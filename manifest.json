@@ -1,0 +1,33 @@
+{
+  "name": "CuidarBem — Cuidados de Saúde",
+  "short_name": "CuidarBem",
+  "description": "App de cuidados de saúde para pacientes com AVC",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1a6b5c",
+  "theme_color": "#1a6b5c",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "categories": ["health", "medical"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Tarefas de hoje",
+      "short_name": "Hoje",
+      "description": "Ver tarefas do dia",
+      "url": "./index.html#home",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Agenda",
+      "short_name": "Agenda",
+      "description": "Ver calendário",
+      "url": "./index.html#calendar",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

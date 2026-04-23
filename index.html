@@ -1,0 +1,3824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a6b5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="CuidarBem">
+<meta name="description" content="App de cuidados de saúde para pacientes com AVC">
+<link rel="manifest" href="manifest.json">
+<title>CuidarBem — Cuidados de Saúde</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-50: #e8f5f1;
+    --green-100: #c3e6da;
+    --green-200: #8ecfbc;
+    --green-400: #3da88a;
+    --green-600: #1a6b5c;
+    --green-800: #0d3d35;
+    --teal-50: #e1f5ee;
+    --teal-400: #1d9e75;
+    --teal-600: #0f6e56;
+    --blue-50: #e6f1fb;
+    --blue-400: #378add;
+    --blue-600: #185fa5;
+    --amber-50: #faeeda;
+    --amber-400: #ba7517;
+    --amber-600: #854f0b;
+    --coral-50: #faece7;
+    --coral-400: #d85a30;
+    --coral-600: #993c1d;
+    --purple-50: #eeedfe;
+    --purple-400: #7f77dd;
+    --purple-600: #534ab7;
+    --red-50: #fcebeb;
+    --red-400: #e24b4a;
+    --red-600: #a32d2d;
+    --gray-50: #f7f7f5;
+    --gray-100: #eeecea;
+    --gray-200: #d3d1c7;
+    --gray-400: #888780;
+    --gray-600: #5f5e5a;
+    --gray-800: #2c2c2a;
+    --white: #ffffff;
+    --text: #1a1a18;
+    --text-muted: #5f5e5a;
+    --text-light: #888780;
+    --bg: #f4f2ee;
+    --card-bg: #ffffff;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --nav-h: 72px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: stretch;
+    height: var(--nav-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 600; padding: 8px 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--green-600); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-dot {
+    position: absolute; top: 6px; right: calc(50% - 14px);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-400); border: 2px solid white;
+    display: none;
+  }
+  .nav-dot.show { display: block; }
+
+  /* SCREENS */
+  .screen {
+    display: none; padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100dvh;
+  }
+  .screen.active { display: block; }
+
+  /* HEADER */
+  .header {
+    background: var(--green-600);
+    color: white;
+    padding: 48px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -30px; left: -20px; right: -20px;
+    height: 60px;
+    background: var(--bg);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header-sub {
+    background: var(--green-600);
+    color: white;
+    padding: 48px 20px 20px;
+  }
+  .header-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .header-sub-title { font-size: 18px; font-weight: 700; color: white; }
+  .header-date { font-size: 13px; opacity: 0.8; font-weight: 500; }
+  .header-greeting { font-size: 15px; opacity: 0.85; margin-bottom: 2px; }
+  .header-patient {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 20px; padding: 6px 14px; margin-top: 10px;
+    font-size: 13px; font-weight: 600;
+  }
+  .header-patient span { font-size: 16px; }
+
+  /* CONTENT AREA */
+  .content { padding: 24px 16px 0; }
+
+  /* CARDS */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+
+  /* PROGRESS RING */
+  .progress-ring-wrap {
+    display: flex; align-items: center; gap: 20px;
+    padding: 4px 0;
+  }
+  .progress-ring { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--gray-100); stroke-width: 8; }
+  .ring-fill { fill: none; stroke: var(--teal-400); stroke-width: 8;
+    stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+  .ring-text { text-anchor: middle; dominant-baseline: middle;
+    font-family: 'Nunito', sans-serif; transform-origin: center; }
+  .progress-info { flex: 1; }
+  .progress-pct { font-size: 28px; font-weight: 800; color: var(--teal-600); }
+  .progress-label { font-size: 14px; color: var(--text-muted); margin-top: 2px; }
+  .progress-count { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* CATEGORY PILLS */
+  .cat-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .cat-pill {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer; border: none;
+    font-family: 'Nunito', sans-serif;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .cat-pill:active { transform: scale(0.96); }
+  .cat-pill.med   { background: var(--blue-50);   color: var(--blue-600); }
+  .cat-pill.cons  { background: var(--purple-50);  color: var(--purple-600); }
+  .cat-pill.fisio { background: var(--amber-50);   color: var(--amber-600); }
+  .cat-pill.exer  { background: var(--teal-50);    color: var(--teal-600); }
+  .cat-pill.all   { background: var(--gray-100);   color: var(--gray-600); }
+
+  /* TASK ITEMS */
+  .task-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .task-item:last-child { border-bottom: none; }
+  .task-check {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid var(--gray-200);
+    background: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; margin-top: 2px;
+  }
+  .task-check.checked { background: var(--teal-400); border-color: var(--teal-400); }
+  .task-check.checked::after {
+    content: ''; width: 8px; height: 5px;
+    border-left: 2px solid white; border-bottom: 2px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+  .task-body { flex: 1; min-width: 0; }
+  .task-name {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--text); line-height: 1.3;
+  }
+  .task-name.done { text-decoration: line-through; color: var(--text-light); }
+  .task-meta { font-size: 12px; color: var(--text-light); margin-top: 3px; }
+  .task-time {
+    font-size: 12px; font-weight: 700;
+    color: var(--text-muted); flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .task-badge {
+    display: inline-block; padding: 2px 8px;
+    border-radius: 8px; font-size: 11px; font-weight: 700;
+    margin-top: 4px;
+  }
+  .badge-med   { background: var(--blue-50);   color: var(--blue-600); }
+  .badge-cons  { background: var(--purple-50);  color: var(--purple-600); }
+  .badge-fisio { background: var(--amber-50);   color: var(--amber-600); }
+  .badge-exer  { background: var(--teal-50);    color: var(--teal-600); }
+
+  /* ALERT CARD */
+  .alert-card {
+    background: var(--coral-50);
+    border-left: 4px solid var(--coral-400);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .alert-icon { font-size: 20px; flex-shrink: 0; }
+  .alert-text { font-size: 13px; font-weight: 600; color: var(--coral-600); }
+
+  /* BUTTONS */
+  .btn-add {
+    width: 100%;
+    background: var(--green-600);
+    color: white;
+    border: none; border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 12px;
+  }
+  .btn-add:active { transform: scale(0.98); background: var(--green-800); }
+  .btn-secondary {
+    background: var(--gray-50); color: var(--text-muted);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-secondary:active { background: var(--gray-100); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 200; display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%; max-width: 480px; margin: 0 auto;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(.32,.72,0,1);
+    max-height: 90dvh; overflow-y: auto;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-handle {
+    width: 40px; height: 4px; background: var(--gray-200);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; color: var(--green-800); }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 15px; color: var(--text);
+    background: white; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--green-400); }
+  .form-select { appearance: none; cursor: pointer; }
+  .type-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  }
+  .type-opt {
+    border: 2px solid var(--gray-100);
+    border-radius: var(--radius-sm);
+    padding: 10px; cursor: pointer;
+    text-align: center; font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .type-opt.sel-med   { border-color: var(--blue-400);   background: var(--blue-50);   color: var(--blue-600); }
+  .type-opt.sel-cons  { border-color: var(--purple-400);  background: var(--purple-50);  color: var(--purple-600); }
+  .type-opt.sel-fisio { border-color: var(--amber-400);   background: var(--amber-50);   color: var(--amber-600); }
+  .type-opt.sel-exer  { border-color: var(--teal-400);    background: var(--teal-50);    color: var(--teal-600); }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: var(--radius); padding: 16px;
+    box-shadow: var(--shadow); text-align: center;
+  }
+  .stat-number { font-size: 32px; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; font-weight: 600; }
+  .stat-icon { font-size: 22px; margin-bottom: 6px; }
+
+  /* HISTORY */
+  .history-day { margin-bottom: 20px; }
+  .history-date {
+    font-size: 13px; font-weight: 700; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 8px; padding-left: 4px;
+  }
+
+  /* EMPTY */
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text-light);
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; line-height: 1.6; }
+
+  /* MEDICATION SPECIFIC */
+  .med-time-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .med-time-badge {
+    background: var(--green-50);
+    color: var(--green-600);
+    padding: 6px 12px; border-radius: 20px;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .med-time-badge.taken { background: var(--gray-100); color: var(--text-light); text-decoration: line-through; }
+
+  /* NEXT ALARM */
+  .next-alarm {
+    background: linear-gradient(135deg, var(--green-600), var(--teal-600));
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    color: white;
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 12px;
+  }
+  .alarm-icon { font-size: 28px; flex-shrink: 0; }
+  .alarm-time { font-size: 22px; font-weight: 800; line-height: 1; }
+  .alarm-desc { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+
+  /* WEEK STRIP */
+  .week-strip { display: flex; gap: 6px; justify-content: space-between; }
+  .week-day {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    padding: 10px 4px; border-radius: 10px;
+    cursor: pointer; background: var(--gray-50);
+    border: 1.5px solid transparent; transition: all 0.15s;
+  }
+  .week-day.today { background: var(--green-50); border-color: var(--green-400); }
+  .week-day.has-tasks::after {
+    content: ''; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--teal-400); display: block;
+  }
+  .week-day-name { font-size: 11px; font-weight: 700; color: var(--text-light); }
+  .week-day.today .week-day-name { color: var(--green-600); }
+  .week-day-num { font-size: 15px; font-weight: 800; color: var(--text); }
+  .week-day.today .week-day-num { color: var(--green-600); }
+
+  /* ── Scrollable ── */
+  .scroll-x { overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .scroll-x::-webkit-scrollbar { display: none; }
+
+  /* Desktop right panel hidden on mobile */
+  .desktop-right-panel { display: none; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 17px; font-weight: 800; color: var(--text); }
+  .section-action {
+    font-size: 13px; font-weight: 700; color: var(--green-600);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gray-800); color: white;
+    padding: 12px 20px; border-radius: 20px;
+    font-size: 14px; font-weight: 600;
+    opacity: 0; transition: all 0.3s;
+    z-index: 300; white-space: nowrap;
+    max-width: calc(100% - 40px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* SETTINGS PAGE */
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--card-bg); border-radius: var(--radius-sm);
+    margin-bottom: 8px; box-shadow: var(--shadow);
+    cursor: pointer;
+  }
+  .setting-row-left { display: flex; align-items: center; gap: 12px; }
+  .setting-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .setting-label { font-weight: 700; font-size: 15px; }
+  .setting-desc { font-size: 12px; color: var(--text-light); }
+
+  /* TOGGLE */
+  .toggle {
+    width: 46px; height: 26px; border-radius: 13px;
+    background: var(--gray-200); cursor: pointer;
+    position: relative; transition: background 0.2s;
+    flex-shrink: 0; border: none;
+  }
+  .toggle::after {
+    content: ''; position: absolute; width: 20px; height: 20px;
+    border-radius: 50%; background: white; top: 3px; left: 3px;
+    transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on { background: var(--teal-400); }
+  .toggle.on::after { left: 23px; }
+
+  /* CHIP FILTER */
+  .chip-filter {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px; margin-bottom: 16px;
+    scrollbar-width: none;
+  }
+  .chip-filter::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: 700;
+    border: 1.5px solid var(--gray-200);
+    background: white; cursor: pointer; color: var(--text-muted);
+    font-family: 'Nunito', sans-serif; transition: all 0.15s;
+  }
+  .chip.active { background: var(--green-600); color: white; border-color: var(--green-600); }
+
+  /* ADESAO BAR */
+  .adherence-bar {
+    height: 8px; border-radius: 4px;
+    background: var(--gray-100); overflow: hidden; margin-top: 6px;
+  }
+  .adherence-fill {
+    height: 100%; border-radius: 4px;
+    background: var(--teal-400); transition: width 0.5s ease;
+  }
+  .adherence-fill.low { background: var(--coral-400); }
+
+  /* MED PHOTO */
+  .med-photo-wrap {
+    width: 52px; height: 52px; flex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
+    border: 2px solid var(--gray-100);
+    background: var(--gray-50);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative;
+  }
+  .med-photo-wrap img { width:100%;height:100%;object-fit:cover; }
+  .med-photo-placeholder { font-size:22px; }
+  .med-photo-wrap .photo-add-badge {
+    position:absolute; bottom:-2px; right:-2px;
+    background: var(--green-600); color:white;
+    width:18px;height:18px;border-radius:50%;
+    font-size:12px;display:flex;align-items:center;justify-content:center;
+    font-weight:800; border:2px solid white;
+  }
+
+  /* CONFIRM MODAL */
+  .confirm-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.7);
+    z-index:500;display:flex;align-items:flex-end;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;
+  }
+  .confirm-overlay.open { opacity:1;pointer-events:all; }
+  .confirm-sheet {
+    background:var(--white);border-radius:28px 28px 0 0;
+    padding:28px 24px 48px;width:100%;max-width:480px;margin:0 auto;
+    transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);
+  }
+  .confirm-overlay.open .confirm-sheet { transform:translateY(0); }
+  .confirm-handle { width:40px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 24px; }
+
+  .confirm-photo-big {
+    width:120px;height:120px;border-radius:20px;object-fit:cover;
+    margin:0 auto 16px;display:block;
+    border:3px solid var(--green-100);
+    box-shadow:0 4px 20px rgba(0,0,0,0.12);
+  }
+  .confirm-photo-placeholder {
+    width:120px;height:120px;border-radius:20px;
+    background:var(--green-50);border:3px dashed var(--green-200);
+    margin:0 auto 16px;display:flex;align-items:center;
+    justify-content:center;font-size:52px;
+  }
+  .confirm-name { font-size:22px;font-weight:800;text-align:center;color:var(--text);margin-bottom:4px; }
+  .confirm-dose { font-size:15px;text-align:center;color:var(--text-muted);margin-bottom:6px; }
+  .confirm-time { text-align:center;margin-bottom:16px; }
+  .confirm-time-badge {
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--teal-50);color:var(--teal-600);
+    padding:6px 16px;border-radius:20px;
+    font-size:14px;font-weight:700;
+  }
+  .confirm-obs {
+    background:var(--amber-50);border-radius:12px;padding:12px 16px;
+    font-size:13px;color:var(--amber-600);font-weight:600;
+    line-height:1.6;margin-bottom:20px;text-align:center;
+  }
+  .confirm-warning {
+    background:var(--coral-50);border-left:4px solid var(--coral-400);
+    border-radius:0 12px 12px 0;padding:12px 14px;
+    font-size:13px;color:var(--coral-600);font-weight:700;
+    margin-bottom:20px;line-height:1.5;
+  }
+  .btn-confirm {
+    width:100%;padding:18px;border:none;border-radius:16px;
+    background:var(--teal-400);color:white;
+    font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    gap:10px;transition:background 0.2s,transform 0.1s;margin-bottom:10px;
+  }
+  .btn-confirm:active { transform:scale(0.98);background:var(--teal-600); }
+  .btn-confirm-cancel {
+    width:100%;padding:14px;border:none;border-radius:12px;
+    background:var(--gray-50);color:var(--text-muted);
+    font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;
+    cursor:pointer;border:1.5px solid var(--gray-200);
+  }
+
+  /* PHOTO MODAL */
+  .photo-modal-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);
+    z-index:600;display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity 0.2s;
+    padding:20px;
+  }
+  .photo-modal-overlay.open { opacity:1;pointer-events:all; }
+  .photo-modal {
+    background:var(--white);border-radius:24px;padding:24px;
+    width:100%;max-width:380px;
+    transform:scale(0.92);transition:transform 0.2s;
+  }
+  .photo-modal-overlay.open .photo-modal { transform:scale(1); }
+
+  /* TASK ITEM enhanced */
+  .task-item-med { cursor: pointer; }
+  .task-item-med:active { background: var(--gray-50); border-radius: 8px; }
+
+
+  /* APPOINTMENT CONFIRM SHEET */
+  .appt-confirm-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.72);
+    z-index:510;display:flex;align-items:flex-end;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;
+  }
+  .appt-confirm-overlay.open { opacity:1;pointer-events:all; }
+  .appt-confirm-sheet {
+    background:var(--white);border-radius:28px 28px 0 0;
+    padding:28px 22px 48px;width:100%;max-width:480px;margin:0 auto;
+    transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);
+    max-height:92dvh;overflow-y:auto;
+  }
+  .appt-confirm-overlay.open .appt-confirm-sheet { transform:translateY(0); }
+
+  .appt-icon-ring {
+    width:72px;height:72px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:34px;margin:0 auto 14px;
+  }
+  .appt-confirm-title { font-size:20px;font-weight:800;text-align:center;color:var(--text);margin-bottom:4px; }
+  .appt-confirm-sub { font-size:14px;text-align:center;color:var(--text-muted);margin-bottom:18px; }
+
+  .appt-info-grid {
+    background:var(--gray-50);border-radius:14px;padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .appt-info-row {
+    display:flex;align-items:flex-start;gap:10px;
+    padding:8px 0;border-bottom:1px solid var(--gray-100);
+  }
+  .appt-info-row:last-child { border-bottom:none;padding-bottom:0; }
+  .appt-info-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .appt-info-label { font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px; }
+  .appt-info-val { font-size:14px;font-weight:700;color:var(--text);margin-top:1px; }
+
+  .appt-checklist { margin-bottom:18px; }
+  .appt-check-item {
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:10px;cursor:pointer;
+    transition:background 0.15s;margin-bottom:6px;
+    background:var(--gray-50);border:1.5px solid var(--gray-100);
+  }
+  .appt-check-item.checked { background:var(--teal-50);border-color:var(--teal-400); }
+  .appt-check-box {
+    width:22px;height:22px;border-radius:6px;border:2px solid var(--gray-200);
+    flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:white;transition:all 0.15s;
+  }
+  .appt-check-item.checked .appt-check-box {
+    background:var(--teal-400);border-color:var(--teal-400);
+  }
+  .appt-check-item.checked .appt-check-box::after {
+    content:'';width:8px;height:5px;
+    border-left:2px solid white;border-bottom:2px solid white;
+    transform:rotate(-45deg) translateY(-1px);display:block;
+  }
+  .appt-check-label { font-size:14px;font-weight:600;color:var(--text); }
+  .appt-check-item.checked .appt-check-label { color:var(--teal-600); }
+
+  .btn-visto {
+    width:100%;padding:18px;border:none;border-radius:16px;
+    background:var(--purple-600);color:white;
+    font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    gap:10px;transition:all 0.15s;margin-bottom:10px;
+  }
+  .btn-visto:active { transform:scale(0.98);opacity:0.9; }
+  .btn-visto.cons { background:var(--purple-600); }
+  .btn-visto.exam { background:var(--blue-600); }
+
+  /* EXAM/CONS badge in task list */
+  .appt-task-detail {
+    background:var(--purple-50);border-radius:8px;padding:7px 10px;
+    margin-top:6px;font-size:12px;color:var(--purple-600);font-weight:600;
+    line-height:1.6;
+  }
+  .appt-task-detail.exam { background:var(--blue-50);color:var(--blue-600); }
+
+  /* ALERT PILLS */
+  .alert-pill {
+    display:inline-flex;align-items:center;gap:4px;
+    background:var(--amber-50);color:var(--amber-600);
+    padding:3px 8px;border-radius:8px;font-size:11px;font-weight:700;
+    margin-top:4px;margin-right:4px;
+  }
+
+  /* OCR EXAM screen additions */
+  .scan-type-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px; }
+  .scan-type-opt {
+    border:2px solid var(--gray-100);border-radius:var(--radius-sm);
+    padding:12px;cursor:pointer;text-align:center;
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;
+    color:var(--text-muted);transition:all 0.15s;
+  }
+  .scan-type-opt.sel-cons  { border-color:var(--purple-400);background:var(--purple-50);color:var(--purple-600); }
+  .scan-type-opt.sel-exam  { border-color:var(--blue-400);background:var(--blue-50);color:var(--blue-600); }
+
+  .ocr-appt-card {
+    background:var(--card-bg);border-radius:var(--radius);padding:16px;
+    margin-bottom:10px;box-shadow:var(--shadow);
+    border-left:4px solid var(--purple-400);
+  }
+  .ocr-appt-card.exam { border-left-color:var(--blue-400); }
+  .ocr-appt-name { font-size:16px;font-weight:800;color:var(--text);margin-bottom:10px; }
+  .ocr-field-row { display:flex;gap:8px;margin-bottom:8px;align-items:flex-start; }
+  .ocr-field-label { font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;min-width:60px;margin-top:13px; }
+  .ocr-field-input { flex:1; }
+
+
+  /* APPOINTMENT / EXAM */
+  .appt-card {
+    background: var(--card-bg); border-radius: var(--radius);
+    padding: 0; margin-bottom: 12px; box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .appt-header {
+    padding: 14px 16px 10px;
+    border-left: 5px solid var(--purple-400);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .appt-header.exam { border-left-color: var(--blue-400); }
+  .appt-icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    background: var(--purple-50);
+  }
+  .appt-icon-wrap.exam { background: var(--blue-50); }
+  .appt-title { font-size: 16px; font-weight: 800; color: var(--text); line-height: 1.3; }
+  .appt-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .appt-detail-row {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-light); margin-top: 4px;
+  }
+  .appt-footer {
+    padding: 10px 16px; background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .appt-status-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+  }
+  .appt-status-badge.pending   { background: var(--amber-50);  color: var(--amber-600); }
+  .appt-status-badge.seen      { background: var(--teal-50);   color: var(--teal-600); }
+  .appt-status-badge.alert-on  { background: var(--coral-50);  color: var(--coral-600); }
+  .appt-view-btn {
+    font-size: 12px; font-weight: 700; color: var(--purple-600);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; padding: 4px 8px;
+  }
+  .appt-photo-thumb {
+    width: 100%; max-height: 160px; object-fit: cover;
+    border-top: 1px solid var(--gray-100); display: block;
+    cursor: pointer;
+  }
+
+  /* SEEN CONFIRM SHEET */
+  .seen-sheet {
+    background: var(--white); border-radius: 28px 28px 0 0;
+    padding: 28px 24px 48px; width: 100%; max-width: 480px; margin: 0 auto;
+    transform: translateY(100%); transition: transform 0.35s cubic-bezier(.32,.72,0,1);
+    max-height: 92dvh; overflow-y: auto;
+  }
+  .confirm-overlay.open .seen-sheet { transform: translateY(0); }
+  .seen-sheet-photo {
+    width: 100%; max-height: 200px; object-fit: cover;
+    border-radius: 16px; margin-bottom: 16px; display: block;
+    border: 2px solid var(--purple-100);
+  }
+  .seen-type-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+    background: var(--purple-50); color: var(--purple-600);
+    margin-bottom: 10px;
+  }
+  .seen-type-badge.exam { background: var(--blue-50); color: var(--blue-600); }
+  .seen-info-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--gray-100);
+    font-size: 14px;
+  }
+  .seen-info-label { color: var(--text-light); font-weight: 600; min-width: 72px; }
+  .seen-info-value { color: var(--text); font-weight: 700; flex: 1; }
+  .prep-box {
+    background: var(--amber-50); border-radius: 12px;
+    padding: 12px 14px; margin: 14px 0;
+    font-size: 13px; color: var(--amber-600); line-height: 1.6; font-weight: 600;
+  }
+  .btn-seen {
+    width: 100%; padding: 18px; border: none; border-radius: 16px;
+    background: var(--purple-600); color: white;
+    font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    transition: background 0.2s, transform 0.1s; margin-bottom: 10px;
+  }
+  .btn-seen:active { transform: scale(0.98); background: var(--purple-800); }
+  .btn-seen.exam-btn { background: var(--blue-600); }
+  .btn-seen.exam-btn:active { background: var(--blue-800); }
+
+  /* APPT OCR SCREEN */
+  .appt-ocr-card {
+    background: var(--card-bg); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+    border-left: 5px solid var(--purple-400);
+  }
+  .appt-ocr-card.exam-type { border-left-color: var(--blue-400); }
+  .appt-ocr-field { margin-bottom: 10px; }
+  .appt-ocr-field label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--text-light); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .appt-ocr-field input, .appt-ocr-field select {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--gray-200); border-radius: 8px;
+    font-family: 'Nunito Sans', sans-serif; font-size: 14px;
+    color: var(--text); background: white; outline: none;
+  }
+  .appt-ocr-field input:focus, .appt-ocr-field select:focus { border-color: var(--purple-400); }
+  .appt-ocr-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .appt-ocr-name { font-size: 15px; font-weight: 800; color: var(--text); }
+  .appt-ocr-type-badge {
+    padding: 3px 10px; border-radius: 8px;
+    font-size: 11px; font-weight: 700;
+  }
+
+  /* ALERT TIME BADGES */
+  .alert-time-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .alert-chip {
+    padding: 5px 12px; border-radius: 14px;
+    font-size: 12px; font-weight: 700;
+    border: 1.5px solid; cursor: pointer;
+    font-family: 'Nunito', sans-serif; transition: all 0.15s;
+  }
+  .alert-chip.active   { background: var(--coral-50);  color: var(--coral-600);  border-color: var(--coral-400); }
+  .alert-chip.inactive { background: var(--gray-100); color: var(--gray-400);  border-color: var(--gray-200); text-decoration: line-through; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .adherence-fill.mid { background: var(--amber-400); }
+
+  /* ═══ DARK MODE ═══ */
+  body.dark {
+    --bg: #0f1410;
+    --card-bg: #1a2019;
+    --white: #1e2620;
+    --text: #e8ede7;
+    --text-muted: #8fa88b;
+    --text-light: #607060;
+    --gray-50: #161c15;
+    --gray-100: #212d20;
+    --gray-200: #2e3d2d;
+    --gray-400: #506050;
+    --gray-600: #8fa88b;
+    --gray-800: #c8d8c4;
+    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    --green-50: #0d1f18;
+    --green-100: #143324;
+    --amber-50: #1f1808;
+    --blue-50: #0a1520;
+    --coral-50: #1f0e0a;
+    --purple-50: #120d1e;
+    --teal-50: #081a13;
+    --red-50: #1a0808;
+  }
+  body.dark .bottom-nav { background: #1a2019; border-top-color: #212d20; }
+  body.dark .modal { background: #1a2019; }
+  body.dark .confirm-sheet { background: #1a2019; }
+  body.dark .seen-sheet { background: #1a2019; }
+  body.dark .appt-confirm-sheet { background: #1a2019; }
+  body.dark .form-input { background: #212d20; border-color: #2e3d2d; color: var(--text); }
+  body.dark .form-input:focus { border-color: var(--green-400); }
+  body.dark .week-day { background: #161c15; }
+  body.dark .chip { background: #1a2019; border-color: #2e3d2d; }
+  body.dark .type-opt { border-color: #2e3d2d; color: var(--text-muted); }
+  body.dark .setting-row { background: #1a2019; }
+  body.dark .btn-secondary { background: #212d20; border-color: #2e3d2d; }
+  body.dark .btn-confirm-cancel { background: #212d20; border-color: #2e3d2d; }
+  body.dark .appt-info-grid { background: #212d20; }
+  body.dark .appt-check-item { background: #212d20; border-color: #2e3d2d; }
+  body.dark .ocr-appt-card { background: #1a2019; }
+  body.dark .task-item { border-bottom-color: #212d20; }
+  body.dark .task-check { background: #212d20; border-color: #2e3d2d; }
+  body.dark .toggle { background: #2e3d2d; }
+  body.dark select option { background: #1a2019; }
+  body.dark .header::after { background: var(--bg); }
+
+  /* ═══ FONT SIZE ═══ */
+  body.font-md { font-size: 16px; }
+  body.font-md .task-name { font-size: 16px; }
+  body.font-md .card-title { font-size: 15px; }
+  body.font-md .stat-label { font-size: 13px; }
+  body.font-md .section-title { font-size: 18px; }
+
+  body.font-lg { font-size: 18px; }
+  body.font-lg .task-name { font-size: 18px; }
+  body.font-lg .task-meta { font-size: 14px; }
+  body.font-lg .card-title { font-size: 16px; }
+  body.font-lg .stat-label { font-size: 14px; }
+  body.font-lg .stat-number { font-size: 36px; }
+  body.font-lg .section-title { font-size: 20px; }
+  body.font-lg .header-title { font-size: 26px; }
+  body.font-lg .btn-add { font-size: 17px; padding: 16px; }
+  body.font-lg .nav-btn { font-size: 12px; }
+  body.font-lg .form-input { font-size: 17px; padding: 14px 16px; }
+  body.font-lg .task-time { font-size: 14px; }
+
+  /* ═══ LOW STRESS MODE ═══ */
+  body.low-stress { --bg: #f0ede8; --card-bg: #faf8f5; }
+  body.low-stress.dark { --bg: #111009; --card-bg: #1a1912; }
+  body.low-stress .header { background: var(--green-800); }
+  body.low-stress .cat-pills { display: none; }
+  body.low-stress .card-title { display: none; }
+  body.low-stress .task-badge { display: none; }
+  body.low-stress .alert-card { display: none; }
+  body.low-stress .section-header { margin-bottom: 6px; }
+  body.low-stress .task-item { padding: 14px 0; }
+  body.low-stress .stats-grid { display: none; }
+  body.low-stress .next-alarm { background: var(--green-600); }
+  body.low-stress .week-strip { gap: 4px; }
+  body.low-stress .chip-filter { display: none; }
+  body.low-stress .week-day { background: var(--gray-50); }
+  body.low-stress .task-name { font-size: 16px; line-height: 1.5; }
+  body.low-stress .nav-btn { font-size: 10px; }
+  body.low-stress .section-title { font-size: 16px; }
+  body.low-stress .progress-ring-wrap { gap: 12px; }
+
+  /* ═══ ACCESSIBILITY CONTROLS PANEL ═══ */
+  .a11y-fab {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); right: 16px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green-600); color: white;
+    border: none; cursor: pointer; z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .a11y-fab:active { transform: scale(0.92); }
+  .a11y-panel {
+    position: fixed; bottom: calc(var(--nav-h) + 72px); right: 16px;
+    background: var(--card-bg); border-radius: 20px;
+    padding: 16px; z-index: 150;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 240px;
+    transform: scale(0.85) translateY(20px); transform-origin: bottom right;
+    opacity: 0; pointer-events: none;
+    transition: all 0.2s cubic-bezier(.32,.72,0,1);
+  }
+  .a11y-panel.open { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
+  .a11y-panel-title { font-size: 12px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .a11y-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .a11y-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .a11y-label small { display: block; font-size: 11px; color: var(--text-light); font-weight: 500; }
+  .font-seg {
+    display: flex; border-radius: 10px; overflow: hidden;
+    border: 1.5px solid var(--gray-200); background: var(--gray-50);
+  }
+  .font-seg button {
+    flex: 1; padding: 6px 10px; border: none; background: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    color: var(--text-muted); font-size: 12px; transition: all 0.15s;
+  }
+  .font-seg button.active { background: var(--green-600); color: white; }
+
+  /* ═══ DASHBOARD APPLE HEALTH STYLE ═══ */
+  .health-dashboard { padding: 0 16px 16px; }
+  .health-section-label {
+    font-size: 13px; font-weight: 800; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin: 20px 0 10px 2px;
+  }
+  .health-ring-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    margin-bottom: 4px;
+  }
+  .health-ring-card {
+    background: var(--card-bg); border-radius: 18px;
+    padding: 14px 10px; text-align: center;
+    box-shadow: var(--shadow); position: relative; overflow: hidden;
+  }
+  .health-ring-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--card-accent, transparent); opacity: 0.06;
+  }
+  .health-ring-val { font-size: 24px; font-weight: 900; line-height: 1; margin: 6px 0 3px; }
+  .health-ring-label { font-size: 11px; color: var(--text-light); font-weight: 700; }
+  .health-ring-unit { font-size: 10px; color: var(--text-light); }
+
+  .health-trend-card {
+    background: var(--card-bg); border-radius: 18px;
+    padding: 16px; box-shadow: var(--shadow); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .health-trend-icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .health-trend-info { flex: 1; min-width: 0; }
+  .health-trend-title { font-size: 14px; font-weight: 800; color: var(--text); }
+  .health-trend-sub { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .health-bar-wrap { margin-top: 8px; }
+  .health-bar-bg { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+  .health-bar-fill { height: 100%; border-radius: 3px; transition: width 0.7s cubic-bezier(.32,.72,0,1); }
+  .health-trend-right { text-align: right; flex-shrink: 0; }
+  .health-trend-pct { font-size: 22px; font-weight: 900; }
+  .health-trend-change {
+    font-size: 11px; font-weight: 700; padding: 2px 6px;
+    border-radius: 6px; margin-top: 2px; display: inline-block;
+  }
+  .health-trend-change.up { background: var(--teal-50); color: var(--teal-600); }
+  .health-trend-change.down { background: var(--coral-50); color: var(--coral-600); }
+  .health-trend-change.neutral { background: var(--gray-100); color: var(--text-light); }
+
+  .mini-chart { height: 36px; display: flex; align-items: flex-end; gap: 4px; margin-top: 10px; }
+  /* ═══ PWA INSTALL BANNER ═══ */
+  .install-banner {
+    position: fixed; bottom: calc(var(--nav-h) + 12px); left: 12px; right: 12px;
+    background: var(--green-800); color: white;
+    border-radius: 18px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    z-index: 400; box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    transform: translateY(120%); opacity: 0;
+    transition: all 0.4s cubic-bezier(.32,.72,0,1);
+    max-width: 448px; margin: 0 auto;
+  }
+  .install-banner.show { transform: translateY(0); opacity: 1; }
+  .install-banner-icon { font-size: 28px; flex-shrink: 0; }
+  .install-banner-text { flex: 1; min-width: 0; }
+  .install-banner-title { font-size: 14px; font-weight: 800; }
+  .install-banner-sub { font-size: 12px; opacity: 0.75; margin-top: 1px; }
+  .install-banner-btn {
+    background: white; color: var(--green-800);
+    border: none; border-radius: 10px; padding: 8px 14px;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
+    cursor: pointer; flex-shrink: 0; white-space: nowrap;
+  }
+  .install-banner-close {
+    background: none; border: none; color: white; opacity: 0.6;
+    font-size: 18px; cursor: pointer; flex-shrink: 0; padding: 0 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     DESKTOP LAYOUT  (≥ 768px)
+     ═══════════════════════════════════════════════════ */
+  @media (min-width: 768px) {
+
+    /* ── Root tweaks ── */
+    :root { --sidebar-w: 220px; --nav-h: 0px; }
+
+    body {
+      max-width: 100%;
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* Screens pushed right of sidebar */
+    .screen {
+      margin-left: var(--sidebar-w);
+      min-height: 100dvh;
+    }
+
+    /* ── Sidebar replaces bottom nav ── */
+    .bottom-nav {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      height: 100dvh;
+      flex-direction: column;
+      align-items: stretch;
+      border-top: none;
+      border-right: 1px solid var(--gray-100);
+      transform: none;
+      padding: 0;
+      z-index: 100;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    /* Sidebar brand header */
+    .bottom-nav::before {
+      content: '';
+      display: block;
+      background: var(--green-600);
+      height: 72px;
+      flex-shrink: 0;
+    }
+
+    .nav-brand {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 72px;
+      background: var(--green-600);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 10px;
+      pointer-events: none;
+    }
+    .nav-brand-icon { font-size: 22px; }
+    .nav-brand-text {
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 800; color: white;
+      line-height: 1.1;
+    }
+    .nav-brand-sub { font-size: 10px; opacity: 0.7; font-weight: 500; }
+
+    .nav-btn {
+      flex: none;
+      flex-direction: row;
+      justify-content: flex-start;
+      padding: 13px 20px;
+      gap: 12px;
+      font-size: 13px;
+      border-radius: 0;
+      text-align: left;
+      position: relative;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .nav-btn:not(.active):hover { background: var(--green-50); color: var(--green-600); }
+    .nav-btn.active {
+      background: var(--green-600);
+      color: white;
+      border-left-color: var(--green-800);
+      font-weight: 800;
+    }
+    .nav-btn.active svg { stroke: white; }
+    .nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* OCR nav button special */
+    .ocr-nav-btn { margin: 8px 12px; border-radius: var(--radius-sm) !important; border-left: 3px solid transparent !important; }
+    .ocr-nav-btn > div { background: none !important; padding: 0 !important; margin: 0 !important; }
+    .ocr-nav-btn > div svg { stroke: var(--green-600) !important; }
+    .nav-btn.ocr-nav-btn { background: transparent; color: var(--green-600); border: 1.5px solid transparent !important; padding: 10px 16px; }
+    .nav-btn.ocr-nav-btn:not(.active):hover { background: var(--green-50) !important; }
+    .nav-btn.ocr-nav-btn.active { background: var(--green-600); color: white; border-color: var(--green-600) !important; }
+    .nav-btn.ocr-nav-btn.active > div svg { stroke: white !important; }
+
+    /* nav dot for desktop */
+    .nav-dot { top: 50%; right: 16px; transform: translateY(-50%); }
+
+    /* Sidebar footer */
+    .nav-spacer { flex: 1; }
+    .nav-footer {
+      padding: 16px 20px 24px;
+      font-size: 11px; color: var(--text-light);
+      border-top: 1px solid var(--gray-100);
+    }
+
+    /* ── Main content area ── */
+    .screen {
+      display: none;
+      padding: 0;
+      min-height: 100dvh;
+      overflow-y: auto;
+    }
+    .screen.active { display: block; }
+
+    /* Home screen: 2-column layout */
+    #screen-home.active {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      grid-template-columns: 1fr 360px;
+      min-height: 100dvh;
+    }
+    #screen-home .header {
+      grid-column: 1 / -1;
+      padding: 0 36px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    #screen-home .header > div { margin: 0; }
+    #screen-home .header::after { display: none; }
+    #screen-home .content {
+      padding: 28px 20px 28px 36px;
+      overflow-y: auto;
+    }
+
+    /* Right panel on home */
+    .desktop-right-panel {
+      display: block;
+      padding: 28px 32px 28px 8px;
+      overflow-y: auto;
+      border-left: 1px solid var(--gray-100);
+    }
+
+    /* Calendar, Reports, Profile, OCR, Dashboard, Appt: single scrollable column */
+    #screen-calendar.active,
+    #screen-reports.active,
+    #screen-profile.active,
+    #screen-ocr.active,
+    #screen-dashboard.active,
+    #screen-appt.active {
+      display: block;
+      max-width: 960px;
+    }
+    #screen-calendar .header-sub,
+    #screen-reports .header-sub,
+    #screen-profile .header-sub,
+    #screen-ocr .header-sub,
+    #screen-dashboard .header-sub,
+    #screen-appt .header-sub {
+      padding: 0 36px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    #screen-calendar .header-sub .header-sub-title,
+    #screen-reports .header-sub .header-sub-title,
+    #screen-profile .header-sub .header-sub-title,
+    #screen-ocr .header-sub .header-sub-title,
+    #screen-dashboard .header-sub .header-sub-title,
+    #screen-appt .header-sub .header-sub-title {
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
+    #screen-calendar .header-sub .header-date,
+    #screen-reports .header-sub .header-date,
+    #screen-profile .header-sub .header-date,
+    #screen-ocr .header-sub .header-date,
+    #screen-dashboard .header-sub .header-date,
+    #screen-appt .header-sub .header-date {
+      margin-left: 20px;
+      padding-left: 20px;
+      border-left: 1px solid rgba(255,255,255,0.3);
+      font-size: 13px;
+      opacity: 0.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #screen-calendar .content,
+    #screen-reports .content,
+    #screen-profile .content,
+    #screen-ocr .content,
+    #screen-appt .content { padding: 28px 36px; }
+
+    .health-dashboard { padding: 28px 36px; }
+
+    /* Reports: 2-col stats grid → 4 cols */
+    #screen-reports .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Calendar: wider week strip */
+    #screen-calendar .week-strip { gap: 10px; }
+    #screen-calendar .week-day { padding: 14px 8px; border-radius: 14px; }
+    #screen-calendar .week-day-num { font-size: 18px; }
+
+    /* Profile: two-column form */
+    #screen-profile .content > .card:first-child .form-group {
+      display: inline-block; width: calc(50% - 8px); vertical-align: top; margin-right: 8px;
+    }
+
+    /* Dashboard: 3-col rings → same; trend cards in 2-col */
+    #screen-dashboard .health-ring-row { grid-template-columns: repeat(6, 1fr); }
+    #screen-dashboard #dash-trends {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    #screen-dashboard .health-trend-card { margin-bottom: 0; }
+
+    /* ── Desktop header ── */
+    .header {
+      padding: 0 36px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header::after { display: none; }
+    .header-title { font-size: 28px; }
+    .header-greeting { font-size: 16px; }
+
+    /* ── Cards & layout ── */
+    .card { border-radius: 20px; padding: 20px; }
+    .section-title { font-size: 19px; }
+
+    /* ── Toast moves to top-right ── */
+    .toast {
+      bottom: auto; top: 24px;
+      right: 24px; left: auto;
+      transform: translateY(-20px);
+      border-radius: 12px;
+      max-width: 360px;
+    }
+    .toast.show { transform: translateY(0); }
+
+    /* ── A11y FAB and panel ── */
+    .a11y-fab { bottom: 24px; right: 24px; }
+    .a11y-panel { bottom: 80px; right: 24px; }
+
+    /* ── Install banner ── */
+    .install-banner {
+      bottom: 24px; left: calc(var(--sidebar-w) + 24px); right: 24px;
+      max-width: 500px;
+    }
+
+    /* ── Modals: centered dialog instead of bottom sheet ── */
+    .modal-overlay { align-items: center; justify-content: center; }
+    .modal {
+      border-radius: 20px;
+      max-width: 560px;
+      max-height: 85dvh;
+      transform: scale(0.94) translateY(0);
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal-handle { display: none; }
+
+    .confirm-overlay { align-items: center; justify-content: center; }
+    .confirm-sheet {
+      border-radius: 24px;
+      max-width: 460px;
+      transform: scale(0.94);
+    }
+    .confirm-overlay.open .confirm-sheet { transform: scale(1); }
+
+    .appt-confirm-overlay { align-items: center; justify-content: center; }
+    .appt-confirm-sheet {
+      border-radius: 24px;
+      max-width: 500px;
+      transform: scale(0.94);
+    }
+    .appt-confirm-overlay.open .appt-confirm-sheet { transform: scale(1); }
+
+    /* ── Home right panel content ── */
+    .desktop-right-panel .card { margin-bottom: 14px; }
+    .desktop-right-panel .section-title { font-size: 16px; margin-bottom: 12px; }
+    /* hide mobile-only progress card on desktop */
+    .mobile-only-progress { display: none !important; }
+
+    /* ── Tasks: better row layout on desktop ── */
+    .task-item { padding: 14px 0; }
+    .task-name { font-size: 15px; }
+
+    /* progress ring bigger */
+    .progress-ring { width: 100px; height: 100px; }
+    .progress-ring circle { cx: 50; cy: 50; r: 40; }
+    #ring-fill { stroke-dasharray: 251; }
+    .progress-pct { font-size: 34px; }
+
+    /* OCR screen max-width */
+    #screen-ocr .content,
+    #screen-appt .content { max-width: 720px; }
+
+    /* type grid 4 cols on desktop */
+    .type-grid { grid-template-columns: repeat(4, 1fr); }
+
+    /* week in calendar: show 14 days */
+    #screen-calendar .content { max-width: 860px; }
+  }
+
+  @media (min-width: 1100px) {
+    :root { --sidebar-w: 240px; }
+    #screen-home .content { padding: 32px 24px 32px 40px; }
+    #screen-home.active { grid-template-columns: 1fr 420px; }
+    .desktop-right-panel { padding: 32px 40px 32px 12px; }
+    #screen-reports .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- SCREEN: HOME -->
+<div id="screen-home" class="screen active">
+  <div class="header">
+    <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+    <div class="header-title">CuidarBem</div>
+    <div class="header-date" id="today-date"></div>
+    <div class="header-patient" id="patient-pill">
+      <span>💚</span> <span id="patient-name-pill">Nome da paciente</span>
+    </div>
+  </div>
+
+  <!-- LEFT: main task list -->
+  <div class="content">
+
+    <!-- NEXT ALARM -->
+    <div class="next-alarm" id="next-alarm-card" style="display:none">
+      <div class="alarm-icon">⏰</div>
+      <div>
+        <div class="alarm-time" id="next-alarm-time">—</div>
+        <div class="alarm-desc" id="next-alarm-desc">Próximo lembrete</div>
+      </div>
+    </div>
+
+    <!-- ALERTS -->
+    <div id="alerts-container"></div>
+
+    <!-- PROGRESSO DO DIA (mobile only, hidden on desktop via class) -->
+    <div class="card mobile-only-progress">
+      <div class="card-title">Progresso de hoje</div>
+      <div class="progress-ring-wrap">
+        <svg width="80" height="80" class="progress-ring">
+          <circle class="ring-bg" cx="40" cy="40" r="32"/>
+          <circle class="ring-fill" id="ring-fill-mobile" cx="40" cy="40" r="32"
+            stroke-dasharray="201" stroke-dashoffset="201"/>
+        </svg>
+        <div class="progress-info">
+          <div class="progress-pct" id="pct-text-mobile">0%</div>
+          <div class="progress-label">concluído hoje</div>
+          <div class="progress-count" id="count-text-mobile">0 de 0 tarefas</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-header">
+      <div class="section-title">Tarefas de hoje</div>
+      <div class="cat-pills">
+        <button class="cat-pill all active" onclick="filterTasks('all',this)">Todas</button>
+        <button class="cat-pill med"   onclick="filterTasks('med',this)">💊 Remédio</button>
+        <button class="cat-pill cons"  onclick="filterTasks('cons',this)">🩺 Consulta</button>
+        <button class="cat-pill fisio" onclick="filterTasks('fisio',this)">🦾 Fisio</button>
+        <button class="cat-pill exer"  onclick="filterTasks('exer',this)">🏃 Exercício</button>
+      </div>
+    </div>
+
+    <div class="card" id="today-tasks-card">
+      <div id="today-tasks-list">
+        <div class="empty-state">
+          <div class="empty-icon">🌿</div>
+          <p>Nenhuma tarefa hoje.<br>Toque em <strong>+</strong> para adicionar!</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add" onclick="openAddModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Adicionar tarefa / lembrete
+    </button>
+
+  </div>
+
+  <!-- RIGHT PANEL: visible only on desktop -->
+  <div class="desktop-right-panel">
+
+    <!-- PROGRESSO DO DIA -->
+    <div class="section-title" style="margin-bottom:12px">Resumo do dia</div>
+    <div class="card">
+      <div class="card-title">Progresso de hoje</div>
+      <div class="progress-ring-wrap">
+        <svg width="80" height="80" class="progress-ring">
+          <circle class="ring-bg" cx="40" cy="40" r="32"/>
+          <circle class="ring-fill" id="ring-fill" cx="40" cy="40" r="32"
+            stroke-dasharray="201" stroke-dashoffset="201"/>
+        </svg>
+        <div class="progress-info">
+          <div class="progress-pct" id="pct-text">0%</div>
+          <div class="progress-label">concluído hoje</div>
+          <div class="progress-count" id="count-text">0 de 0 tarefas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINI STATS -->
+    <div class="stats-grid" style="margin-bottom:14px">
+      <div class="stat-card">
+        <div class="stat-icon">💊</div>
+        <div class="stat-number" id="stat-med-home" style="color:var(--blue-600)">0</div>
+        <div class="stat-label">Remédios</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-number" id="stat-done-home" style="color:var(--teal-600)">0</div>
+        <div class="stat-label">Feitos</div>
+      </div>
+    </div>
+
+    <!-- PRÓXIMAS CONSULTAS (from appt list) -->
+    <div class="section-title" style="margin-bottom:12px">Próximas consultas</div>
+    <div id="home-upcoming-appts">
+      <div style="font-size:13px;color:var(--text-light);padding:12px 0">Nenhuma consulta agendada.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SCREEN: CALENDÁRIO -->
+<div id="screen-calendar" class="screen">
+  <div class="header-sub">
+    <div class="header-sub-title">📅 Calendário</div>
+    <div class="header-date" id="cal-month"></div>
+  </div>
+  <div class="content" style="padding-top:16px">
+    <div class="card">
+      <div class="week-strip" id="week-strip"></div>
+    </div>
+
+    <div class="chip-filter">
+      <button class="chip active" onclick="calFilter('all',this)">Todas</button>
+      <button class="chip" onclick="calFilter('med',this)">💊 Remédio</button>
+      <button class="chip" onclick="calFilter('cons',this)">🩺 Consulta</button>
+      <button class="chip" onclick="calFilter('fisio',this)">🦾 Fisio</button>
+      <button class="chip" onclick="calFilter('exer',this)">🏃 Exercício</button>
+    </div>
+
+    <div id="cal-tasks-list"></div>
+
+    <button class="btn-add" onclick="openAddModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nova tarefa
+    </button>
+  </div>
+</div>
+
+<!-- SCREEN: RELATÓRIOS -->
+<div id="screen-reports" class="screen">
+  <div class="header-sub">
+    <div class="header-sub-title">📊 Relatórios</div>
+    <div class="header-date">Acompanhamento e histórico</div>
+  </div>
+  <div class="content" style="padding-top:16px">
+
+    <div class="stats-grid" style="margin-bottom:12px">
+      <div class="stat-card">
+        <div class="stat-icon">💊</div>
+        <div class="stat-number" id="stat-med" style="color:var(--blue-600)">0</div>
+        <div class="stat-label">Remédios hoje</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-number" id="stat-done" style="color:var(--teal-600)">0</div>
+        <div class="stat-label">Feitos hoje</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🗓️</div>
+        <div class="stat-number" id="stat-week" style="color:var(--purple-600)">0</div>
+        <div class="stat-label">Esta semana</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-number" id="stat-streak" style="color:var(--coral-600)">0</div>
+        <div class="stat-label">Dias seguidos</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Adesão por categoria</div>
+      <div id="adherence-list"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Histórico recente</div>
+      <div id="history-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SCREEN: PERFIL -->
+<div id="screen-profile" class="screen">
+  <div class="header-sub">
+    <div class="header-sub-title">⚙️ Configurações</div>
+  </div>
+  <div class="content" style="padding-top:16px">
+
+    <div class="card" style="margin-bottom:16px">
+      <div style="text-align:center; padding:8px 0">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--green-50);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:36px">👩</div>
+        <div style="font-size:18px;font-weight:800;color:var(--green-800)" id="profile-name">Nome da paciente</div>
+        <div style="font-size:13px;color:var(--text-light);margin-top:4px">Paciente</div>
+      </div>
+      <div style="border-top:1px solid var(--gray-100);padding-top:14px;margin-top:14px">
+        <div class="form-group">
+          <label class="form-label">Nome da paciente</label>
+          <input class="form-input" id="patient-name-input" placeholder="Ex: Maria da Silva" oninput="updatePatientName(this.value)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cuidador(a)</label>
+          <input class="form-input" id="caregiver-input" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Diagnóstico / Condição</label>
+          <input class="form-input" id="diagnosis-input" placeholder="Ex: AVC isquêmico" value="AVC">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-bottom:10px;padding-left:4px">Notificações</div>
+    <div class="setting-row">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--blue-50)">🔔</div>
+        <div>
+          <div class="setting-label">Lembretes de remédio</div>
+          <div class="setting-desc">Alertas nos horários cadastrados</div>
+        </div>
+      </div>
+      <button class="toggle on" onclick="toggleSetting(this)" id="notif-med"></button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--purple-50)">🩺</div>
+        <div>
+          <div class="setting-label">Lembretes de consulta</div>
+          <div class="setting-desc">1 dia antes da consulta</div>
+        </div>
+      </div>
+      <button class="toggle on" onclick="toggleSetting(this)" id="notif-cons"></button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--amber-50)">🦾</div>
+        <div>
+          <div class="setting-label">Fisioterapia e exercícios</div>
+          <div class="setting-desc">Lembretes diários</div>
+        </div>
+      </div>
+      <button class="toggle" onclick="toggleSetting(this)" id="notif-fisio"></button>
+    </div>
+
+    <div class="section-title" style="margin:20px 0 10px;padding-left:4px">Acessibilidade</div>
+    <div class="setting-row" onclick="toggleDarkMode()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--gray-100)">🌙</div>
+        <div>
+          <div class="setting-label">Modo escuro</div>
+          <div class="setting-desc">Tema noturno para poupar energia</div>
+        </div>
+      </div>
+      <button class="toggle" id="dark-toggle-profile" onclick="event.stopPropagation();toggleDarkMode()"></button>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--blue-50)">👁️</div>
+        <div>
+          <div class="setting-label">Tamanho do texto</div>
+          <div class="setting-desc">Ajuste para facilitar a leitura</div>
+        </div>
+      </div>
+      <div class="font-seg" style="min-width:100px">
+        <button id="fs-sm-p" onclick="setFontSize('sm')">A</button>
+        <button id="fs-md-p" onclick="setFontSize('md')">A+</button>
+        <button id="fs-lg-p" onclick="setFontSize('lg')">A++</button>
+      </div>
+    </div>
+    <div class="setting-row" onclick="toggleLowStress()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--green-50)">🧠</div>
+        <div>
+          <div class="setting-label">Baixo estresse visual</div>
+          <div class="setting-desc">Interface simplificada e calma</div>
+        </div>
+      </div>
+      <button class="toggle" id="lowstress-toggle-profile" onclick="event.stopPropagation();toggleLowStress()"></button>
+    </div>
+
+    <div class="section-title" style="margin:20px 0 10px;padding-left:4px">Dados</div>
+    <div class="setting-row" onclick="exportData()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--teal-50)">📤</div>
+        <div>
+          <div class="setting-label">Exportar dados</div>
+          <div class="setting-desc">Gerar relatório em texto</div>
+        </div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+    <div class="setting-row" onclick="clearAll()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--red-50)">🗑️</div>
+        <div>
+          <div class="setting-label" style="color:var(--red-600)">Limpar todos os dados</div>
+          <div class="setting-desc">Irreversível</div>
+        </div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+
+    <div style="text-align:center;padding:24px;color:var(--text-light);font-size:12px">
+      CuidarBem v1.0 — Feito com 💚
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: RECEITA OCR -->
+<div id="screen-ocr" class="screen">
+  <div class="header-sub">
+    <div class="header-sub-title">📷 Escanear Receita</div>
+    <div class="header-date">Leia a receita e adicione os remédios</div>
+  </div>
+  <div class="content" style="padding-top:16px">
+
+    <div id="ocr-upload-zone">
+      <div class="card" style="text-align:center;padding:28px 20px;border:2px dashed var(--gray-200);background:var(--gray-50);box-shadow:none;cursor:pointer" onclick="document.getElementById('ocr-file-input').click()">
+        <div style="font-size:48px;margin-bottom:12px">📄</div>
+        <div style="font-size:16px;font-weight:800;color:var(--green-600);margin-bottom:6px">Tirar foto da receita</div>
+        <div style="font-size:13px;color:var(--text-light)">Toque para abrir a câmera ou escolher uma imagem</div>
+        <input type="file" id="ocr-file-input" accept="image/*" style="display:none" onchange="handleOcrFile(event)">
+      </div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button class="btn-add" style="flex:1;margin:0" onclick="document.getElementById('ocr-file-input').removeAttribute('capture');document.getElementById('ocr-file-input').click()">
+          🖼️ Da galeria
+        </button>
+        <button class="btn-add" style="flex:1;margin:0" onclick="document.getElementById('ocr-file-input').setAttribute('capture','environment');document.getElementById('ocr-file-input').click()">
+          📷 Câmera
+        </button>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-title">Como funciona</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.9">
+          <div style="margin-bottom:8px">📷 <strong>Fotografe</strong> a receita médica</div>
+          <div style="margin-bottom:8px">🤖 A <strong>IA analisa</strong> os remédios, doses e frequência</div>
+          <div style="margin-bottom:8px">💊 <strong>Sugere horários</strong> inteligentes para cada um</div>
+          <div>✅ Você <strong>confirma e adiciona</strong> direto na agenda</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ocr-preview-zone" style="display:none">
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">
+        <img id="ocr-preview-img" style="width:100%;max-height:220px;object-fit:cover;display:block" alt="Receita">
+        <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:700;color:var(--text-muted)">Receita carregada</span>
+          <button style="font-size:12px;color:var(--coral-400);background:none;border:none;cursor:pointer;font-weight:700" onclick="resetOcr()">✕ Trocar</button>
+        </div>
+      </div>
+      <button class="btn-add" id="ocr-analyze-btn" onclick="analyzeRecipe()">
+        🤖 Analisar com IA
+      </button>
+    </div>
+
+    <div id="ocr-loading" style="display:none;text-align:center;padding:40px 20px">
+      <div style="width:48px;height:48px;border:4px solid var(--gray-100);border-top-color:var(--teal-400);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto"></div>
+      <div style="font-size:15px;font-weight:700;color:var(--green-600);margin-top:16px" id="ocr-loading-text">Lendo a receita...</div>
+      <div style="font-size:13px;color:var(--text-light);margin-top:6px">Isso pode levar alguns segundos</div>
+    </div>
+
+    <div id="ocr-result-zone" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Remédios encontrados</div>
+        <button style="font-size:12px;color:var(--text-light);background:none;border:none;cursor:pointer;font-weight:700" onclick="resetOcr()">📷 Nova receita</button>
+      </div>
+      <div id="ocr-meds-list"></div>
+      <div id="ocr-obs-card" style="display:none;background:var(--amber-50);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--amber-600);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">⚠️ Observações</div>
+        <div id="ocr-obs-text" style="font-size:13px;color:var(--amber-600);line-height:1.7"></div>
+      </div>
+      <div style="padding:12px 14px;background:var(--green-50);border-radius:var(--radius-sm);margin-bottom:8px">
+        <div style="font-size:12px;color:var(--green-600);font-weight:600;line-height:1.6">
+          📷 Depois de salvar, toque no ícone 💊 ao lado de cada remédio na agenda para adicionar a foto do comprimido.
+        </div>
+      </div>
+      <div style="padding:12px 14px;background:var(--blue-50);border-radius:var(--radius-sm);margin-bottom:12px">
+        <div style="font-size:12px;color:var(--blue-600);font-weight:600;line-height:1.6">
+          ℹ️ As informações são orientativas. Sempre confirme horários e doses com o médico ou farmacêutico.
+        </div>
+      </div>
+      <button class="btn-add" onclick="addAllOcrMeds()">✅ Adicionar todos à agenda</button>
+      <button class="btn-add btn-secondary" onclick="resetOcr()">Cancelar</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- SCREEN: DASHBOARD (Apple Health style) -->
+<div id="screen-dashboard" class="screen">
+  <div class="header-sub" style="background: linear-gradient(135deg, #0d3d35, #1a6b5c)">
+    <div class="header-sub-title">📊 Saúde</div>
+    <div class="header-date" id="dash-date"></div>
+  </div>
+  <div class="health-dashboard">
+    <div class="health-section-label">Hoje</div>
+    <div class="health-ring-row" id="dash-rings"></div>
+
+    <div class="health-section-label">Adesão aos cuidados</div>
+    <div id="dash-trends"></div>
+
+    <div class="health-section-label">Últimos 7 dias</div>
+    <div id="dash-weekly"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <!-- Desktop sidebar brand -->
+  <div class="nav-brand">
+    <div class="nav-brand-icon">💚</div>
+    <div>
+      <div class="nav-brand-text">CuidarBem</div>
+      <div class="nav-brand-sub">Cuidados de Saúde</div>
+    </div>
+  </div>
+  <button class="nav-btn active" onclick="goScreen('home',this)" id="nav-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    Início
+    <div class="nav-dot" id="home-dot"></div>
+  </button>
+  <button class="nav-btn" onclick="goScreen('calendar',this)" id="nav-calendar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    Agenda
+  </button>
+  <button class="nav-btn ocr-nav-btn" onclick="goScreen('ocr',this)" id="nav-ocr" style="position:relative">
+    <div style="background:var(--green-600);border-radius:14px;padding:6px 10px;margin-bottom:2px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" width="20" height="20">
+        <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </div>
+    Receita
+  </button>
+  <button class="nav-btn" onclick="goScreen('dashboard',this)" id="nav-dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 3"/>
+    </svg>
+    Saúde
+  </button>
+  <button class="nav-btn" onclick="goScreen('reports',this)" id="nav-reports">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+      <line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+    Relatórios
+  </button>
+  <button class="nav-btn" onclick="goScreen('appt',this)" id="nav-appt">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+      <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
+    </svg>
+    Consultas
+  </button>
+  <button class="nav-btn" onclick="goScreen('profile',this)" id="nav-profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    Perfil
+  </button>
+  <div class="nav-spacer"></div>
+  <div class="nav-footer">CuidarBem v1.0<br>Feito com 💚</div>
+</nav>
+
+<!-- MODAL ADD TASK -->
+<div class="modal-overlay" id="add-modal" onclick="closeModalOut(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">➕ Nova tarefa</div>
+
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <div class="type-grid">
+        <div class="type-opt" data-type="med"   onclick="selectType('med')"  >💊 Remédio</div>
+        <div class="type-opt" data-type="cons"  onclick="selectType('cons')" >🩺 Consulta</div>
+        <div class="type-opt" data-type="fisio" onclick="selectType('fisio')">🦾 Fisioterapia</div>
+        <div class="type-opt" data-type="exer"  onclick="selectType('exer')" >🏃 Exercício</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Nome / descrição</label>
+      <input class="form-input" id="task-name" placeholder="Ex: Losartana 50mg, Fisio com Dra. Ana...">
+    </div>
+
+    <div class="form-group" id="field-dose" style="display:none">
+      <label class="form-label">Dose</label>
+      <input class="form-input" id="task-dose" placeholder="Ex: 1 comprimido, 10ml...">
+    </div>
+
+    <!-- CONS/EXAM extra fields -->
+    <div id="field-appt-block" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Médico / Especialidade</label>
+        <input class="form-input" id="task-doctor" placeholder="Ex: Dr. Carlos — Neurologia">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Local / Clínica</label>
+        <input class="form-input" id="task-location" placeholder="Ex: Hospital das Clínicas, Sala 204">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Preparo necessário</label>
+        <input class="form-input" id="task-preparo" placeholder="Ex: Jejum de 8h, levar exames anteriores">
+      </div>
+      <div class="form-group">
+        <label class="form-label">O que levar</label>
+        <input class="form-input" id="task-levar" placeholder="Ex: Carteirinha, RG, pedido médico">
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="display:flex;align-items:center;gap:8px">
+          Alertas
+          <span style="font-size:11px;color:var(--text-light);font-weight:500;text-transform:none;letter-spacing:0">(além do horário)</span>
+        </label>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;background:var(--gray-50);border-radius:10px;border:1.5px solid var(--gray-100)">
+            <input type="checkbox" id="alert-morning" checked style="width:18px;height:18px;accent-color:var(--teal-400)">
+            <span style="font-size:14px;font-weight:600;color:var(--text)">☀️ Início do dia (08:00)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;background:var(--gray-50);border-radius:10px;border:1.5px solid var(--gray-100)">
+            <input type="checkbox" id="alert-1h" checked style="width:18px;height:18px;accent-color:var(--teal-400)">
+            <span style="font-size:14px;font-weight:600;color:var(--text)">⏰ 1 hora antes</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div id="repeat-fields">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input class="form-input" type="date" id="task-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <input class="form-input" type="time" id="task-time">
+      </div>
+    </div>
+
+    <div class="form-group" id="field-repeat">
+      <label class="form-label">Repetição</label>
+      <select class="form-input form-select" id="task-repeat">
+        <option value="none">Sem repetição</option>
+        <option value="daily">Diário</option>
+        <option value="weekly">Semanal</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Observações (opcional)</label>
+      <input class="form-input" id="task-obs" placeholder="Tomar com água, levar carteirinha...">
+    </div>
+
+    <div class="form-group" id="field-photo" style="display:none">
+      <label class="form-label">Foto do comprimido/remédio (opcional)</label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="med-photo-wrap" style="width:72px;height:72px;border-radius:14px" onclick="document.getElementById('task-photo-input').click()">
+          <div id="task-photo-placeholder" class="med-photo-placeholder">💊</div>
+          <img id="task-photo-preview" style="display:none;width:100%;height:100%;object-fit:cover;position:absolute;inset:0;border-radius:12px">
+          <div class="photo-add-badge">+</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;color:var(--text-muted);margin-bottom:4px">Adicionar foto</div>
+          <div style="font-size:12px;color:var(--text-light);line-height:1.5">Foto ajuda a confirmar que é o remédio certo antes de tomar</div>
+          <input type="file" id="task-photo-input" accept="image/*" style="display:none" onchange="handleTaskPhoto(event)">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add" onclick="saveTask()">💾 Salvar</button>
+    <button class="btn-add btn-secondary" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<!-- A11Y FAB -->
+<div class="install-banner" id="install-banner">
+  <div class="install-banner-icon">💚</div>
+  <div class="install-banner-text">
+    <div class="install-banner-title">Instalar CuidarBem</div>
+    <div class="install-banner-sub">Use offline, sem navegador</div>
+  </div>
+  <button class="install-banner-btn" onclick="installPWA()">Instalar</button>
+  <button class="install-banner-close" onclick="dismissInstallBanner()">✕</button>
+</div>
+
+<!-- A11Y FAB -->
+<button class="a11y-fab" id="a11y-fab" onclick="toggleA11yPanel()" title="Acessibilidade">⚙️</button>
+<div class="a11y-panel" id="a11y-panel">
+  <div class="a11y-panel-title">Acessibilidade</div>
+
+  <div class="a11y-row">
+    <div class="a11y-label">🌙 Tema escuro<small>Modo noturno</small></div>
+    <button class="toggle" id="dark-toggle" onclick="toggleDarkMode()"></button>
+  </div>
+
+  <div class="a11y-row" style="flex-direction:column; align-items:flex-start; gap:8px">
+    <div class="a11y-label">👁️ Tamanho do texto</div>
+    <div class="font-seg">
+      <button id="fs-sm" class="active" onclick="setFontSize('sm')">A</button>
+      <button id="fs-md" onclick="setFontSize('md')">A+</button>
+      <button id="fs-lg" onclick="setFontSize('lg')">A++</button>
+    </div>
+  </div>
+
+  <div class="a11y-row" style="margin-bottom:0">
+    <div class="a11y-label">🧠 Baixo estresse<small>Interface simplificada</small></div>
+    <button class="toggle" id="lowstress-toggle" onclick="toggleLowStress()"></button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]');
+let completions = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+let settings = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{"patient":"Maria","caregiver":"","diagnosis":"AVC","notif_med":true,"notif_cons":true,"notif_fisio":false}');
+let currentFilter = 'all';
+let calFilter_ = 'all';
+let selectedType = '';
+let selectedCalDay = null;
+let currentTaskPhoto = null;
+let pendingConfirmId = null;
+let photoViewTaskId = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  setGreeting();
+  setTodayDate();
+  loadSettings();
+  buildWeekStrip();
+  renderAll();
+  requestNotifPermission();
+  setupNotifications();
+  // Init sample data if empty
+  if (tasks.length === 0) addSampleTasks();
+}
+
+function addSampleTasks() {
+  const today = todayStr();
+  const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr_ = tomorrow.toISOString().split('T')[0];
+  tasks = [
+    {id:uid(), type:'med',   name:'Losartana 50mg',       dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'Tomar com água em jejum', createdAt: Date.now()},
+    {id:uid(), type:'med',   name:'AAS 100mg',             dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'', createdAt: Date.now()},
+    {id:uid(), type:'med',   name:'Clopidogrel 75mg',      dose:'1 comprimido', date:today,       time:'12:00', repeat:'daily',  obs:'', createdAt: Date.now()},
+    {id:uid(), type:'med',   name:'Atorvastatina 40mg',    dose:'1 comprimido', date:today,       time:'21:00', repeat:'daily',  obs:'Tomar à noite', createdAt: Date.now()},
+    {id:uid(), type:'fisio', name:'Fisioterapia motora',   dose:'', date:today,       time:'10:00', repeat:'daily',  obs:'30 min com a fisioterapeuta', createdAt: Date.now()},
+    {id:uid(), type:'exer',  name:'Exercícios de equilíbrio', dose:'', date:today,    time:'15:00', repeat:'daily',  obs:'10 repetições cada lado', createdAt: Date.now()},
+    {id:uid(), type:'cons', name:'Consulta com neurologista', dose:'', date:tomorrowStr_, time:'09:30', repeat:'none', obs:'Levar últimos exames', local:'Hospital das Clínicas', doctor:'Dr. Carlos Menezes', prep:'Levar exames anteriores e lista de medicamentos', alertMorning:true, alertBefore:true, subtype:'cons', createdAt: Date.now()},
+  ];
+  saveTasks();
+  renderAll();
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+function setGreeting() {
+  const h = new Date().getHours();
+  const el = document.getElementById('greeting');
+  if (h < 12) el.textContent = 'Bom dia ☀️';
+  else if (h < 18) el.textContent = 'Boa tarde 🌤️';
+  else el.textContent = 'Boa noite 🌙';
+}
+
+function setTodayDate() {
+  const d = new Date();
+  const opts = {weekday:'long', day:'numeric', month:'long'};
+  const str = d.toLocaleDateString('pt-BR', opts);
+  document.getElementById('today-date').textContent = str.charAt(0).toUpperCase() + str.slice(1);
+  document.getElementById('cal-month').textContent = d.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+}
+
+function loadSettings() {
+  document.getElementById('patient-name-input').value = settings.patient || '';
+  document.getElementById('caregiver-input').value = settings.caregiver || '';
+  document.getElementById('diagnosis-input').value = settings.diagnosis || '';
+  document.getElementById('patient-name-pill').textContent = settings.patient || 'Paciente';
+  document.getElementById('profile-name').textContent = settings.patient || 'Paciente';
+  document.getElementById('notif-med').classList.toggle('on', settings.notif_med !== false);
+  document.getElementById('notif-cons').classList.toggle('on', settings.notif_cons !== false);
+  document.getElementById('notif-fisio').classList.toggle('on', settings.notif_fisio === true);
+  // default date
+  document.getElementById('task-date').value = todayStr();
+}
+
+function saveSettings() {
+  settings.patient = document.getElementById('patient-name-input').value;
+  settings.caregiver = document.getElementById('caregiver-input').value;
+  settings.diagnosis = document.getElementById('diagnosis-input').value;
+  localStorage.setItem('cuidarbem_settings', JSON.stringify(settings));
+}
+
+function updatePatientName(v) {
+  document.getElementById('patient-name-pill').textContent = v || 'Paciente';
+  document.getElementById('profile-name').textContent = v || 'Paciente';
+  settings.patient = v; saveSettings();
+}
+
+function saveTasks() {
+  localStorage.setItem('cuidarbem_tasks', JSON.stringify(tasks));
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+function renderAll() {
+  renderTodayTasks();
+  renderProgress();
+  renderAlerts();
+  renderNextAlarm();
+  renderCalendar();
+  renderReports();
+}
+
+function getTodayTasks() {
+  const today = todayStr();
+  return tasks.filter(t => {
+    if (t.date === today) return true;
+    if (t.repeat === 'daily') return true;
+    if (t.repeat === 'weekly') {
+      const base = new Date(t.date);
+      const now  = new Date(today);
+      return base.getDay() === now.getDay();
+    }
+    return false;
+  });
+}
+
+function isCompletedToday(task) {
+  const key = `${task.id}_${todayStr()}`;
+  return completions[key] === true;
+}
+
+function renderTodayTasks() {
+  const list = document.getElementById('today-tasks-list');
+  let items = getTodayTasks();
+  if (currentFilter !== 'all') items = items.filter(t => t.type === currentFilter);
+  items.sort((a,b) => (a.time||'99:99').localeCompare(b.time||'99:99'));
+
+  if (!items.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌿</div><p>Nenhuma tarefa${currentFilter!=='all'?' nessa categoria':' hoje'}.<br>Toque em <strong>+</strong> para adicionar!</p></div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(t => {
+    const done = isCompletedToday(t);
+    const badgeClass = {med:'badge-med',cons:'badge-cons',fisio:'badge-fisio',exer:'badge-exer'}[t.type]||'';
+    const badgeLabel = {med:'💊 Remédio',cons:'🩺 Consulta',fisio:'🦾 Fisio',exer:'🏃 Exercício'}[t.type]||'';
+    const isMed = t.type === 'med';
+    const isAppt = t.type === 'cons' || t.examType;
+
+    // Render appointment/exam as rich card
+    if (isAppt) {
+      const seen = isCompletedToday(t);
+      const isExam = t.examType || t.subtype === 'exam';
+      const accentColor = isExam ? 'var(--blue-400)' : 'var(--purple-400)';
+      const bgColor = isExam ? 'var(--blue-50)' : 'var(--purple-50)';
+      const icon = isExam ? '🔬' : '🩺';
+      const alertBadges = [];
+      if (t.alertMorning) alertBadges.push('🌅 Manhã do dia');
+      if (t.alertBefore)  alertBadges.push('⏰ 1h antes');
+      const dateStr = t.date ? new Date(t.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'}) : '';
+      return `<div style="background:var(--card-bg);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:14px 16px 10px;border-left:5px solid ${accentColor};display:flex;align-items:flex-start;gap:12px">
+          <div style="width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;background:${bgColor}">${icon}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:800;color:${seen?'var(--text-light)':'var(--text)'};${seen?'text-decoration:line-through':''}">
+              ${t.name}
+            </div>
+            ${t.local ? `<div style="font-size:12px;color:var(--text-light);margin-top:2px">🏥 ${t.local}</div>` : ''}
+            ${t.doctor ? `<div style="font-size:12px;color:var(--text-light)">👨‍⚕️ ${t.doctor}</div>` : ''}
+            <div style="font-size:12px;color:var(--text-light);margin-top:2px">📅 ${dateStr} ${t.time ? '· 🕐 '+t.time : ''}</div>
+            ${alertBadges.length ? `<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${alertBadges.map(a=>`<span style="padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;background:var(--coral-50);color:var(--coral-600)">${a}</span>`).join('')}</div>` : ''}
+          </div>
+          <div style="flex-shrink:0">
+            <div class="task-check ${seen?'checked':''}" style="border-color:${accentColor.replace('--','var(--')}" onclick="openSeenModal('${t.id}')"></div>
+          </div>
+        </div>
+        ${t.prep ? `<div style="padding:8px 16px;background:var(--amber-50);border-top:1px solid var(--amber-100);font-size:12px;color:var(--amber-600);font-weight:600">⚠️ Preparo: ${t.prep}</div>` : ''}
+        ${t.photo ? `<img src="${t.photo}" style="width:100%;max-height:120px;object-fit:cover;border-top:1px solid var(--gray-100);display:block;cursor:pointer" onclick="openPhotoModal('${t.id}')">` : ''}
+      </div>`;
+    }
+    const photoHtml = isMed ? `
+      <div class="med-photo-wrap" onclick="event.stopPropagation();${t.photo ? `openPhotoModal('${t.id}')` : `addPhotoToTask('${t.id}')`}" style="width:46px;height:46px;border-radius:10px;margin-right:4px;flex-shrink:0">
+        ${t.photo
+          ? `<img src="${t.photo}" style="width:100%;height:100%;object-fit:cover">`
+          : `<div class="med-photo-placeholder" style="font-size:18px">💊</div><div class="photo-add-badge" style="font-size:10px">+</div>`
+        }
+      </div>` : '';
+    const checkClick = isMed && !done
+      ? `openConfirmModal('${t.id}')`
+      : `toggleTask('${t.id}')`;
+    return `<div class="task-item ${isMed&&!done?'task-item-med':''}">
+      <div class="task-check ${done?'checked':''}" onclick="${checkClick}"></div>
+      ${photoHtml}
+      <div class="task-body">
+        <div class="task-name ${done?'done':''}">${t.name}${t.dose ? ` — ${t.dose}` : ''}</div>
+        ${t.obs ? `<div class="task-meta">${t.obs}</div>` : ''}
+        <span class="task-badge ${badgeClass}">${badgeLabel}</span>
+      </div>
+      <div class="task-time">${t.time||''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderProgress() {
+  const items = getTodayTasks();
+  const total = items.length;
+  const done  = items.filter(t => isCompletedToday(t)).length;
+  const pct   = total ? Math.round(done/total*100) : 0;
+  const circumference = 201;
+  const offset = circumference - (pct/100)*circumference;
+  // Update both desktop (right panel) and mobile rings
+  ['ring-fill','ring-fill-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.strokeDashoffset = offset;
+  });
+  ['pct-text','pct-text-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = pct + '%';
+  });
+  ['count-text','count-text-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = `${done} de ${total} tarefas`;
+  });
+}
+
+function renderAlerts() {
+  const container = document.getElementById('alerts-container');
+  const items = getTodayTasks();
+  const late = items.filter(t => {
+    if (isCompletedToday(t) || !t.time) return false;
+    const [h,m] = t.time.split(':').map(Number);
+    const now = new Date();
+    const taskTime = new Date(); taskTime.setHours(h,m,0);
+    return now > taskTime;
+  });
+  if (!late.length) { container.innerHTML=''; return; }
+  container.innerHTML = late.map(t =>
+    `<div class="alert-card"><div class="alert-icon">⚠️</div><div class="alert-text">Pendente: <strong>${t.name}</strong> — previsto às ${t.time}</div></div>`
+  ).join('');
+}
+
+function renderNextAlarm() {
+  const card = document.getElementById('next-alarm-card');
+  const items = getTodayTasks().filter(t => !isCompletedToday(t) && t.time);
+  const now = new Date();
+  const upcoming = items.filter(t => {
+    const [h,m] = t.time.split(':').map(Number);
+    const taskTime = new Date(); taskTime.setHours(h,m,0);
+    return taskTime > now;
+  }).sort((a,b)=>a.time.localeCompare(b.time));
+
+  if (!upcoming.length) { card.style.display='none'; return; }
+  card.style.display = 'flex';
+  document.getElementById('next-alarm-time').textContent = upcoming[0].time;
+  document.getElementById('next-alarm-desc').textContent = upcoming[0].name;
+}
+
+// ─── TOGGLE TASK ──────────────────────────────────────────────────────────
+function toggleTask(id) {
+  const key = `${id}_${todayStr()}`;
+  if (completions[key]) {
+    delete completions[key];
+  } else {
+    completions[key] = true;
+    showToast('✅ Tarefa concluída!');
+  }
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  renderAll();
+}
+
+// ─── FILTER ───────────────────────────────────────────────────────────────
+function filterTasks(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTodayTasks();
+}
+
+// ─── CALENDAR ─────────────────────────────────────────────────────────────
+function buildWeekStrip() {
+  const strip = document.getElementById('week-strip');
+  const today = new Date();
+  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html = '';
+  for (let i=-3; i<=3; i++) {
+    const d = new Date(today); d.setDate(today.getDate()+i);
+    const ds = d.toISOString().split('T')[0];
+    const isToday = i===0;
+    const hasTasks = tasks.some(t => t.date===ds || (t.repeat==='daily'));
+    html += `<div class="week-day ${isToday?'today':''} ${hasTasks?'has-tasks':''}" onclick="selectDay('${ds}',this)">
+      <div class="week-day-name">${days[d.getDay()]}</div>
+      <div class="week-day-num">${d.getDate()}</div>
+    </div>`;
+  }
+  strip.innerHTML = html;
+  selectedCalDay = todayStr();
+}
+
+function selectDay(ds, el) {
+  selectedCalDay = ds;
+  document.querySelectorAll('.week-day').forEach(d => d.classList.remove('today'));
+  el.classList.add('today');
+  renderCalendar();
+}
+
+function calFilter(type, btn) {
+  calFilter_ = type;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const list = document.getElementById('cal-tasks-list');
+  const day = selectedCalDay || todayStr();
+  const dayDate = new Date(day + 'T00:00:00');
+  let items = tasks.filter(t => {
+    if (t.date === day) return true;
+    if (t.repeat === 'daily') return true;
+    if (t.repeat === 'weekly') {
+      const base = new Date(t.date + 'T00:00:00');
+      return base.getDay() === dayDate.getDay();
+    }
+    return false;
+  });
+  if (calFilter_ !== 'all') items = items.filter(t => t.type === calFilter_);
+  items.sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));
+
+  if (!items.length) {
+    list.innerHTML = `<div class="card"><div class="empty-state"><div class="empty-icon">📅</div><p>Nenhuma tarefa neste dia.</p></div></div>`;
+    return;
+  }
+
+  const badgeClass = {med:'badge-med',cons:'badge-cons',fisio:'badge-fisio',exer:'badge-exer'};
+  const badgeLabel = {med:'💊 Remédio',cons:'🩺 Consulta',fisio:'🦾 Fisio',exer:'🏃 Exercício'};
+  list.innerHTML = `<div class="card">${items.map(t => {
+    const done = completions[`${t.id}_${day}`];
+    const isMedCal = t.type === 'med';
+    const checkClickCal = isMedCal && !done ? `openConfirmModal('${t.id}')` : `toggleTaskDay('${t.id}','${day}')`;
+    const photoHtmlCal = isMedCal ? `
+      <div class="med-photo-wrap" onclick="event.stopPropagation();${t.photo ? `openPhotoModal('${t.id}')` : `addPhotoToTask('${t.id}')`}" style="width:46px;height:46px;border-radius:10px;margin-right:4px;flex-shrink:0">
+        ${t.photo ? `<img src="${t.photo}" style="width:100%;height:100%;object-fit:cover">` : `<div class="med-photo-placeholder" style="font-size:18px">💊</div><div class="photo-add-badge" style="font-size:10px">+</div>`}
+      </div>` : '';
+    return `<div class="task-item">
+      <div class="task-check ${done?'checked':''}" onclick="${checkClickCal}"></div>
+      ${photoHtmlCal}
+      <div class="task-body">
+        <div class="task-name ${done?'done':''}">${t.name}${t.dose?` — ${t.dose}`:''}</div>
+        ${t.obs?`<div class="task-meta">${t.obs}</div>`:''}
+        <span class="task-badge ${badgeClass[t.type]||''}">${badgeLabel[t.type]||''}</span>
+      </div>
+      <div class="task-time">${t.time||''}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function toggleTaskDay(id, day) {
+  const key = `${id}_${day}`;
+  if (completions[key]) delete completions[key];
+  else { completions[key]=true; showToast('✅ Concluído!'); }
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  renderAll();
+}
+
+// ─── REPORTS ──────────────────────────────────────────────────────────────
+function renderReports() {
+  const today = todayStr();
+  const todayTasks = getTodayTasks();
+  const medToday = todayTasks.filter(t=>t.type==='med').length;
+  const doneToday = todayTasks.filter(t=>isCompletedToday(t)).length;
+
+  // This week
+  let weekTotal = 0;
+  for (let i=0;i<7;i++) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const dayTasks = tasks.filter(t => t.date===ds || t.repeat==='daily');
+    weekTotal += dayTasks.filter(t => completions[`${t.id}_${ds}`]).length;
+  }
+
+  // Streak
+  let streak = 0;
+  for (let i=0;i<30;i++) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const dayTasks = tasks.filter(t => t.date===ds || t.repeat==='daily');
+    if (!dayTasks.length) continue;
+    const done = dayTasks.filter(t=>completions[`${t.id}_${ds}`]).length;
+    if (done > 0) streak++; else break;
+  }
+
+  document.getElementById('stat-med').textContent = medToday;
+  document.getElementById('stat-done').textContent = doneToday;
+  document.getElementById('stat-week').textContent = weekTotal;
+  document.getElementById('stat-streak').textContent = streak;
+
+  // Adherence
+  const cats = [{k:'med',l:'💊 Remédios'},{k:'cons',l:'🩺 Consultas'},{k:'fisio',l:'🦾 Fisioterapia'},{k:'exer',l:'🏃 Exercícios'}];
+  const adList = document.getElementById('adherence-list');
+  adList.innerHTML = cats.map(cat => {
+    let total=0, done=0;
+    for (let i=0;i<7;i++) {
+      const d = new Date(); d.setDate(d.getDate()-i);
+      const ds = d.toISOString().split('T')[0];
+      const dayTasks = tasks.filter(t=>(t.date===ds||t.repeat==='daily'||t.repeat==='weekly')&&t.type===cat.k);
+      total += dayTasks.length;
+      done += dayTasks.filter(t=>completions[`${t.id}_${ds}`]).length;
+    }
+    const pct = total ? Math.round(done/total*100) : 0;
+    const fillClass = pct>=80?'':pct>=50?'mid':'low';
+    return `<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:14px;font-weight:700">${cat.l}</span>
+        <span style="font-size:13px;font-weight:700;color:var(--text-muted)">${pct}%</span>
+      </div>
+      <div class="adherence-bar"><div class="adherence-fill ${fillClass}" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px">${done} de ${total} nos últimos 7 dias</div>
+    </div>`;
+  }).join('');
+
+  // History last 5 days
+  const histList = document.getElementById('history-list');
+  let histHtml = '';
+  for (let i=0;i<5;i++) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    const label = i===0?'Hoje': i===1?'Ontem': d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
+    const dayTasks = tasks.filter(t=>t.date===ds||t.repeat==='daily');
+    if (!dayTasks.length) continue;
+    const done = dayTasks.filter(t=>completions[`${t.id}_${ds}`]).length;
+    const pct_ = Math.round(done/dayTasks.length*100);
+    histHtml += `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+      <div>
+        <div style="font-weight:700;font-size:14px">${label}</div>
+        <div style="font-size:12px;color:var(--text-light)">${done}/${dayTasks.length} tarefas</div>
+      </div>
+      <div style="font-size:18px;font-weight:800;color:${pct_>=80?'var(--teal-600)':pct_>=50?'var(--amber-600)':'var(--coral-600)'}">${pct_}%</div>
+    </div>`;
+  }
+  histList.innerHTML = histHtml || '<div class="empty-state"><p>Nenhum histórico ainda.</p></div>';
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────
+function openAddModal() {
+  selectedType = '';
+  currentTaskPhoto = null;
+  document.getElementById('task-name').value = '';
+  document.getElementById('task-dose').value = '';
+  document.getElementById('task-time').value = '';
+  document.getElementById('task-obs').value = '';
+  document.getElementById('task-date').value = selectedCalDay || todayStr();
+  document.getElementById('task-repeat').value = 'none';
+  document.querySelectorAll('.type-opt').forEach(o=>o.classList.remove(...['sel-med','sel-cons','sel-fisio','sel-exer']));
+  document.getElementById('field-dose').style.display='none';
+  document.getElementById('field-photo').style.display='none';
+  // Reset photo preview
+  document.getElementById('task-photo-placeholder').style.display='flex';
+  const prev = document.getElementById('task-photo-preview');
+  prev.style.display='none'; prev.src='';
+  document.getElementById('add-modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
+function closeModalOut(e) { if (e.target.id==='add-modal') closeModal(); }
+
+function selectType(type) {
+  selectedType = type;
+  document.querySelectorAll('.type-opt').forEach(o=>o.classList.remove('sel-med','sel-cons','sel-fisio','sel-exer'));
+  document.querySelector(`[data-type="${type}"]`).classList.add(`sel-${type}`);
+  document.getElementById('field-dose').style.display = type==='med'?'block':'none';
+  document.getElementById('field-photo').style.display = type==='med'?'block':'none';
+}
+
+function saveTask() {
+  const name = document.getElementById('task-name').value.trim();
+  if (!selectedType) { showToast('⚠️ Selecione o tipo'); return; }
+  if (!name) { showToast('⚠️ Digite o nome'); return; }
+  const task = {
+    id: uid(),
+    type: selectedType,
+    name,
+    dose: document.getElementById('task-dose').value.trim(),
+    date: document.getElementById('task-date').value || todayStr(),
+    time: document.getElementById('task-time').value,
+    repeat: document.getElementById('task-repeat').value,
+    obs: document.getElementById('task-obs').value.trim(),
+    photo: currentTaskPhoto || null,
+    createdAt: Date.now()
+  };
+  tasks.push(task);
+  saveTasks();
+  closeModal();
+  showToast('✅ Tarefa salva!');
+  renderAll();
+  buildWeekStrip();
+}
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────
+function requestNotifPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function setupNotifications() {
+  setInterval(checkNotifications, 60000);
+  checkNotifications();
+}
+
+function checkNotifications() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const now = new Date();
+  const hm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const today = todayStr();
+
+  // Med/fisio/exer notifications
+  getTodayTasks().forEach(t => {
+    if (t.time !== hm) return;
+    if (isCompletedToday(t)) return;
+    const notified = sessionStorage.getItem(`notif_${t.id}_${hm}`);
+    if (notified) return;
+    sessionStorage.setItem(`notif_${t.id}_${hm}`, '1');
+    new Notification('CuidarBem 💚', {
+      body: `Hora de: ${t.name}${t.dose?' — '+t.dose:''}`,
+      icon: 'icon-192.png'
+    });
+  });
+
+  // Appointment alerts
+  tasks.forEach(t => {
+    if (t.type !== 'cons' || isCompletedToday(t)) return;
+    if (t.date !== today) return;
+
+    // Morning alert at 07:00
+    if (t.alertMorning && hm === '07:00') {
+      const key = `appt_morning_${t.id}_${today}`;
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        new Notification('🩺 Lembrete de hoje', {
+          body: `${t.name}${t.time ? ' às ' + t.time : ''}${t.local ? ' — ' + t.local : ''}`,
+          icon: 'icon-192.png'
+        });
+      }
+    }
+
+    // 1h before alert
+    if (t.alertBefore && t.time) {
+      const [h, m] = t.time.split(':').map(Number);
+      const alertDate = new Date(); alertDate.setHours(h, m - 60, 0);
+      const alertHM = `${String(alertDate.getHours()).padStart(2,'0')}:${String(alertDate.getMinutes()).padStart(2,'0')}`;
+      if (hm === alertHM) {
+        const key = `appt_before_${t.id}_${today}`;
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, '1');
+          new Notification('⏰ Em 1 hora!', {
+            body: `${t.name} às ${t.time}${t.local ? ' — ' + t.local : ''}`,
+            icon: 'icon-192.png'
+          });
+        }
+      }
+    }
+  });
+}
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────
+function toggleSetting(btn) {
+  btn.classList.toggle('on');
+  const id = btn.id;
+  if (id==='notif-med') settings.notif_med = btn.classList.contains('on');
+  if (id==='notif-cons') settings.notif_cons = btn.classList.contains('on');
+  if (id==='notif-fisio') settings.notif_fisio = btn.classList.contains('on');
+  saveSettings();
+}
+
+function exportData() {
+  const today = todayStr();
+  let txt = `CuidarBem — Relatório\n`;
+  txt += `Paciente: ${settings.patient}\n`;
+  txt += `Cuidador(a): ${settings.caregiver}\n`;
+  txt += `Data: ${today}\n\n`;
+  txt += `TAREFAS:\n`;
+  tasks.forEach(t => {
+    const done = completions[`${t.id}_${today}`] ? '✓' : '○';
+    txt += `${done} [${t.type.toUpperCase()}] ${t.name}${t.dose?' ('+t.dose+')':''} — ${t.time||'sem hora'}\n`;
+  });
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `cuidarbem_${today}.txt`;
+  a.click();
+  showToast('📤 Relatório exportado!');
+}
+
+function clearAll() {
+  if (!confirm('Tem certeza? Todos os dados serão apagados.')) return;
+  tasks=[]; completions={};
+  localStorage.removeItem('cuidarbem_tasks');
+  localStorage.removeItem('cuidarbem_completions');
+  renderAll();
+  showToast('🗑️ Dados apagados');
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────
+function goScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  btn.classList.add('active');
+  if (name==='reports') renderReports();
+  if (name==='calendar') { buildWeekStrip(); renderCalendar(); }
+  if (name==='appt') renderApptUpcoming();
+  window.scrollTo(0,0);
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+
+// ─── PHOTO HANDLING ───────────────────────────────────────────────────────
+function handleTaskPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    currentTaskPhoto = e.target.result;
+    document.getElementById('task-photo-placeholder').style.display = 'none';
+    const prev = document.getElementById('task-photo-preview');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function addPhotoToTask(taskId) {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const task = tasks.find(t => t.id === taskId);
+      if (task) { task.photo = ev.target.result; saveTasks(); renderAll(); showToast('📷 Foto adicionada!'); }
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function openPhotoModal(taskId) {
+  photoViewTaskId = taskId;
+  const task = tasks.find(t => t.id === taskId);
+  if (!task || !task.photo) return;
+  document.getElementById('photo-view-img').src = task.photo;
+  document.getElementById('photo-view-name').textContent = task.name;
+  document.getElementById('photo-view-modal').classList.add('open');
+}
+
+function closePhotoModal() {
+  document.getElementById('photo-view-modal').classList.remove('open');
+  photoViewTaskId = null;
+}
+
+function changeTaskPhoto() {
+  document.getElementById('change-photo-input').click();
+}
+
+function handleChangePhoto(event) {
+  const file = event.target.files[0];
+  if (!file || !photoViewTaskId) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const task = tasks.find(t => t.id === photoViewTaskId);
+    if (task) {
+      task.photo = e.target.result;
+      saveTasks(); renderAll();
+      document.getElementById('photo-view-img').src = e.target.result;
+      showToast('📷 Foto atualizada!');
+    }
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeTaskPhoto() {
+  if (!photoViewTaskId) return;
+  const task = tasks.find(t => t.id === photoViewTaskId);
+  if (task) { task.photo = null; saveTasks(); renderAll(); }
+  closePhotoModal();
+  showToast('🗑️ Foto removida');
+}
+
+// ─── CONFIRM MODAL ────────────────────────────────────────────────────────
+function openConfirmModal(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  pendingConfirmId = taskId;
+
+  // Photo
+  const photoWrap = document.getElementById('confirm-photo-big-wrap');
+  if (task.photo) {
+    photoWrap.innerHTML = `<img src="${task.photo}" class="confirm-photo-big" alt="${task.name}">`;
+  } else {
+    photoWrap.innerHTML = `<div class="confirm-photo-placeholder">💊</div>`;
+  }
+
+  document.getElementById('confirm-name').textContent = task.name;
+  document.getElementById('confirm-dose').textContent = task.dose || 'Conforme prescrição';
+
+  const timeEl = document.getElementById('confirm-time');
+  timeEl.textContent = task.time || 'Agora';
+
+  // Obs
+  const obsEl = document.getElementById('confirm-obs');
+  if (task.obs) { obsEl.style.display='block'; obsEl.textContent = '⚠️ ' + task.obs; }
+  else obsEl.style.display='none';
+
+  // Warning if no photo
+  const warnEl = document.getElementById('confirm-warning');
+  if (!task.photo) {
+    warnEl.style.display='block';
+    warnEl.innerHTML = '📷 <strong>Dica:</strong> Adicione uma foto deste comprimido para facilitar a confirmação visual no futuro.';
+  } else {
+    warnEl.style.display='none';
+  }
+
+  document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirm-modal').classList.remove('open');
+  pendingConfirmId = null;
+}
+
+function confirmTake() {
+  if (!pendingConfirmId) return;
+  const key = `${pendingConfirmId}_${todayStr()}`;
+  completions[key] = true;
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  closeConfirmModal();
+  showToast('✅ Remédio confirmado!');
+  renderAll();
+}
+
+
+// ─── APPOINTMENT / EXAM OCR ───────────────────────────────────────────────
+let apptOcrImageBase64 = null;
+let apptOcrResults = [];
+let pendingSeenId = null;
+const manualApptData = {};
+
+function openApptOcrCamera() {
+  const inp = document.getElementById('appt-file-input');
+  inp.setAttribute('capture','environment');
+  inp.click();
+}
+
+function handleApptFile(event) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    apptOcrImageBase64 = e.target.result.split(',')[1];
+    document.getElementById('appt-preview-img').src = e.target.result;
+    document.getElementById('appt-upload-zone').style.display = 'none';
+    document.getElementById('appt-preview-zone').style.display = 'block';
+    document.getElementById('appt-result-zone').style.display = 'none';
+    document.getElementById('appt-loading').style.display = 'none';
+    document.getElementById('appt-manual-zone').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function resetApptOcr() {
+  apptOcrImageBase64 = null; apptOcrResults = [];
+  document.getElementById('appt-upload-zone').style.display = 'block';
+  document.getElementById('appt-preview-zone').style.display = 'none';
+  document.getElementById('appt-result-zone').style.display = 'none';
+  document.getElementById('appt-loading').style.display = 'none';
+  document.getElementById('appt-manual-zone').style.display = 'none';
+  renderApptUpcoming();
+}
+
+function openApptManual() {
+  document.getElementById('appt-upload-zone').style.display = 'none';
+  document.getElementById('appt-manual-zone').style.display = 'block';
+  renderManualApptForm([{name:'',subtype:'cons',date:'',time:'',local:'',doctor:'',prep:'',alertMorning:true,alertBefore:true}]);
+}
+
+function renderManualApptForm(items) {
+  const wrap = document.getElementById('appt-manual-form-wrap');
+  wrap.innerHTML = items.map((it, i) => buildApptFormCard(it, i, true)).join('');
+  apptOcrResults = items.map(it => ({...it, include:true}));
+}
+
+function buildApptFormCard(it, i, isManual) {
+  const isExam = it.subtype === 'exam' || it.examType;
+  const borderColor = isExam ? 'var(--blue-400)' : 'var(--purple-400)';
+  const badgeBg = isExam ? 'var(--blue-50)' : 'var(--purple-50)';
+  const badgeColor = isExam ? 'var(--blue-600)' : 'var(--purple-600)';
+  const typeLabel = isExam ? '🔬 Exame' : '🩺 Consulta';
+  return `
+  <div class="appt-ocr-card ${isExam?'exam-type':''}" id="appt-card-${i}">
+    <div class="appt-ocr-header">
+      <div>
+        <select style="padding:4px 10px;border-radius:8px;border:1.5px solid ${borderColor};background:${badgeBg};color:${badgeColor};font-weight:700;font-family:'Nunito',sans-serif;font-size:12px;cursor:pointer"
+          onchange="updateApptField(${i},'subtype',this.value);reRenderApptCard(${i})">
+          <option value="cons" ${!isExam?'selected':''}>🩺 Consulta</option>
+          <option value="exam" ${isExam?'selected':''}>🔬 Exame</option>
+        </select>
+      </div>
+      ${!isManual ? `<button class="toggle ${it.include?'on':''}" onclick="toggleApptInclude(${i})" id="appt-toggle-${i}"></button>` : ''}
+    </div>
+
+    <div class="appt-ocr-field">
+      <label>Nome / descrição</label>
+      <input value="${it.name||''}" placeholder="${isExam?'Ex: Hemograma completo, ECG...':'Ex: Consulta neurologia, Retorno...'}"
+        oninput="updateApptField(${i},'name',this.value)">
+    </div>
+    ${isExam ? `<div class="appt-ocr-field">
+      <label>Tipo de exame</label>
+      <input value="${it.examType||''}" placeholder="Ex: Sangue, Imagem, Eletro..."
+        oninput="updateApptField(${i},'examType',this.value)">
+    </div>` : `<div class="appt-ocr-field">
+      <label>Médico / especialidade</label>
+      <input value="${it.doctor||''}" placeholder="Ex: Dr. João Silva — Neurologia"
+        oninput="updateApptField(${i},'doctor',this.value)">
+    </div>`}
+    <div class="appt-ocr-field">
+      <label>Local / clínica / laboratório</label>
+      <input value="${it.local||''}" placeholder="Nome e endereço"
+        oninput="updateApptField(${i},'local',this.value)">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="appt-ocr-field">
+        <label>Data</label>
+        <input type="date" value="${it.date||''}" oninput="updateApptField(${i},'date',this.value)">
+      </div>
+      <div class="appt-ocr-field">
+        <label>Horário</label>
+        <input type="time" value="${it.time||''}" oninput="updateApptField(${i},'time',this.value)">
+      </div>
+    </div>
+    <div class="appt-ocr-field">
+      <label>Preparo necessário</label>
+      <input value="${it.prep||''}" placeholder="Ex: Jejum 8h, trazer exames anteriores..."
+        oninput="updateApptField(${i},'prep',this.value)">
+    </div>
+    <div style="margin-top:4px">
+      <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Alertas</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="alert-chip ${it.alertMorning!==false?'active':'inactive'}" onclick="toggleApptAlert(${i},'alertMorning',this)" id="alert-morning-${i}">
+          🌅 Manhã do dia (7h)
+        </button>
+        <button class="alert-chip ${it.alertBefore!==false?'active':'inactive'}" onclick="toggleApptAlert(${i},'alertBefore',this)" id="alert-before-${i}">
+          ⏰ 1 hora antes
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateApptField(i, field, value) {
+  if (apptOcrResults[i]) apptOcrResults[i][field] = value;
+}
+
+function reRenderApptCard(i) {
+  const card = document.getElementById(`appt-card-${i}`);
+  if (card) card.outerHTML = buildApptFormCard(apptOcrResults[i], i, false);
+}
+
+function toggleApptInclude(i) {
+  apptOcrResults[i].include = !apptOcrResults[i].include;
+  const card = document.getElementById(`appt-card-${i}`);
+  const toggle = document.getElementById(`appt-toggle-${i}`);
+  if(card) card.classList.toggle('excluded', !apptOcrResults[i].include);
+  if(toggle) toggle.classList.toggle('on', apptOcrResults[i].include);
+}
+
+function toggleApptAlert(i, field, btn) {
+  const cur = apptOcrResults[i][field] !== false;
+  apptOcrResults[i][field] = !cur;
+  btn.classList.toggle('active', !cur);
+  btn.classList.toggle('inactive', cur);
+}
+
+async function analyzeApptRecipe() {
+  if (!apptOcrImageBase64) return;
+  document.getElementById('appt-preview-zone').style.display = 'none';
+  document.getElementById('appt-loading').style.display = 'block';
+  document.getElementById('appt-result-zone').style.display = 'none';
+
+  const msgs = ['Lendo o pedido...','Identificando exames...','Extraindo dados...','Quase pronto...'];
+  let mi = 0;
+  const intv = setInterval(() => {
+    mi = (mi+1)%msgs.length;
+    const el = document.getElementById('appt-loading-text');
+    if(el) el.textContent = msgs[mi];
+  }, 2000);
+
+  try {
+    const prompt = `Você é um assistente médico-administrativo. Analise esta imagem (pode ser uma guia de consulta, pedido de exame, solicitação médica ou similar).
+
+Extraia TODOS os exames e/ou consultas presentes. Responda SOMENTE com JSON, sem markdown, sem texto extra:
+
+{
+  "itens": [
+    {
+      "subtype": "cons" ou "exam",
+      "name": "Nome descritivo (ex: Consulta Neurologia, Hemograma Completo)",
+      "examType": "Tipo se for exame (Sangue, Imagem, Eletrocardiograma, etc) — deixe vazio se consulta",
+      "doctor": "Nome do médico solicitante ou especialidade se consulta — vazio se exame",
+      "local": "Local, clínica, laboratório ou hospital se mencionado",
+      "date": "Data no formato YYYY-MM-DD se mencionada, senão vazio",
+      "time": "Horário HH:MM se mencionado, senão vazio",
+      "prep": "Instruções de preparo (jejum, etc) se mencionadas",
+      "alertMorning": true,
+      "alertBefore": true
+    }
+  ],
+  "observacoes": "Notas gerais sobre o pedido ou combinação de exames"
+}
+
+Se não conseguir ler: {"erro": "Imagem ilegível. Tente uma foto mais nítida."}`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:1500,
+        messages:[{role:'user', content:[
+          {type:'image', source:{type:'base64', media_type:'image/jpeg', data:apptOcrImageBase64}},
+          {type:'text', text:prompt}
+        ]}]
+      })
+    });
+    clearInterval(intv);
+    const data = await resp.json();
+    const raw = data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if (parsed.erro) { showToast('❌ '+parsed.erro); resetApptOcr(); return; }
+
+    apptOcrResults = (parsed.itens||[]).map((it,i) => ({...it, id:'appt_ocr_'+i, include:true}));
+
+    // Build editable result cards
+    const listEl = document.getElementById('appt-ocr-list');
+    listEl.innerHTML = apptOcrResults.map((it,i) => buildApptFormCard(it, i, false)).join('');
+
+    document.getElementById('appt-loading').style.display = 'none';
+    document.getElementById('appt-result-zone').style.display = 'block';
+
+  } catch(e) {
+    clearInterval(intv);
+    showToast('❌ Erro ao analisar. Tente novamente.');
+    resetApptOcr();
+  }
+}
+
+function addAllAppts() {
+  let added = 0;
+  const imgSrc = document.getElementById('appt-preview-img')?.src;
+  const hasPhoto = imgSrc && imgSrc.startsWith('data:');
+  apptOcrResults.forEach(it => {
+    if (it.include === false) return;
+    if (!it.name) return;
+    tasks.push({
+      id: uid(), type:'cons',
+      name: it.name, subtype: it.subtype||'cons',
+      examType: it.examType||'', doctor: it.doctor||'',
+      local: it.local||'', date: it.date||todayStr(),
+      time: it.time||'', repeat:'none',
+      obs: it.prep||'', prep: it.prep||'',
+      alertMorning: it.alertMorning!==false,
+      alertBefore: it.alertBefore!==false,
+      photo: hasPhoto ? imgSrc : null,
+      dose:'', createdAt: Date.now()
+    });
+    added++;
+  });
+  saveTasks(); buildWeekStrip();
+  showToast(`✅ ${added} evento${added!==1?'s':''} adicionado${added!==1?'s':''}!`);
+  setTimeout(()=> {
+    resetApptOcr();
+    renderAll();
+  }, 300);
+}
+
+function saveManualAppt() {
+  addAllAppts();
+  document.getElementById('appt-manual-zone').style.display = 'none';
+  document.getElementById('appt-upload-zone').style.display = 'block';
+}
+
+function renderApptUpcoming() {
+  const el = document.getElementById('appt-upcoming-list');
+  if (!el) return;
+  const today = new Date(todayStr()+'T00:00:00');
+  const upcoming = tasks
+    .filter(t => t.type==='cons' && t.date >= todayStr())
+    .sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time))
+    .slice(0,5);
+
+  if (!upcoming.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📅</div><p>Nenhuma consulta ou exame agendado.</p></div>`;
+    return;
+  }
+
+  el.innerHTML = upcoming.map(t => {
+    const isExam = t.subtype==='exam'||t.examType;
+    const seen = completions[`${t.id}_${t.date}`];
+    const icon = isExam?'🔬':'🩺';
+    const borderColor = isExam?'var(--blue-400)':'var(--purple-400)';
+    const dateStr = t.date ? new Date(t.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'}) : '';
+    return `<div style="background:var(--card-bg);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:12px 16px;border-left:5px solid ${borderColor};display:flex;align-items:center;gap:12px">
+        <div style="font-size:24px">${icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:800;color:${seen?'var(--text-light)':'var(--text)'};${seen?'text-decoration:line-through':''}">${t.name}</div>
+          ${t.local?`<div style="font-size:12px;color:var(--text-light)">🏥 ${t.local}</div>`:''}
+          <div style="font-size:12px;color:var(--text-light)">📅 ${dateStr}${t.time?' · 🕐 '+t.time:''}</div>
+          ${t.prep?`<div style="font-size:11px;font-weight:700;color:var(--amber-600);margin-top:4px">⚠️ ${t.prep}</div>`:''}
+        </div>
+        <div class="task-check ${seen?'checked':''}" style="flex-shrink:0" onclick="openSeenModal('${t.id}')"></div>
+      </div>
+      ${t.photo?`<img src="${t.photo}" style="width:100%;max-height:80px;object-fit:cover;border-top:1px solid var(--gray-100);display:block">` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ─── SEEN MODAL ───────────────────────────────────────────────────────────
+function openSeenModal(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  pendingSeenId = taskId;
+
+  // Photo
+  const photoWrap = document.getElementById('seen-photo-wrap');
+  if (task.photo) {
+    photoWrap.innerHTML = `<img src="${task.photo}" class="seen-sheet-photo" alt="${task.name}">`;
+  } else {
+    const isExam = task.subtype==='exam'||task.examType;
+    photoWrap.innerHTML = `<div style="width:80px;height:80px;border-radius:16px;background:${isExam?'var(--blue-50)':'var(--purple-50)'};display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 12px">${isExam?'🔬':'🩺'}</div>`;
+  }
+
+  const isExam = task.subtype==='exam'||task.examType;
+  const badge = document.getElementById('seen-type-badge-el');
+  badge.textContent = isExam ? '🔬 Exame' : '🩺 Consulta';
+  badge.className = 'seen-type-badge' + (isExam?' exam':'');
+
+  document.getElementById('seen-name').textContent = task.name;
+
+  const dateStr = task.date ? new Date(task.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : '—';
+  document.getElementById('seen-date').textContent = dateStr;
+  document.getElementById('seen-time').textContent = task.time || 'Não informado';
+
+  const localRow = document.getElementById('seen-local-row');
+  if (task.local) { localRow.style.display='flex'; document.getElementById('seen-local').textContent = task.local; }
+  else localRow.style.display='none';
+
+  const doctorRow = document.getElementById('seen-doctor-row');
+  if (task.doctor) { doctorRow.style.display='flex'; document.getElementById('seen-doctor').textContent = task.doctor; }
+  else doctorRow.style.display='none';
+
+  const prepEl = document.getElementById('seen-prep');
+  if (task.prep || task.obs) {
+    prepEl.style.display='block';
+    prepEl.innerHTML = `⚠️ <strong>Preparo:</strong> ${task.prep||task.obs}`;
+  } else prepEl.style.display='none';
+
+  const btnEl = document.getElementById('seen-confirm-btn');
+  btnEl.className = 'btn-seen' + (isExam?' exam-btn':'');
+
+  document.getElementById('seen-modal').classList.add('open');
+}
+
+function closeSeenModal() {
+  document.getElementById('seen-modal').classList.remove('open');
+  pendingSeenId = null;
+}
+
+function confirmSeen() {
+  if (!pendingSeenId) return;
+  const task = tasks.find(t=>t.id===pendingSeenId);
+  const day = task?.date || todayStr();
+  const key = `${pendingSeenId}_${day}`;
+  completions[key] = true;
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  closeSeenModal();
+  showToast('👁️ Compromisso confirmado!');
+  renderAll();
+  renderApptUpcoming();
+}
+
+// ─── OCR / AI RECIPE ANALYSIS ─────────────────────────────────────────────
+let ocrImageBase64 = null;
+let ocrResults = [];
+
+function handleOcrFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+    ocrImageBase64 = dataUrl.split(',')[1];
+    document.getElementById('ocr-preview-img').src = dataUrl;
+    document.getElementById('ocr-upload-zone').style.display = 'none';
+    document.getElementById('ocr-preview-zone').style.display = 'block';
+    document.getElementById('ocr-result-zone').style.display = 'none';
+    document.getElementById('ocr-loading').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function resetOcr() {
+  ocrImageBase64 = null; ocrResults = [];
+  document.getElementById('ocr-upload-zone').style.display = 'block';
+  document.getElementById('ocr-preview-zone').style.display = 'none';
+  document.getElementById('ocr-result-zone').style.display = 'none';
+  document.getElementById('ocr-loading').style.display = 'none';
+}
+
+async function analyzeRecipe() {
+  if (!ocrImageBase64) return;
+  document.getElementById('ocr-preview-zone').style.display = 'none';
+  document.getElementById('ocr-loading').style.display = 'block';
+  document.getElementById('ocr-result-zone').style.display = 'none';
+
+  const loadingMsgs = ['Lendo a receita...','Identificando medicamentos...','Sugerindo horários...','Buscando informações...'];
+  let mi = 0;
+  const loadInt = setInterval(() => {
+    mi = (mi+1) % loadingMsgs.length;
+    const el = document.getElementById('ocr-loading-text');
+    if (el) el.textContent = loadingMsgs[mi];
+  }, 2000);
+
+  try {
+    const prompt = `Você é um assistente farmacêutico especializado em auxiliar cuidadores de pacientes com AVC.
+
+Analise esta imagem de receita médica e extraia TODOS os medicamentos presentes.
+
+Para cada medicamento, forneça um JSON com este formato EXATO (responda APENAS com o JSON, sem markdown, sem texto extra):
+
+{
+  "medicamentos": [
+    {
+      "nome": "Nome do medicamento e dose (ex: Losartana 50mg)",
+      "dose": "Como tomar (ex: 1 comprimido)",
+      "frequencia": "Quantas vezes por dia (ex: 1x ao dia, 2x ao dia)",
+      "horarios_sugeridos": ["08:00", "20:00"],
+      "para_que_serve": "Explicação simples em 1-2 frases do que esse remédio trata, voltado para leigo",
+      "instrucoes": "Instruções especiais de uso (ex: tomar em jejum, com alimento, à noite)",
+      "cuidados_avc": "Se relevante para paciente com AVC, mencione cuidados específicos. Se não houver, deixe vazio."
+    }
+  ],
+  "observacoes": "Qualquer observação geral sobre a receita ou combinação de medicamentos. Se não houver, deixe vazio."
+}
+
+Regras para sugestão de horários:
+- 1x ao dia: prefira 08:00 (exceto se for medicamento que deve ser tomado à noite, aí use 21:00)
+- 2x ao dia: 08:00 e 20:00
+- 3x ao dia: 08:00, 14:00, 20:00
+- 4x ao dia: 08:00, 12:00, 18:00, 22:00
+- Se a receita especificar horário, use o horário da receita
+
+Se não conseguir ler a receita claramente, retorne:
+{"erro": "Não foi possível ler a receita. Tente uma foto mais nítida e bem iluminada."}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: ocrImageBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    clearInterval(loadInt);
+    const data = await response.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    if (parsed.erro) {
+      showToast('❌ ' + parsed.erro);
+      resetOcr();
+      return;
+    }
+
+    ocrResults = (parsed.medicamentos || []).map((m, i) => ({...m, id: 'ocr_'+i, include: true, selectedTimes: [...(m.horarios_sugeridos||[])]}));
+    renderOcrResults(parsed.observacoes);
+
+  } catch(e) {
+    clearInterval(loadInt);
+    console.error(e);
+    showToast('❌ Erro ao analisar. Tente novamente.');
+    resetOcr();
+  }
+}
+
+function renderOcrResults(observacoes) {
+  document.getElementById('ocr-loading').style.display = 'none';
+  document.getElementById('ocr-result-zone').style.display = 'block';
+
+  const list = document.getElementById('ocr-meds-list');
+  list.innerHTML = ocrResults.map((m, i) => `
+    <div class="ocr-med-card ${m.include?'':'excluded'}" id="ocr-card-${i}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1">
+          <div class="ocr-med-name">💊 ${m.nome}</div>
+          <div class="ocr-med-dose">${m.dose} · ${m.frequencia}</div>
+        </div>
+        <button class="toggle ${m.include?'on':''}" onclick="toggleOcrMed(${i})" id="ocr-toggle-${i}"></button>
+      </div>
+
+      <div class="ocr-med-para">
+        <strong>Para que serve:</strong> ${m.para_que_serve}
+        ${m.cuidados_avc ? `<br><br>🧠 <strong>AVC:</strong> ${m.cuidados_avc}` : ''}
+      </div>
+
+      ${m.instrucoes ? `<div style="font-size:12px;color:var(--amber-600);background:var(--amber-50);padding:8px 10px;border-radius:8px;margin-bottom:10px">⚠️ ${m.instrucoes}</div>` : ''}
+
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px">Horários sugeridos (toque para remover/adicionar):</div>
+      <div class="ocr-time-row" id="times-${i}">
+        ${(m.selectedTimes||[]).map((t,ti) => `<button class="ocr-time-chip" onclick="toggleOcrTime(${i},${ti})" id="time-${i}-${ti}">${t}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const obsCard = document.getElementById('ocr-obs-card');
+  if (observacoes && observacoes.trim()) {
+    obsCard.style.display = 'block';
+    document.getElementById('ocr-obs-text').textContent = observacoes;
+  } else { obsCard.style.display = 'none'; }
+}
+
+function toggleOcrMed(i) {
+  ocrResults[i].include = !ocrResults[i].include;
+  const card = document.getElementById(`ocr-card-${i}`);
+  const toggle = document.getElementById(`ocr-toggle-${i}`);
+  card.classList.toggle('excluded', !ocrResults[i].include);
+  toggle.classList.toggle('on', ocrResults[i].include);
+}
+
+function toggleOcrTime(medIdx, timeIdx) {
+  const chip = document.getElementById(`time-${medIdx}-${timeIdx}`);
+  chip.classList.toggle('removed');
+  if (chip.classList.contains('removed')) {
+    ocrResults[medIdx].selectedTimes[timeIdx] = null;
+  } else {
+    ocrResults[medIdx].selectedTimes[timeIdx] = ocrResults[medIdx].horarios_sugeridos[timeIdx];
+  }
+}
+
+function addAllOcrMeds() {
+  const today = todayStr();
+  let added = 0;
+  ocrResults.forEach(m => {
+    if (!m.include) return;
+    const times = (m.selectedTimes||[]).filter(Boolean);
+    if (times.length === 0) {
+      tasks.push({
+        id: uid(), type:'med', name: m.nome,
+        dose: m.dose, date: today, time: '', repeat:'daily',
+        obs: [m.instrucoes, m.cuidados_avc].filter(Boolean).join(' | '),
+        createdAt: Date.now()
+      });
+      added++;
+    } else {
+      times.forEach(time => {
+        tasks.push({
+          id: uid(), type:'med', name: m.nome,
+          dose: m.dose, date: today, time, repeat:'daily',
+          obs: [m.instrucoes, m.cuidados_avc].filter(Boolean).join(' | '),
+          createdAt: Date.now()
+        });
+      });
+      added += times.length;
+    }
+  });
+  saveTasks();
+  showToast(`✅ ${added} lembretes adicionados!`);
+  setTimeout(() => goScreen('home', document.getElementById('nav-home')), 400);
+  resetOcr();
+  renderAll();
+}
+
+// ─── PROFILE AUTO-SAVE ────────────────────────────────────────────────────
+document.getElementById('caregiver-input').addEventListener('input', e => { settings.caregiver=e.target.value; saveSettings(); });
+document.getElementById('diagnosis-input').addEventListener('input', e => { settings.diagnosis=e.target.value; saveSettings(); });
+
+init();
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ── Desktop home right panel ──────────────────────────────
+function renderHomeRightPanel() {
+  // Mini stats
+  const today = todayStr();
+  const todayTasks = getTodayTasks();
+  const meds = todayTasks.filter(t => t.type === 'med');
+  const done = todayTasks.filter(t => isCompletedToday(t));
+  const medEl = document.getElementById('stat-med-home');
+  const doneEl = document.getElementById('stat-done-home');
+  if (medEl) medEl.textContent = meds.length;
+  if (doneEl) doneEl.textContent = done.length;
+
+  // Upcoming appointments
+  const apptEl = document.getElementById('home-upcoming-appts');
+  if (!apptEl) return;
+  const upcoming = tasks
+    .filter(t => (t.type === 'cons' || t.examType) && t.date >= today)
+    .sort((a,b) => (a.date||'').localeCompare(b.date||'') || (a.time||'').localeCompare(b.time||''))
+    .slice(0, 3);
+  if (!upcoming.length) {
+    apptEl.innerHTML = '<div style="font-size:13px;color:var(--text-light);padding:12px 0">Nenhuma consulta agendada.</div>';
+    return;
+  }
+  apptEl.innerHTML = upcoming.map(t => {
+    const isExam = t.examType || t.subtype === 'exam';
+    const color = isExam ? 'var(--blue-400)' : 'var(--purple-400)';
+    const bg = isExam ? 'var(--blue-50)' : 'var(--purple-50)';
+    const dateStr = t.date ? new Date(t.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'}) : '';
+    return `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-100)">
+      <div style="width:36px;height:36px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${isExam?'🔬':'🩺'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.name}</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px">${dateStr}${t.time?' · '+t.time:''}</div>
+        ${t.local?`<div style="font-size:11px;color:var(--text-light)">🏥 ${t.local}</div>`:''}
+      </div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;margin-top:6px"></div>
+    </div>`;
+  }).join('');
+}
+
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  // Show install banner after 3s if not already installed
+  setTimeout(showInstallBanner, 3000);
+});
+
+function showInstallBanner() {
+  if (!deferredInstallPrompt) return;
+  if (localStorage.getItem('pwa_install_dismissed')) return;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.classList.add('show');
+}
+
+function installPWA() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') {
+      showToast('✅ CuidarBem instalado!');
+    }
+    deferredInstallPrompt = null;
+    document.getElementById('install-banner').classList.remove('show');
+  });
+}
+
+function dismissInstallBanner() {
+  document.getElementById('install-banner').classList.remove('show');
+  localStorage.setItem('pwa_install_dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+  showToast('💚 App instalado com sucesso!');
+  deferredInstallPrompt = null;
+});
+</script>
+
+<!-- CONFIRM TAKE MODAL -->
+<div class="confirm-overlay" id="confirm-modal">
+  <div class="confirm-sheet">
+    <div class="confirm-handle"></div>
+    <div id="confirm-photo-big-wrap"></div>
+    <div class="confirm-name" id="confirm-name">Nome do remédio</div>
+    <div class="confirm-dose" id="confirm-dose">1 comprimido</div>
+    <div class="confirm-time"><span class="confirm-time-badge">🕐 <span id="confirm-time">08:00</span></span></div>
+    <div class="confirm-obs" id="confirm-obs" style="display:none"></div>
+    <div class="confirm-warning" id="confirm-warning" style="display:none"></div>
+    <div style="text-align:center;font-size:13px;color:var(--text-light);margin-bottom:20px">
+      Verifique a foto e confirme que é <strong>este remédio</strong> e <strong>esta dose</strong>.
+    </div>
+    <button class="btn-confirm" onclick="confirmTake()">
+      ✅ Confirmei — tomei o remédio
+    </button>
+    <button class="btn-confirm-cancel" onclick="closeConfirmModal()">Cancelar</button>
+  </div>
+</div>
+
+<!-- PHOTO VIEW MODAL -->
+<div class="photo-modal-overlay" id="photo-view-modal" onclick="closePhotoModal()">
+  <div class="photo-modal" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:800" id="photo-view-name">Remédio</div>
+      <button style="background:none;border:none;font-size:20px;cursor:pointer" onclick="closePhotoModal()">✕</button>
+    </div>
+    <img id="photo-view-img" style="width:100%;border-radius:16px;object-fit:contain;max-height:300px" src="" alt="">
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn-add" style="flex:1;margin:0;font-size:14px" onclick="changeTaskPhoto()">📷 Trocar foto</button>
+      <button class="btn-add btn-secondary" style="flex:1;margin:0;font-size:14px" onclick="removeTaskPhoto()">🗑️ Remover</button>
+    </div>
+    <input type="file" id="change-photo-input" accept="image/*" style="display:none" onchange="handleChangePhoto(event)">
+  </div>
+</div>
+
+
+<!-- APPOINTMENT / EXAM CONFIRM MODAL -->
+<div class="appt-confirm-overlay" id="appt-confirm-modal">
+  <div class="appt-confirm-sheet">
+    <div class="confirm-handle"></div>
+    <div class="appt-icon-ring" id="appt-icon-ring">🩺</div>
+    <div class="appt-confirm-title" id="appt-confirm-title">Consulta</div>
+    <div class="appt-confirm-sub" id="appt-confirm-sub">Veja os detalhes e confirme que está preparado</div>
+
+    <div class="appt-info-grid" id="appt-info-grid"></div>
+
+    <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:10px">✔ Checklist antes de sair:</div>
+    <div class="appt-checklist" id="appt-checklist"></div>
+
+    <button class="btn-visto" id="btn-visto-appt" onclick="confirmAppt()">
+      👁️ Visto — estou preparado
+    </button>
+    <button class="btn-confirm-cancel" onclick="closeApptModal()">Fechar</button>
+  </div>
+</div>
+
+<!-- SCAN RECEIPT MODAL (cons/exam) -->
+<div class="modal-overlay" id="scan-appt-modal" onclick="if(event.target.id==='scan-appt-modal')closeScanApptModal()">
+  <div class="modal" style="max-height:95dvh">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="scan-appt-title">📷 Escanear pedido</div>
+
+    <div id="scan-appt-upload" style="text-align:center;padding:20px 0">
+      <div style="font-size:48px;margin-bottom:10px">📋</div>
+      <div style="font-size:15px;font-weight:700;color:var(--green-600);margin-bottom:6px">Foto do pedido médico</div>
+      <div style="font-size:13px;color:var(--text-light);margin-bottom:16px">Encaminhamento, pedido de exame ou cartão de consulta</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-add" style="flex:1;margin:0;font-size:13px" onclick="document.getElementById('scan-appt-input').removeAttribute('capture');document.getElementById('scan-appt-input').click()">🖼️ Galeria</button>
+        <button class="btn-add" style="flex:1;margin:0;font-size:13px" onclick="document.getElementById('scan-appt-input').setAttribute('capture','environment');document.getElementById('scan-appt-input').click()">📷 Câmera</button>
+      </div>
+      <input type="file" id="scan-appt-input" accept="image/*" style="display:none" onchange="handleScanApptFile(event)">
+    </div>
+
+    <div id="scan-appt-preview" style="display:none">
+      <img id="scan-appt-img" style="width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-bottom:12px">
+      <button class="btn-add" onclick="analyzeScanAppt()">🤖 Analisar com IA</button>
+      <button class="btn-add btn-secondary" onclick="resetScanAppt()" style="margin-top:8px">✕ Trocar foto</button>
+    </div>
+
+    <div id="scan-appt-loading" style="display:none;text-align:center;padding:30px 0">
+      <div style="width:44px;height:44px;border:4px solid var(--gray-100);border-top-color:var(--purple-400);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto"></div>
+      <div style="font-size:14px;font-weight:700;color:var(--purple-600);margin-top:14px" id="scan-appt-loading-text">Lendo o pedido...</div>
+    </div>
+
+    <div id="scan-appt-result" style="display:none">
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px" id="scan-appt-result-title">Encontrado:</div>
+      <div id="scan-appt-fields"></div>
+      <button class="btn-add" onclick="saveScanApptResult()" style="margin-top:4px">✅ Adicionar à agenda</button>
+      <button class="btn-add btn-secondary" onclick="resetScanAppt()" style="margin-top:8px">📷 Nova foto</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- SCREEN: CONSULTAS/EXAMES OCR -->
+<div id="screen-appt" class="screen">
+  <div class="header-sub" style="background:var(--purple-600)">
+    <div class="header-sub-title">🩺 Consultas &amp; Exames</div>
+    <div class="header-date">Escaneie o pedido e adicione à agenda</div>
+  </div>
+  <div class="content" style="padding-top:16px">
+
+    <!-- UPLOAD ZONE -->
+    <div id="appt-upload-zone">
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <button class="btn-add" style="flex:1;margin:0;background:var(--purple-600)" onclick="openApptOcrCamera()">
+          📷 Foto do pedido/guia
+        </button>
+        <button class="btn-add" style="flex:1;margin:0;background:var(--blue-600)" onclick="openApptManual()">
+          ✏️ Adicionar manual
+        </button>
+      </div>
+      <input type="file" id="appt-file-input" accept="image/*" style="display:none" onchange="handleApptFile(event)">
+
+      <div class="card" style="margin-top:4px">
+        <div class="card-title">O que a IA extrai do pedido</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.9">
+          <div style="margin-bottom:6px">🩺 <strong>Tipo</strong> de consulta ou exame</div>
+          <div style="margin-bottom:6px">🏥 <strong>Local</strong>, clínica ou laboratório</div>
+          <div style="margin-bottom:6px">📅 <strong>Data e horário</strong> agendados</div>
+          <div style="margin-bottom:6px">⚠️ <strong>Preparo</strong> necessário (jejum, etc.)</div>
+          <div>🔔 <strong>Alertas</strong>: manhã do dia + 1h antes</div>
+        </div>
+      </div>
+
+      <!-- UPCOMING APPTS -->
+      <div class="section-header" style="margin-top:16px">
+        <div class="section-title">Próximas consultas e exames</div>
+      </div>
+      <div id="appt-upcoming-list"></div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div id="appt-preview-zone" style="display:none">
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px">
+        <img id="appt-preview-img" style="width:100%;max-height:200px;object-fit:cover;display:block">
+        <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:700;color:var(--text-muted)">Pedido carregado</span>
+          <button style="font-size:12px;color:var(--coral-400);background:none;border:none;cursor:pointer;font-weight:700" onclick="resetApptOcr()">✕ Trocar</button>
+        </div>
+      </div>
+      <button class="btn-add" style="background:var(--purple-600)" onclick="analyzeApptRecipe()">
+        🤖 Analisar com IA
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="appt-loading" style="display:none;text-align:center;padding:40px 20px">
+      <div style="width:48px;height:48px;border:4px solid var(--gray-100);border-top-color:var(--purple-400);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto"></div>
+      <div style="font-size:15px;font-weight:700;color:var(--purple-600);margin-top:16px" id="appt-loading-text">Lendo o pedido...</div>
+      <div style="font-size:13px;color:var(--text-light);margin-top:6px">Identificando consultas e exames</div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="appt-result-zone" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Encontrados no pedido</div>
+        <button style="font-size:12px;color:var(--text-light);background:none;border:none;cursor:pointer;font-weight:700" onclick="resetApptOcr()">📷 Novo pedido</button>
+      </div>
+      <div id="appt-ocr-list"></div>
+      <div style="padding:12px 14px;background:var(--blue-50);border-radius:var(--radius-sm);margin-bottom:12px">
+        <div style="font-size:12px;color:var(--blue-600);font-weight:600;line-height:1.6">
+          ℹ️ Verifique e edite os campos antes de salvar. Confirme data e local com o serviço de saúde.
+        </div>
+      </div>
+      <button class="btn-add" style="background:var(--purple-600)" onclick="addAllAppts()">✅ Adicionar tudo à agenda</button>
+      <button class="btn-add btn-secondary" onclick="resetApptOcr()">Cancelar</button>
+    </div>
+
+    <!-- MANUAL FORM -->
+    <div id="appt-manual-zone" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:17px;font-weight:800">Novo evento</div>
+        <button style="font-size:12px;color:var(--text-light);background:none;border:none;cursor:pointer;font-weight:700" onclick="resetApptOcr()">✕ Cancelar</button>
+      </div>
+      <div id="appt-manual-form-wrap"></div>
+      <button class="btn-add" style="background:var(--purple-600);margin-top:4px" onclick="saveManualAppt()">💾 Salvar</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- SEEN / APPOINTMENT CONFIRM MODAL -->
+<div class="confirm-overlay" id="seen-modal">
+  <div class="seen-sheet">
+    <div class="confirm-handle"></div>
+    <div id="seen-photo-wrap"></div>
+    <div id="seen-type-badge-el" class="seen-type-badge">🩺 Consulta</div>
+    <div class="confirm-name" id="seen-name" style="margin-top:8px">Nome</div>
+    <div style="border-top:1px solid var(--gray-100);margin:14px 0 0"></div>
+    <div class="seen-info-row">
+      <span class="seen-info-label">📅 Data</span>
+      <span class="seen-info-value" id="seen-date">—</span>
+    </div>
+    <div class="seen-info-row">
+      <span class="seen-info-label">🕐 Horário</span>
+      <span class="seen-info-value" id="seen-time">—</span>
+    </div>
+    <div class="seen-info-row" id="seen-local-row">
+      <span class="seen-info-label">🏥 Local</span>
+      <span class="seen-info-value" id="seen-local">—</span>
+    </div>
+    <div class="seen-info-row" id="seen-doctor-row">
+      <span class="seen-info-label">👨‍⚕️ Médico</span>
+      <span class="seen-info-value" id="seen-doctor">—</span>
+    </div>
+    <div class="prep-box" id="seen-prep" style="display:none"></div>
+    <div style="text-align:center;font-size:13px;color:var(--text-light);margin:14px 0 18px;line-height:1.6">
+      Confirme que <strong>leu e está ciente</strong> deste compromisso de saúde.
+    </div>
+    <button class="btn-seen" id="seen-confirm-btn" onclick="confirmSeen()">
+      👁️ Estou ciente — anotado!
+    </button>
+    <button class="btn-confirm-cancel" onclick="closeSeenModal()">Fechar</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  ACESSIBILIDADE: DARK MODE, FONT SIZE, LOW STRESS
+// ═══════════════════════════════════════════════════════════
+let a11yState = JSON.parse(localStorage.getItem('cuidarbem_a11y') || '{"dark":false,"font":"sm","lowstress":false}');
+
+function applyA11y() {
+  const body = document.body;
+  body.classList.toggle('dark', a11yState.dark);
+  body.classList.remove('font-sm','font-md','font-lg');
+  if (a11yState.font !== 'sm') body.classList.add('font-' + a11yState.font);
+  body.classList.toggle('low-stress', a11yState.lowstress);
+  // Update toggle UIs (FAB panel + profile screen)
+  ['dark-toggle','dark-toggle-profile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', a11yState.dark);
+  });
+  ['lowstress-toggle','lowstress-toggle-profile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', a11yState.lowstress);
+  });
+  // Font segments
+  ['sm','md','lg'].forEach(s => {
+    ['fs-'+s, 'fs-'+s+'-p'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.classList.toggle('active', a11yState.font === s);
+    });
+  });
+  // Update FAB emoji
+  const fab = document.getElementById('a11y-fab');
+  if (fab) fab.textContent = a11yState.dark ? '🌙' : '⚙️';
+  localStorage.setItem('cuidarbem_a11y', JSON.stringify(a11yState));
+}
+
+function toggleA11yPanel() {
+  const panel = document.getElementById('a11y-panel');
+  panel.classList.toggle('open');
+}
+
+function toggleDarkMode() {
+  a11yState.dark = !a11yState.dark;
+  applyA11y();
+}
+
+function setFontSize(size) {
+  a11yState.font = size;
+  applyA11y();
+}
+
+function toggleLowStress() {
+  a11yState.lowstress = !a11yState.lowstress;
+  applyA11y();
+}
+
+// Close a11y panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('a11y-panel');
+  const fab = document.getElementById('a11y-fab');
+  if (panel && fab && !panel.contains(e.target) && !fab.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+// Apply on load
+applyA11y();
+
+
+// ═══════════════════════════════════════════════════════════
+//  DASHBOARD APPLE HEALTH STYLE
+// ═══════════════════════════════════════════════════════════
+function renderDashboard() {
+  const today = todayStr ? todayStr() : new Date().toISOString().split('T')[0];
+  const todayTasks = typeof getTodayTasks === 'function' ? getTodayTasks() : [];
+  const completionsData = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+
+  // ── Date label ──
+  const dateEl = document.getElementById('dash-date');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+  }
+
+  // ── Count tasks by type ──
+  const byType = {med:0, fisio:0, exer:0, cons:0};
+  const doneByType = {med:0, fisio:0, exer:0, cons:0};
+  todayTasks.forEach(t => {
+    const k = `${t.id}_${today}`;
+    if (byType[t.type] !== undefined) {
+      byType[t.type]++;
+      if (completionsData[k]) doneByType[t.type]++;
+    }
+  });
+
+  const totalToday = todayTasks.length;
+  const doneToday = todayTasks.filter(t => completionsData[`${t.id}_${today}`]).length;
+  const pctToday = totalToday ? Math.round(doneToday/totalToday*100) : 0;
+
+  // ── Rings row ──
+  const ringsEl = document.getElementById('dash-rings');
+  if (ringsEl) {
+    const rings = [
+      { emoji:'💊', label:'Remédios', val: byType.med ? `${doneByType.med}/${byType.med}` : '—', color:'var(--blue-600)', bg:'var(--blue-50)', accent:'#378add' },
+      { emoji:'🦾', label:'Fisio',    val: byType.fisio ? `${doneByType.fisio}/${byType.fisio}` : '—', color:'var(--amber-600)', bg:'var(--amber-50)', accent:'#ba7517' },
+      { emoji:'🏃', label:'Exercício', val: byType.exer ? `${doneByType.exer}/${byType.exer}` : '—', color:'var(--teal-600)', bg:'var(--teal-50)', accent:'#1d9e75' },
+    ];
+    ringsEl.innerHTML = rings.map(r => `
+      <div class="health-ring-card" style="--card-accent:${r.accent}">
+        <div style="font-size:24px">${r.emoji}</div>
+        <div class="health-ring-val" style="color:${r.color}">${r.val}</div>
+        <div class="health-ring-label">${r.label}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Trend cards ──
+  const trendsEl = document.getElementById('dash-trends');
+  if (trendsEl) {
+    const categories = [
+      { key:'med',   emoji:'💊', label:'Remédios',    color:'var(--blue-600)',   bg:'var(--blue-50)',   fill:'#378add' },
+      { key:'fisio', emoji:'🦾', label:'Fisioterapia', color:'var(--amber-600)',  bg:'var(--amber-50)',  fill:'#ba7517' },
+      { key:'exer',  emoji:'🏃', label:'Exercícios',   color:'var(--teal-600)',   bg:'var(--teal-50)',   fill:'#1d9e75' },
+    ];
+
+    // Compute last 7 days for each category
+    const getLast7 = (type) => {
+      const arr = [];
+      for (let i=6; i>=0; i--) {
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const ds = d.toISOString().split('T')[0];
+        const dayTasks = (JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]')).filter(t => {
+          if (t.type !== type) return false;
+          if (t.date === ds) return true;
+          if (t.repeat === 'daily') return true;
+          return false;
+        });
+        const total = dayTasks.length;
+        const done = dayTasks.filter(t => completionsData[`${t.id}_${ds}`]).length;
+        arr.push({ total, done, pct: total ? Math.round(done/total*100) : 0 });
+      }
+      return arr;
+    };
+
+    trendsEl.innerHTML = categories.map(cat => {
+      const history = getLast7(cat.key);
+      const todayPct = history[6].pct;
+      const yesterdayPct = history[5].pct;
+      const diff = todayPct - yesterdayPct;
+      const changeClass = diff > 0 ? 'up' : diff < 0 ? 'down' : 'neutral';
+      const changeLabel = diff > 0 ? `↑${diff}%` : diff < 0 ? `↓${Math.abs(diff)}%` : '—';
+      const maxPct = Math.max(...history.map(h => h.pct), 10);
+
+      return `
+      <div class="health-trend-card">
+        <div class="health-trend-icon" style="background:${cat.bg}">${cat.emoji}</div>
+        <div class="health-trend-info">
+          <div class="health-trend-title">${cat.label}</div>
+          <div class="health-trend-sub">7 dias</div>
+          <div class="mini-chart">
+            ${history.map(h => `<div class="mini-bar" style="height:${Math.round((h.pct/maxPct)*100)}%;background:${cat.fill};opacity:${0.3 + 0.7*(h.pct/maxPct)}"></div>`).join('')}
+          </div>
+        </div>
+        <div class="health-trend-right">
+          <div class="health-trend-pct" style="color:${cat.color}">${todayPct}%</div>
+          <div class="health-trend-change ${changeClass}">${changeLabel}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Weekly summary ──
+  const weeklyEl = document.getElementById('dash-weekly');
+  if (weeklyEl) {
+    const days = [];
+    for (let i=6; i>=0; i--) {
+      const d = new Date(); d.setDate(d.getDate()-i);
+      const ds = d.toISOString().split('T')[0];
+      const allTasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]').filter(t => {
+        if (t.date === ds) return true;
+        if (t.repeat === 'daily') return true;
+        return false;
+      });
+      const total = allTasks.length;
+      const done = allTasks.filter(t => completionsData[`${t.id}_${ds}`]).length;
+      const pct = total ? Math.round(done/total*100) : 0;
+      days.push({ d, ds, total, done, pct });
+    }
+    const maxPct = Math.max(...days.map(d => d.pct), 10);
+    const dayNames = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    weeklyEl.innerHTML = `
+    <div class="health-trend-card" style="flex-direction:column; align-items:stretch; gap:12px">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; height:64px; gap:4px">
+        ${days.map(d => {
+          const h = Math.round((d.pct/maxPct)*100);
+          const color = d.pct >= 80 ? '#1d9e75' : d.pct >= 50 ? '#ba7517' : '#d85a30';
+          const isToday = d.ds === today;
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:100%;border-radius:4px 4px 0 0;background:${color};height:${Math.max(4,h)}%;opacity:${isToday?1:0.6};transition:height 0.5s ease;max-height:52px;min-height:4px"></div>
+            <div style="font-size:10px;font-weight:700;color:${isToday?'var(--green-600)':'var(--text-light)'}">${dayNames[d.d.getDay()]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--gray-100)">
+        <div style="font-size:12px;color:var(--text-light)">Melhor dia: <strong style="color:var(--teal-600)">${Math.max(...days.map(d=>d.pct))}%</strong></div>
+        <div style="font-size:12px;color:var(--text-light)">Média: <strong style="color:var(--green-600)">${Math.round(days.reduce((s,d)=>s+d.pct,0)/7)}%</strong></div>
+      </div>
+    </div>`;
+  }
+}
+
+// Patch goScreen to render dashboard when navigating to it
+const _origGoScreen = typeof goScreen === 'function' ? goScreen : null;
+if (_origGoScreen) {
+  window._patchedGoScreen = true;
+}
+
+// Hook into screen navigation to render dashboard
+document.addEventListener('DOMContentLoaded', () => {
+  // Patch goScreen after original init
+  const origGo = window.goScreen;
+  if (origGo) {
+    window.goScreen = function(name, btn) {
+      origGo(name, btn);
+      if (name === 'dashboard') renderDashboard();
+      if (name === 'home') renderHomeRightPanel();
+    };
+  }
+  // Patch renderAll to also update right panel
+  const origRenderAll = window.renderAll;
+  if (origRenderAll) {
+    window.renderAll = function() {
+      origRenderAll();
+      renderHomeRightPanel();
+    };
+  }
+  applyA11y();
+  // Initial right panel render
+  setTimeout(renderHomeRightPanel, 100);
+});
+</script>
+</body>
+</html>
