@@ -2715,53 +2715,45 @@
 
 
 
-    <!-- ── Modo Família Sincronizado — Firebase/Firestore ── -->
-    <div class="card" style="margin-bottom:8px;border:1.5px solid var(--blue-100);background:linear-gradient(180deg,#fff,#f7fbff)">
+    <!-- ── Modo Família Sincronizado — Supabase Realtime ── -->
+    <div class="card" style="margin-bottom:8px;border:1.5px solid var(--green-100);background:linear-gradient(180deg,#fff,#f6fffb)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="width:40px;height:40px;border-radius:12px;background:var(--blue-50);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0">👨‍👩‍👧</div>
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--teal-50);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0">👨‍👩‍👧</div>
         <div style="flex:1;min-width:0">
           <div style="font-size:15px;font-weight:900;color:var(--text)">Modo Família Sincronizado</div>
-          <div id="firebase-sync-status" style="font-size:12px;font-weight:700;color:var(--text-light);margin-top:1px">⚪ Não conectado ao Firebase</div>
+          <div id="supabase-sync-status" style="font-size:12px;font-weight:700;color:var(--text-light);margin-top:1px">⚪ Não conectado ao Supabase</div>
         </div>
-        <button class="toggle" id="firebase-sync-toggle" onclick="event.stopPropagation();toggleFirebaseSync()"></button>
+        <button class="toggle" id="supabase-sync-toggle" onclick="event.stopPropagation();toggleSupabaseSync()"></button>
       </div>
 
-      <div style="background:var(--blue-50);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.5;color:var(--blue-600);font-weight:700">
+      <div style="background:var(--teal-50);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.5;color:var(--teal-600);font-weight:700">
         Sincroniza remédios, confirmações, dados do paciente, eventos e sinais vitais entre paciente, cuidador e familiares em tempo real.
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
         <div>
           <label class="form-label" style="margin-bottom:4px">Código da família</label>
-          <input class="form-input" id="firebase-family-code" placeholder="CUIDAR-4829" style="font-size:13px;text-transform:uppercase">
+          <input class="form-input" id="supabase-family-code" placeholder="CUIDAR-4829-ABCD" style="font-size:13px;text-transform:uppercase">
         </div>
         <div>
           <label class="form-label" style="margin-bottom:4px">Seu nome neste aparelho</label>
-          <input class="form-input" id="firebase-member-name" placeholder="Maria cuidadora" style="font-size:13px">
+          <input class="form-input" id="supabase-member-name" placeholder="Maria cuidadora" style="font-size:13px">
         </div>
       </div>
 
-      <details style="margin:8px 0 12px">
-        <summary style="cursor:pointer;font-size:12px;font-weight:800;color:var(--text-muted);padding:8px 0">Configuração Firebase do projeto</summary>
-        <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px">
-          <input class="form-input" id="fb-apiKey" placeholder="apiKey" style="font-size:12px">
-          <input class="form-input" id="fb-authDomain" placeholder="authDomain: seu-projeto.firebaseapp.com" style="font-size:12px">
-          <input class="form-input" id="fb-projectId" placeholder="projectId" style="font-size:12px">
-          <input class="form-input" id="fb-appId" placeholder="appId" style="font-size:12px">
-        </div>
-        <div style="font-size:11px;color:var(--text-light);line-height:1.45;margin-top:8px">
-          No Firebase: crie um app Web, copie esses 4 campos, ative Authentication anônimo e Cloud Firestore.
-        </div>
-      </details>
+      <div style="background:var(--gray-50);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:11px;line-height:1.45;color:var(--text-muted);font-weight:700">
+        Projeto Supabase conectado: <span style="word-break:break-all;color:var(--teal-600)">lwldroopbooeocchgngg.supabase.co</span><br>
+        Antes do primeiro uso, execute o arquivo <strong>SUPABASE_SETUP.sql</strong> no SQL Editor do Supabase.
+      </div>
 
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="createFirebaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--blue-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Criar família</button>
-        <button onclick="joinFirebaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--green-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Entrar / sincronizar</button>
-        <button onclick="pushFirebaseNow()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Enviar agora</button>
-        <button onclick="disconnectFirebaseSync()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--coral-600);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Desconectar</button>
+        <button onclick="createSupabaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--blue-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Criar família</button>
+        <button onclick="joinSupabaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--green-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Entrar / sincronizar</button>
+        <button onclick="pushSupabaseNow()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Enviar agora</button>
+        <button onclick="disconnectSupabaseSync()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--coral-600);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Desconectar</button>
       </div>
 
-      <div id="firebase-last-sync" style="font-size:11px;color:var(--text-light);margin-top:10px;line-height:1.4">Última sincronização: —</div>
+      <div id="supabase-last-sync" style="font-size:11px;color:var(--text-light);margin-top:10px;line-height:1.4">Última sincronização: —</div>
     </div>
 
     <!-- ── Card de backup na nuvem (JSONbin) ── -->
@@ -8207,7 +8199,7 @@ function falar(texto){
 
 
 <script>
-// ── Ponte local para sincronização em nuvem (Firebase/Firestore) ─────────────
+// ── Ponte local para sincronização em nuvem (Supabase Realtime) ─────────────
 window.cbCollectSnapshot = function cbCollectSnapshot() {
   return {
     version: 20,
@@ -8254,16 +8246,16 @@ window.cbMarkLocalChange = function cbMarkLocalChange(reason) {
   window.dispatchEvent(new CustomEvent('cb-local-change', { detail: { reason: reason || 'local' } }));
 };
 
-(function patchLocalSavesForFirebase(){
+(function patchLocalSavesForSupabase(){
   const patch = (name) => {
     const original = window[name];
-    if (typeof original !== 'function' || original.__firebasePatched) return;
+    if (typeof original !== 'function' || original.__supabasePatched) return;
     const wrapped = function(...args) {
       const result = original.apply(this, args);
       setTimeout(() => window.cbMarkLocalChange(name), 120);
       return result;
     };
-    wrapped.__firebasePatched = true;
+    wrapped.__supabasePatched = true;
     window[name] = wrapped;
   };
   ['saveTasks','saveSettings','toggleTask','toggleTaskDay','saveProfile','saveCareEvent','deleteCareEvent','saveVital'].forEach(patch);
@@ -8271,21 +8263,21 @@ window.cbMarkLocalChange = function cbMarkLocalChange(reason) {
 </script>
 
 <script type="module">
-// ── Firebase/Firestore realtime sync — CuidarBem v20 ───────────────────────
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+// ── Supabase Realtime sync — CuidarBem v21 ───────────────────────────────
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 
-const FB_CFG_KEY = 'cb_firebase_config';
-const FB_FAMILY_KEY = 'cb_firebase_family_code';
-const FB_MEMBER_KEY = 'cb_firebase_member_name';
-const FB_ENABLED_KEY = 'cb_firebase_sync_enabled';
+const SUPABASE_URL = 'https://lwldroopbooeocchgngg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3bGRyb29wYm9vZW9jY2hnbmdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MDY3MDUsImV4cCI6MjA5MDI4MjcwNX0.fDWYV4yVLqf4j8Bce_o7denInTvJUxWhqcexND4UOyc';
 
-let fbApp = null, fbAuth = null, fbDb = null, fbUnsub = null, fbUser = null;
-let fbReady = false, fbApplyingRemote = false, fbSaveTimer = null, fbLastRemoteTs = 0;
+const SB_FAMILY_KEY = 'cb_supabase_family_code';
+const SB_MEMBER_KEY = 'cb_supabase_member_name';
+const SB_ENABLED_KEY = 'cb_supabase_sync_enabled';
+
+let sb = null, sbChannel = null;
+let sbReadyCode = '', sbApplyingRemote = false, sbSaveTimer = null, sbLastRemoteTs = 0;
 
 function normalizeCode(v) {
-  return (v || '').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/^CUIDAR/, 'CUIDAR').slice(0, 16);
+  return (v || '').toUpperCase().replace(/[^A-Z0-9-]/g,'').replace(/--+/g,'-').slice(0, 28);
 }
 function prettyCode(raw) {
   const v = normalizeCode(raw);
@@ -8293,202 +8285,203 @@ function prettyCode(raw) {
   if (v.startsWith('CUIDAR') && !v.startsWith('CUIDAR-')) return 'CUIDAR-' + v.slice(6);
   return v.startsWith('CUIDAR') ? v.replace(/^CUIDAR-?/, 'CUIDAR-') : v;
 }
-function genFamilyCode() {
-  return 'CUIDAR-' + Math.floor(1000 + Math.random() * 9000);
+function randomPart(len=5) {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out = '';
+  for (let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
 }
-function getConfig() {
-  try { return JSON.parse(localStorage.getItem(FB_CFG_KEY) || '{}'); } catch(e) { return {}; }
+function genFamilyCode() {
+  return 'CUIDAR-' + Math.floor(1000 + Math.random() * 9000) + '-' + randomPart(5);
+}
+function getSecretFromCode(code) {
+  const parts = prettyCode(code).split('-').filter(Boolean);
+  return parts.length >= 3 ? parts[parts.length - 1] : '';
 }
 function setStatus(text, color = 'var(--text-light)', toggleOn = null) {
-  const el = document.getElementById('firebase-sync-status');
+  const el = document.getElementById('supabase-sync-status');
   if (el) { el.textContent = text; el.style.color = color; }
-  const tog = document.getElementById('firebase-sync-toggle');
+  const tog = document.getElementById('supabase-sync-toggle');
   if (tog && toggleOn !== null) tog.classList.toggle('on', !!toggleOn);
 }
 function setLastSync(text) {
-  const el = document.getElementById('firebase-last-sync');
+  const el = document.getElementById('supabase-last-sync');
   if (el) el.textContent = text;
 }
-function readFirebaseForm() {
-  const cfg = {
-    apiKey: document.getElementById('fb-apiKey')?.value.trim() || '',
-    authDomain: document.getElementById('fb-authDomain')?.value.trim() || '',
-    projectId: document.getElementById('fb-projectId')?.value.trim() || '',
-    appId: document.getElementById('fb-appId')?.value.trim() || ''
-  };
-  const familyCode = prettyCode(document.getElementById('firebase-family-code')?.value || '');
-  const memberName = document.getElementById('firebase-member-name')?.value.trim() || 'Cuidador/Familiar';
-  return { cfg, familyCode, memberName };
+function readSupabaseForm() {
+  const familyCode = prettyCode(document.getElementById('supabase-family-code')?.value || '');
+  const memberName = document.getElementById('supabase-member-name')?.value.trim() || 'Cuidador/Familiar';
+  return { familyCode, memberName };
 }
-function saveFirebaseForm() {
-  const { cfg, familyCode, memberName } = readFirebaseForm();
-  if (Object.values(cfg).some(v => !v)) throw new Error('Preencha apiKey, authDomain, projectId e appId do Firebase.');
-  localStorage.setItem(FB_CFG_KEY, JSON.stringify(cfg));
-  if (familyCode) localStorage.setItem(FB_FAMILY_KEY, familyCode);
-  localStorage.setItem(FB_MEMBER_KEY, memberName);
-  return { cfg, familyCode, memberName };
+function validateFamilyCode(familyCode) {
+  if (!familyCode) throw new Error('Informe ou crie o código da família.');
+  if (!getSecretFromCode(familyCode)) throw new Error('Use o código completo, no formato CUIDAR-4829-ABCD.');
 }
-function loadFirebaseForm() {
-  const cfg = getConfig();
-  const ids = { apiKey:'fb-apiKey', authDomain:'fb-authDomain', projectId:'fb-projectId', appId:'fb-appId' };
-  Object.entries(ids).forEach(([k,id]) => { const el = document.getElementById(id); if (el && cfg[k]) el.value = cfg[k]; });
-  const fam = document.getElementById('firebase-family-code'); if (fam) fam.value = localStorage.getItem(FB_FAMILY_KEY) || '';
-  const mem = document.getElementById('firebase-member-name'); if (mem) mem.value = localStorage.getItem(FB_MEMBER_KEY) || (JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}').caregiver || '');
-  const enabled = localStorage.getItem(FB_ENABLED_KEY) === '1';
-  setStatus(enabled ? '🟡 Firebase configurado, conectando…' : '⚪ Não conectado ao Firebase', enabled ? 'var(--amber-600)' : 'var(--text-light)', enabled);
+function saveSupabaseForm() {
+  const { familyCode, memberName } = readSupabaseForm();
+  if (familyCode) localStorage.setItem(SB_FAMILY_KEY, familyCode);
+  localStorage.setItem(SB_MEMBER_KEY, memberName);
+  return { familyCode, memberName };
 }
-async function ensureFirebase() {
-  if (fbReady) return true;
-  const cfg = getConfig();
-  if (!cfg.apiKey || !cfg.authDomain || !cfg.projectId || !cfg.appId) throw new Error('Configuração Firebase incompleta.');
-  fbApp = initializeApp(cfg);
-  fbAuth = getAuth(fbApp);
-  fbDb = getFirestore(fbApp);
-  setStatus('🔐 Conectando ao Firebase…', 'var(--amber-600)', true);
-  await signInAnonymously(fbAuth);
-  await new Promise(resolve => {
-    const off = onAuthStateChanged(fbAuth, user => { fbUser = user; if (user) { off(); resolve(); } });
+function loadSupabaseForm() {
+  const fam = document.getElementById('supabase-family-code'); if (fam) fam.value = localStorage.getItem(SB_FAMILY_KEY) || '';
+  const mem = document.getElementById('supabase-member-name'); if (mem) mem.value = localStorage.getItem(SB_MEMBER_KEY) || (JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}').caregiver || '');
+  const enabled = localStorage.getItem(SB_ENABLED_KEY) === '1';
+  setStatus(enabled ? '🟡 Supabase configurado, conectando…' : '⚪ Não conectado ao Supabase', enabled ? 'var(--amber-600)' : 'var(--text-light)', enabled);
+}
+function ensureSupabase(familyCode) {
+  validateFamilyCode(familyCode);
+  const secret = getSecretFromCode(familyCode);
+  if (sb && sbReadyCode === familyCode) return sb;
+  if (sbChannel && sb) { try { sb.removeChannel(sbChannel); } catch(e) {} sbChannel = null; }
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { 'x-cb-family-secret': secret } },
+    realtime: { params: { eventsPerSecond: 10 } }
   });
-  fbReady = true;
-  return true;
-}
-function familyDocRef(code) {
-  return doc(fbDb, 'cuidarbem_families', code);
-}
-function stateDocRef(code) {
-  return doc(fbDb, 'cuidarbem_families', code, 'state', 'current');
+  sbReadyCode = familyCode;
+  return sb;
 }
 function buildCloudPayload() {
-  const memberName = localStorage.getItem(FB_MEMBER_KEY) || 'Cuidador/Familiar';
+  const memberName = localStorage.getItem(SB_MEMBER_KEY) || 'Cuidador/Familiar';
   return {
     snapshot: window.cbCollectSnapshot(),
-    updatedAt: serverTimestamp(),
-    updatedAtClient: new Date().toISOString(),
-    updatedBy: memberName,
-    updatedByUid: fbUser?.uid || 'anonymous'
+    updated_at_client: new Date().toISOString(),
+    updated_by: memberName
   };
 }
+async function pullState(familyCode, {apply=true, silent=false} = {}) {
+  const client = ensureSupabase(familyCode);
+  const { data, error } = await client
+    .from('cuidarbem_family_state')
+    .select('family_code,state,updated_by,updated_at_client,updated_at')
+    .eq('family_code', familyCode)
+    .maybeSingle();
+  if (error) throw error;
+  if (data?.state && apply) {
+    const remoteTs = Date.parse(data.updated_at_client || data.updated_at || '') || 0;
+    sbLastRemoteTs = Math.max(sbLastRemoteTs, remoteTs);
+    sbApplyingRemote = true;
+    try {
+      window.cbApplySnapshot(data.state, { silent });
+      setLastSync('Dados recebidos: ' + new Date().toLocaleString('pt-BR') + (data.updated_by ? ' · por ' + data.updated_by : ''));
+    } finally {
+      setTimeout(() => { sbApplyingRemote = false; }, 1200);
+    }
+  }
+  return data;
+}
 async function pushStateNow({silent=false} = {}) {
-  if (!fbReady) await ensureFirebase();
-  const code = localStorage.getItem(FB_FAMILY_KEY);
-  if (!code) throw new Error('Informe ou crie o código da família.');
+  const { familyCode, memberName } = saveSupabaseForm();
+  validateFamilyCode(familyCode);
+  const secret = getSecretFromCode(familyCode);
+  const client = ensureSupabase(familyCode);
+  const payload = buildCloudPayload();
   setStatus('🔄 Enviando dados para a família…', 'var(--amber-600)', true);
-  await setDoc(stateDocRef(code), buildCloudPayload(), { merge: true });
-  localStorage.setItem(FB_ENABLED_KEY, '1');
+  const { error } = await client
+    .from('cuidarbem_family_state')
+    .upsert({
+      family_code: familyCode,
+      family_secret: secret,
+      state: payload.snapshot,
+      updated_by: memberName,
+      updated_at_client: payload.updated_at_client
+    }, { onConflict: 'family_code' });
+  if (error) throw error;
+  localStorage.setItem(SB_ENABLED_KEY, '1');
   setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
   setLastSync('Última sincronização enviada: ' + new Date().toLocaleString('pt-BR'));
+  if (sbChannel) {
+    sbChannel.send({ type:'broadcast', event:'state-updated', payload: { familyCode, updated_at_client: payload.updated_at_client, updated_by: memberName } }).catch(()=>{});
+  }
   if (!silent && typeof showToast === 'function') showToast('☁️ Dados enviados para a família');
 }
 function queuePush(reason) {
-  if (fbApplyingRemote || localStorage.getItem(FB_ENABLED_KEY) !== '1') return;
-  if (!localStorage.getItem(FB_FAMILY_KEY) || !getConfig().projectId) return;
-  clearTimeout(fbSaveTimer);
-  fbSaveTimer = setTimeout(() => pushStateNow({silent:true}).catch(err => {
-    console.warn('[CuidarBem Firebase] Falha ao sincronizar:', err);
+  if (sbApplyingRemote || localStorage.getItem(SB_ENABLED_KEY) !== '1') return;
+  const code = localStorage.getItem(SB_FAMILY_KEY);
+  if (!code) return;
+  clearTimeout(sbSaveTimer);
+  sbSaveTimer = setTimeout(() => pushStateNow({silent:true}).catch(err => {
+    console.warn('[CuidarBem Supabase] Falha ao sincronizar:', err);
     setStatus('❌ Falha ao sincronizar', 'var(--coral-600)', true);
   }), 900);
 }
-async function startRealtimeListener(code) {
-  if (fbUnsub) { fbUnsub(); fbUnsub = null; }
-  fbUnsub = onSnapshot(stateDocRef(code), snap => {
-    if (!snap.exists()) return;
-    const data = snap.data();
-    const remote = data.snapshot;
-    if (!remote) return;
-    const remoteTs = Date.parse(data.updatedAtClient || remote.ts || '') || 0;
-    if (remoteTs && remoteTs <= fbLastRemoteTs) return;
-    fbLastRemoteTs = remoteTs;
-    if (data.updatedByUid && fbUser?.uid && data.updatedByUid === fbUser.uid) {
-      setLastSync('Última sincronização: ' + new Date().toLocaleString('pt-BR') + ' · por este aparelho');
-      return;
-    }
-    fbApplyingRemote = true;
-    try {
-      window.cbApplySnapshot(remote, { silent:false });
-      setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
-      setLastSync('Última atualização recebida: ' + (data.updatedAtClient ? new Date(data.updatedAtClient).toLocaleString('pt-BR') : new Date().toLocaleString('pt-BR')) + (data.updatedBy ? ' · por ' + data.updatedBy : ''));
-    } finally {
-      setTimeout(() => { fbApplyingRemote = false; }, 1200);
-    }
-  }, err => {
-    console.warn('[CuidarBem Firebase] Listener error:', err);
-    setStatus('❌ Firebase sem permissão ou offline', 'var(--coral-600)', true);
-    if (typeof showToast === 'function') showToast('❌ Verifique regras/permissão do Firestore');
-  });
+async function startRealtimeListener(familyCode) {
+  const client = ensureSupabase(familyCode);
+  if (sbChannel) { try { client.removeChannel(sbChannel); } catch(e) {} sbChannel = null; }
+  sbChannel = client.channel('cuidarbem-' + familyCode, { config: { broadcast: { self: false } } })
+    .on('broadcast', { event: 'state-updated' }, async ({ payload }) => {
+      if (!payload || payload.familyCode !== familyCode) return;
+      const remoteTs = Date.parse(payload.updated_at_client || '') || 0;
+      if (remoteTs && remoteTs <= sbLastRemoteTs) return;
+      try {
+        await pullState(familyCode, { apply:true, silent:false });
+        setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
+      } catch(err) {
+        console.warn('[CuidarBem Supabase] Pull after broadcast error:', err);
+        setStatus('❌ Falha ao receber atualização', 'var(--coral-600)', true);
+      }
+    })
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
+      if (status === 'CHANNEL_ERROR') setStatus('❌ Canal em tempo real indisponível', 'var(--coral-600)', true);
+    });
 }
 
-window.createFirebaseFamily = async function createFirebaseFamily() {
+window.createSupabaseFamily = async function createSupabaseFamily() {
   try {
-    const famEl = document.getElementById('firebase-family-code');
+    const famEl = document.getElementById('supabase-family-code');
     if (!famEl.value.trim()) famEl.value = genFamilyCode();
-    const { familyCode, memberName } = saveFirebaseForm();
-    await ensureFirebase();
-    await setDoc(familyDocRef(familyCode), {
-      familyCode,
-      app: 'CuidarBem',
-      createdAt: serverTimestamp(),
-      createdAtClient: new Date().toISOString(),
-      createdBy: memberName,
-      createdByUid: fbUser?.uid || 'anonymous'
-    }, { merge: true });
-    await setDoc(stateDocRef(familyCode), buildCloudPayload(), { merge: true });
-    localStorage.setItem(FB_ENABLED_KEY, '1');
+    const { familyCode } = saveSupabaseForm();
+    validateFamilyCode(familyCode);
+    ensureSupabase(familyCode);
+    await pushStateNow({silent:true});
     await startRealtimeListener(familyCode);
+    localStorage.setItem(SB_ENABLED_KEY, '1');
     setStatus('✅ Família criada e sincronizada', 'var(--teal-600)', true);
-    setLastSync('Código da família: ' + familyCode + ' · compartilhe com o familiar/cuidador');
+    setLastSync('Código da família: ' + familyCode + ' · compartilhe este código completo');
     if (typeof showToast === 'function') showToast('👨‍👩‍👧 Família criada: ' + familyCode);
   } catch(err) {
-    console.warn('[CuidarBem Firebase] create error:', err);
-    setStatus('❌ ' + err.message, 'var(--coral-600)', false);
-    if (typeof showToast === 'function') showToast('❌ ' + err.message);
+    console.warn('[CuidarBem Supabase] create error:', err);
+    setStatus('❌ ' + (err.message || err), 'var(--coral-600)', false);
+    if (typeof showToast === 'function') showToast('❌ ' + (err.message || err));
   }
 };
 
-window.joinFirebaseFamily = async function joinFirebaseFamily() {
+window.joinSupabaseFamily = async function joinSupabaseFamily() {
   try {
-    const { familyCode } = saveFirebaseForm();
-    if (!familyCode) throw new Error('Digite o código da família.');
-    await ensureFirebase();
-    const stateSnap = await getDoc(stateDocRef(familyCode));
-    if (stateSnap.exists() && stateSnap.data().snapshot) {
-      const data = stateSnap.data();
-      fbApplyingRemote = true;
-      window.cbApplySnapshot(data.snapshot, { silent:true });
-      setTimeout(() => { fbApplyingRemote = false; }, 1200);
-      setLastSync('Dados recebidos da família: ' + familyCode);
-    } else {
-      await setDoc(familyDocRef(familyCode), { familyCode, app:'CuidarBem', createdAt: serverTimestamp(), createdAtClient: new Date().toISOString() }, { merge:true });
-      await setDoc(stateDocRef(familyCode), buildCloudPayload(), { merge:true });
-      setLastSync('Família vazia criada com os dados deste aparelho: ' + familyCode);
-    }
-    localStorage.setItem(FB_ENABLED_KEY, '1');
+    const { familyCode } = saveSupabaseForm();
+    validateFamilyCode(familyCode);
+    ensureSupabase(familyCode);
+    const current = await pullState(familyCode, { apply:true, silent:true });
+    if (!current) await pushStateNow({silent:true});
     await startRealtimeListener(familyCode);
+    localStorage.setItem(SB_ENABLED_KEY, '1');
     setStatus('✅ Acompanhamento familiar ativo', 'var(--teal-600)', true);
     if (typeof showToast === 'function') showToast('✅ Sincronização familiar ativa');
   } catch(err) {
-    console.warn('[CuidarBem Firebase] join error:', err);
-    setStatus('❌ ' + err.message, 'var(--coral-600)', false);
-    if (typeof showToast === 'function') showToast('❌ ' + err.message);
+    console.warn('[CuidarBem Supabase] join error:', err);
+    setStatus('❌ ' + (err.message || err), 'var(--coral-600)', false);
+    if (typeof showToast === 'function') showToast('❌ ' + (err.message || err));
   }
 };
 
-window.pushFirebaseNow = async function pushFirebaseNow() {
-  try { saveFirebaseForm(); await pushStateNow({silent:false}); }
-  catch(err) { setStatus('❌ ' + err.message, 'var(--coral-600)', true); if (typeof showToast === 'function') showToast('❌ ' + err.message); }
+window.pushSupabaseNow = async function pushSupabaseNow() {
+  try { await pushStateNow({silent:false}); }
+  catch(err) { setStatus('❌ ' + (err.message || err), 'var(--coral-600)', true); if (typeof showToast === 'function') showToast('❌ ' + (err.message || err)); }
 };
 
-window.disconnectFirebaseSync = function disconnectFirebaseSync() {
-  if (fbUnsub) { fbUnsub(); fbUnsub = null; }
-  localStorage.setItem(FB_ENABLED_KEY, '0');
+window.disconnectSupabaseSync = function disconnectSupabaseSync() {
+  if (sbChannel && sb) { try { sb.removeChannel(sbChannel); } catch(e) {} sbChannel = null; }
+  localStorage.setItem(SB_ENABLED_KEY, '0');
   setStatus('⚪ Desconectado do modo família', 'var(--text-light)', false);
   setLastSync('Última sincronização: pausada neste aparelho');
   if (typeof showToast === 'function') showToast('☁️ Sincronização pausada');
 };
 
-window.toggleFirebaseSync = function toggleFirebaseSync() {
-  const enabled = localStorage.getItem(FB_ENABLED_KEY) === '1';
-  if (enabled) disconnectFirebaseSync();
-  else joinFirebaseFamily();
+window.toggleSupabaseSync = function toggleSupabaseSync() {
+  const enabled = localStorage.getItem(SB_ENABLED_KEY) === '1';
+  if (enabled) disconnectSupabaseSync();
+  else joinSupabaseFamily();
 };
 
 window.addEventListener('cb-local-change', e => queuePush(e.detail?.reason));
@@ -8496,13 +8489,17 @@ window.addEventListener('storage', e => {
   if (['cuidarbem_tasks','cuidarbem_completions','cuidarbem_settings','cb_medical_profile','cb_care_events','cb_vitals','paciente'].includes(e.key)) queuePush('storage:' + e.key);
 });
 
-loadFirebaseForm();
-if (localStorage.getItem(FB_ENABLED_KEY) === '1' && localStorage.getItem(FB_FAMILY_KEY) && getConfig().projectId) {
-  ensureFirebase().then(() => startRealtimeListener(localStorage.getItem(FB_FAMILY_KEY))).then(() => {
+loadSupabaseForm();
+if (localStorage.getItem(SB_ENABLED_KEY) === '1' && localStorage.getItem(SB_FAMILY_KEY)) {
+  const code = localStorage.getItem(SB_FAMILY_KEY);
+  Promise.resolve().then(() => {
+    ensureSupabase(code);
+    return pullState(code, { apply:true, silent:true });
+  }).then(() => startRealtimeListener(code)).then(() => {
     setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
   }).catch(err => {
-    console.warn('[CuidarBem Firebase] auto start error:', err);
-    setStatus('❌ Firebase precisa de configuração', 'var(--coral-600)', false);
+    console.warn('[CuidarBem Supabase] auto start error:', err);
+    setStatus('❌ Supabase precisa da tabela/regras', 'var(--coral-600)', false);
   });
 }
 </script>

@@ -1,77 +1,36 @@
-CuidarBem PWA - pacote corrigido
+CuidarBem PWA v21 - Supabase Sync
 
-Correção aplicada:
-- Arquivos renomeados exatamente como o manifest e o service worker procuram.
-- icon-144.png incluído na raiz.
-- favicon.ico incluído na raiz.
-- Cache do Service Worker atualizado para forçar renovação.
-
-Envie TODOS estes arquivos para a raiz do repositório CuidarBem no GitHub Pages:
+Arquivos necessários incluídos:
 - index.html
 - manifest.webmanifest
 - sw.js
+- SUPABASE_SETUP.sql
+- icon-48.png, icon-72.png, icon-96.png, icon-128.png, icon-144.png, icon-152.png, icon-180.png, icon-192.png, icon-512.png
 - favicon.ico
-- icon-48.png
-- icon-72.png
-- icon-96.png
-- icon-128.png
-- icon-144.png
-- icon-152.png
-- icon-180.png
-- icon-192.png
-- icon-512.png
 
-Depois de subir:
-1. Abra o site.
-2. No DevTools > Application > Service Workers, clique em Update ou Unregister e recarregue.
-3. No celular, limpe cache do site se continuar puxando versão antiga.
-4. Teste se estes links abrem diretamente:
-   /CuidarBem/icon-144.png
-   /CuidarBem/favicon.ico
+Como publicar no GitHub Pages:
+1. Envie TODOS os arquivos desta pasta para a raiz do repositório CuidarBem.
+2. Substitua os arquivos antigos.
+3. Aguarde o GitHub Pages publicar.
+4. Acesse: https://ceducunha-alt0609.github.io/CuidarBem/
 
+Configuração obrigatória no Supabase:
+1. Abra o projeto Supabase.
+2. Vá em SQL Editor > New query.
+3. Cole todo o conteúdo do arquivo SUPABASE_SETUP.sql.
+4. Clique em Run.
+5. No painel do Supabase, verifique se Realtime está ativo para o projeto.
 
-Atualização v19:
-- Dados essenciais do paciente: tipo sanguíneo, peso, altura, médico principal e observações críticas.
-- Resumo do cuidador na tela inicial.
-- Histórico rápido de eventos/intercorrências.
-- Exportação e importação de backup completo em JSON.
-- Modo SAMU mostra dados essenciais e observações críticas.
+Como usar o Modo Família:
+1. No primeiro celular, abra CuidarBem > Configurações.
+2. Em Modo Família Sincronizado, clique em Criar família.
+3. Copie o código completo, por exemplo: CUIDAR-4829-ABCD.
+4. No celular do familiar/cuidador, cole o mesmo código e clique em Entrar / sincronizar.
+5. Ao marcar medicamentos, eventos, sinais vitais ou dados do paciente, o outro aparelho recebe atualização.
 
-
-CuidarBem v20 - Modo Família Sincronizado com Firebase
-
-O que foi acrescentado:
-- Card "Modo Família Sincronizado" em Perfil > Dados/App.
-- Sincronização em tempo real via Firebase Authentication anônimo + Cloud Firestore.
-- Código da família, exemplo: CUIDAR-4829.
-- Quando um aparelho marca medicamento como tomado, os outros aparelhos da mesma família recebem a atualização.
-- Sincroniza medicamentos, confirmações, dados essenciais do paciente, histórico rápido, sinais vitais e preferências.
-
-Configuração no Firebase:
-1. Acesse o console do Firebase e crie/abra seu projeto.
-2. Em Authentication > Sign-in method, ative "Anonymous/Anônimo".
-3. Em Firestore Database, crie o banco em modo production ou test.
-4. Em Project settings > General > Your apps, crie um app Web.
-5. Copie para o CuidarBem estes campos: apiKey, authDomain, projectId e appId.
-6. No app CuidarBem, abra Perfil > Dados > Modo Família Sincronizado.
-7. Cole os 4 campos, informe seu nome e toque em "Criar família".
-8. No outro celular, cole os mesmos 4 campos, digite o mesmo código da família e toque em "Entrar / sincronizar".
-
-Regras iniciais sugeridas do Firestore para teste controlado:
-
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /cuidarbem_families/{familyId} {
-      allow read, write: if request.auth != null;
-      match /state/{docId} {
-        allow read, write: if request.auth != null;
-      }
-    }
-  }
-}
-
-Observação importante:
-- As chaves do Firebase Web são públicas por natureza, mas as regras do Firestore precisam estar corretas.
-- Para uso familiar pequeno, o plano gratuito tende a ser suficiente.
-- Fotos em base64 podem aumentar o tamanho do documento. Se o app crescer muito, o ideal será separar anexos/imagens em Storage.
+Importante:
+- Compartilhe apenas o código completo com pessoas autorizadas.
+- O código completo funciona como chave familiar.
+- Não teste instalação abrindo pelo arquivo C:\...\index.html. PWA precisa de HTTPS ou localhost.
+- No Android/Chrome e PC/Edge/Chrome deve aparecer instalar app.
+- No iPhone/iPad: Compartilhar > Adicionar à Tela de Início.
