@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v25-premium-layout';
+const CACHE_NAME = 'cuidarbem-pwa-v26-mobile-topbar';
 const APP_SHELL = [
   './',
   './index.html',

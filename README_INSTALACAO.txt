@@ -67,3 +67,10 @@ CuidarBem v25 Premium Layout
 - Nova camada visual para Home, tarefas, cards, bottom nav/sidebar, perfil, modais e confirmação de medicação.
 - Mantém a lógica operacional da v24: Supabase Sync, alertas inteligentes, limpeza de dados demo e PWA.
 - Cache atualizado para cuidarbem-pwa-v25-premium-layout.
+
+
+Versão v26 - Refinamento mobile da tela inicial:
+- Removido hamburger da topbar mobile.
+- Removido nome duplicado no centro da topbar.
+- Sininho de alertas alinhado à direita, mais baixo e fixo.
+- Topbar da home fixada no topo no mobile.

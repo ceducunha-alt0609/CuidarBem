@@ -1956,6 +1956,61 @@
 .vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
 .vital-value{font-weight:800}
 
+
+
+/* CuidarBem v26 — refinamento mobile da tela inicial
+   - Topbar fixa
+   - Sem hamburger no topo
+   - Sem nome duplicado no centro da topbar
+   - Sininho mais baixo e alinhado à direita
+*/
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
 </style>
 
 <style>
@@ -2041,7 +2096,7 @@
 
 <style id="cuidarbem-v25-premium-redesign">
 /* ═══════════════════════════════════════════════════════════════
-   CuidarBem v25 — redesign visual premium inspirado no mockup
+   CuidarBem v26 — refinamento mobile topbar fixa
    Mantém a operação v24 e altera apenas camada visual/layout.
    ═══════════════════════════════════════════════════════════════ */
 :root{
@@ -2210,9 +2265,7 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 <!-- SCREEN: HOME -->
 <div id="screen-home" class="screen active">
   <div class="header">
-    <div class="premium-topbar">
-      <button class="premium-icon-btn" onclick="goScreen('profile',document.getElementById('nav-profile'))" aria-label="Menu">☰</button>
-      <div class="premium-topbar-brand">CuidarBem</div>
+    <div class="premium-topbar" aria-label="Barra superior fixa">
       <button class="premium-icon-btn premium-bell" onclick="speakSummary()" aria-label="Notificações">🔔<span></span></button>
     </div>
     <div class="header-greeting" id="greeting">Bom dia ☀️</div>
