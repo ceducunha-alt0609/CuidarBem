@@ -2317,7 +2317,7 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 
 
 <style id="cuidarbem-v29-mobile-subtitle-one-line">
-/* v29 — slogan da topbar em linha única no mobile */
+/* v29/v30 — slogan em linha única + sininho como central de alertas */
 .mobile-header-subtitle,
 .mobile-header-actions,
 .mobile-bell-btn{display:none;}
@@ -2414,6 +2414,51 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 }
 </style>
 
+
+
+<style id="cuidarbem-v30-alerts-center">
+/* v30 — Sininho virou Central de Alertas; Ler resumo fica só para voz */
+.alerts-center-overlay{
+  position:fixed;inset:0;background:rgba(0,31,26,.54);z-index:9800;
+  display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;
+  transition:opacity .22s ease;backdrop-filter:blur(6px);
+}
+.alerts-center-overlay.open{opacity:1;pointer-events:auto;}
+.alerts-center-sheet{
+  width:100%;max-width:480px;background:#fff;border-radius:30px 30px 0 0;
+  padding:16px 16px calc(22px + env(safe-area-inset-bottom));
+  box-shadow:0 -20px 50px rgba(0,39,33,.28);transform:translateY(105%);
+  transition:transform .28s cubic-bezier(.32,.72,0,1);max-height:82dvh;overflow-y:auto;
+}
+.alerts-center-overlay.open .alerts-center-sheet{transform:translateY(0);}
+.alerts-center-handle{width:42px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 14px;}
+.alerts-center-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.alerts-center-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:950;color:var(--green-800);line-height:1.1;}
+.alerts-center-sub{font-size:12.5px;font-weight:700;color:var(--text-light);margin-top:3px;}
+.alerts-center-close{width:38px;height:38px;border-radius:14px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:18px;cursor:pointer;}
+.alerts-center-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px;}
+.alerts-center-stat{border-radius:16px;padding:10px 8px;text-align:center;border:1px solid var(--gray-100);background:var(--gray-50);}
+.alerts-center-stat strong{display:block;font-size:20px;font-family:'Nunito',sans-serif;color:var(--green-800);line-height:1;}
+.alerts-center-stat span{display:block;font-size:10.5px;font-weight:800;color:var(--text-light);margin-top:4px;text-transform:uppercase;letter-spacing:.03em;}
+.alerts-center-list{display:flex;flex-direction:column;gap:9px;}
+.alerts-center-item{display:flex;align-items:flex-start;gap:11px;border-radius:18px;padding:12px;border:1px solid var(--gray-100);background:#fff;box-shadow:0 8px 20px rgba(0,0,0,.045);}
+.alerts-center-icon{width:36px;height:36px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:0 0 36px;font-size:18px;}
+.alerts-center-body{min-width:0;flex:1;}
+.alerts-center-name{font-size:14px;font-weight:900;color:var(--text);line-height:1.25;}
+.alerts-center-meta{font-size:12px;color:var(--text-muted);font-weight:700;margin-top:2px;line-height:1.35;}
+.alerts-center-action{margin-top:8px;display:inline-flex;border:0;border-radius:999px;padding:6px 10px;background:var(--green-50);color:var(--green-700,var(--green-600));font-family:'Nunito',sans-serif;font-size:11.5px;font-weight:900;cursor:pointer;}
+.alerts-center-item.late .alerts-center-icon{background:var(--coral-50);color:var(--coral-600);}
+.alerts-center-item.next .alerts-center-icon{background:var(--green-50);color:var(--green-600);}
+.alerts-center-item.sync .alerts-center-icon{background:var(--blue-50);color:var(--blue-600);}
+.alerts-center-item.warn .alerts-center-icon{background:var(--amber-50);color:var(--amber-600);}
+.alerts-center-empty{text-align:center;padding:28px 12px;color:var(--text-muted);font-weight:700;line-height:1.55;}
+.alerts-center-empty .big{font-size:44px;display:block;margin-bottom:8px;}
+.mobile-bell-btn.has-alerts{background:rgba(255,255,255,.24)!important;box-shadow:inset 0 1px rgba(255,255,255,.28),0 10px 24px rgba(255,77,95,.20)!important;}
+#mobile-alert-dot{display:none;}
+.mobile-bell-btn.has-alerts #mobile-alert-dot{display:block!important;}
+@media (min-width:768px){.alerts-center-sheet{max-width:560px;border-radius:30px;margin-bottom:24px}.alerts-center-overlay{align-items:center}.alerts-center-overlay.open .alerts-center-sheet{transform:translateY(0)}}
+</style>
+
 </head>
 <body>
 
@@ -2427,7 +2472,7 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
         <div class="header-title">Cuidar Bem</div>
         <div class="mobile-header-subtitle">Cuidado que conecta, saúde que acompanha.</div>
       </div>
-      <button class="mobile-bell-btn" onclick="speakSummary()" aria-label="Alertas">🔔<span></span></button>
+      <button class="mobile-bell-btn" onclick="openAlertsCenter()" aria-label="Central de alertas">🔔<span id="mobile-alert-dot"></span></button>
     </div>
 
 <div class="vitals-bar">
@@ -3900,6 +3945,24 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 </div>
 
 <!-- TOAST -->
+
+
+<!-- v30: Central de Alertas do sininho -->
+<div class="alerts-center-overlay" id="alerts-center" onclick="closeAlertsCenter(event)" aria-hidden="true">
+  <div class="alerts-center-sheet" role="dialog" aria-modal="true" aria-labelledby="alerts-center-title" onclick="event.stopPropagation()">
+    <div class="alerts-center-handle"></div>
+    <div class="alerts-center-head">
+      <div>
+        <div class="alerts-center-title" id="alerts-center-title">Central de Alertas</div>
+        <div class="alerts-center-sub" id="alerts-center-sub">Pendências, próximos horários e sincronização.</div>
+      </div>
+      <button class="alerts-center-close" onclick="closeAlertsCenter()" aria-label="Fechar">×</button>
+    </div>
+    <div class="alerts-center-summary" id="alerts-center-summary"></div>
+    <div class="alerts-center-list" id="alerts-center-list"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -4695,7 +4758,9 @@ function renderAlerts() {
     </div>`);
   });
   if (examResultAlerts.length) container.innerHTML += examResultAlerts.join('');
+  if (typeof updateAlertsBell === 'function') updateAlertsBell();
 }
+
 
 function renderNextAlarm() {
   const card = document.getElementById('next-alarm-card');
@@ -7459,6 +7524,138 @@ function haptic(pattern = [30]) {
     if (btn) { haptic([15]); goScreen(nextName, btn); }
   }, { passive: true });
 })();
+
+
+
+// ── v30. CENTRAL DE ALERTAS DO SININHO ─────────────────────────────────────
+function cbSafeDateFromTime(time){
+  if (!time || !/^\d{1,2}:\d{2}$/.test(time)) return null;
+  const [h,m] = time.split(':').map(Number);
+  const d = new Date(); d.setHours(h, m, 0, 0);
+  return d;
+}
+function cbMinutesDiffFromNow(time){
+  const d = cbSafeDateFromTime(time);
+  if (!d) return null;
+  return Math.round((d.getTime() - Date.now()) / 60000);
+}
+function cbTypeLabel(t){
+  const map = { med:'Medicamento', exer:'Exercício', fisio:'Fisioterapia', cons:'Consulta', exam:'Exame' };
+  return map[t && t.type] || 'Cuidado';
+}
+function cbCollectAlerts(){
+  const result = { late: [], next: [], warn: [], sync: [] };
+  const today = typeof todayStr === 'function' ? todayStr() : new Date().toISOString().split('T')[0];
+  const list = (typeof getTodayTasks === 'function' ? getTodayTasks() : (tasks || []).filter(t => t.date === today || t.repeat === 'daily')) || [];
+  const pending = list.filter(t => !(typeof isCompletedToday === 'function' ? isCompletedToday(t) : completions[`${t.id}_${today}`]));
+  pending.forEach(t => {
+    const diff = cbMinutesDiffFromNow(t.time);
+    if (diff === null) return;
+    if (diff < 0) {
+      result.late.push({ task:t, diff, title:t.name, meta:`${cbTypeLabel(t)} atrasado há ${Math.abs(diff)} min • previsto às ${t.time}` });
+    } else if (diff <= 60) {
+      result.next.push({ task:t, diff, title:t.name, meta: diff === 0 ? `${cbTypeLabel(t)} é agora • ${t.time}` : `${cbTypeLabel(t)} em ${diff} min • ${t.time}` });
+    }
+  });
+  // Receitas/retiradas próximas
+  try {
+    (tasks || []).filter(t => t.type === 'med').forEach(t => {
+      if (typeof getMedStatus !== 'function') return;
+      const st = getMedStatus(t);
+      if (st.rxExpired) result.warn.push({ task:t, icon:'📄', title:t.name, meta:'Receita vencida. Renove com urgência.' });
+      else if (st.rxDays !== null && st.rxDays <= 14) result.warn.push({ task:t, icon:'📄', title:t.name, meta:`Receita vence em ${st.rxDays} dia${st.rxDays!==1?'s':''}.` });
+      if (st.pickupDays !== null && st.pickupDays <= 5) result.warn.push({ task:t, icon:'🏥', title:t.name, meta: st.pickupDays <= 0 ? 'Retirada do medicamento é hoje ou já passou.' : `Retirada do medicamento em ${st.pickupDays} dia${st.pickupDays!==1?'s':''}.` });
+    });
+  } catch(e) {}
+  // Sincronização familiar
+  try {
+    const fam = JSON.parse(localStorage.getItem('cb_family_sync') || localStorage.getItem('cuidarbem_family_sync') || '{}');
+    const last = fam.lastSync || fam.last_sync || localStorage.getItem('cuidarbem_last_sync') || '';
+    if (last) result.sync.push({ icon:'🔄', title:'Sincronização familiar', meta:'Última sincronização: agora ou recentemente.' });
+    else result.sync.push({ icon:'🔄', title:'Sincronização familiar', meta:'Sem registro recente. Use Forçar envio se necessário.' });
+  } catch(e) {
+    result.sync.push({ icon:'🔄', title:'Sincronização familiar', meta:'Status não identificado.' });
+  }
+  result.late.sort((a,b)=>a.diff-b.diff);
+  result.next.sort((a,b)=>a.diff-b.diff);
+  return result;
+}
+function cbAlertCount(){
+  const a = cbCollectAlerts();
+  return a.late.length + a.warn.length;
+}
+function updateAlertsBell(){
+  const btn = document.querySelector('.mobile-bell-btn');
+  if (!btn) return;
+  const count = cbAlertCount();
+  btn.classList.toggle('has-alerts', count > 0);
+  btn.setAttribute('title', count > 0 ? `${count} alerta${count>1?'s':''} importante${count>1?'s':''}` : 'Central de alertas');
+}
+function renderAlertsCenter(){
+  const summary = document.getElementById('alerts-center-summary');
+  const listEl = document.getElementById('alerts-center-list');
+  const sub = document.getElementById('alerts-center-sub');
+  if (!summary || !listEl) return;
+  const a = cbCollectAlerts();
+  const pendingTotal = (typeof getTodayTasks === 'function' ? getTodayTasks() : []).filter(t => !(typeof isCompletedToday === 'function' ? isCompletedToday(t) : false)).length;
+  summary.innerHTML = `
+    <div class="alerts-center-stat"><strong>${a.late.length}</strong><span>Atrasado</span></div>
+    <div class="alerts-center-stat"><strong>${a.next.length}</strong><span>Próximos</span></div>
+    <div class="alerts-center-stat"><strong>${pendingTotal}</strong><span>Pendentes</span></div>`;
+  const rows = [];
+  a.late.slice(0,8).forEach(x => rows.push(cbAlertRow('late','⚠️',x.title,x.meta,x.task && x.task.id ? `onclick="closeAlertsCenter();setTimeout(()=>openTaskQuickAction('${x.task.id}'),120)"` : '')));
+  a.next.slice(0,5).forEach(x => rows.push(cbAlertRow('next','⏰',x.title,x.meta,x.task && x.task.id ? `onclick="closeAlertsCenter();setTimeout(()=>openTaskQuickAction('${x.task.id}'),120)"` : '')));
+  a.warn.slice(0,6).forEach(x => rows.push(cbAlertRow('warn',x.icon || '📌',x.title,x.meta,x.task && x.task.id && typeof openMedInfo === 'function' ? `onclick="closeAlertsCenter();setTimeout(()=>openMedInfo('${x.task.id}'),120)"` : '')));
+  a.sync.slice(0,1).forEach(x => rows.push(cbAlertRow('sync',x.icon || '🔄',x.title,x.meta,'')));
+  if (!rows.length) {
+    listEl.innerHTML = `<div class="alerts-center-empty"><span class="big">✅</span>Tudo tranquilo por aqui.<br>Sem alertas importantes neste momento.</div>`;
+    if (sub) sub.textContent = 'Sem alertas importantes neste momento.';
+  } else {
+    listEl.innerHTML = rows.join('');
+    if (sub) sub.textContent = 'Toque em um item para agir ou conferir detalhes.';
+  }
+  updateAlertsBell();
+}
+function cbAlertRow(kind, icon, title, meta, actionAttr){
+  const hasAction = !!actionAttr;
+  return `<div class="alerts-center-item ${kind}">
+    <div class="alerts-center-icon">${icon}</div>
+    <div class="alerts-center-body">
+      <div class="alerts-center-name">${title || 'Alerta'}</div>
+      <div class="alerts-center-meta">${meta || ''}</div>
+      ${hasAction ? `<button class="alerts-center-action" ${actionAttr}>Abrir cuidado</button>` : ''}
+    </div>
+  </div>`;
+}
+function openAlertsCenter(){
+  renderAlertsCenter();
+  const el = document.getElementById('alerts-center');
+  if (el) {
+    el.classList.add('open');
+    el.setAttribute('aria-hidden','false');
+  }
+  if (typeof haptic === 'function') haptic([15,35,15]);
+}
+function closeAlertsCenter(ev){
+  if (ev && ev.target && ev.currentTarget && ev.target !== ev.currentTarget) return;
+  const el = document.getElementById('alerts-center');
+  if (el) {
+    el.classList.remove('open');
+    el.setAttribute('aria-hidden','true');
+  }
+}
+function openTaskQuickAction(id){
+  const t = (tasks || []).find(x => x.id === id);
+  if (!t) return;
+  if (t.type === 'med' && typeof openMedConfirm === 'function') return openMedConfirm(id);
+  if ((t.type === 'cons' || t.type === 'exam') && typeof openSeenModal === 'function') return openSeenModal(id);
+  if (typeof toggleTask === 'function') {
+    if (!isCompletedToday(t)) toggleTask(id);
+    showToast('✅ Cuidado confirmado');
+  }
+}
+setInterval(updateAlertsBell, 60000);
+setTimeout(updateAlertsBell, 800);
 
 // ── 4. VOICE SUMMARY ─────────────────────────────────────────────────────────
 function speakSummary() {
