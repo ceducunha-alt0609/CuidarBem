@@ -1,3 +1,9 @@
+CuidarBem PWA v29 - Refinamento mobile
+
+Alteração desta versão:
+- Slogan da topbar em uma única linha: "Cuidado que conecta, saúde que acompanha."
+- Cache do PWA atualizado para v29.
+
 CuidarBem PWA v27 - Correção mobile header
 
 Correção: Bom dia/Boa tarde e CuidarBem voltam a aparecer abaixo da topbar fixa. Hamburger removido, título duplicado do topo removido, sininho mantido no canto superior direito.
@@ -85,3 +91,15 @@ Versão v28:
 - Nome do app Cuidar Bem + slogan.
 - Dia, data e horário HH:MM atualizando automaticamente.
 - Paciente, botão SAMU e ações Ler resumo / Parar resumo / Modo simples na própria topbar.
+
+
+Versão v30 - Central de Alertas
+- Sininho agora abre a Central de Alertas.
+- Ler resumo continua exclusivo para leitura por voz.
+- Central mostra atrasados, próximos cuidados, avisos de receita/retirada e sincronização.
+
+
+Versão v31:
+- Central de Alertas do sininho agora abre centralizada no mobile.
+- Janela com altura máxima visível, rolagem interna e botão fechar sempre acessível.
+- Cache atualizado para v31.
