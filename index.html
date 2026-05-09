@@ -2127,6 +2127,12 @@
     <!-- ALERTS -->
     <div id="alerts-container"></div>
 
+    <!-- RESUMO DO CUIDADOR -->
+    <div class="card" id="caregiver-summary-card" style="display:none;border:1.5px solid var(--green-100);margin-bottom:12px">
+      <div class="card-title">👨‍⚕️ Resumo do cuidador</div>
+      <div id="caregiver-summary-content"></div>
+    </div>
+
     <!-- PROGRESSO DO DIA (mobile only, hidden on desktop via class) -->
     <div class="card mobile-only-progress">
       <div class="card-title">Progresso de hoje</div>
@@ -2340,6 +2346,33 @@
           <input class="form-input" id="patient-conditions" placeholder="Ex: Hipertensão, Diabetes tipo 2, Fibrilação atrial" onchange="saveProfile()">
           <div style="font-size:11px;color:var(--text-light);margin-top:4px">💡 Separe por vírgula. Pedido frequente no SAMU.</div>
         </div>
+        <div class="form-group">
+          <label class="form-label">Observações essenciais</label>
+          <textarea class="form-input" id="patient-important-notes" rows="3" placeholder="Ex: AVC em 2024; dificuldade de fala; risco de queda; usa anticoagulante; não pode ficar sem supervisão." style="resize:vertical;min-height:76px;font-family:'Nunito Sans',sans-serif" onchange="saveProfile()"></textarea>
+          <div style="font-size:11px;color:var(--text-light);margin-top:4px">Aparece no resumo do cuidador e no Modo SAMU.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group">
+            <label class="form-label">Tipo sanguíneo</label>
+            <select class="form-input form-select" id="patient-blood" onchange="saveProfile()">
+              <option value="">—</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Não sabe</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Peso</label>
+            <input class="form-input" id="patient-weight" inputmode="decimal" placeholder="Ex: 68 kg" onchange="saveProfile()">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group">
+            <label class="form-label">Altura</label>
+            <input class="form-input" id="patient-height" inputmode="decimal" placeholder="Ex: 1,65 m" onchange="saveProfile()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Médico principal</label>
+            <input class="form-input" id="patient-main-doctor" placeholder="Ex: Dra. Ana — Neurologia" onchange="saveProfile()">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2390,6 +2423,27 @@
       <div class="form-group" style="margin-bottom:0">
         <textarea class="form-input" id="patient-surgeries" rows="3" placeholder="Ex: Revascularização do miocárdio (2019), Prótese de quadril esquerdo (2022)..." style="resize:vertical;min-height:80px;font-family:'Nunito Sans',sans-serif" onchange="saveProfile()"></textarea>
       </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;border:1.5px solid var(--amber-50)">
+      <div class="card-title">🧾 Histórico rápido de eventos</div>
+      <div style="font-size:12px;color:var(--text-light);line-height:1.5;margin-bottom:12px">Registre quedas, pronto-socorro, alteração de remédio, exames importantes ou qualquer intercorrência.</div>
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;margin-bottom:8px">
+        <input class="form-input" type="date" id="event-date" title="Data do evento">
+        <select class="form-input form-select" id="event-type">
+          <option value="queda">🚨 Queda</option>
+          <option value="ps">🏥 Pronto-socorro</option>
+          <option value="remedio">💊 Alteração de remédio</option>
+          <option value="exame">🔬 Exame importante</option>
+          <option value="sintoma">⚠️ Sintoma / alerta</option>
+          <option value="outro">📝 Outro</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:8px">
+        <input class="form-input" id="event-desc" placeholder="Ex: Queda no banheiro, sem corte, dor no quadril esquerdo.">
+      </div>
+      <button class="btn-add" style="margin-bottom:10px;padding:12px" onclick="addCareEvent()">➕ Adicionar evento</button>
+      <div id="care-event-list"></div>
     </div>
 
     <div class="card" style="margin-bottom:12px">
@@ -2626,6 +2680,28 @@
       </div>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
     </div>
+    <div class="setting-row" onclick="exportBackupJSON()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--blue-50)">💾</div>
+        <div>
+          <div class="setting-label">Exportar backup completo</div>
+          <div class="setting-desc">Salva um arquivo .json com todos os dados</div>
+        </div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+    <div class="setting-row" onclick="document.getElementById('backup-import-input').click()">
+      <div class="setting-row-left">
+        <div class="setting-icon" style="background:var(--amber-50)">📥</div>
+        <div>
+          <div class="setting-label">Importar backup completo</div>
+          <div class="setting-desc">Restaura dados salvos em outro celular/PC</div>
+        </div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      <input type="file" id="backup-import-input" accept="application/json,.json" style="display:none" onchange="importBackupJSON(event)">
+    </div>
+
     <div class="setting-row">
       <div class="setting-row-left">
         <div class="setting-icon" style="background:var(--green-50)">☁️</div>
@@ -2635,6 +2711,57 @@
         </div>
       </div>
       <button class="toggle on" id="autobackup-toggle" onclick="toggleAutoBackup(this)"></button>
+    </div>
+
+
+
+    <!-- ── Modo Família Sincronizado — Firebase/Firestore ── -->
+    <div class="card" style="margin-bottom:8px;border:1.5px solid var(--blue-100);background:linear-gradient(180deg,#fff,#f7fbff)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:40px;height:40px;border-radius:12px;background:var(--blue-50);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0">👨‍👩‍👧</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15px;font-weight:900;color:var(--text)">Modo Família Sincronizado</div>
+          <div id="firebase-sync-status" style="font-size:12px;font-weight:700;color:var(--text-light);margin-top:1px">⚪ Não conectado ao Firebase</div>
+        </div>
+        <button class="toggle" id="firebase-sync-toggle" onclick="event.stopPropagation();toggleFirebaseSync()"></button>
+      </div>
+
+      <div style="background:var(--blue-50);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:12px;line-height:1.5;color:var(--blue-600);font-weight:700">
+        Sincroniza remédios, confirmações, dados do paciente, eventos e sinais vitais entre paciente, cuidador e familiares em tempo real.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <label class="form-label" style="margin-bottom:4px">Código da família</label>
+          <input class="form-input" id="firebase-family-code" placeholder="CUIDAR-4829" style="font-size:13px;text-transform:uppercase">
+        </div>
+        <div>
+          <label class="form-label" style="margin-bottom:4px">Seu nome neste aparelho</label>
+          <input class="form-input" id="firebase-member-name" placeholder="Maria cuidadora" style="font-size:13px">
+        </div>
+      </div>
+
+      <details style="margin:8px 0 12px">
+        <summary style="cursor:pointer;font-size:12px;font-weight:800;color:var(--text-muted);padding:8px 0">Configuração Firebase do projeto</summary>
+        <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px">
+          <input class="form-input" id="fb-apiKey" placeholder="apiKey" style="font-size:12px">
+          <input class="form-input" id="fb-authDomain" placeholder="authDomain: seu-projeto.firebaseapp.com" style="font-size:12px">
+          <input class="form-input" id="fb-projectId" placeholder="projectId" style="font-size:12px">
+          <input class="form-input" id="fb-appId" placeholder="appId" style="font-size:12px">
+        </div>
+        <div style="font-size:11px;color:var(--text-light);line-height:1.45;margin-top:8px">
+          No Firebase: crie um app Web, copie esses 4 campos, ative Authentication anônimo e Cloud Firestore.
+        </div>
+      </details>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="createFirebaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--blue-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Criar família</button>
+        <button onclick="joinFirebaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--green-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Entrar / sincronizar</button>
+        <button onclick="pushFirebaseNow()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Enviar agora</button>
+        <button onclick="disconnectFirebaseSync()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--coral-600);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Desconectar</button>
+      </div>
+
+      <div id="firebase-last-sync" style="font-size:11px;color:var(--text-light);margin-top:10px;line-height:1.4">Última sincronização: —</div>
     </div>
 
     <!-- ── Card de backup na nuvem (JSONbin) ── -->
@@ -3472,6 +3599,22 @@ function openSamuMode() {
     conditionsVal.textContent = allConditions;
   } else conditionsEl.style.display = 'none';
 
+  const essential = [
+    p.blood ? `🩸 Tipo sanguíneo: ${p.blood}` : '',
+    p.weight ? `⚖️ Peso: ${p.weight}` : '',
+    p.height ? `📏 Altura: ${p.height}` : '',
+    p.mainDoctor ? `🩺 Médico principal: ${p.mainDoctor}` : ''
+  ].filter(Boolean).join('\n');
+  const essentialBlock = document.getElementById('samu-essential-block');
+  const essentialVal = document.getElementById('samu-essential');
+  if (essential) { essentialBlock.style.display = 'block'; essentialVal.textContent = essential; }
+  else essentialBlock.style.display = 'none';
+
+  const notesBlock = document.getElementById('samu-notes-block');
+  const notesVal = document.getElementById('samu-notes');
+  if (p.importantNotes?.trim()) { notesBlock.style.display = 'block'; notesVal.textContent = p.importantNotes.trim(); }
+  else notesBlock.style.display = 'none';
+
   // ── Medicamentos em uso ──────────────────────────────────────────────────
   const meds = tasks.filter(t => t.type === 'med' && (t.repeat === 'daily' || t.date === todayStr()));
   const medsEl = document.getElementById('samu-meds');
@@ -3579,6 +3722,8 @@ function loadSettings() {
   document.getElementById('notif-fisio').classList.toggle('on', settings.notif_fisio === true);
   document.getElementById('task-date').value = todayStr();
   loadProfile();
+  const evDate = document.getElementById('event-date');
+  if (evDate && !evDate.value) evDate.value = todayStr();
 }
 
 // ── Convênio / SUS ────────────────────────────────────────────────────────
@@ -3717,6 +3862,11 @@ function loadProfile() {
   set('patient-birthday', p.birthday);
   set('patient-sex', p.sex);
   set('patient-conditions', p.conditions);
+  set('patient-important-notes', p.importantNotes);
+  set('patient-blood', p.blood);
+  set('patient-weight', p.weight);
+  set('patient-height', p.height);
+  set('patient-main-doctor', p.mainDoctor);
   set('emerg-name', p.emergName);
   set('emerg-rel', p.emergRel);
   set('emerg-phone', p.emergPhone);
@@ -3762,6 +3912,8 @@ function renderEmergCard(p) {
   if (p.allergyMeds)  tags.push(`<span class="emerg-tag danger">⚠️ Alérgico: ${p.allergyMeds}</span>`);
   if (p.allergyFood)  tags.push(`<span class="emerg-tag">🍽️ ${p.allergyFood}</span>`);
   if (p.allergyOther) tags.push(`<span class="emerg-tag">⚗️ ${p.allergyOther}</span>`);
+  if (p.blood) tags.push(`<span class="emerg-tag">🩸 ${p.blood}</span>`);
+  if (p.importantNotes) tags.push(`<span class="emerg-tag danger">📌 Obs. crítica</span>`);
   const insuranceLine = (() => {
     if (p.insuranceType === 'conv' && p.convName)
       return `<span class="emerg-tag">💳 ${p.convName}${p.convNumber ? ' · '+p.convNumber : ''}</span>`;
@@ -3864,6 +4016,8 @@ function renderAll() {
   renderProgress();
   renderAlerts();
   renderNextAlarm();
+  renderCaregiverSummary();
+  renderCareEvents();
   renderCalendar();
   renderReports();
 }
@@ -6221,6 +6375,16 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="samu-section-content" id="samu-conditions"></div>
     </div>
 
+    <div class="samu-section neutral" id="samu-essential-block" style="display:none">
+      <div class="samu-section-label">🧾 Dados essenciais</div>
+      <div class="samu-section-content small" id="samu-essential"></div>
+    </div>
+
+    <div class="samu-section allergy" id="samu-notes-block" style="display:none">
+      <div class="samu-section-label">📌 Observações críticas</div>
+      <div class="samu-section-content" id="samu-notes"></div>
+    </div>
+
     <!-- Medicamentos em uso -->
     <div class="samu-section meds">
       <div class="samu-section-label">💊 Medicamentos em uso contínuo</div>
@@ -7401,6 +7565,108 @@ function exportPDF() {
   setTimeout(() => window.print(), 300);
 }
 
+
+// ── RESUMO DO CUIDADOR + HISTÓRICO RÁPIDO ─────────────────────────────────
+function getCareEvents() {
+  try { return JSON.parse(localStorage.getItem('cb_care_events') || '[]'); } catch(e) { return []; }
+}
+function saveCareEvents(items) { localStorage.setItem('cb_care_events', JSON.stringify(items || [])); }
+function addCareEvent() {
+  const date = document.getElementById('event-date')?.value || todayStr();
+  const type = document.getElementById('event-type')?.value || 'outro';
+  const desc = (document.getElementById('event-desc')?.value || '').trim();
+  if (!desc) { showToast('⚠️ Descreva o evento'); return; }
+  const events = getCareEvents();
+  events.unshift({ id: uid(), date, type, desc, createdAt: Date.now() });
+  saveCareEvents(events.slice(0, 80));
+  document.getElementById('event-desc').value = '';
+  renderCareEvents();
+  renderCaregiverSummary();
+  showToast('✅ Evento registrado');
+}
+function deleteCareEvent(id) {
+  if (!confirm('Apagar este evento do histórico?')) return;
+  saveCareEvents(getCareEvents().filter(e => e.id !== id));
+  renderCareEvents();
+  renderCaregiverSummary();
+}
+function careEventLabel(t) {
+  return {queda:'🚨 Queda', ps:'🏥 Pronto-socorro', remedio:'💊 Alteração de remédio', exame:'🔬 Exame importante', sintoma:'⚠️ Sintoma / alerta', outro:'📝 Outro'}[t] || '📝 Outro';
+}
+function renderCareEvents() {
+  const dateEl = document.getElementById('event-date');
+  if (dateEl && !dateEl.value) dateEl.value = todayStr();
+  const el = document.getElementById('care-event-list');
+  if (!el) return;
+  const events = getCareEvents().sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0)).slice(0, 8);
+  if (!events.length) { el.innerHTML = '<div class="hist-empty">Nenhum evento registrado ainda.</div>'; return; }
+  el.innerHTML = events.map(ev => {
+    const d = ev.date ? new Date(ev.date+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
+    return `<div class="hist-item">
+      <div class="hist-icon" style="background:var(--amber-50)">${careEventLabel(ev.type).split(' ')[0]}</div>
+      <div class="hist-body">
+        <div class="hist-name">${careEventLabel(ev.type)} · ${d}</div>
+        <div class="hist-meta" style="font-size:12px;line-height:1.5;color:var(--text-muted)">${ev.desc}</div>
+      </div>
+      <button onclick="deleteCareEvent('${ev.id}')" style="border:none;background:var(--red-50);color:var(--red-600);border-radius:8px;padding:6px 8px;font-weight:800;cursor:pointer">✕</button>
+    </div>`;
+  }).join('');
+}
+function renderCaregiverSummary() {
+  const card = document.getElementById('caregiver-summary-card');
+  const el = document.getElementById('caregiver-summary-content');
+  if (!card || !el) return;
+  const today = todayStr();
+  const nowMin = new Date().getHours()*60 + new Date().getMinutes();
+  const todayTasks = tasks.filter(t => shouldShowToday(t));
+  const pending = todayTasks.filter(t => !completions[`${t.id}_${today}`]);
+  const lateMeds = pending.filter(t => t.type === 'med' && t.time && (parseInt(t.time.split(':')[0])*60 + parseInt(t.time.split(':')[1]||'0')) < nowMin);
+  const next = pending.filter(t => t.time).sort((a,b)=>(a.time||'').localeCompare(b.time||''))[0];
+  const p = getProfile();
+  const events = getCareEvents().slice(0,3);
+  if (!todayTasks.length && !p.importantNotes && !events.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  const chips = [
+    `<span style="background:${lateMeds.length?'var(--coral-50)':'var(--teal-50)'};color:${lateMeds.length?'var(--coral-600)':'var(--teal-600)'};padding:6px 10px;border-radius:10px;font-size:12px;font-weight:800">${lateMeds.length ? '🚨 '+lateMeds.length+' remédio(s) atrasado(s)' : '✅ Sem remédio atrasado'}</span>`,
+    `<span style="background:var(--blue-50);color:var(--blue-600);padding:6px 10px;border-radius:10px;font-size:12px;font-weight:800">📋 ${pending.length} pendência(s)</span>`
+  ].join('');
+  el.innerHTML = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${chips}</div>
+    ${next ? `<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px"><strong>Próximo:</strong> ${next.time} — ${next.name}</div>` : ''}
+    ${p.importantNotes ? `<div style="background:var(--amber-50);color:var(--amber-600);border-radius:10px;padding:9px 10px;font-size:12px;font-weight:700;line-height:1.5;margin-bottom:8px">📌 ${p.importantNotes}</div>` : ''}
+    ${events.length ? `<div style="font-size:12px;color:var(--text-muted);line-height:1.6"><strong>Últimos eventos:</strong><br>${events.map(e => `• ${new Date((e.date||today)+'T00:00:00').toLocaleDateString('pt-BR')} — ${careEventLabel(e.type)}: ${e.desc}`).join('<br>')}</div>` : ''}
+  `;
+}
+function exportBackupJSON() {
+  const snap = buildSnapshot();
+  const name = `CuidarBem-backup-${new Date().toISOString().slice(0,10)}.json`;
+  const blob = new Blob([JSON.stringify(snap, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  showToast('💾 Backup completo exportado');
+}
+function importBackupJSON(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const snap = JSON.parse(e.target.result);
+      if (!snap || !snap.tasks || !snap.settings) throw new Error('Arquivo inválido');
+      const ts = snap.ts ? new Date(snap.ts).toLocaleString('pt-BR') : 'data desconhecida';
+      if (!confirm(`Importar backup de ${ts}?\n\nIsso substituirá os dados atuais deste aparelho.`)) return;
+      applySnapshot(snap);
+      localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+      loadSettings();
+      renderAll();
+      showToast('✅ Backup importado com sucesso');
+    } catch(err) { showToast('❌ Backup inválido'); console.warn(err); }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
 // ── 9. BACKUP — LOCAL + JSONBIN.IO NUVEM ──────────────────────────────────────
 //
 //  Arquitetura de dois níveis:
@@ -7441,8 +7707,11 @@ function buildSnapshot() {
     tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
     completions: localStorage.getItem('cuidarbem_completions') || '{}',
     settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')     || '{}',
+    careEvents : localStorage.getItem('cb_care_events')         || '[]',
     vitals     : localStorage.getItem('cb_vitals')             || '[]',
     vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')         || '{}',
   };
 }
 
@@ -7450,8 +7719,11 @@ function applySnapshot(snap) {
   localStorage.setItem('cuidarbem_tasks',        snap.tasks);
   localStorage.setItem('cuidarbem_completions',  snap.completions);
   localStorage.setItem('cuidarbem_settings',     snap.settings);
+  if (snap.profile) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
   if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
   if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
   tasks       = JSON.parse(snap.tasks);
   completions = JSON.parse(snap.completions);
   settings    = JSON.parse(snap.settings);
@@ -7929,6 +8201,309 @@ function falar(texto){
   const msg = new SpeechSynthesisUtterance(texto);
   msg.lang = 'pt-BR';
   speechSynthesis.speak(msg);
+}
+</script>
+
+
+
+<script>
+// ── Ponte local para sincronização em nuvem (Firebase/Firestore) ─────────────
+window.cbCollectSnapshot = function cbCollectSnapshot() {
+  return {
+    version: 20,
+    app: 'CuidarBem',
+    ts: new Date().toISOString(),
+    tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
+    completions: localStorage.getItem('cuidarbem_completions') || '{}',
+    settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')    || '{}',
+    careEvents : localStorage.getItem('cb_care_events')        || '[]',
+    vitals     : localStorage.getItem('cb_vitals')             || '[]',
+    vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')        || '{}',
+    paciente   : localStorage.getItem('paciente')              || '[]'
+  };
+};
+
+window.cbApplySnapshot = function cbApplySnapshot(snap, opts = {}) {
+  if (!snap || !snap.tasks || !snap.completions) return false;
+  localStorage.setItem('cuidarbem_tasks',       snap.tasks);
+  localStorage.setItem('cuidarbem_completions', snap.completions);
+  if (snap.settings)   localStorage.setItem('cuidarbem_settings', snap.settings);
+  if (snap.profile)    localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals)     localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq)  localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y)       localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  if (snap.paciente)   localStorage.setItem('paciente', snap.paciente);
+
+  try { tasks = JSON.parse(snap.tasks || '[]'); } catch(e) {}
+  try { completions = JSON.parse(snap.completions || '{}'); } catch(e) {}
+  try { settings = JSON.parse(snap.settings || '{}'); } catch(e) {}
+
+  if (!opts.silent && typeof showToast === 'function') showToast('🔄 Dados atualizados pela família');
+  if (typeof loadSettings === 'function') loadSettings();
+  if (typeof renderAll === 'function') renderAll();
+  if (typeof buildWeekStrip === 'function') buildWeekStrip();
+  if (typeof renderHistorico === 'function') renderHistorico();
+  if (typeof carregarUltimo === 'function') carregarUltimo();
+  return true;
+};
+
+window.cbMarkLocalChange = function cbMarkLocalChange(reason) {
+  window.dispatchEvent(new CustomEvent('cb-local-change', { detail: { reason: reason || 'local' } }));
+};
+
+(function patchLocalSavesForFirebase(){
+  const patch = (name) => {
+    const original = window[name];
+    if (typeof original !== 'function' || original.__firebasePatched) return;
+    const wrapped = function(...args) {
+      const result = original.apply(this, args);
+      setTimeout(() => window.cbMarkLocalChange(name), 120);
+      return result;
+    };
+    wrapped.__firebasePatched = true;
+    window[name] = wrapped;
+  };
+  ['saveTasks','saveSettings','toggleTask','toggleTaskDay','saveProfile','saveCareEvent','deleteCareEvent','saveVital'].forEach(patch);
+})();
+</script>
+
+<script type="module">
+// ── Firebase/Firestore realtime sync — CuidarBem v20 ───────────────────────
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+
+const FB_CFG_KEY = 'cb_firebase_config';
+const FB_FAMILY_KEY = 'cb_firebase_family_code';
+const FB_MEMBER_KEY = 'cb_firebase_member_name';
+const FB_ENABLED_KEY = 'cb_firebase_sync_enabled';
+
+let fbApp = null, fbAuth = null, fbDb = null, fbUnsub = null, fbUser = null;
+let fbReady = false, fbApplyingRemote = false, fbSaveTimer = null, fbLastRemoteTs = 0;
+
+function normalizeCode(v) {
+  return (v || '').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/^CUIDAR/, 'CUIDAR').slice(0, 16);
+}
+function prettyCode(raw) {
+  const v = normalizeCode(raw);
+  if (!v) return '';
+  if (v.startsWith('CUIDAR') && !v.startsWith('CUIDAR-')) return 'CUIDAR-' + v.slice(6);
+  return v.startsWith('CUIDAR') ? v.replace(/^CUIDAR-?/, 'CUIDAR-') : v;
+}
+function genFamilyCode() {
+  return 'CUIDAR-' + Math.floor(1000 + Math.random() * 9000);
+}
+function getConfig() {
+  try { return JSON.parse(localStorage.getItem(FB_CFG_KEY) || '{}'); } catch(e) { return {}; }
+}
+function setStatus(text, color = 'var(--text-light)', toggleOn = null) {
+  const el = document.getElementById('firebase-sync-status');
+  if (el) { el.textContent = text; el.style.color = color; }
+  const tog = document.getElementById('firebase-sync-toggle');
+  if (tog && toggleOn !== null) tog.classList.toggle('on', !!toggleOn);
+}
+function setLastSync(text) {
+  const el = document.getElementById('firebase-last-sync');
+  if (el) el.textContent = text;
+}
+function readFirebaseForm() {
+  const cfg = {
+    apiKey: document.getElementById('fb-apiKey')?.value.trim() || '',
+    authDomain: document.getElementById('fb-authDomain')?.value.trim() || '',
+    projectId: document.getElementById('fb-projectId')?.value.trim() || '',
+    appId: document.getElementById('fb-appId')?.value.trim() || ''
+  };
+  const familyCode = prettyCode(document.getElementById('firebase-family-code')?.value || '');
+  const memberName = document.getElementById('firebase-member-name')?.value.trim() || 'Cuidador/Familiar';
+  return { cfg, familyCode, memberName };
+}
+function saveFirebaseForm() {
+  const { cfg, familyCode, memberName } = readFirebaseForm();
+  if (Object.values(cfg).some(v => !v)) throw new Error('Preencha apiKey, authDomain, projectId e appId do Firebase.');
+  localStorage.setItem(FB_CFG_KEY, JSON.stringify(cfg));
+  if (familyCode) localStorage.setItem(FB_FAMILY_KEY, familyCode);
+  localStorage.setItem(FB_MEMBER_KEY, memberName);
+  return { cfg, familyCode, memberName };
+}
+function loadFirebaseForm() {
+  const cfg = getConfig();
+  const ids = { apiKey:'fb-apiKey', authDomain:'fb-authDomain', projectId:'fb-projectId', appId:'fb-appId' };
+  Object.entries(ids).forEach(([k,id]) => { const el = document.getElementById(id); if (el && cfg[k]) el.value = cfg[k]; });
+  const fam = document.getElementById('firebase-family-code'); if (fam) fam.value = localStorage.getItem(FB_FAMILY_KEY) || '';
+  const mem = document.getElementById('firebase-member-name'); if (mem) mem.value = localStorage.getItem(FB_MEMBER_KEY) || (JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}').caregiver || '');
+  const enabled = localStorage.getItem(FB_ENABLED_KEY) === '1';
+  setStatus(enabled ? '🟡 Firebase configurado, conectando…' : '⚪ Não conectado ao Firebase', enabled ? 'var(--amber-600)' : 'var(--text-light)', enabled);
+}
+async function ensureFirebase() {
+  if (fbReady) return true;
+  const cfg = getConfig();
+  if (!cfg.apiKey || !cfg.authDomain || !cfg.projectId || !cfg.appId) throw new Error('Configuração Firebase incompleta.');
+  fbApp = initializeApp(cfg);
+  fbAuth = getAuth(fbApp);
+  fbDb = getFirestore(fbApp);
+  setStatus('🔐 Conectando ao Firebase…', 'var(--amber-600)', true);
+  await signInAnonymously(fbAuth);
+  await new Promise(resolve => {
+    const off = onAuthStateChanged(fbAuth, user => { fbUser = user; if (user) { off(); resolve(); } });
+  });
+  fbReady = true;
+  return true;
+}
+function familyDocRef(code) {
+  return doc(fbDb, 'cuidarbem_families', code);
+}
+function stateDocRef(code) {
+  return doc(fbDb, 'cuidarbem_families', code, 'state', 'current');
+}
+function buildCloudPayload() {
+  const memberName = localStorage.getItem(FB_MEMBER_KEY) || 'Cuidador/Familiar';
+  return {
+    snapshot: window.cbCollectSnapshot(),
+    updatedAt: serverTimestamp(),
+    updatedAtClient: new Date().toISOString(),
+    updatedBy: memberName,
+    updatedByUid: fbUser?.uid || 'anonymous'
+  };
+}
+async function pushStateNow({silent=false} = {}) {
+  if (!fbReady) await ensureFirebase();
+  const code = localStorage.getItem(FB_FAMILY_KEY);
+  if (!code) throw new Error('Informe ou crie o código da família.');
+  setStatus('🔄 Enviando dados para a família…', 'var(--amber-600)', true);
+  await setDoc(stateDocRef(code), buildCloudPayload(), { merge: true });
+  localStorage.setItem(FB_ENABLED_KEY, '1');
+  setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
+  setLastSync('Última sincronização enviada: ' + new Date().toLocaleString('pt-BR'));
+  if (!silent && typeof showToast === 'function') showToast('☁️ Dados enviados para a família');
+}
+function queuePush(reason) {
+  if (fbApplyingRemote || localStorage.getItem(FB_ENABLED_KEY) !== '1') return;
+  if (!localStorage.getItem(FB_FAMILY_KEY) || !getConfig().projectId) return;
+  clearTimeout(fbSaveTimer);
+  fbSaveTimer = setTimeout(() => pushStateNow({silent:true}).catch(err => {
+    console.warn('[CuidarBem Firebase] Falha ao sincronizar:', err);
+    setStatus('❌ Falha ao sincronizar', 'var(--coral-600)', true);
+  }), 900);
+}
+async function startRealtimeListener(code) {
+  if (fbUnsub) { fbUnsub(); fbUnsub = null; }
+  fbUnsub = onSnapshot(stateDocRef(code), snap => {
+    if (!snap.exists()) return;
+    const data = snap.data();
+    const remote = data.snapshot;
+    if (!remote) return;
+    const remoteTs = Date.parse(data.updatedAtClient || remote.ts || '') || 0;
+    if (remoteTs && remoteTs <= fbLastRemoteTs) return;
+    fbLastRemoteTs = remoteTs;
+    if (data.updatedByUid && fbUser?.uid && data.updatedByUid === fbUser.uid) {
+      setLastSync('Última sincronização: ' + new Date().toLocaleString('pt-BR') + ' · por este aparelho');
+      return;
+    }
+    fbApplyingRemote = true;
+    try {
+      window.cbApplySnapshot(remote, { silent:false });
+      setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
+      setLastSync('Última atualização recebida: ' + (data.updatedAtClient ? new Date(data.updatedAtClient).toLocaleString('pt-BR') : new Date().toLocaleString('pt-BR')) + (data.updatedBy ? ' · por ' + data.updatedBy : ''));
+    } finally {
+      setTimeout(() => { fbApplyingRemote = false; }, 1200);
+    }
+  }, err => {
+    console.warn('[CuidarBem Firebase] Listener error:', err);
+    setStatus('❌ Firebase sem permissão ou offline', 'var(--coral-600)', true);
+    if (typeof showToast === 'function') showToast('❌ Verifique regras/permissão do Firestore');
+  });
+}
+
+window.createFirebaseFamily = async function createFirebaseFamily() {
+  try {
+    const famEl = document.getElementById('firebase-family-code');
+    if (!famEl.value.trim()) famEl.value = genFamilyCode();
+    const { familyCode, memberName } = saveFirebaseForm();
+    await ensureFirebase();
+    await setDoc(familyDocRef(familyCode), {
+      familyCode,
+      app: 'CuidarBem',
+      createdAt: serverTimestamp(),
+      createdAtClient: new Date().toISOString(),
+      createdBy: memberName,
+      createdByUid: fbUser?.uid || 'anonymous'
+    }, { merge: true });
+    await setDoc(stateDocRef(familyCode), buildCloudPayload(), { merge: true });
+    localStorage.setItem(FB_ENABLED_KEY, '1');
+    await startRealtimeListener(familyCode);
+    setStatus('✅ Família criada e sincronizada', 'var(--teal-600)', true);
+    setLastSync('Código da família: ' + familyCode + ' · compartilhe com o familiar/cuidador');
+    if (typeof showToast === 'function') showToast('👨‍👩‍👧 Família criada: ' + familyCode);
+  } catch(err) {
+    console.warn('[CuidarBem Firebase] create error:', err);
+    setStatus('❌ ' + err.message, 'var(--coral-600)', false);
+    if (typeof showToast === 'function') showToast('❌ ' + err.message);
+  }
+};
+
+window.joinFirebaseFamily = async function joinFirebaseFamily() {
+  try {
+    const { familyCode } = saveFirebaseForm();
+    if (!familyCode) throw new Error('Digite o código da família.');
+    await ensureFirebase();
+    const stateSnap = await getDoc(stateDocRef(familyCode));
+    if (stateSnap.exists() && stateSnap.data().snapshot) {
+      const data = stateSnap.data();
+      fbApplyingRemote = true;
+      window.cbApplySnapshot(data.snapshot, { silent:true });
+      setTimeout(() => { fbApplyingRemote = false; }, 1200);
+      setLastSync('Dados recebidos da família: ' + familyCode);
+    } else {
+      await setDoc(familyDocRef(familyCode), { familyCode, app:'CuidarBem', createdAt: serverTimestamp(), createdAtClient: new Date().toISOString() }, { merge:true });
+      await setDoc(stateDocRef(familyCode), buildCloudPayload(), { merge:true });
+      setLastSync('Família vazia criada com os dados deste aparelho: ' + familyCode);
+    }
+    localStorage.setItem(FB_ENABLED_KEY, '1');
+    await startRealtimeListener(familyCode);
+    setStatus('✅ Acompanhamento familiar ativo', 'var(--teal-600)', true);
+    if (typeof showToast === 'function') showToast('✅ Sincronização familiar ativa');
+  } catch(err) {
+    console.warn('[CuidarBem Firebase] join error:', err);
+    setStatus('❌ ' + err.message, 'var(--coral-600)', false);
+    if (typeof showToast === 'function') showToast('❌ ' + err.message);
+  }
+};
+
+window.pushFirebaseNow = async function pushFirebaseNow() {
+  try { saveFirebaseForm(); await pushStateNow({silent:false}); }
+  catch(err) { setStatus('❌ ' + err.message, 'var(--coral-600)', true); if (typeof showToast === 'function') showToast('❌ ' + err.message); }
+};
+
+window.disconnectFirebaseSync = function disconnectFirebaseSync() {
+  if (fbUnsub) { fbUnsub(); fbUnsub = null; }
+  localStorage.setItem(FB_ENABLED_KEY, '0');
+  setStatus('⚪ Desconectado do modo família', 'var(--text-light)', false);
+  setLastSync('Última sincronização: pausada neste aparelho');
+  if (typeof showToast === 'function') showToast('☁️ Sincronização pausada');
+};
+
+window.toggleFirebaseSync = function toggleFirebaseSync() {
+  const enabled = localStorage.getItem(FB_ENABLED_KEY) === '1';
+  if (enabled) disconnectFirebaseSync();
+  else joinFirebaseFamily();
+};
+
+window.addEventListener('cb-local-change', e => queuePush(e.detail?.reason));
+window.addEventListener('storage', e => {
+  if (['cuidarbem_tasks','cuidarbem_completions','cuidarbem_settings','cb_medical_profile','cb_care_events','cb_vitals','paciente'].includes(e.key)) queuePush('storage:' + e.key);
+});
+
+loadFirebaseForm();
+if (localStorage.getItem(FB_ENABLED_KEY) === '1' && localStorage.getItem(FB_FAMILY_KEY) && getConfig().projectId) {
+  ensureFirebase().then(() => startRealtimeListener(localStorage.getItem(FB_FAMILY_KEY))).then(() => {
+    setStatus('✅ Sincronizado em tempo real', 'var(--teal-600)', true);
+  }).catch(err => {
+    console.warn('[CuidarBem Firebase] auto start error:', err);
+    setStatus('❌ Firebase precisa de configuração', 'var(--coral-600)', false);
+  });
 }
 </script>
 
