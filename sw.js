@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v47-editar-excluir-rotinas';
+const CACHE_NAME = 'cuidarbem-pwa-v48-edit-med-stable';
 const APP_SHELL = [
   './',
   './index.html',

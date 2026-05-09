@@ -10177,6 +10177,79 @@ document.addEventListener('keydown', function(e){
 })();
 </script>
 
+
+
+<!-- v48 — correção: editor de medicamento estável, sem tremor/pisca no mobile -->
+<style id="cuidarbem-v48-edit-med-stable">
+  .edit-med-overlay{backdrop-filter:blur(8px);overscroll-behavior:contain;}
+  .edit-med-overlay.open{animation:none!important;}
+  .edit-med-card{transform:none!important;animation:none!important;will-change:auto!important;}
+  body.cb-edit-med-open{overflow:hidden!important;touch-action:none;}
+  body.cb-edit-med-open .med-info-overlay{opacity:0!important;pointer-events:none!important;}
+</style>
+<script id="cuidarbem-v48-edit-med-stable-js">
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function getCurrentMedTask(){
+    const list = (typeof tasks !== 'undefined' ? tasks : []);
+    return list.find(t => t.id === window.currentMedInfoTaskId || t.id === currentMedInfoTaskId);
+  }
+  window.editCurrentMedFromInfo = function(){
+    const task = getCurrentMedTask();
+    if (!task) { showToast('Não encontrei este medicamento para editar.'); return; }
+
+    // Fecha visualmente a janela de detalhes antes de abrir o editor.
+    // Isso evita duas camadas/modais animando ao mesmo tempo no mobile.
+    const info = byId('med-info-overlay');
+    if (info) info.classList.remove('open');
+
+    byId('edit-med-name').value = task.name || '';
+    byId('edit-med-dose').value = task.dose || '';
+    byId('edit-med-time').value = task.time || '';
+    byId('edit-med-date').value = task.date || todayStr();
+    byId('edit-med-repeat').value = task.repeat || 'daily';
+    byId('edit-med-obs').value = task.obs || '';
+    byId('edit-med-rx').value = task.prescriptionExpiry || '';
+    byId('edit-med-pickup').value = task.nextPickup || '';
+
+    document.body.classList.add('cb-edit-med-open');
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.add('open');
+  };
+
+  window.closeEditMedModal = function(){
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.remove('open');
+    document.body.classList.remove('cb-edit-med-open');
+  };
+
+  window.saveEditMedModal = function(){
+    const task = getCurrentMedTask();
+    if (!task) { showToast('Não encontrei este medicamento para salvar.'); return; }
+    const name = (byId('edit-med-name')?.value || '').trim();
+    if (!name) { showToast('Informe o nome do medicamento.'); return; }
+
+    task.name = name;
+    task.dose = (byId('edit-med-dose')?.value || '').trim();
+    task.time = (byId('edit-med-time')?.value || '').trim();
+    task.date = (byId('edit-med-date')?.value || '').trim() || todayStr();
+    task.repeat = byId('edit-med-repeat')?.value || 'daily';
+    task.obs = (byId('edit-med-obs')?.value || '').trim();
+    task.prescriptionExpiry = (byId('edit-med-rx')?.value || '').trim();
+    task.nextPickup = (byId('edit-med-pickup')?.value || '').trim();
+    task.updatedAt = Date.now();
+
+    saveTasks();
+    closeEditMedModal();
+    renderAll();
+    buildWeekStrip();
+    if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+    if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication');
+    showToast('✅ Medicamento atualizado.');
+  };
+})();
+</script>
+
 </body>
 </html>
 

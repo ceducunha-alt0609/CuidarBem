@@ -199,3 +199,10 @@ Versão v47:
 - Mantido editar/excluir medicamentos.
 - Edições reagendam alertas, atualizam a tela e sincronizam com a família.
 - Cache PWA atualizado para v47.
+
+
+Versão v48:
+- Corrigido tremor/pisca ao editar medicamento no mobile.
+- O editor agora abre sozinho, sem a janela de detalhes animando por baixo.
+- Ao salvar, atualiza rotina, alertas e sincronização sem reabrir outra janela automaticamente.
+- Cache PWA atualizado para v48.
