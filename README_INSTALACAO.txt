@@ -103,3 +103,8 @@ Versão v31:
 - Central de Alertas do sininho agora abre centralizada no mobile.
 - Janela com altura máxima visível, rolagem interna e botão fechar sempre acessível.
 - Cache atualizado para v31.
+
+
+Versão v32:
+- Ajuste mobile: primeiro painel da tela inicial foi rebaixado para não ficar encoberto pela topbar fixa.
+- Cache PWA atualizado para v32.
