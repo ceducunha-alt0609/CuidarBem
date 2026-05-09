@@ -4816,7 +4816,7 @@ function renderTodayTasks() {
           </div>
           <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center">
             <div class="task-check ${seen?'checked':''}" style="border-color:${accentColor.replace('--','var(--')}" onclick="openSeenModal('${t.id}')"></div>
-            <button class="task-delete-btn appt-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
+            <button class="task-edit-btn appt-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button><button class="task-delete-btn appt-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
           </div>
         </div>
         ${t.prep ? `<div style="padding:8px 16px;background:var(--amber-50);border-top:1px solid var(--amber-100);font-size:12px;color:var(--amber-600);font-weight:600">⚠️ Preparo: ${t.prep}</div>` : ''}
@@ -4894,7 +4894,8 @@ function renderTodayTasks() {
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
         <div class="task-time" style="${medNameClass?'color:#c0192d;font-weight:900':''}">${t.time||''}</div>
         ${isMed ? `<button class="med-info-btn" onclick="event.stopPropagation();openMedInfo('${t.id}')" title="Ver detalhes do remédio">ℹ</button>` : ''}
-        <button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
+        <button class="task-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button>
+        <button class="task-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button><button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
       </div>
     </div>`;
   }).join('');
@@ -5085,7 +5086,7 @@ function renderCalendar() {
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
         <div class="task-time">${t.time||''}</div>
-        <button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
+        <button class="task-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button><button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
       </div>
     </div>`;
   }).join('')}</div>`;
@@ -9987,6 +9988,191 @@ document.addEventListener('keydown', function(e){
     if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication');
     setTimeout(() => openMedInfo(task.id), 50);
     showToast('✅ Medicamento atualizado.');
+  };
+})();
+</script>
+
+
+
+<!-- v47 — edição geral de rotinas: exercícios, fisioterapia, consultas e exames -->
+<style id="cuidarbem-v47-edit-all-routines">
+  .task-edit-btn{width:28px;height:28px;border:0;border-radius:10px;background:var(--green-50);color:var(--green-700);font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:4px;box-shadow:inset 0 0 0 1px rgba(0,107,88,.08)}
+  .task-edit-btn:active{transform:scale(.94);background:var(--green-100)}
+  .appt-edit-btn{margin-top:8px;}
+  .edit-task-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9810;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s ease;}
+  .edit-task-overlay.open{opacity:1;pointer-events:auto;}
+  .edit-task-card{width:100%;max-width:430px;max-height:86dvh;overflow-y:auto;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:26px;padding:20px;box-shadow:0 24px 80px rgba(0,40,34,.28);border:1px solid rgba(255,255,255,.65)}
+  .edit-task-title{font-size:20px;font-weight:900;color:var(--green-800);margin-bottom:4px;letter-spacing:-.02em;}
+  .edit-task-sub{font-size:13px;color:var(--text-light);font-weight:700;line-height:1.45;margin-bottom:14px;}
+  .edit-task-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:420px){.edit-task-grid{grid-template-columns:1fr}.edit-task-card{border-radius:22px;padding:18px;max-height:84dvh}}
+</style>
+
+<div class="edit-task-overlay" id="edit-task-overlay" onclick="if(event.target.id==='edit-task-overlay')closeGenericTaskEditor()">
+  <div class="edit-task-card" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">
+      <div>
+        <div class="edit-task-title" id="edit-task-title">✏️ Editar rotina</div>
+        <div class="edit-task-sub">Altere os dados sem excluir e cadastrar novamente.</div>
+      </div>
+      <button style="background:var(--gray-50);border:1px solid var(--gray-200);width:34px;height:34px;border-radius:12px;font-weight:900;cursor:pointer" onclick="closeGenericTaskEditor()">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tipo</label>
+      <select class="form-input" id="edit-task-type" onchange="refreshGenericTaskEditorFields()">
+        <option value="med">Remédio</option>
+        <option value="exer">Exercício</option>
+        <option value="fisio">Fisioterapia</option>
+        <option value="cons">Consulta</option>
+        <option value="exam">Exame</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome / descrição</label>
+      <input class="form-input" id="edit-task-name" placeholder="Nome da rotina">
+    </div>
+    <div class="edit-task-grid">
+      <div class="form-group" id="edit-task-dose-wrap">
+        <label class="form-label">Dose / detalhe</label>
+        <input class="form-input" id="edit-task-dose" placeholder="Ex: 1 comprimido, 10 minutos">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <input class="form-input" id="edit-task-time" type="time">
+      </div>
+    </div>
+    <div class="edit-task-grid">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input class="form-input" id="edit-task-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Repetição</label>
+        <select class="form-input" id="edit-task-repeat">
+          <option value="none">Sem repetição</option>
+          <option value="daily">Diário</option>
+          <option value="weekly">Semanal</option>
+        </select>
+      </div>
+    </div>
+    <div id="edit-task-appt-fields" style="display:none">
+      <div class="edit-task-grid">
+        <div class="form-group">
+          <label class="form-label" id="edit-task-doctor-label">Médico / profissional</label>
+          <input class="form-input" id="edit-task-doctor" placeholder="Ex: Dr. Carlos — Neurologia">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Local / clínica</label>
+          <input class="form-input" id="edit-task-local" placeholder="Ex: Hospital, UBS, Laboratório">
+        </div>
+      </div>
+      <div class="form-group" id="edit-task-exam-type-wrap" style="display:none">
+        <label class="form-label">Tipo de exame</label>
+        <input class="form-input" id="edit-task-exam-type" placeholder="Ex: Hemograma, Tomografia, ECG">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Preparo necessário</label>
+        <input class="form-input" id="edit-task-prep" placeholder="Ex: Jejum, levar pedido, chegar antes">
+      </div>
+      <div class="form-group" id="edit-task-results-wrap" style="display:none">
+        <label class="form-label">Resultado disponível em</label>
+        <input class="form-input" id="edit-task-results" type="date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações</label>
+      <textarea class="form-input" id="edit-task-obs" rows="3" placeholder="Observações importantes"></textarea>
+    </div>
+    <button class="btn-add" onclick="saveGenericTaskEditor()">💾 Salvar alterações</button>
+    <button class="btn-add btn-secondary" onclick="closeGenericTaskEditor()">Cancelar</button>
+  </div>
+</div>
+
+<script id="cuidarbem-v47-edit-all-routines-js">
+(function(){
+  let editingTaskId = null;
+  function byId(id){ return document.getElementById(id); }
+  window.openGenericTaskEditor = function(taskId){
+    const task = (typeof tasks !== 'undefined' ? tasks : []).find(t => t.id === taskId);
+    if (!task) { showToast('Não encontrei esta rotina para editar.'); return; }
+    if (task.type === 'med' && typeof window.editCurrentMedFromInfo === 'function') {
+      currentMedInfoTaskId = taskId;
+      window.editCurrentMedFromInfo();
+      return;
+    }
+    editingTaskId = taskId;
+    byId('edit-task-type').value = task.type || 'exer';
+    byId('edit-task-name').value = task.name || '';
+    byId('edit-task-dose').value = task.dose || '';
+    byId('edit-task-time').value = task.time || '';
+    byId('edit-task-date').value = task.date || todayStr();
+    byId('edit-task-repeat').value = task.repeat || 'none';
+    byId('edit-task-obs').value = task.obs || '';
+    byId('edit-task-doctor').value = task.doctor || task.examDoctor || '';
+    byId('edit-task-local').value = task.local || '';
+    byId('edit-task-prep').value = task.prep || '';
+    byId('edit-task-exam-type').value = task.examType || '';
+    byId('edit-task-results').value = task.resultsDate || '';
+    refreshGenericTaskEditorFields();
+    byId('edit-task-overlay').classList.add('open');
+  };
+  window.refreshGenericTaskEditorFields = function(){
+    const type = byId('edit-task-type')?.value || 'exer';
+    const isAppt = type === 'cons' || type === 'exam';
+    const isExam = type === 'exam';
+    byId('edit-task-title').textContent = '✏️ Editar ' + ({exer:'exercício',fisio:'fisioterapia',cons:'consulta',exam:'exame',med:'medicamento'}[type] || 'rotina');
+    byId('edit-task-dose-wrap').style.display = type === 'med' ? 'block' : 'none';
+    byId('edit-task-appt-fields').style.display = isAppt ? 'block' : 'none';
+    byId('edit-task-exam-type-wrap').style.display = isExam ? 'block' : 'none';
+    byId('edit-task-results-wrap').style.display = isExam ? 'block' : 'none';
+    byId('edit-task-doctor-label').textContent = isExam ? 'Médico solicitante' : 'Médico / especialidade';
+  };
+  window.closeGenericTaskEditor = function(){
+    const el = byId('edit-task-overlay');
+    if (el) el.classList.remove('open');
+    editingTaskId = null;
+  };
+  window.saveGenericTaskEditor = function(){
+    const task = (typeof tasks !== 'undefined' ? tasks : []).find(t => t.id === editingTaskId);
+    if (!task) { showToast('Não encontrei esta rotina para salvar.'); return; }
+    const name = (byId('edit-task-name')?.value || '').trim();
+    if (!name) { showToast('Informe o nome da rotina.'); return; }
+    const type = byId('edit-task-type')?.value || task.type;
+    task.type = type;
+    task.name = name;
+    task.dose = type === 'med' ? ((byId('edit-task-dose')?.value || '').trim()) : '';
+    task.time = (byId('edit-task-time')?.value || '').trim();
+    task.date = (byId('edit-task-date')?.value || '').trim() || todayStr();
+    task.repeat = byId('edit-task-repeat')?.value || 'none';
+    task.obs = (byId('edit-task-obs')?.value || '').trim();
+    if (type === 'cons' || type === 'exam') {
+      task.local = (byId('edit-task-local')?.value || '').trim();
+      task.prep = (byId('edit-task-prep')?.value || '').trim();
+      if (type === 'cons') {
+        task.doctor = (byId('edit-task-doctor')?.value || '').trim();
+        task.examDoctor = '';
+        task.examType = '';
+        task.resultsDate = '';
+        task.subtype = 'cons';
+      } else {
+        task.examDoctor = (byId('edit-task-doctor')?.value || '').trim();
+        task.doctor = task.examDoctor;
+        task.examType = (byId('edit-task-exam-type')?.value || '').trim();
+        task.resultsDate = (byId('edit-task-results')?.value || '').trim();
+        task.subtype = 'exam';
+      }
+    } else {
+      task.local = task.local || '';
+      task.prep = task.prep || '';
+    }
+    task.updatedAt = Date.now();
+    saveTasks();
+    closeGenericTaskEditor();
+    renderAll();
+    buildWeekStrip();
+    if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+    if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-task');
+    showToast('✅ Rotina atualizada.');
   };
 })();
 </script>

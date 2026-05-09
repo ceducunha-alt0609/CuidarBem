@@ -192,3 +192,10 @@ Versão v46:
 - Agora é possível alterar nome, dose, horário, repetição, observações, validade da receita e próxima retirada.
 - Ao salvar, o app atualiza a rotina, reagenda alertas e sincroniza com a família.
 - Cache PWA atualizado para v46.
+
+
+Versão v47:
+- Adicionado editar para exercícios, fisioterapia, consultas e exames.
+- Mantido editar/excluir medicamentos.
+- Edições reagendam alertas, atualizam a tela e sincronizam com a família.
+- Cache PWA atualizado para v47.
