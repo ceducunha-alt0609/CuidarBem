@@ -2259,20 +2259,176 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 @keyframes cbFadeIn{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
 
+
+<style id="cuidarbem-v27-mobile-header-fix">
+/* v27 — correção: mantém Bom dia/Boa tarde + CuidarBem visíveis abaixo da topbar fixa */
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:96px!important;
+    min-height:252px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:78px!important;
+    padding:calc(env(safe-area-inset-top) + 18px) 18px 8px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98) 0%,rgba(0,107,88,.88) 68%,rgba(0,107,88,0) 100%)!important;
+    pointer-events:none!important;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{pointer-events:auto!important;}
+  #screen-home .premium-topbar-brand,
+  #screen-home .premium-menu{display:none!important;}
+  #screen-home .premium-bell{
+    margin-top:0!important;
+    transform:translateY(8px);
+    width:42px!important;
+    height:42px!important;
+  }
+  #screen-home .header-greeting{
+    display:block!important;
+    visibility:visible!important;
+    opacity:.92!important;
+    margin-top:0!important;
+    margin-bottom:4px!important;
+    color:rgba(255,255,255,.88)!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+  #screen-home .header-title{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    margin-top:2px!important;
+    color:#fff!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v28-mobile-operational-topbar">
+/* v28 — Topbar operacional fixa: saudação, app, data/hora, paciente, SAMU e ações rápidas */
+.mobile-header-subtitle,
+.mobile-header-actions,
+.mobile-bell-btn{display:none;}
+@media (max-width:767px){
+  body{padding-top:0!important;}
+  #screen-home .header{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    min-height:238px!important;
+    height:auto!important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px!important;
+    border-radius:0 0 28px 28px!important;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg,#004d42 0%,#006b58 58%,#0b8068 100%)!important;
+    box-shadow:0 18px 38px rgba(0,64,54,.28)!important;
+    z-index:9997!important;
+    overflow:hidden!important;
+  }
+  #screen-home .header::before{
+    content:'';position:absolute;right:-60px;top:-60px;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none;
+  }
+  #screen-home .header::after{
+    content:'';position:absolute;left:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.06);pointer-events:none;display:block!important;
+  }
+  #screen-home .premium-topbar{display:none!important;}
+  #screen-home .content{padding-top:258px!important;}
+  .mobile-topbar-title-row{
+    position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  }
+  .mobile-topbar-copy{min-width:0;flex:1;}
+  #screen-home .header-greeting{
+    display:block!important;font-size:14px!important;line-height:1.1!important;font-weight:800!important;
+    color:rgba(255,255,255,.86)!important;margin:0 0 5px!important;letter-spacing:.01em!important;
+  }
+  #screen-home .header-title{
+    display:block!important;font-size:31px!important;line-height:.98!important;font-weight:950!important;
+    letter-spacing:-.045em!important;color:#fff!important;margin:0!important;text-shadow:0 2px 12px rgba(0,0,0,.10);
+  }
+  #screen-home .header-title::after{display:none!important;content:none!important;}
+  .mobile-header-subtitle{
+    display:block!important;margin-top:8px;font-size:13px;line-height:1.26;font-weight:700;color:rgba(255,255,255,.75);
+    letter-spacing:.005em;
+  }
+  .mobile-bell-btn{
+    display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
+    width:46px;height:46px;border-radius:17px;border:1px solid rgba(255,255,255,.34);
+    background:rgba(255,255,255,.16);color:#fff;font-size:20px;box-shadow:inset 0 1px rgba(255,255,255,.20),0 10px 22px rgba(0,0,0,.14);
+    margin-top:18px;backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-bell-btn span{position:absolute;right:9px;top:8px;width:8px;height:8px;background:#ff4d5f;border:2px solid #fff;border-radius:50%;}
+  #screen-home .vitals-bar{display:none!important;}
+  #screen-home .header-date{
+    position:relative!important;z-index:3!important;display:inline-flex!important;align-items:center;gap:6px;
+    margin-top:12px!important;padding:6px 10px!important;border-radius:999px!important;
+    background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.18)!important;
+    color:rgba(255,255,255,.84)!important;font-size:12px!important;font-weight:800!important;
+  }
+  #screen-home .header-date::before{content:'📅';font-size:12px;}
+  #screen-home .header > div[style*="justify-content:space-between"]{
+    position:relative;z-index:3;margin-top:10px!important;gap:10px!important;
+  }
+  #screen-home .header-patient{
+    min-width:0;max-width:calc(100% - 105px);background:rgba(255,255,255,.16)!important;
+    border:1px solid rgba(255,255,255,.24)!important;border-radius:999px!important;
+    padding:7px 12px!important;box-shadow:inset 0 1px rgba(255,255,255,.18)!important;font-size:12px!important;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #patient-name-pill{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #screen-home .header button[onclick="openSamuMode()"]{
+    flex-shrink:0!important;border-radius:999px!important;padding:8px 13px!important;background:rgba(232,41,63,.92)!important;
+    border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 10px 20px rgba(160,20,38,.22)!important;
+  }
+  .mobile-header-actions{
+    position:relative;z-index:3;display:grid!important;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;
+  }
+  .mobile-header-action{
+    min-height:40px;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.14);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif;font-size:11.2px;font-weight:900;
+    box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.10);backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-header-action.danger{background:rgba(232,41,63,.78);}
+  .voice-kiosk-actions{display:none!important;}
+  #streak-badge,#patient-mode-header-badge{position:relative;z-index:3;}
+}
+@media (min-width:768px){
+  .mobile-topbar-title-row{display:block;}
+}
+</style>
+
 </head>
 <body>
 
 <!-- SCREEN: HOME -->
 <div id="screen-home" class="screen active">
   <div class="header">
-    <div class="premium-topbar" aria-label="Barra superior fixa">
-      <button class="premium-icon-btn premium-bell" onclick="speakSummary()" aria-label="Notificações">🔔<span></span></button>
+    <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
+    <div class="mobile-topbar-title-row">
+      <div class="mobile-topbar-copy">
+        <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+        <div class="header-title">Cuidar Bem</div>
+        <div class="mobile-header-subtitle">Cuidado que conecta,<br>saúde que acompanha.</div>
+      </div>
+      <button class="mobile-bell-btn" onclick="speakSummary()" aria-label="Alertas">🔔<span></span></button>
     </div>
-    <div class="header-greeting" id="greeting">Bom dia ☀️</div>
-    <div class="header-title">CuidarBem</div>
-
-
-
 
 <div class="vitals-bar">
   <div class="vital-item" id="vital-hr"><div>❤️</div><div><div class="vital-value">--</div><div class="vital-label">BPM</div></div></div>
@@ -2289,6 +2445,11 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
       <button onclick="openSamuMode()" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.45);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;color:white;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:5px;transition:background 0.15s" title="Abrir ficha de emergência">
         🆘 SAMU
       </button>
+    </div>
+    <div class="mobile-header-actions" aria-label="Ações rápidas da tela inicial">
+      <button class="mobile-header-action" onclick="speakSummary()" title="Ler resumo">🔊 <span>Ler resumo</span></button>
+      <button class="mobile-header-action danger" onclick="pararAudio()" title="Parar resumo">⛔ <span>Parar resumo</span></button>
+      <button class="mobile-header-action" onclick="toggleKiosk()" title="Modo simples" id="mobile-kiosk-btn">🔒 <span>Modo simples</span></button>
     </div>
     <!-- Streak badge -->
     <div id="streak-badge" style="display:none;margin-top:10px">
@@ -2308,7 +2469,7 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
   <div class="content">
 
     <!-- VOICE + KIOSK actions -->
-    <div style="display:flex;gap:8px;margin-bottom:12px">
+    <div class="voice-kiosk-actions" style="display:flex;gap:8px;margin-bottom:12px">
       <button class="btn-action-small" onclick="speakSummary()" title="Resumo por voz">
         🔊 Ler resumo
       </button>
@@ -3759,6 +3920,7 @@ function init() {
   migrateExamType();
   setGreeting();
   setTodayDate();
+  setInterval(() => { setGreeting(); setTodayDate(); }, 30000);
   loadSettings();
   buildWeekStrip();
   renderAll();
@@ -3938,8 +4100,11 @@ function setTodayDate() {
   const d = new Date();
   const opts = {weekday:'long', day:'numeric', month:'long'};
   const str = d.toLocaleDateString('pt-BR', opts);
-  document.getElementById('today-date').textContent = str.charAt(0).toUpperCase() + str.slice(1);
-  document.getElementById('cal-month').textContent = d.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
+  const time = d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  const dateEl = document.getElementById('today-date');
+  if (dateEl) dateEl.textContent = `${str.charAt(0).toUpperCase() + str.slice(1)} • ${time}`;
+  const calMonth = document.getElementById('cal-month');
+  if (calMonth) calMonth.textContent = d.toLocaleDateString('pt-BR', {month:'long', year:'numeric'});
 }
 
 function loadSettings() {

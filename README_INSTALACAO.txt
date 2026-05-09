@@ -1,3 +1,7 @@
+CuidarBem PWA v27 - Correção mobile header
+
+Correção: Bom dia/Boa tarde e CuidarBem voltam a aparecer abaixo da topbar fixa. Hamburger removido, título duplicado do topo removido, sininho mantido no canto superior direito.
+
 CuidarBem PWA v23 - Supabase Sync automático
 
 Arquivos necessários incluídos:
@@ -74,3 +78,10 @@ Versão v26 - Refinamento mobile da tela inicial:
 - Removido nome duplicado no centro da topbar.
 - Sininho de alertas alinhado à direita, mais baixo e fixo.
 - Topbar da home fixada no topo no mobile.
+
+Versão v28:
+- Topbar mobile fixa redesenhada.
+- Saudação automática Bom dia/Boa tarde/Boa noite.
+- Nome do app Cuidar Bem + slogan.
+- Dia, data e horário HH:MM atualizando automaticamente.
+- Paciente, botão SAMU e ações Ler resumo / Parar resumo / Modo simples na própria topbar.
