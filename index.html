@@ -2316,8 +2316,8 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 
 
 
-<style id="cuidarbem-v28-mobile-operational-topbar">
-/* v28 — Topbar operacional fixa: saudação, app, data/hora, paciente, SAMU e ações rápidas */
+<style id="cuidarbem-v29-mobile-subtitle-one-line">
+/* v29 — slogan da topbar em linha única no mobile */
 .mobile-header-subtitle,
 .mobile-header-actions,
 .mobile-bell-btn{display:none;}
@@ -2365,8 +2365,8 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
   }
   #screen-home .header-title::after{display:none!important;content:none!important;}
   .mobile-header-subtitle{
-    display:block!important;margin-top:8px;font-size:13px;line-height:1.26;font-weight:700;color:rgba(255,255,255,.75);
-    letter-spacing:.005em;
+    display:block!important;margin-top:7px;font-size:12.2px;line-height:1.15;font-weight:800;color:rgba(255,255,255,.78);
+    letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
   }
   .mobile-bell-btn{
     display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
@@ -2425,7 +2425,7 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
       <div class="mobile-topbar-copy">
         <div class="header-greeting" id="greeting">Bom dia ☀️</div>
         <div class="header-title">Cuidar Bem</div>
-        <div class="mobile-header-subtitle">Cuidado que conecta,<br>saúde que acompanha.</div>
+        <div class="mobile-header-subtitle">Cuidado que conecta, saúde que acompanha.</div>
       </div>
       <button class="mobile-bell-btn" onclick="speakSummary()" aria-label="Alertas">🔔<span></span></button>
     </div>
