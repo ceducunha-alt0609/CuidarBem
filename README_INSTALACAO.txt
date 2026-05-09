@@ -212,3 +212,10 @@ Versão v49:
 - Corrigido tremor/pisca na tela inicial após editar medicamento.
 - Salvamento agora estabiliza a renderização da home e preserva a posição da tela.
 - Cache PWA atualizado para v49.
+
+
+Versão v50:
+- Corrigido pisca/tremor na tela inicial após editar medicamento.
+- Removido ícone duplicado de editar no card de medicamento.
+- Atualização do medicamento agora altera apenas o card necessário, sem recarregar a lista inteira da home.
+- Cache PWA atualizado para v50.

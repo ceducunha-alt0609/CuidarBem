@@ -4894,7 +4894,6 @@ function renderTodayTasks() {
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
         <div class="task-time" style="${medNameClass?'color:#c0192d;font-weight:900':''}">${t.time||''}</div>
         ${isMed ? `<button class="med-info-btn" onclick="event.stopPropagation();openMedInfo('${t.id}')" title="Ver detalhes do remédio">ℹ</button>` : ''}
-        <button class="task-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button>
         <button class="task-edit-btn" onclick="event.stopPropagation();openGenericTaskEditor('${t.id}')" title="Editar">✏️</button><button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
       </div>
     </div>`;
@@ -10252,46 +10251,70 @@ document.addEventListener('keydown', function(e){
 
 
 
-<!-- v49 — estabiliza a home após editar: evita pisca/tremor e salto de rolagem -->
-<style id="cuidarbem-v49-home-stable-after-edit">
-  body.cb-home-render-stable #screen-home,
-  body.cb-home-render-stable #screen-home *{
+
+<!-- v50 — edição sem piscar: atualiza só o card alterado e remove ícone duplicado -->
+<style id="cuidarbem-v50-no-flicker-edit">
+  body.cb-med-saving #screen-home,
+  body.cb-med-saving #screen-home *{
     animation:none!important;
     transition:none!important;
     scroll-behavior:auto!important;
   }
-  body.cb-home-render-stable .task-item-med-late,
-  body.cb-home-render-stable .task-name-blink,
-  body.cb-home-render-stable .med-late-badge,
-  body.cb-home-render-stable .task-item-med-late .task-check:not(.checked){
-    animation:none!important;
-  }
+  .task-edit-btn + .task-edit-btn{display:none!important;}
 </style>
-<script id="cuidarbem-v49-home-stable-after-edit-js">
+<script id="cuidarbem-v50-no-flicker-edit-js">
 (function(){
   function byId(id){ return document.getElementById(id); }
   function getCurrentMedTask(){
     const list = (typeof tasks !== 'undefined' ? tasks : []);
-    return list.find(t => t.id === window.currentMedInfoTaskId || (typeof currentMedInfoTaskId !== 'undefined' && t.id === currentMedInfoTaskId));
+    const id = window.currentMedInfoTaskId || (typeof currentMedInfoTaskId !== 'undefined' ? currentMedInfoTaskId : null);
+    return list.find(t => t.id === id);
   }
-  function stableHomeRender(){
-    const y = window.scrollY || document.documentElement.scrollTop || 0;
-    const activeId = document.querySelector('.screen.active')?.id || '';
-    document.body.classList.add('cb-home-render-stable');
-    try { if (typeof renderAll === 'function') renderAll(); } catch(e){ console.warn('[CuidarBem] renderAll falhou:', e); }
-    try { if (typeof buildWeekStrip === 'function') buildWeekStrip(); } catch(e){}
-    requestAnimationFrame(() => {
-      if ((document.querySelector('.screen.active')?.id || '') === activeId) window.scrollTo(0, y);
-      setTimeout(() => document.body.classList.remove('cb-home-render-stable'), 650);
-    });
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function updateOnlyMedicationCard(task){
+    if (!task || !task.id) return;
+    const card = byId('task-card-' + task.id);
+    if (!card) return;
+    const nameEl = card.querySelector('.task-name');
+    if (nameEl) nameEl.textContent = (task.name || '') + (task.dose ? ' — ' + task.dose : '');
+    const timeEl = card.querySelector('.task-time');
+    if (timeEl) timeEl.textContent = task.time || '';
+
+    const badge = card.querySelector('.task-badge');
+    if (badge) { badge.className = 'task-badge badge-med'; badge.textContent = 'Remédio'; }
+
+    const bodyBlock = card.querySelector('.task-body > div');
+    if (bodyBlock) {
+      let meta = bodyBlock.querySelector('.task-meta');
+      if (task.obs) {
+        if (!meta) {
+          meta = document.createElement('div');
+          meta.className = 'task-meta';
+          const title = bodyBlock.querySelector('.task-name');
+          if (title && title.nextSibling) bodyBlock.insertBefore(meta, title.nextSibling);
+          else bodyBlock.appendChild(meta);
+        }
+        meta.textContent = task.obs;
+      } else if (meta) {
+        meta.remove();
+      }
+    }
+
+    // Remove qualquer botão de editar duplicado que tenha sobrado no card atual.
+    const edits = card.querySelectorAll('.task-edit-btn');
+    edits.forEach((btn, idx) => { if (idx > 0) btn.remove(); });
   }
 
-  // Reaplica a versão estável do salvamento do medicamento, porque ela fica por último no arquivo.
   window.saveEditMedModal = function(){
     const task = getCurrentMedTask();
     if (!task) { showToast('Não encontrei este medicamento para salvar.'); return; }
     const name = (byId('edit-med-name')?.value || '').trim();
     if (!name) { showToast('Informe o nome do medicamento.'); return; }
+
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.classList.add('cb-med-saving');
 
     task.name = name;
     task.dose = (byId('edit-med-dose')?.value || '').trim();
@@ -10303,13 +10326,32 @@ document.addEventListener('keydown', function(e){
     task.nextPickup = (byId('edit-med-pickup')?.value || '').trim();
     task.updatedAt = Date.now();
 
-    try { if (typeof saveTasks === 'function') saveTasks(); } catch(e){}
-    try { if (typeof closeEditMedModal === 'function') closeEditMedModal(); } catch(e){}
-    stableHomeRender();
-    try { if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW(); } catch(e){}
-    try { if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication'); } catch(e){}
+    try { if (typeof saveTasks === 'function') saveTasks(); } catch(e) {}
+    try { updateOnlyMedicationCard(task); } catch(e) {}
+    try { if (typeof closeEditMedModal === 'function') closeEditMedModal(); } catch(e) {}
+    try { window.scrollTo(0, y); } catch(e) {}
+
+    // Atualizações leves, sem re-renderizar a lista da home inteira.
+    requestAnimationFrame(() => {
+      try { if (typeof renderProgress === 'function') renderProgress(); } catch(e) {}
+      try { if (typeof renderAlerts === 'function') renderAlerts(); } catch(e) {}
+      try { if (typeof renderNextAlarm === 'function') renderNextAlarm(); } catch(e) {}
+      try { if (typeof renderCaregiverSummary === 'function') renderCaregiverSummary(); } catch(e) {}
+      try { window.scrollTo(0, y); } catch(e) {}
+      setTimeout(() => document.body.classList.remove('cb-med-saving'), 500);
+    });
+
+    try { if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW(); } catch(e) {}
+    try { if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication'); } catch(e) {}
     showToast('✅ Medicamento atualizado.');
   };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.task-item').forEach(card => {
+      const edits = card.querySelectorAll('.task-edit-btn');
+      edits.forEach((btn, idx) => { if (idx > 0) btn.remove(); });
+    });
+  });
 })();
 </script>
 
