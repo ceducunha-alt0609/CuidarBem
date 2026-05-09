@@ -160,3 +160,8 @@ Versão v41:
 - Correção mobile na Agenda > Nova tarefa: janela centralizada, com altura controlada e rolagem interna.
 - Parte inferior da janela não fica mais escondida atrás da barra inferior.
 - Cache PWA atualizado para v41.
+
+
+Versão v42:
+- Ajuste mobile na guia Saúde: os 3 cards iniciais foram rebaixados para aparecerem abaixo da topbar fixa.
+- Cache PWA atualizado para v42.

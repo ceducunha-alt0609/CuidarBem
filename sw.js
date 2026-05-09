@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v41-agenda-modal-fix';
+const CACHE_NAME = 'cuidarbem-pwa-v42-saude-cards-rebaixados';
 const APP_SHELL = [
   './',
   './index.html',
