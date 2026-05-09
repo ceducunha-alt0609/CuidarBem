@@ -206,3 +206,9 @@ Versão v48:
 - O editor agora abre sozinho, sem a janela de detalhes animando por baixo.
 - Ao salvar, atualiza rotina, alertas e sincronização sem reabrir outra janela automaticamente.
 - Cache PWA atualizado para v48.
+
+
+Versão v49:
+- Corrigido tremor/pisca na tela inicial após editar medicamento.
+- Salvamento agora estabiliza a renderização da home e preserva a posição da tela.
+- Cache PWA atualizado para v49.

@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v48-edit-med-stable';
+const CACHE_NAME = 'cuidarbem-pwa-v49-home-stable';
 const APP_SHELL = [
   './',
   './index.html',

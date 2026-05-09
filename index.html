@@ -10250,6 +10250,69 @@ document.addEventListener('keydown', function(e){
 })();
 </script>
 
+
+
+<!-- v49 — estabiliza a home após editar: evita pisca/tremor e salto de rolagem -->
+<style id="cuidarbem-v49-home-stable-after-edit">
+  body.cb-home-render-stable #screen-home,
+  body.cb-home-render-stable #screen-home *{
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+  body.cb-home-render-stable .task-item-med-late,
+  body.cb-home-render-stable .task-name-blink,
+  body.cb-home-render-stable .med-late-badge,
+  body.cb-home-render-stable .task-item-med-late .task-check:not(.checked){
+    animation:none!important;
+  }
+</style>
+<script id="cuidarbem-v49-home-stable-after-edit-js">
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function getCurrentMedTask(){
+    const list = (typeof tasks !== 'undefined' ? tasks : []);
+    return list.find(t => t.id === window.currentMedInfoTaskId || (typeof currentMedInfoTaskId !== 'undefined' && t.id === currentMedInfoTaskId));
+  }
+  function stableHomeRender(){
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const activeId = document.querySelector('.screen.active')?.id || '';
+    document.body.classList.add('cb-home-render-stable');
+    try { if (typeof renderAll === 'function') renderAll(); } catch(e){ console.warn('[CuidarBem] renderAll falhou:', e); }
+    try { if (typeof buildWeekStrip === 'function') buildWeekStrip(); } catch(e){}
+    requestAnimationFrame(() => {
+      if ((document.querySelector('.screen.active')?.id || '') === activeId) window.scrollTo(0, y);
+      setTimeout(() => document.body.classList.remove('cb-home-render-stable'), 650);
+    });
+  }
+
+  // Reaplica a versão estável do salvamento do medicamento, porque ela fica por último no arquivo.
+  window.saveEditMedModal = function(){
+    const task = getCurrentMedTask();
+    if (!task) { showToast('Não encontrei este medicamento para salvar.'); return; }
+    const name = (byId('edit-med-name')?.value || '').trim();
+    if (!name) { showToast('Informe o nome do medicamento.'); return; }
+
+    task.name = name;
+    task.dose = (byId('edit-med-dose')?.value || '').trim();
+    task.time = (byId('edit-med-time')?.value || '').trim();
+    task.date = (byId('edit-med-date')?.value || '').trim() || (typeof todayStr === 'function' ? todayStr() : new Date().toISOString().split('T')[0]);
+    task.repeat = byId('edit-med-repeat')?.value || 'daily';
+    task.obs = (byId('edit-med-obs')?.value || '').trim();
+    task.prescriptionExpiry = (byId('edit-med-rx')?.value || '').trim();
+    task.nextPickup = (byId('edit-med-pickup')?.value || '').trim();
+    task.updatedAt = Date.now();
+
+    try { if (typeof saveTasks === 'function') saveTasks(); } catch(e){}
+    try { if (typeof closeEditMedModal === 'function') closeEditMedModal(); } catch(e){}
+    stableHomeRender();
+    try { if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW(); } catch(e){}
+    try { if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication'); } catch(e){}
+    showToast('✅ Medicamento atualizado.');
+  };
+})();
+</script>
+
 </body>
 </html>
 
