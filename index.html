@@ -2531,6 +2531,22 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 }
 </style>
 
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;padding:14px 16px;cursor:pointer;box-shadow:0 12px 28px rgba(192,25,45,.22);}
+.cb-delete-cancel{width:100%;border:1.5px solid var(--gray-200);border-radius:14px;background:var(--gray-50);color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:13px 16px;cursor:pointer;}
+.cb-delete-confirm:active,.cb-delete-cancel:active{transform:scale(.98);}
+</style>
+
 </head>
 <body>
 
@@ -5715,14 +5731,7 @@ function openMedInfo(taskId) {
 }
 
 
-function deleteCurrentMedFromInfo() {
-  const taskId = currentMedInfoTaskId;
-  const task = tasks.find(t => t.id === taskId);
-  if (!task) return;
-  const nome = task.name || 'este medicamento';
-  if (!confirm(`Excluir ${nome} da rotina?
-
-Essa ação remove o medicamento da tela inicial e apaga as confirmações dele neste aparelho.`)) return;
+function performDeleteTask(taskId, sourceReason) {
   tasks = tasks.filter(t => t.id !== taskId);
   if (typeof removeCompletionsForTaskIds === 'function') removeCompletionsForTaskIds([taskId]);
   else {
@@ -5730,12 +5739,28 @@ Essa ação remove o medicamento da tela inicial e apaga as confirmações dele 
     localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
   }
   saveTasks();
-  closeMedInfo();
+  try { closeMedInfo(); } catch(e) {}
+  try { if (typeof closeSeenModal === 'function') closeSeenModal(); } catch(e) {}
   renderAll();
   buildWeekStrip();
   if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
-  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('delete-medication');
-  showToast('🗑️ Medicamento excluído');
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush(sourceReason || 'delete-task');
+}
+
+function deleteCurrentMedFromInfo() {
+  const taskId = currentMedInfoTaskId;
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const nome = task.name || 'este medicamento';
+  openDeleteConfirm({
+    title: `Excluir ${nome}?`,
+    message: 'Esta ação remove o medicamento da tela inicial, apaga as confirmações dele neste aparelho e sincroniza com a família.',
+    confirmText: 'Excluir medicamento',
+    onConfirm: () => {
+      performDeleteTask(taskId, 'delete-medication');
+      showToast('🗑️ Medicamento excluído');
+    }
+  });
 }
 
 
@@ -5749,23 +5774,15 @@ function deleteTaskById(taskId) {
   if (!task) return;
   const tipo = cbTaskTypeLabel(task);
   const nome = task.name || `esta ${tipo}`;
-  if (!confirm(`Excluir ${nome}?
-
-Essa ação remove este ${tipo} da rotina, apaga as confirmações relacionadas neste aparelho e sincroniza a alteração com a família.`)) return;
-  tasks = tasks.filter(t => t.id !== taskId);
-  if (typeof removeCompletionsForTaskIds === 'function') removeCompletionsForTaskIds([taskId]);
-  else {
-    Object.keys(completions || {}).forEach(k => { if (k.split('_')[0] === taskId) delete completions[k]; });
-    localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
-  }
-  saveTasks();
-  try { closeMedInfo(); } catch(e) {}
-  try { if (typeof closeSeenModal === 'function') closeSeenModal(); } catch(e) {}
-  renderAll();
-  buildWeekStrip();
-  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
-  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('delete-task');
-  showToast(`🗑️ ${tipo.charAt(0).toUpperCase()+tipo.slice(1)} excluído`);
+  openDeleteConfirm({
+    title: `Excluir ${nome}?`,
+    message: `Esta ação remove este ${tipo} da rotina, apaga as confirmações relacionadas neste aparelho e sincroniza com a família.`,
+    confirmText: `Excluir ${tipo}`,
+    onConfirm: () => {
+      performDeleteTask(taskId, 'delete-task');
+      showToast(`🗑️ ${tipo.charAt(0).toUpperCase()+tipo.slice(1)} excluído`);
+    }
+  });
 }
 
 function closeMedInfo() { document.getElementById('med-info-sheet').classList.remove('open'); }
@@ -9437,7 +9454,57 @@ if (localStorage.getItem(SB_ENABLED_KEY) === '1' && localStorage.getItem(SB_FAMI
 }
 </script>
 
+
+<div class="cb-delete-overlay" id="cb-delete-overlay" onclick="closeDeleteConfirm(event)">
+  <div class="cb-delete-dialog" role="dialog" aria-modal="true" aria-labelledby="cb-delete-title" onclick="event.stopPropagation()">
+    <div class="cb-delete-icon">🗑️</div>
+    <div class="cb-delete-title" id="cb-delete-title">Excluir?</div>
+    <div class="cb-delete-message" id="cb-delete-message">Esta ação não pode ser desfeita.</div>
+    <div class="cb-delete-actions">
+      <button class="cb-delete-confirm" id="cb-delete-confirm-btn" type="button">Excluir</button>
+      <button class="cb-delete-cancel" type="button" onclick="closeDeleteConfirm()">Cancelar</button>
+    </div>
+  </div>
+</div>
+<script id="cuidarbem-v39-delete-modal-script">
+let cbDeleteConfirmCallback = null;
+function openDeleteConfirm(opts){
+  const o = opts || {};
+  cbDeleteConfirmCallback = typeof o.onConfirm === 'function' ? o.onConfirm : null;
+  const overlay = document.getElementById('cb-delete-overlay');
+  const title = document.getElementById('cb-delete-title');
+  const msg = document.getElementById('cb-delete-message');
+  const btn = document.getElementById('cb-delete-confirm-btn');
+  if (!overlay || !title || !msg || !btn) {
+    if (cbDeleteConfirmCallback) cbDeleteConfirmCallback();
+    return;
+  }
+  title.textContent = o.title || 'Excluir?';
+  msg.textContent = o.message || 'Esta ação não pode ser desfeita.';
+  btn.textContent = o.confirmText || 'Excluir';
+  btn.onclick = function(){
+    const fn = cbDeleteConfirmCallback;
+    cbDeleteConfirmCallback = null;
+    overlay.classList.remove('open');
+    if (fn) fn();
+  };
+  overlay.classList.add('open');
+  setTimeout(()=>btn.focus && btn.focus(), 80);
+}
+function closeDeleteConfirm(ev){
+  if (ev && ev.target && ev.target.id !== 'cb-delete-overlay') return;
+  cbDeleteConfirmCallback = null;
+  const overlay = document.getElementById('cb-delete-overlay');
+  if (overlay) overlay.classList.remove('open');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeDeleteConfirm();
+});
+</script>
+
 </body>
 </html>
+
+<!-- v39: confirmação personalizada de exclusão sem mensagem do navegador -->
 
 <!-- v38: correção da exclusão e botão excluir para remédios, exercícios, fisioterapia, consultas e exames -->

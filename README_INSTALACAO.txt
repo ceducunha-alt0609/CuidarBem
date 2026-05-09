@@ -141,3 +141,10 @@ Versão v38:
 - Adicionado botão de exclusão para exercícios, fisioterapia, consultas e exames.
 - Ao excluir, remove confirmações relacionadas, reagenda alertas e sincroniza com a família.
 - Cache PWA atualizado para v38.
+
+
+Versão v39:
+- Substituída a confirmação nativa do navegador ao excluir por uma janela personalizada do app.
+- A mensagem agora aparece limpa: Excluir..., sem 'ceducunha-alt0609.github.io diz'.
+- Mantida exclusão de medicamentos, exercícios, fisioterapia, consultas e exames com sincronização familiar.
+- Cache PWA atualizado para v39.
