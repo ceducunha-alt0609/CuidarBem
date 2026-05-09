@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v22-supabase-fix';
+const CACHE_NAME = 'cuidarbem-pwa-v23-supabase-auto-sync';
 const APP_SHELL = [
   './',
   './index.html',

@@ -2743,13 +2743,13 @@
 
       <div style="background:var(--gray-50);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:11px;line-height:1.45;color:var(--text-muted);font-weight:700">
         Projeto Supabase conectado: <span style="word-break:break-all;color:var(--teal-600)">lwldroopbooeocchgngg.supabase.co</span><br>
-        Antes do primeiro uso, execute o arquivo <strong>SUPABASE_SETUP.sql</strong> no SQL Editor do Supabase.
+        Sincronização automática ativa: ao marcar remédio tomado, exercício/fisio feito, consulta/exame confirmado, sinais vitais ou dados do paciente, a família recebe automaticamente. O botão <strong>Forçar envio</strong> fica apenas como emergência.
       </div>
 
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button onclick="createSupabaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--blue-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Criar família</button>
         <button onclick="joinSupabaseFamily()" style="flex:1;min-width:130px;padding:11px 8px;background:var(--green-600);color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Entrar / sincronizar</button>
-        <button onclick="pushSupabaseNow()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Enviar agora</button>
+        <button onclick="pushSupabaseNow()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Forçar envio</button>
         <button onclick="disconnectSupabaseSync()" style="flex:1;min-width:115px;padding:10px 8px;background:var(--gray-50);color:var(--coral-600);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">Desconectar</button>
       </div>
 
@@ -8206,7 +8206,7 @@ function falar(texto){
 // ── Ponte local para sincronização em nuvem (Supabase Realtime) ─────────────
 window.cbCollectSnapshot = function cbCollectSnapshot() {
   return {
-    version: 20,
+    version: 23,
     app: 'CuidarBem',
     ts: new Date().toISOString(),
     tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
@@ -8256,18 +8256,21 @@ window.cbMarkLocalChange = function cbMarkLocalChange(reason) {
     if (typeof original !== 'function' || original.__supabasePatched) return;
     const wrapped = function(...args) {
       const result = original.apply(this, args);
-      setTimeout(() => window.cbMarkLocalChange(name), 120);
+      setTimeout(() => window.cbMarkLocalChange(name), 80);
+      if (typeof window.cbSupabaseQueuePush === 'function') {
+        setTimeout(() => window.cbSupabaseQueuePush(name), 120);
+      }
       return result;
     };
     wrapped.__supabasePatched = true;
     window[name] = wrapped;
   };
-  ['saveTasks','saveSettings','toggleTask','toggleTaskDay','saveProfile','saveCareEvent','deleteCareEvent','saveVital'].forEach(patch);
+  ['saveTasks','saveSettings','toggleTask','toggleTaskDay','confirmTake','quickTake','confirmSeen','saveProfile','saveCareEvent','deleteCareEvent','saveVital','saveVitalFreqData','saveVitalFreq'].forEach(patch);
 })();
 </script>
 
 <script type="module">
-// ── Supabase Realtime sync — CuidarBem v21 ───────────────────────────────
+// ── Supabase Realtime sync — CuidarBem v23 — auto sync ─────────────────
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 
 const SUPABASE_URL = 'https://lwldroopbooeocchgngg.supabase.co';
@@ -8404,11 +8407,51 @@ function queuePush(reason) {
   const code = localStorage.getItem(SB_FAMILY_KEY);
   if (!code) return;
   clearTimeout(sbSaveTimer);
+  const fast = String(reason || '').includes('completions') || String(reason || '').includes('toggleTask') || String(reason || '').includes('quickTake') || String(reason || '').includes('confirmTake');
   sbSaveTimer = setTimeout(() => pushStateNow({silent:true}).catch(err => {
     console.warn('[CuidarBem Supabase] Falha ao sincronizar:', err);
     setStatus('❌ Falha ao sincronizar', 'var(--coral-600)', true);
-  }), 900);
+  }), fast ? 250 : 750);
 }
+window.cbSupabaseQueuePush = queuePush;
+
+(function installSupabaseAutoStorageSync(){
+  if (window.__cbSupabaseAutoStorageSync) return;
+  window.__cbSupabaseAutoStorageSync = true;
+  const syncKeys = new Set([
+    'cuidarbem_tasks',
+    'cuidarbem_completions',
+    'cuidarbem_settings',
+    'cb_medical_profile',
+    'cb_care_events',
+    'cb_vitals',
+    'cb_vital_freq',
+    'cuidarbem_a11y',
+    'paciente'
+  ]);
+  const nativeSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value) {
+    const oldValue = this === localStorage ? this.getItem(key) : null;
+    const result = nativeSetItem.apply(this, arguments);
+    try {
+      if (this === localStorage && syncKeys.has(key) && oldValue !== String(value)) {
+        setTimeout(() => queuePush('localStorage:' + key), 40);
+      }
+    } catch(e) {}
+    return result;
+  };
+  const nativeRemoveItem = Storage.prototype.removeItem;
+  Storage.prototype.removeItem = function(key) {
+    const hadValue = this === localStorage && this.getItem(key) !== null;
+    const result = nativeRemoveItem.apply(this, arguments);
+    try {
+      if (this === localStorage && syncKeys.has(key) && hadValue) {
+        setTimeout(() => queuePush('localStorage-remove:' + key), 40);
+      }
+    } catch(e) {}
+    return result;
+  };
+})();
 async function startRealtimeListener(familyCode) {
   const client = ensureSupabase(familyCode);
   if (sbChannel) { try { client.removeChannel(sbChannel); } catch(e) {} sbChannel = null; }
@@ -8490,7 +8533,7 @@ window.toggleSupabaseSync = function toggleSupabaseSync() {
 
 window.addEventListener('cb-local-change', e => queuePush(e.detail?.reason));
 window.addEventListener('storage', e => {
-  if (['cuidarbem_tasks','cuidarbem_completions','cuidarbem_settings','cb_medical_profile','cb_care_events','cb_vitals','paciente'].includes(e.key)) queuePush('storage:' + e.key);
+  if (['cuidarbem_tasks','cuidarbem_completions','cuidarbem_settings','cb_medical_profile','cb_care_events','cb_vitals','cb_vital_freq','cuidarbem_a11y','paciente'].includes(e.key)) queuePush('storage:' + e.key);
 });
 
 loadSupabaseForm();

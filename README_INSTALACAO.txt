@@ -1,4 +1,4 @@
-CuidarBem PWA v21 - Supabase Sync
+CuidarBem PWA v23 - Supabase Sync automático
 
 Arquivos necessários incluídos:
 - index.html
@@ -26,7 +26,7 @@ Como usar o Modo Família:
 2. Em Modo Família Sincronizado, clique em Criar família.
 3. Copie o código completo, por exemplo: CUIDAR-4829-ABCD.
 4. No celular do familiar/cuidador, cole o mesmo código e clique em Entrar / sincronizar.
-5. Ao marcar medicamentos, eventos, sinais vitais ou dados do paciente, o outro aparelho recebe atualização.
+5. Ao marcar medicamento tomado, exercício/fisio feito, consulta/exame confirmado, sinais vitais ou dados do paciente, o outro aparelho recebe atualização automaticamente. O botão "Forçar envio" é apenas para emergência/cache.
 
 Importante:
 - Compartilhe apenas o código completo com pessoas autorizadas.
@@ -39,3 +39,10 @@ Importante:
 Correção v22:
 - Corrigido erro JavaScript: shouldShowToday is not defined.
 - Atualizado cache do Service Worker para forçar recarregamento da versão corrigida.
+
+
+Atualização v23:
+- Sincronização automática reforçada em localStorage.
+- Ao marcar remédio tomado, exercício/fisioterapia feito ou compromisso confirmado na tela inicial, o app envia para o Supabase sem precisar clicar em enviar.
+- Botão manual renomeado para Forçar envio.
+- Cache do Service Worker atualizado para v23.
