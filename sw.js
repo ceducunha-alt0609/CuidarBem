@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v40-topbars-fixas';
+const CACHE_NAME = 'cuidarbem-pwa-v41-agenda-modal-fix';
 const APP_SHELL = [
   './',
   './index.html',

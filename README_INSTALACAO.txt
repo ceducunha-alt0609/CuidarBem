@@ -154,3 +154,9 @@ Versão v40:
 - Topbar fixa aplicada em todas as guias no mobile: Calendário, Relatórios, Configurações, Escanear Receita, Saúde e Consultas/Exames.
 - Conteúdo das guias rebaixado para não ficar encoberto pela topbar.
 - Cache PWA atualizado para v40.
+
+
+Versão v41:
+- Correção mobile na Agenda > Nova tarefa: janela centralizada, com altura controlada e rolagem interna.
+- Parte inferior da janela não fica mais escondida atrás da barra inferior.
+- Cache PWA atualizado para v41.

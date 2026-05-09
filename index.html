@@ -2547,6 +2547,43 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 .cb-delete-confirm:active,.cb-delete-cancel:active{transform:scale(.98);}
 </style>
 
+
+
+<style id="cuidarbem-v41-add-modal-fix">
+/* v41 — corrige a janela Nova tarefa da Agenda para não ficar escondida no mobile */
+@media (max-width:767px){
+  #add-modal{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px 12px calc(var(--nav-h) + 22px + env(safe-area-inset-bottom))!important;
+  }
+  #add-modal .modal{
+    width:min(100%, 456px)!important;
+    max-height:calc(100dvh - var(--nav-h) - 92px - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;
+    border-radius:26px!important;
+    padding:22px 18px calc(30px + env(safe-area-inset-bottom))!important;
+    margin:0 auto!important;
+    transform:translateY(10px) scale(.98)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #add-modal.open .modal{
+    transform:translateY(0) scale(1)!important;
+  }
+  #add-modal .modal-title{
+    position:sticky;
+    top:-22px;
+    z-index:2;
+    background:linear-gradient(180deg,#fff 0%,#f8fcfa 100%);
+    padding:4px 0 12px;
+    margin-bottom:12px!important;
+  }
+  #add-modal .btn-add:last-child{
+    margin-bottom:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 
