@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v43-saude-cards-ajuste-fino';
+const CACHE_NAME = 'cuidarbem-pwa-v44-receita-ia-fallback';
 const APP_SHELL = [
   './',
   './index.html',

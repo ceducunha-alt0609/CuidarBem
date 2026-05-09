@@ -170,3 +170,10 @@ Versão v42:
 Versão v43:
 - Ajuste fino na guia Saúde: os 3 cards iniciais subiram um pouco em relação à v42, mantendo folga da topbar fixa.
 - Cache PWA atualizado para v43.
+
+
+Versão v44:
+- Corrigido travamento na guia Escanear Receita quando a IA externa não responde.
+- A foto da receita permanece visível e o app abre preenchimento manual seguro para adicionar o medicamento.
+- Botão para tentar IA novamente, sem perder a foto carregada.
+- Cache PWA atualizado para v44.

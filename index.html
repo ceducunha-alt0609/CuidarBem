@@ -6542,6 +6542,90 @@ function resetOcr() {
   document.getElementById('ocr-loading').style.display = 'none';
 }
 
+
+function fetchWithTimeout(url, options, timeoutMs = 18000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
+function showOcrManualFallback(reason) {
+  const loading = document.getElementById('ocr-loading');
+  const result = document.getElementById('ocr-result-zone');
+  const preview = document.getElementById('ocr-preview-zone');
+  if (loading) loading.style.display = 'none';
+  if (preview) preview.style.display = 'none';
+  if (result) result.style.display = 'block';
+
+  const title = result?.querySelector('div[style*="font-size:17px"]');
+  if (title) title.textContent = 'Adicionar receita manualmente';
+
+  const list = document.getElementById('ocr-meds-list');
+  if (!list) return;
+  list.innerHTML = `
+    <div class="card" style="border-left:4px solid var(--amber-400);background:var(--amber-50);box-shadow:none;margin-bottom:12px">
+      <div style="font-size:15px;font-weight:900;color:var(--amber-600);margin-bottom:6px">⚠️ IA indisponível no momento</div>
+      <div style="font-size:13px;color:var(--amber-600);font-weight:700;line-height:1.55">
+        A foto foi carregada, mas a análise automática não respondeu. Para não travar seu cadastro, preencha os dados abaixo e salve normalmente.
+      </div>
+      ${reason ? `<div style="font-size:11px;color:var(--amber-600);opacity:.8;margin-top:8px">Detalhe técnico: ${String(reason).replace(/[<>]/g,'')}</div>` : ''}
+    </div>
+    ${ocrImageBase64 ? `<div class="card" style="padding:0;overflow:hidden;margin-bottom:12px"><img src="data:image/jpeg;base64,${ocrImageBase64}" style="width:100%;max-height:180px;object-fit:cover;display:block" alt="Receita carregada"></div>` : ''}
+    <div class="ocr-med-card" style="border-left:4px solid var(--green-400)">
+      <div style="font-size:16px;font-weight:900;color:var(--green-800);margin-bottom:12px">💊 Novo medicamento</div>
+      <div class="form-group">
+        <label class="form-label">Nome do medicamento</label>
+        <input class="form-input" id="manual-ocr-name" placeholder="Ex: Losartana 50mg">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dose / como tomar</label>
+        <input class="form-input" id="manual-ocr-dose" placeholder="Ex: 1 comprimido">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Frequência</label>
+        <input class="form-input" id="manual-ocr-freq" placeholder="Ex: 1x ao dia, 2x ao dia">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horários</label>
+        <input class="form-input" id="manual-ocr-times" placeholder="Ex: 08:00, 20:00">
+        <div style="font-size:11px;color:var(--text-light);margin-top:5px">Separe os horários por vírgula. Se deixar vazio, cria sem horário.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observações / instruções</label>
+        <input class="form-input" id="manual-ocr-obs" placeholder="Ex: tomar com alimento">
+      </div>
+      <button class="btn-add" onclick="addManualOcrMedication()">✅ Adicionar este medicamento</button>
+      <button class="btn-add btn-secondary" onclick="document.getElementById('ocr-preview-zone').style.display='block';document.getElementById('ocr-result-zone').style.display='none'">🤖 Tentar IA novamente</button>
+    </div>`;
+
+  const obsCard = document.getElementById('ocr-obs-card');
+  if (obsCard) obsCard.style.display = 'none';
+}
+
+function addManualOcrMedication() {
+  const name = (document.getElementById('manual-ocr-name')?.value || '').trim();
+  const dose = (document.getElementById('manual-ocr-dose')?.value || '').trim();
+  const freq = (document.getElementById('manual-ocr-freq')?.value || '').trim();
+  const timesRaw = (document.getElementById('manual-ocr-times')?.value || '').trim();
+  const obs = (document.getElementById('manual-ocr-obs')?.value || '').trim();
+  if (!name) { showToast('Informe o nome do medicamento.'); return; }
+  const horarios = timesRaw ? timesRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+  ocrResults = [{
+    id: 'manual_' + Date.now(),
+    include: true,
+    nome: name,
+    dose: dose || 'Conforme receita',
+    frequencia: freq || 'Conforme receita',
+    horarios_sugeridos: horarios,
+    selectedTimes: [...horarios],
+    para_que_serve: 'Medicamento adicionado manualmente a partir da receita fotografada.',
+    instrucoes: obs,
+    cuidados_avc: ''
+  }];
+  renderOcrResults('Medicamento preenchido manualmente. Confira dose e horários antes de salvar.');
+  showToast('✅ Medicamento preparado para salvar.');
+}
+
 async function analyzeRecipe() {
   if (!ocrImageBase64) return;
   document.getElementById('ocr-preview-zone').style.display = 'none';
@@ -6588,7 +6672,7 @@ Regras para sugestão de horários:
 Se não conseguir ler a receita claramente, retorne:
 {"erro": "Não foi possível ler a receita. Tente uma foto mais nítida e bem iluminada."}`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -6602,9 +6686,10 @@ Se não conseguir ler a receita claramente, retorne:
           ]
         }]
       })
-    });
+    }, 18000);
 
     clearInterval(loadInt);
+    if (!response.ok) throw new Error('IA não respondeu (' + response.status + ')');
     const data = await response.json();
     const raw = data.content?.find(b => b.type === 'text')?.text || '';
     const clean = raw.replace(/```json|```/g,'').trim();
@@ -6622,8 +6707,8 @@ Se não conseguir ler a receita claramente, retorne:
   } catch(e) {
     clearInterval(loadInt);
     console.error(e);
-    showToast('❌ Erro ao analisar. Tente novamente.');
-    resetOcr();
+    showToast('⚠️ IA indisponível. Use o preenchimento manual.');
+    showOcrManualFallback(e && e.message ? e.message : 'falha na análise');
   }
 }
 
