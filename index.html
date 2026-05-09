@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>CuidarBem — Cuidados de Saúde</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=pTFFG0a5oIjT8BXKlg3fmPRNiNhaW1SMZOP4hInf_sLnYYDa5G2b9aJWEc8Tqitjy0zs0F2AMEhIS8I2p1QsRnnPxLtjpmsOh-gsB2_M7JA9ggR3MLgo0bQ8cGDqPxnHsua-gvLtoRqDMsXaOIQ-mkwOKNRSCD_ONPcbs-oirzvp05kyfeWr8TbZST3GCv_htms60wABcJ4DhwVMY4RkccZuBai9X3KyRRcSJqGplF_nQjwv3Rlzr9FdMMaRJPPEC-Z0qqhiGRmYH1PYFPu_Hw" charset="UTF-8"></script><style>
   :root {
     --green-50: #e8f5f1;
     --green-100: #c3e6da;
@@ -10710,6 +10710,209 @@ document.addEventListener('keydown', function(e){
   } else {
     startCuidarBemStable();
   }
+})();
+</script>
+
+
+
+<!-- v52 — FIX MOBILE DEFINITIVO: evita tela branca/tremor ao editar medicamento -->
+<style id="cuidarbem-v52-mobile-edit-white-flicker-fix">
+@media (max-width: 767px){
+  html, body{
+    min-height: 100dvh;
+    overflow-x: hidden !important;
+    background-color: var(--bg) !important;
+  }
+
+  /* Enquanto o editor de medicamento está aberto ou salvando:
+     - trava repaint pesado da home
+     - desliga blur/transições infinitas
+     - impede tela branca causada por composição GPU/backdrop-filter no Chrome mobile */
+  body.cb-edit-med-open #screen-home,
+  body.cb-med-saving #screen-home{
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    contain: layout paint style;
+    background: var(--bg) !important;
+  }
+
+  body.cb-edit-med-open #screen-home *,
+  body.cb-med-saving #screen-home *{
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    will-change: auto !important;
+  }
+
+  body.cb-edit-med-open .bottom-nav,
+  body.cb-med-saving .bottom-nav{
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.cb-edit-med-open .edit-med-overlay,
+  body.cb-med-saving .edit-med-overlay{
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: rgba(0,0,0,.48) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.cb-edit-med-open .edit-med-card,
+  body.cb-med-saving .edit-med-card{
+    transform: translateZ(0) !important;
+    animation: none !important;
+    will-change: auto !important;
+    max-height: 88dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+</style>
+
+<script id="cuidarbem-v52-mobile-edit-white-flicker-fix-js">
+(function(){
+  function byId(id){ return document.getElementById(id); }
+
+  function todaySafe(){
+    try {
+      return (typeof todayStr === 'function') ? todayStr() : new Date().toISOString().split('T')[0];
+    } catch(e){
+      return new Date().toISOString().split('T')[0];
+    }
+  }
+
+  function getCurrentMedTaskSafe(){
+    const list = (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : [];
+    const id = window.currentMedInfoTaskId || (typeof currentMedInfoTaskId !== 'undefined' ? currentMedInfoTaskId : null);
+    return list.find(t => t && t.id === id);
+  }
+
+  function fillEditMedForm(task){
+    const map = {
+      'edit-med-name': task.name || '',
+      'edit-med-dose': task.dose || '',
+      'edit-med-time': task.time || '',
+      'edit-med-date': task.date || todaySafe(),
+      'edit-med-repeat': task.repeat || 'daily',
+      'edit-med-obs': task.obs || '',
+      'edit-med-rx': task.prescriptionExpiry || '',
+      'edit-med-pickup': task.nextPickup || ''
+    };
+    Object.keys(map).forEach(id => {
+      const el = byId(id);
+      if (el) el.value = map[id];
+    });
+  }
+
+  function closeMedInfoQuietly(){
+    const info = byId('med-info-overlay');
+    if (info) {
+      info.classList.remove('open');
+      info.style.pointerEvents = 'none';
+      setTimeout(() => { info.style.pointerEvents = ''; }, 350);
+    }
+  }
+
+  function updateMedCardOnly(task){
+    const card = byId('task-card-' + task.id);
+    if (!card) return false;
+
+    const nameEl = card.querySelector('.task-name');
+    if (nameEl) nameEl.textContent = (task.name || '') + (task.dose ? ' — ' + task.dose : '');
+
+    const timeEl = card.querySelector('.task-time');
+    if (timeEl) timeEl.textContent = task.time || '';
+
+    const metas = card.querySelectorAll('.task-meta');
+    if (metas.length) {
+      if (task.obs) metas[0].textContent = task.obs;
+      else metas[0].remove();
+    }
+
+    card.querySelectorAll('.task-edit-btn').forEach((btn, idx) => {
+      if (idx > 0) btn.remove();
+    });
+
+    return true;
+  }
+
+  window.editCurrentMedFromInfo = function(){
+    const task = getCurrentMedTaskSafe();
+    if (!task) { if (typeof showToast === 'function') showToast('Não encontrei este medicamento para editar.'); return; }
+
+    closeMedInfoQuietly();
+    fillEditMedForm(task);
+
+    document.body.classList.remove('cb-med-saving');
+    document.body.classList.add('cb-edit-med-open');
+
+    const overlay = byId('edit-med-overlay');
+    if (overlay) {
+      overlay.classList.add('open');
+      overlay.style.display = '';
+    }
+  };
+
+  window.closeEditMedModal = function(){
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.remove('open');
+
+    setTimeout(() => {
+      document.body.classList.remove('cb-edit-med-open');
+      document.body.classList.remove('cb-med-saving');
+    }, 180);
+  };
+
+  window.saveEditMedModal = function(){
+    const task = getCurrentMedTaskSafe();
+    if (!task) { if (typeof showToast === 'function') showToast('Não encontrei este medicamento para salvar.'); return; }
+
+    const name = (byId('edit-med-name')?.value || '').trim();
+    if (!name) { if (typeof showToast === 'function') showToast('Informe o nome do medicamento.'); return; }
+
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.classList.add('cb-med-saving');
+
+    task.name = name;
+    task.dose = (byId('edit-med-dose')?.value || '').trim();
+    task.time = (byId('edit-med-time')?.value || '').trim();
+    task.date = (byId('edit-med-date')?.value || '').trim() || todaySafe();
+    task.repeat = byId('edit-med-repeat')?.value || 'daily';
+    task.obs = (byId('edit-med-obs')?.value || '').trim();
+    task.prescriptionExpiry = (byId('edit-med-rx')?.value || '').trim();
+    task.nextPickup = (byId('edit-med-pickup')?.value || '').trim();
+    task.updatedAt = Date.now();
+
+    try { if (typeof saveTasks === 'function') saveTasks(); } catch(e) {}
+
+    // Fecha primeiro, preserva scroll e evita renderAll imediato na Home.
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.remove('open');
+
+    requestAnimationFrame(() => {
+      try { updateMedCardOnly(task); } catch(e) {}
+      try { window.scrollTo(0, y); } catch(e) {}
+
+      setTimeout(() => {
+        document.body.classList.remove('cb-edit-med-open');
+        document.body.classList.remove('cb-med-saving');
+
+        // Atualizações leves depois da tela estabilizar.
+        try { if (typeof renderProgress === 'function') renderProgress(); } catch(e) {}
+        try { if (typeof renderAlerts === 'function') renderAlerts(); } catch(e) {}
+        try { if (typeof renderNextAlarm === 'function') renderNextAlarm(); } catch(e) {}
+        try { if (typeof buildWeekStrip === 'function') buildWeekStrip(); } catch(e) {}
+        try { if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW(); } catch(e) {}
+        try { if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication'); } catch(e) {}
+      }, 260);
+    });
+
+    if (typeof showToast === 'function') showToast('✅ Medicamento atualizado.');
+  };
 })();
 </script>
 
