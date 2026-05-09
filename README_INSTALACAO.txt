@@ -219,3 +219,17 @@ Versão v50:
 - Removido ícone duplicado de editar no card de medicamento.
 - Atualização do medicamento agora altera apenas o card necessário, sem recarregar a lista inteira da home.
 - Cache PWA atualizado para v50.
+
+
+Versão v51:
+- Refinamento visual premium para mobile com glassmorphism, gradientes e microinterações de hover.
+- Cards, botões, modais e navegação inferior ganharam acabamento translúcido, sombras suaves e gradientes.
+- Header e topbars receberam gradientes premium mantendo a operação atual do app.
+- Cache PWA atualizado para v51.
+
+
+Versão v52:
+- Refinamento visual premium por guia no mobile: Início, Agenda, Saúde, Configurações, Receita, Consultas/Exames e Relatórios.
+- Mais glass, gradientes, sombras suaves, campos refinados e acabamento premium em cards/chips/modais.
+- Mantém a lógica operacional da v50/v51 e prepara a base para o próximo refinamento da versão PC.
+- Cache PWA atualizado para v52.

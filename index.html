@@ -10355,6 +10355,331 @@ document.addEventListener('keydown', function(e){
 })();
 </script>
 
+
+
+<!-- v51 — premium mobile glass/gradient refinement -->
+<style id="cuidarbem-v51-premium-mobile-visual">
+@media (max-width:767px){
+  :root{
+    --cb-glass-bg: rgba(255,255,255,.68);
+    --cb-glass-strong: rgba(255,255,255,.78);
+    --cb-glass-border: rgba(255,255,255,.52);
+    --cb-shadow-soft: 0 14px 40px rgba(9,64,54,.10);
+    --cb-shadow-strong: 0 18px 48px rgba(9,64,54,.16);
+  }
+  body{
+    background:
+      radial-gradient(circle at top left, rgba(61,168,138,.16), transparent 34%),
+      radial-gradient(circle at top right, rgba(29,158,117,.12), transparent 26%),
+      linear-gradient(180deg,#eef8f4 0%,#f7fbf9 36%,#f2f6f4 100%)!important;
+  }
+  #screen-home .header,
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,255,255,.15), transparent 24%),
+      linear-gradient(135deg,#0d5c4f 0%, #167563 44%, #1aa081 100%)!important;
+    box-shadow:0 12px 32px rgba(4,53,45,.22)!important;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  #screen-home .header::before,
+  #screen-home .header::after{opacity:.9!important}
+  .card,.stat-card,.setting-row,.appt-card,.health-trend-card,.health-ring-card,.vital-card,.hist-card,.emerg-card,
+  #today-tasks-card,#next-alarm-card,#caregiver-summary-card,.result-section,.appt-info-grid{
+    background:linear-gradient(180deg,var(--cb-glass-strong) 0%, rgba(255,255,255,.60) 100%)!important;
+    border:1px solid var(--cb-glass-border)!important;
+    box-shadow:var(--cb-shadow-soft)!important;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+  .card,.stat-card,.setting-row,.appt-card,.health-trend-card,.health-ring-card,.vital-card{
+    border-radius:24px!important;
+  }
+  .task-item,.hist-item,.appt-check-item,.mi-row,.setting-row,.week-day,.type-opt,.chip,.cat-pill,
+  .alert-card,.med-checklist,.med-info-inner .mi-row{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .task-item{
+    background:linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(246,252,249,.72) 100%);
+    border:1px solid rgba(18,123,101,.08)!important;
+    border-radius:18px;
+    padding:14px 12px!important;
+    margin-bottom:8px;
+    box-shadow:0 8px 24px rgba(9,64,54,.06);
+  }
+  .task-item:last-child{margin-bottom:0}
+  .task-item-med-pending{
+    background:linear-gradient(180deg, rgba(255,246,247,.96) 0%, rgba(255,239,242,.86) 100%)!important;
+    border:1px solid rgba(255,172,182,.35)!important;
+  }
+  .task-item-med-late{
+    background:linear-gradient(180deg, rgba(255,235,239,.98) 0%, rgba(255,221,227,.90) 100%)!important;
+    box-shadow:0 12px 28px rgba(200,25,45,.14)!important;
+  }
+  .bottom-nav{
+    background:rgba(255,255,255,.70)!important;
+    border-top:1px solid rgba(255,255,255,.60)!important;
+    box-shadow:0 -12px 36px rgba(6,62,52,.14)!important;
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+  }
+  .nav-btn{
+    border-radius:18px!important;
+    transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+  }
+  .nav-btn.active{
+    background:linear-gradient(135deg,#0f6e56 0%, #19a07d 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 30px rgba(15,110,86,.28)!important;
+  }
+  .btn-add,.btn-confirm,.btn-visto,.btn-quick-take,.samu-call-btn,.mobile-header-action,
+  #screen-home .header button[onclick="openSamuMode()"]{
+    background:linear-gradient(135deg,#0f6e56 0%, #1aa081 100%)!important;
+    box-shadow:0 14px 28px rgba(15,110,86,.24)!important;
+    border:1px solid rgba(255,255,255,.18)!important;
+  }
+  .mobile-header-action.danger,
+  .btn-quick-take,
+  #screen-home .header button[onclick="openSamuMode()"]{
+    background:linear-gradient(135deg,#c0192d 0%, #e24b4a 100%)!important;
+  }
+  .btn-secondary,.result-viewer-btn,.appt-view-btn,.result-add-btn,.type-opt{
+    background:linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(245,251,248,.78) 100%)!important;
+    border:1px solid rgba(18,123,101,.12)!important;
+    box-shadow:0 10px 24px rgba(9,64,54,.08)!important;
+  }
+  .progress-ring-wrap,
+  .next-alarm,
+  .emerg-card,
+  .samu-contact-block{
+    box-shadow:var(--cb-shadow-strong)!important;
+  }
+  .next-alarm{
+    background:linear-gradient(135deg,#0d6a58 0%, #139171 52%, #1ab08a 100%)!important;
+  }
+  .progress-ring-wrap{
+    background:linear-gradient(180deg, rgba(255,255,255,.50) 0%, rgba(255,255,255,.18) 100%);
+    border-radius:22px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.46);
+  }
+  .med-info-inner,.confirm-sheet,.appt-confirm-sheet,.modal,.confirm-sheet,.edit-med-card,.edit-task-card{
+    background:linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,251,249,.92) 100%)!important;
+    border:1px solid rgba(255,255,255,.72)!important;
+    box-shadow:0 28px 90px rgba(0,40,34,.24)!important;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+  }
+  .med-info-overlay,.modal-overlay,.confirm-overlay,.appt-confirm-overlay,.photo-modal-overlay{
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .chip.active,.week-day.today,.toggle.on{
+    box-shadow:0 10px 22px rgba(15,110,86,.20)!important;
+  }
+  .header-patient{
+    background:rgba(255,255,255,.18)!important;
+    border:1px solid rgba(255,255,255,.26)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.18), 0 8px 16px rgba(8,59,49,.10)!important;
+  }
+  .mobile-bell-btn,
+  .premium-icon-btn{
+    background:rgba(255,255,255,.16)!important;
+    border:1px solid rgba(255,255,255,.22)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.18), 0 10px 22px rgba(8,59,49,.16)!important;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .stat-card .stat-number,
+  .progress-pct,
+  .header-title,
+  .section-title{
+    letter-spacing:-.02em;
+  }
+}
+@media (hover:hover){
+  .card:hover,.stat-card:hover,.setting-row:hover,.appt-card:hover,.task-item:hover,.nav-btn:hover,
+  .btn-add:hover,.mobile-header-action:hover,.chip:hover,.week-day:hover,.type-opt:hover,.med-info-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 18px 36px rgba(8,59,49,.14)!important;
+  }
+  .btn-add:hover,.mobile-header-action:hover,.btn-confirm:hover,.btn-visto:hover,.samu-call-btn:hover{
+    filter:brightness(1.03);
+  }
+}
+</style>
+
+
+
+<!-- v52 — refinamento premium por guias mobile -->
+<style id="cuidarbem-v52-premium-guides-mobile">
+@media (max-width:767px){
+  /* camada geral mais refinada para todas as guias */
+  .screen .content{
+    position:relative;
+  }
+  .screen .content::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 8% 18%, rgba(29,158,117,.08), transparent 22%),
+      radial-gradient(circle at 92% 26%, rgba(55,138,221,.06), transparent 20%);
+    z-index:-1;
+  }
+
+  /* títulos/headers das guias secundárias */
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    border-bottom:1px solid rgba(255,255,255,.18)!important;
+  }
+  .header-sub-title{
+    letter-spacing:-.02em!important;
+    text-shadow:0 1px 0 rgba(0,0,0,.04);
+  }
+  .header-date{
+    font-weight:700!important;
+    letter-spacing:.01em;
+  }
+
+  /* Agenda / calendário */
+  #screen-calendar .week-strip,
+  #screen-calendar .cat-pills,
+  #screen-calendar .chip-filter{
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.58);
+    border-radius:22px;
+    padding:8px!important;
+    box-shadow:0 12px 32px rgba(6,62,52,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+  #screen-calendar .week-day{
+    background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(246,252,249,.66))!important;
+    border:1px solid rgba(18,123,101,.10)!important;
+    box-shadow:0 8px 18px rgba(9,64,54,.05);
+  }
+  #screen-calendar .week-day.today{
+    background:linear-gradient(135deg,#e4f7ef,#ffffff)!important;
+    border-color:rgba(29,158,117,.42)!important;
+  }
+
+  /* Saúde */
+  #screen-dashboard .stat-card,
+  #screen-dashboard .health-ring-card,
+  #screen-dashboard .health-trend-card,
+  #screen-dashboard .vital-card{
+    overflow:hidden;
+    position:relative;
+  }
+  #screen-dashboard .stat-card::after,
+  #screen-dashboard .health-ring-card::after,
+  #screen-dashboard .health-trend-card::after{
+    content:'';
+    position:absolute;
+    right:-34px;
+    top:-34px;
+    width:86px;
+    height:86px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(29,158,117,.16),transparent 68%);
+    pointer-events:none;
+  }
+  #screen-dashboard .stat-number{
+    background:linear-gradient(135deg,#0f6e56,#1aa081);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent!important;
+  }
+
+  /* Perfil / configurações */
+  #screen-profile .setting-row{
+    min-height:72px;
+    align-items:center!important;
+  }
+  #screen-profile .setting-icon{
+    box-shadow:inset 0 1px rgba(255,255,255,.5), 0 10px 24px rgba(15,110,86,.12)!important;
+  }
+  #screen-profile .setting-label{
+    letter-spacing:-.01em;
+  }
+
+  /* Receita / OCR */
+  #screen-ocr .card,
+  #screen-ocr .scan-type-opt,
+  #screen-ocr .result-section{
+    position:relative;
+    overflow:hidden;
+  }
+  #screen-ocr .scan-type-opt.sel-med,
+  #screen-ocr .scan-type-opt.sel-exam{
+    box-shadow:0 12px 28px rgba(15,110,86,.16)!important;
+  }
+
+  /* Consultas / exames */
+  #screen-appt .appt-card,
+  #screen-appt .appt-task-detail{
+    border:1px solid rgba(255,255,255,.58)!important;
+    box-shadow:0 12px 32px rgba(6,62,52,.08)!important;
+  }
+  #screen-appt .appt-card{
+    border-radius:24px!important;
+    background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(250,252,252,.62))!important;
+  }
+
+  /* Relatórios */
+  #screen-reports .card,
+  #screen-reports .stat-card{
+    position:relative;
+    overflow:hidden;
+  }
+  #screen-reports .card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(29,158,117,.08),transparent 42%);
+    pointer-events:none;
+  }
+
+  /* Botões e campos */
+  input,select,textarea,.form-input{
+    border-radius:16px!important;
+    background:rgba(255,255,255,.82)!important;
+    border:1px solid rgba(18,123,101,.16)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.55), 0 8px 18px rgba(9,64,54,.05)!important;
+  }
+  input:focus,select:focus,textarea:focus,.form-input:focus{
+    border-color:rgba(29,158,117,.55)!important;
+    box-shadow:0 0 0 4px rgba(29,158,117,.12), inset 0 1px rgba(255,255,255,.60)!important;
+  }
+
+  /* pequenos acabamentos nos chips */
+  .badge-med,.badge-cons,.badge-exam,.badge-fisio,.badge-exer,
+  .task-badge,.result-badge,.alert-pill,.rx-pill,.med-alert-pill{
+    border:1px solid rgba(255,255,255,.45);
+    box-shadow:0 6px 14px rgba(8,59,49,.06);
+  }
+
+  /* modais ainda mais premium no mobile */
+  .modal,.confirm-sheet,.appt-confirm-sheet,.med-info-inner,.edit-med-card,.edit-task-card,.photo-modal{
+    border-radius:28px!important;
+  }
+  .modal-title,.confirm-name,.appt-confirm-title,.med-info-title{
+    letter-spacing:-.02em;
+  }
+}
+</style>
+
 </body>
 </html>
 
