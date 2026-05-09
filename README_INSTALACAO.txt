@@ -148,3 +148,9 @@ Versão v39:
 - A mensagem agora aparece limpa: Excluir..., sem 'ceducunha-alt0609.github.io diz'.
 - Mantida exclusão de medicamentos, exercícios, fisioterapia, consultas e exames com sincronização familiar.
 - Cache PWA atualizado para v39.
+
+
+Versão v40:
+- Topbar fixa aplicada em todas as guias no mobile: Calendário, Relatórios, Configurações, Escanear Receita, Saúde e Consultas/Exames.
+- Conteúdo das guias rebaixado para não ficar encoberto pela topbar.
+- Cache PWA atualizado para v40.

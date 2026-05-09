@@ -2551,6 +2551,79 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 <body>
 
 <!-- SCREEN: HOME -->
+
+
+<style id="cuidarbem-v40-fixed-topbars-all-screens">
+/* v40 — topbar fixa em todas as guias mobile */
+@media (max-width:767px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!important;
+    line-height:1.25!important;
+    opacity:.82!important;
+  }
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content{
+    padding-top:124px!important;
+  }
+  #screen-calendar,
+  #screen-reports,
+  #screen-profile,
+  #screen-ocr,
+  #screen-dashboard,
+  #screen-appt{
+    scroll-padding-top:124px!important;
+  }
+}
+</style>
+
 <div id="screen-home" class="screen active">
   <div class="header">
     <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
