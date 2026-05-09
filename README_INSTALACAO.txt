@@ -165,3 +165,8 @@ Versão v41:
 Versão v42:
 - Ajuste mobile na guia Saúde: os 3 cards iniciais foram rebaixados para aparecerem abaixo da topbar fixa.
 - Cache PWA atualizado para v42.
+
+
+Versão v43:
+- Ajuste fino na guia Saúde: os 3 cards iniciais subiram um pouco em relação à v42, mantendo folga da topbar fixa.
+- Cache PWA atualizado para v43.
