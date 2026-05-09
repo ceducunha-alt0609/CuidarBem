@@ -134,3 +134,10 @@ Versão v37:
 - Janela de detalhes do medicamento centralizada no mobile.
 - Adicionado botão Excluir medicamento dentro dos detalhes.
 - Cache PWA atualizado para v37.
+
+
+Versão v38:
+- Corrigido botão Excluir medicamento na janela centralizada.
+- Adicionado botão de exclusão para exercícios, fisioterapia, consultas e exames.
+- Ao excluir, remove confirmações relacionadas, reagenda alertas e sincroniza com a família.
+- Cache PWA atualizado para v38.

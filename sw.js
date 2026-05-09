@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v37-med-info-centralizado';
+const CACHE_NAME = 'cuidarbem-pwa-v38-delete-all-tasks';
 const APP_SHELL = [
   './',
   './index.html',

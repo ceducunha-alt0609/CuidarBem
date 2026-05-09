@@ -2516,6 +2516,15 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
   border:1.5px solid rgba(216,90,48,.18);
 }
 .med-info-danger-btn:active{transform:scale(.98);background:#ffe1d8;}
+
+.task-delete-btn{
+  border:none;background:var(--coral-50);color:var(--coral-600);
+  border-radius:9px;width:28px;height:28px;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(216,90,48,.10);
+}
+.task-delete-btn:active{transform:scale(.94);background:#ffe1d8;}
+.appt-delete-btn{margin-top:8px;}
 @media (max-width:767px){
   .med-info-overlay{padding:14px!important;}
   .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
@@ -4669,8 +4678,9 @@ function renderTodayTasks() {
             <div style="font-size:12px;color:var(--text-light);margin-top:2px">📅 ${dateStr} ${t.time ? '· 🕐 '+t.time : ''}</div>
             ${alertBadges.length ? `<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${alertBadges.map(a=>`<span style="padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;background:var(--coral-50);color:var(--coral-600)">${a}</span>`).join('')}</div>` : ''}
           </div>
-          <div style="flex-shrink:0">
+          <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center">
             <div class="task-check ${seen?'checked':''}" style="border-color:${accentColor.replace('--','var(--')}" onclick="openSeenModal('${t.id}')"></div>
+            <button class="task-delete-btn appt-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
           </div>
         </div>
         ${t.prep ? `<div style="padding:8px 16px;background:var(--amber-50);border-top:1px solid var(--amber-100);font-size:12px;color:var(--amber-600);font-weight:600">⚠️ Preparo: ${t.prep}</div>` : ''}
@@ -4748,6 +4758,7 @@ function renderTodayTasks() {
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
         <div class="task-time" style="${medNameClass?'color:#c0192d;font-weight:900':''}">${t.time||''}</div>
         ${isMed ? `<button class="med-info-btn" onclick="event.stopPropagation();openMedInfo('${t.id}')" title="Ver detalhes do remédio">ℹ</button>` : ''}
+        <button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
       </div>
     </div>`;
   }).join('');
@@ -4936,7 +4947,10 @@ function renderCalendar() {
         ${t.obs?`<div class="task-meta">${t.obs}</div>`:''}
         <span class="task-badge ${badgeClass[t.type]||''}">${badgeLabel[t.type]||''}</span>
       </div>
-      <div class="task-time">${t.time||''}</div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        <div class="task-time">${t.time||''}</div>
+        <button class="task-delete-btn" onclick="event.stopPropagation();deleteTaskById('${t.id}')" title="Excluir">🗑️</button>
+      </div>
     </div>`;
   }).join('')}</div>`;
 }
@@ -5611,6 +5625,7 @@ function getMedStatus(task) {
 let currentMedInfoTaskId = null;
 
 function openMedInfo(taskId) {
+  currentMedInfoTaskId = taskId;
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
 
@@ -5721,6 +5736,36 @@ Essa ação remove o medicamento da tela inicial e apaga as confirmações dele 
   if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
   if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('delete-medication');
   showToast('🗑️ Medicamento excluído');
+}
+
+
+function cbTaskTypeLabel(t) {
+  const map = { med:'medicamento', exer:'exercício', fisio:'fisioterapia', cons:'consulta', exam:'exame' };
+  return map[t && t.type] || 'tarefa';
+}
+
+function deleteTaskById(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const tipo = cbTaskTypeLabel(task);
+  const nome = task.name || `esta ${tipo}`;
+  if (!confirm(`Excluir ${nome}?
+
+Essa ação remove este ${tipo} da rotina, apaga as confirmações relacionadas neste aparelho e sincroniza a alteração com a família.`)) return;
+  tasks = tasks.filter(t => t.id !== taskId);
+  if (typeof removeCompletionsForTaskIds === 'function') removeCompletionsForTaskIds([taskId]);
+  else {
+    Object.keys(completions || {}).forEach(k => { if (k.split('_')[0] === taskId) delete completions[k]; });
+    localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  }
+  saveTasks();
+  try { closeMedInfo(); } catch(e) {}
+  try { if (typeof closeSeenModal === 'function') closeSeenModal(); } catch(e) {}
+  renderAll();
+  buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('delete-task');
+  showToast(`🗑️ ${tipo.charAt(0).toUpperCase()+tipo.slice(1)} excluído`);
 }
 
 function closeMedInfo() { document.getElementById('med-info-sheet').classList.remove('open'); }
@@ -9394,3 +9439,5 @@ if (localStorage.getItem(SB_ENABLED_KEY) === '1' && localStorage.getItem(SB_FAMI
 
 </body>
 </html>
+
+<!-- v38: correção da exclusão e botão excluir para remédios, exercícios, fisioterapia, consultas e exames -->
