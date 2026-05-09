@@ -108,3 +108,8 @@ Versão v31:
 Versão v32:
 - Ajuste mobile: primeiro painel da tela inicial foi rebaixado para não ficar encoberto pela topbar fixa.
 - Cache PWA atualizado para v32.
+
+
+Versão v33:
+- Ajuste mobile: o primeiro painel da tela inicial foi rebaixado ainda mais para ficar totalmente abaixo da topbar fixa.
+- Cache PWA atualizado para v33.
