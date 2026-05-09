@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v52-premium-guias-mobile';
+const CACHE_NAME = 'cuidarbem-pwa-v53-init-fix-icons';
 const APP_SHELL = [
   './',
   './index.html',

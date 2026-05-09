@@ -10680,6 +10680,39 @@ document.addEventListener('keydown', function(e){
 }
 </style>
 
+
+
+<!-- v53 — inicialização estável após todos os módulos -->
+<script id="cuidarbem-v53-stable-init">
+(function(){
+  if (window.__cuidarBemStableInitInstalled) return;
+  window.__cuidarBemStableInitInstalled = true;
+  function startCuidarBemStable(){
+    if (window.__cuidarBemStarted) return;
+    window.__cuidarBemStarted = true;
+    try {
+      if (typeof renderCaregiverSummary !== 'function') {
+        window.renderCaregiverSummary = function(){
+          const el = document.getElementById('caregiver-summary-card');
+          if (el && !el.innerHTML.trim()) {
+            el.innerHTML = '<div class="card-title">Resumo do cuidador</div><div style="font-size:13px;color:var(--text-muted)">Resumo indisponível no momento.</div>';
+          }
+        };
+      }
+      if (typeof init === 'function') init();
+    } catch (err) {
+      console.error('[CuidarBem v53] Falha na inicialização estável:', err);
+      try { showToast && showToast('Falha ao iniciar. Recarregue o app.'); } catch(e) {}
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startCuidarBemStable, { once:true });
+  } else {
+    startCuidarBemStable();
+  }
+})();
+</script>
+
 </body>
 </html>
 

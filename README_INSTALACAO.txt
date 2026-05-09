@@ -233,3 +233,10 @@ Versão v52:
 - Mais glass, gradientes, sombras suaves, campos refinados e acabamento premium em cards/chips/modais.
 - Mantém a lógica operacional da v50/v51 e prepara a base para o próximo refinamento da versão PC.
 - Cache PWA atualizado para v52.
+
+
+Versão v53:
+- Corrigido erro renderCaregiverSummary is not defined: a inicialização agora acontece após todos os módulos do app carregarem.
+- Mantido visual premium mobile da v52.
+- Cache PWA atualizado para v53.
+- Atenção: subir todos os arquivos de dentro da pasta cb_v53 para a raiz do GitHub, incluindo icon-72.png.
