@@ -177,3 +177,11 @@ Versão v44:
 - A foto da receita permanece visível e o app abre preenchimento manual seguro para adicionar o medicamento.
 - Botão para tentar IA novamente, sem perder a foto carregada.
 - Cache PWA atualizado para v44.
+
+
+Versão v45 — IA/edição de receitas:
+- Adicionado README_IA_RECEITAS.txt com o passo a passo para habilitar a leitura por IA via Supabase Edge Function.
+- Adicionada pasta supabase/functions/analisar-receita com função segura para OpenAI.
+- Medicamentos lidos/preenchidos na receita agora podem ser editados antes de salvar.
+- Medicamentos já cadastrados podem ser editados pela janela de detalhes.
+- Cache PWA atualizado para v45.

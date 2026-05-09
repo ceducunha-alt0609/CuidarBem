@@ -7096,6 +7096,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
 
+    <button class="btn-add" style="margin-bottom:8px" onclick="editCurrentMedFromInfo()">✏️ Editar medicamento</button>
     <button class="med-info-danger-btn" onclick="deleteCurrentMedFromInfo()">🗑️ Excluir medicamento</button>
     <button class="btn-confirm-cancel" style="margin-top:8px" onclick="closeMedInfo()">Fechar</button>
   </div>
@@ -9705,6 +9706,240 @@ function closeDeleteConfirm(ev){
 document.addEventListener('keydown', function(e){
   if (e.key === 'Escape') closeDeleteConfirm();
 });
+</script>
+
+
+
+<!-- v45 — editor de medicamento e OCR editável -->
+<style id="cuidarbem-v45-edit-med">
+  .edit-med-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:9800;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .edit-med-overlay.open{opacity:1;pointer-events:auto}
+  .edit-med-card{width:100%;max-width:430px;max-height:86dvh;overflow-y:auto;background:#fff;border-radius:24px;padding:20px;box-shadow:0 22px 70px rgba(0,0,0,.28)}
+  .edit-med-title{font-size:20px;font-weight:900;color:var(--green-800);margin-bottom:4px}
+  .edit-med-sub{font-size:13px;color:var(--text-light);font-weight:700;line-height:1.45;margin-bottom:14px}
+  .edit-med-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ocr-edit-grid{display:grid;gap:8px;margin-top:10px}
+  .ocr-edit-grid .form-input{font-size:13px;padding:10px 12px}
+  .ocr-edit-actions{display:flex;gap:8px;margin-top:10px}
+  @media(max-width:420px){.edit-med-grid{grid-template-columns:1fr}.edit-med-card{border-radius:22px;padding:18px}}
+</style>
+
+<div class="edit-med-overlay" id="edit-med-overlay" onclick="if(event.target.id==='edit-med-overlay')closeEditMedModal()">
+  <div class="edit-med-card" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">
+      <div>
+        <div class="edit-med-title">✏️ Editar medicamento</div>
+        <div class="edit-med-sub">Corrija nome, dose, horário e observações sem precisar excluir e cadastrar de novo.</div>
+      </div>
+      <button style="background:var(--gray-50);border:1px solid var(--gray-200);width:34px;height:34px;border-radius:12px;font-weight:900;cursor:pointer" onclick="closeEditMedModal()">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome do medicamento</label>
+      <input class="form-input" id="edit-med-name" placeholder="Ex: Losartana 50mg">
+    </div>
+    <div class="edit-med-grid">
+      <div class="form-group">
+        <label class="form-label">Dose / como tomar</label>
+        <input class="form-input" id="edit-med-dose" placeholder="Ex: 1 comprimido">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <input class="form-input" id="edit-med-time" type="time">
+      </div>
+    </div>
+    <div class="edit-med-grid">
+      <div class="form-group">
+        <label class="form-label">Data inicial</label>
+        <input class="form-input" id="edit-med-date" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Repetição</label>
+        <select class="form-input" id="edit-med-repeat">
+          <option value="daily">Todos os dias</option>
+          <option value="weekly">Semanal</option>
+          <option value="none">Uma vez</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Observações / instruções</label>
+      <textarea class="form-input" id="edit-med-obs" rows="3" placeholder="Ex: tomar com alimento"></textarea>
+    </div>
+    <div class="edit-med-grid">
+      <div class="form-group">
+        <label class="form-label">Validade da receita</label>
+        <input class="form-input" id="edit-med-rx" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Próxima retirada</label>
+        <input class="form-input" id="edit-med-pickup" type="date">
+      </div>
+    </div>
+    <button class="btn-add" onclick="saveEditMedModal()">💾 Salvar alterações</button>
+    <button class="btn-add btn-secondary" onclick="closeEditMedModal()">Cancelar</button>
+  </div>
+</div>
+
+<script id="cuidarbem-v45-editable-ocr-ai">
+(function(){
+  window.CB_AI_EDGE_URL = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://lwldroopbooeocchgngg.supabase.co') + '/functions/v1/analisar-receita';
+
+  window.updateOcrField = function(i, field, value){
+    if (!window.ocrResults || !ocrResults[i]) return;
+    if (field === 'times') {
+      const horarios = String(value || '').split(',').map(t => t.trim()).filter(Boolean);
+      ocrResults[i].horarios_sugeridos = horarios;
+      ocrResults[i].selectedTimes = [...horarios];
+      return;
+    }
+    ocrResults[i][field] = value;
+  };
+
+  window.renderOcrResults = function(observacoes) {
+    const loading = document.getElementById('ocr-loading');
+    const result = document.getElementById('ocr-result-zone');
+    if (loading) loading.style.display = 'none';
+    if (result) result.style.display = 'block';
+
+    const list = document.getElementById('ocr-meds-list');
+    if (!list) return;
+    list.innerHTML = (ocrResults || []).map((m, i) => {
+      const timesText = (m.selectedTimes && m.selectedTimes.length ? m.selectedTimes : (m.horarios_sugeridos || [])).filter(Boolean).join(', ');
+      return `
+      <div class="ocr-med-card ${m.include?'':'excluded'}" id="ocr-card-${i}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
+          <div style="flex:1">
+            <div class="ocr-med-name">💊 ${m.nome || 'Medicamento'}</div>
+            <div class="ocr-med-dose">Revise e edite antes de salvar</div>
+          </div>
+          <button class="toggle ${m.include?'on':''}" onclick="toggleOcrMed(${i})" id="ocr-toggle-${i}" title="Incluir/remover"></button>
+        </div>
+
+        <div class="ocr-edit-grid">
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Nome</label>
+            <input class="form-input" value="${String(m.nome || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" oninput="updateOcrField(${i},'nome',this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Dose / como tomar</label>
+            <input class="form-input" value="${String(m.dose || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" oninput="updateOcrField(${i},'dose',this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Frequência</label>
+            <input class="form-input" value="${String(m.frequencia || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" oninput="updateOcrField(${i},'frequencia',this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Horários</label>
+            <input class="form-input" value="${String(timesText).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" placeholder="08:00, 20:00" oninput="updateOcrField(${i},'times',this.value)">
+            <div style="font-size:11px;color:var(--text-light);margin-top:4px">Separe por vírgula.</div>
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Para que serve</label>
+            <input class="form-input" value="${String(m.para_que_serve || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" oninput="updateOcrField(${i},'para_que_serve',this.value)">
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label">Instruções / observações</label>
+            <input class="form-input" value="${String(m.instrucoes || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" oninput="updateOcrField(${i},'instrucoes',this.value)">
+          </div>
+        </div>
+        <div class="ocr-edit-actions">
+          <button class="btn-add btn-secondary" style="margin:0;font-size:13px;padding:10px" onclick="toggleOcrMed(${i})">${m.include ? 'Remover da inclusão' : 'Incluir novamente'}</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    const obsCard = document.getElementById('ocr-obs-card');
+    if (obsCard && observacoes && String(observacoes).trim()) {
+      obsCard.style.display = 'block';
+      document.getElementById('ocr-obs-text').textContent = observacoes;
+    } else if (obsCard) obsCard.style.display = 'none';
+  };
+
+  window.editCurrentMedFromInfo = function(){
+    const task = (window.tasks || []).find(t => t.id === window.currentMedInfoTaskId);
+    if (!task) return;
+    document.getElementById('edit-med-name').value = task.name || '';
+    document.getElementById('edit-med-dose').value = task.dose || '';
+    document.getElementById('edit-med-time').value = task.time || '';
+    document.getElementById('edit-med-date').value = task.date || todayStr();
+    document.getElementById('edit-med-repeat').value = task.repeat || 'daily';
+    document.getElementById('edit-med-obs').value = task.obs || '';
+    document.getElementById('edit-med-rx').value = task.prescriptionExpiry || '';
+    document.getElementById('edit-med-pickup').value = task.nextPickup || '';
+    document.getElementById('edit-med-overlay').classList.add('open');
+  };
+
+  window.closeEditMedModal = function(){
+    const el = document.getElementById('edit-med-overlay');
+    if (el) el.classList.remove('open');
+  };
+
+  window.saveEditMedModal = function(){
+    const task = (window.tasks || []).find(t => t.id === window.currentMedInfoTaskId);
+    if (!task) return;
+    const name = (document.getElementById('edit-med-name')?.value || '').trim();
+    if (!name) { showToast('Informe o nome do medicamento.'); return; }
+    task.name = name;
+    task.dose = (document.getElementById('edit-med-dose')?.value || '').trim();
+    task.time = (document.getElementById('edit-med-time')?.value || '').trim();
+    task.date = (document.getElementById('edit-med-date')?.value || '').trim() || todayStr();
+    task.repeat = document.getElementById('edit-med-repeat')?.value || 'daily';
+    task.obs = (document.getElementById('edit-med-obs')?.value || '').trim();
+    task.prescriptionExpiry = (document.getElementById('edit-med-rx')?.value || '').trim();
+    task.nextPickup = (document.getElementById('edit-med-pickup')?.value || '').trim();
+    task.updatedAt = Date.now();
+    saveTasks();
+    closeEditMedModal();
+    openMedInfo(task.id);
+    renderAll();
+    buildWeekStrip();
+    if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+    if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication');
+    showToast('✅ Medicamento atualizado.');
+  };
+
+  // IA segura: chama uma Supabase Edge Function. Se ela não existir/configurar, cai no manual sem travar.
+  window.analyzeRecipe = async function(){
+    if (!window.ocrImageBase64) return;
+    document.getElementById('ocr-preview-zone').style.display = 'none';
+    document.getElementById('ocr-loading').style.display = 'block';
+    document.getElementById('ocr-result-zone').style.display = 'none';
+    const loadingMsgs = ['Lendo a receita...','Identificando medicamentos...','Sugerindo horários...','Conferindo dados...'];
+    let mi = 0;
+    const loadInt = setInterval(() => {
+      mi = (mi+1) % loadingMsgs.length;
+      const el = document.getElementById('ocr-loading-text');
+      if (el) el.textContent = loadingMsgs[mi];
+    }, 1800);
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 30000);
+      const res = await fetch(window.CB_AI_EDGE_URL, {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey': (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : ''),
+          'Authorization': 'Bearer ' + (typeof SUPABASE_ANON_KEY !== 'undefined' ? SUPABASE_ANON_KEY : '')
+        },
+        body: JSON.stringify({ imageBase64: ocrImageBase64 }),
+        signal: controller.signal
+      }).finally(() => clearTimeout(timer));
+      if (!res.ok) throw new Error('Função de IA não respondeu (' + res.status + ')');
+      const parsed = await res.json();
+      if (parsed.erro) throw new Error(parsed.erro);
+      ocrResults = (parsed.medicamentos || []).map((m, i) => ({...m, id:'ocr_'+i, include:true, selectedTimes:[...(m.horarios_sugeridos || [])]}));
+      if (!ocrResults.length) throw new Error('Nenhum medicamento identificado.');
+      clearInterval(loadInt);
+      renderOcrResults(parsed.observacoes || 'Confira os dados antes de salvar.');
+      showToast('🤖 Receita lida pela IA. Revise antes de salvar.');
+    } catch(e) {
+      clearInterval(loadInt);
+      console.error(e);
+      showToast('⚠️ IA não configurada/indisponível. Use o manual.');
+      if (typeof showOcrManualFallback === 'function') showOcrManualFallback(e && e.message ? e.message : 'falha na análise');
+    }
+  };
+})();
 </script>
 
 </body>
