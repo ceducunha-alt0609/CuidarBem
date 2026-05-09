@@ -185,3 +185,10 @@ Versão v45 — IA/edição de receitas:
 - Medicamentos lidos/preenchidos na receita agora podem ser editados antes de salvar.
 - Medicamentos já cadastrados podem ser editados pela janela de detalhes.
 - Cache PWA atualizado para v45.
+
+
+Versão v46:
+- Corrigido o botão Editar medicamento na janela de detalhes.
+- Agora é possível alterar nome, dose, horário, repetição, observações, validade da receita e próxima retirada.
+- Ao salvar, o app atualiza a rotina, reagenda alertas e sincroniza com a família.
+- Cache PWA atualizado para v46.

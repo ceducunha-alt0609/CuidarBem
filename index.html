@@ -9710,7 +9710,7 @@ document.addEventListener('keydown', function(e){
 
 
 
-<!-- v45 — editor de medicamento e OCR editável -->
+<!-- v45/v46 — editor de medicamento e OCR editável -->
 <style id="cuidarbem-v45-edit-med">
   .edit-med-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:9800;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s ease}
   .edit-med-overlay.open{opacity:1;pointer-events:auto}
@@ -9856,8 +9856,8 @@ document.addEventListener('keydown', function(e){
   };
 
   window.editCurrentMedFromInfo = function(){
-    const task = (window.tasks || []).find(t => t.id === window.currentMedInfoTaskId);
-    if (!task) return;
+    const task = tasks.find(t => t.id === currentMedInfoTaskId);
+    if (!task) { showToast('Não encontrei este medicamento para editar.'); return; }
     document.getElementById('edit-med-name').value = task.name || '';
     document.getElementById('edit-med-dose').value = task.dose || '';
     document.getElementById('edit-med-time').value = task.time || '';
@@ -9875,8 +9875,8 @@ document.addEventListener('keydown', function(e){
   };
 
   window.saveEditMedModal = function(){
-    const task = (window.tasks || []).find(t => t.id === window.currentMedInfoTaskId);
-    if (!task) return;
+    const task = tasks.find(t => t.id === currentMedInfoTaskId);
+    if (!task) { showToast('Não encontrei este medicamento para salvar.'); return; }
     const name = (document.getElementById('edit-med-name')?.value || '').trim();
     if (!name) { showToast('Informe o nome do medicamento.'); return; }
     task.name = name;
@@ -9938,6 +9938,55 @@ document.addEventListener('keydown', function(e){
       showToast('⚠️ IA não configurada/indisponível. Use o manual.');
       if (typeof showOcrManualFallback === 'function') showOcrManualFallback(e && e.message ? e.message : 'falha na análise');
     }
+  };
+})();
+</script>
+
+
+<script id="cuidarbem-v46-edit-fix">
+/* v46 — correção definitiva do botão Editar medicamento: usa o ID real da janela aberta */
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  window.editCurrentMedFromInfo = function(){
+    const task = (typeof tasks !== 'undefined' ? tasks : []).find(t => t.id === currentMedInfoTaskId);
+    if (!task) { showToast('Não encontrei este medicamento para editar.'); return; }
+    byId('edit-med-name').value = task.name || '';
+    byId('edit-med-dose').value = task.dose || '';
+    byId('edit-med-time').value = task.time || '';
+    byId('edit-med-date').value = task.date || todayStr();
+    byId('edit-med-repeat').value = task.repeat || 'daily';
+    byId('edit-med-obs').value = task.obs || '';
+    byId('edit-med-rx').value = task.prescriptionExpiry || '';
+    byId('edit-med-pickup').value = task.nextPickup || '';
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.add('open');
+  };
+  window.closeEditMedModal = function(){
+    const overlay = byId('edit-med-overlay');
+    if (overlay) overlay.classList.remove('open');
+  };
+  window.saveEditMedModal = function(){
+    const task = (typeof tasks !== 'undefined' ? tasks : []).find(t => t.id === currentMedInfoTaskId);
+    if (!task) { showToast('Não encontrei este medicamento para salvar.'); return; }
+    const name = (byId('edit-med-name')?.value || '').trim();
+    if (!name) { showToast('Informe o nome do medicamento.'); return; }
+    task.name = name;
+    task.dose = (byId('edit-med-dose')?.value || '').trim();
+    task.time = (byId('edit-med-time')?.value || '').trim();
+    task.date = (byId('edit-med-date')?.value || '').trim() || todayStr();
+    task.repeat = byId('edit-med-repeat')?.value || 'daily';
+    task.obs = (byId('edit-med-obs')?.value || '').trim();
+    task.prescriptionExpiry = (byId('edit-med-rx')?.value || '').trim();
+    task.nextPickup = (byId('edit-med-pickup')?.value || '').trim();
+    task.updatedAt = Date.now();
+    saveTasks();
+    closeEditMedModal();
+    renderAll();
+    buildWeekStrip();
+    if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+    if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-medication');
+    setTimeout(() => openMedInfo(task.id), 50);
+    showToast('✅ Medicamento atualizado.');
   };
 })();
 </script>
