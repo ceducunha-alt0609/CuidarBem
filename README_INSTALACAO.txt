@@ -34,3 +34,8 @@ Importante:
 - Não teste instalação abrindo pelo arquivo C:\...\index.html. PWA precisa de HTTPS ou localhost.
 - No Android/Chrome e PC/Edge/Chrome deve aparecer instalar app.
 - No iPhone/iPad: Compartilhar > Adicionar à Tela de Início.
+
+
+Correção v22:
+- Corrigido erro JavaScript: shouldShowToday is not defined.
+- Atualizado cache do Service Worker para forçar recarregamento da versão corrigida.

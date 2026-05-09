@@ -4014,18 +4014,22 @@ function renderAll() {
   renderReports();
 }
 
-function getTodayTasks() {
+
+function shouldShowToday(task) {
   const today = todayStr();
-  return tasks.filter(t => {
-    if (t.date === today) return true;
-    if (t.repeat === 'daily') return true;
-    if (t.repeat === 'weekly') {
-      const base = new Date(t.date);
-      const now  = new Date(today);
-      return base.getDay() === now.getDay();
-    }
-    return false;
-  });
+  if (!task) return false;
+  if (task.date === today) return true;
+  if (task.repeat === 'daily') return true;
+  if (task.repeat === 'weekly' && task.date) {
+    const base = new Date(task.date + 'T00:00:00');
+    const now  = new Date(today + 'T00:00:00');
+    return base.getDay() === now.getDay();
+  }
+  return false;
+}
+
+function getTodayTasks() {
+  return tasks.filter(t => shouldShowToday(t));
 }
 
 function isCompletedToday(task) {
