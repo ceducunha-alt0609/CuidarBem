@@ -2038,12 +2038,183 @@
 
 </style>
 
+
+<style id="cuidarbem-v25-premium-redesign">
+/* ═══════════════════════════════════════════════════════════════
+   CuidarBem v25 — redesign visual premium inspirado no mockup
+   Mantém a operação v24 e altera apenas camada visual/layout.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --green-50:#eef8f4;
+  --green-100:#d9efe6;
+  --green-200:#bfe4d6;
+  --green-400:#25a27d;
+  --green-600:#006b58;
+  --green-700:#005847;
+  --green-800:#013f36;
+  --teal-50:#eaf8f4;
+  --teal-400:#1ea87e;
+  --teal-600:#08705b;
+  --blue-50:#eaf4fb;
+  --blue-400:#2a91c8;
+  --blue-600:#11628f;
+  --amber-50:#fff4df;
+  --amber-400:#e29322;
+  --amber-600:#9c5b00;
+  --coral-50:#fff0ef;
+  --coral-400:#ef4f48;
+  --coral-600:#b12a27;
+  --purple-50:#f1efff;
+  --purple-400:#7b70df;
+  --purple-600:#5344be;
+  --gray-50:#f8faf8;
+  --gray-100:#edf2ef;
+  --gray-200:#dce5e0;
+  --gray-400:#8a9891;
+  --gray-600:#53625c;
+  --gray-800:#17231f;
+  --text:#0c2721;
+  --text-muted:#52645d;
+  --text-light:#82918a;
+  --bg:#edf6f1;
+  --card-bg:rgba(255,255,255,.94);
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 14px 40px rgba(0,63,54,.10),0 2px 10px rgba(0,0,0,.04);
+}
+html{background:linear-gradient(145deg,#f8fcfa 0%,#e9f6f0 52%,#dcedeb 100%)}
+body{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gradient(circle at 115% 82%, rgba(0,107,88,.12), transparent 36%),
+    linear-gradient(180deg,#f9fcfa 0%,#edf6f1 44%,#e4f1ec 100%) !important;
+  color:var(--text);
+}
+body::before{
+  content:'';position:fixed;inset:auto -20% -10% -20%;height:32vh;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,107,88,.10),rgba(37,162,125,.06));
+  clip-path:ellipse(60% 42% at 50% 100%);
+  pointer-events:none;
+}
+.card,.stat-card,.setting-row,.health-trend-card,.health-ring-card{
+  background:var(--card-bg)!important;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:blur(16px);
+}
+.card{border-radius:22px!important;padding:18px!important;margin-bottom:14px!important;}
+.card-title{font-size:12px!important;letter-spacing:.08em!important;color:var(--green-700)!important;}
+/* Home hero */
+#screen-home .header{
+  min-height:246px;
+  padding:18px 20px 34px!important;
+  background:
+    radial-gradient(circle at 22% 10%,rgba(255,255,255,.20),transparent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px rgba(255,255,255,.18);cursor:pointer;}
+.premium-bell{font-size:18px;position:relative}.premium-bell span{position:absolute;right:8px;top:7px;width:8px;height:8px;border-radius:50%;background:#ff4c4c;border:2px solid #006b58;}
+#screen-home .header-greeting{font-size:14px;opacity:.92;margin-bottom:4px;color:rgba(255,255,255,.88)!important;position:relative;z-index:2;}
+#screen-home .header-title{font-size:30px;line-height:1.05;font-weight:900;color:#fff!important;position:relative;z-index:2;letter-spacing:-.03em;}
+#screen-home .header-title::after{content:'Cuidado que conecta, saúde que acompanha.';display:block;font-size:13px;line-height:1.35;font-weight:600;color:rgba(255,255,255,.76);letter-spacing:0;margin-top:6px;max-width:280px;}
+#screen-home .header-date{font-size:12px;color:rgba(255,255,255,.70)!important;position:relative;z-index:2;margin-top:8px;}
+#patient-pill.header-patient,.header-patient{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.18);}
+.vitals-bar{gap:8px!important;position:relative;z-index:2;order:8;width:100%;}
+.vital-item{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.11)!important;border-radius:18px!important;min-width:0;}
+.vital-value{color:#fff}.vital-label{color:rgba(255,255,255,.68);font-size:10px;font-weight:700;}
+#screen-home .content{margin-top:-26px;padding:0 14px calc(var(--nav-h) + 18px)!important;}
+/* Ações secundárias mais discretas */
+.btn-action-small{border:none!important;border-radius:15px!important;background:rgba(255,255,255,.80)!important;color:var(--green-700)!important;box-shadow:0 8px 22px rgba(0,63,54,.08);font-weight:800!important;}
+/* Próximo alarme em estilo hero card */
+.next-alarm{
+  background:linear-gradient(135deg,#005847,#00806a)!important;
+  border:1px solid rgba(255,255,255,.26);
+  border-radius:22px!important;
+  box-shadow:0 18px 42px rgba(0,86,72,.25)!important;
+  padding:18px!important;
+}
+.alarm-icon{width:54px;height:54px;border-radius:18px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;}
+.alarm-time{font-size:28px!important;letter-spacing:-.03em}.alarm-desc{font-size:13px!important;}
+/* Progresso igual ao mockup */
+.mobile-only-progress{background:rgba(255,255,255,.96)!important;border-radius:24px!important;}
+.progress-ring-wrap{gap:16px!important}.ring-bg{stroke:#e7f0ea!important}.ring-fill{stroke:var(--green-600)!important;filter:drop-shadow(0 3px 5px rgba(0,107,88,.20));}
+.progress-pct{font-size:34px!important;color:var(--green-700)!important;letter-spacing:-.04em;}.progress-label{font-weight:700;color:var(--text-muted)!important}.progress-count{color:var(--green-600)!important;font-weight:800!important;}
+/* Seções */
+.section-header{display:block!important;margin:6px 2px 10px!important;}
+.section-title{font-size:18px!important;font-weight:900!important;color:var(--green-800)!important;letter-spacing:-.02em;}
+.cat-pills{margin-top:10px;flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:4px}.cat-pill{border:1px solid rgba(0,107,88,.08)!important;box-shadow:0 4px 12px rgba(0,63,54,.05);white-space:nowrap}.cat-pill.all.active,.chip.active{background:var(--green-600)!important;color:#fff!important;}
+#today-tasks-card{padding:8px!important;background:rgba(255,255,255,.78)!important;border-radius:24px!important;}
+.task-item{
+  background:#fff!important;border:none!important;border-radius:19px!important;padding:13px!important;margin-bottom:8px!important;
+  box-shadow:0 8px 20px rgba(0,63,54,.055)!important;align-items:center!important;
+}
+.task-item:last-child{margin-bottom:0!important}.task-item:hover{background:#fff!important}.task-name{font-size:15.5px!important;font-weight:900!important;color:var(--text)!important;letter-spacing:-.01em;}
+.task-name.done{color:var(--text-light)!important}.task-meta{font-size:12px!important}.task-badge{border-radius:10px!important;padding:3px 9px!important;font-weight:800!important;}
+.task-time{border-radius:999px;background:var(--green-50);color:var(--green-700)!important;padding:4px 10px;font-weight:900!important;min-width:54px;text-align:center;}
+.task-check{width:36px!important;height:36px!important;border-radius:14px!important;border:0!important;background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;box-shadow:0 8px 18px rgba(0,107,88,.25);}
+.task-check.checked{background:linear-gradient(135deg,#20a77e,#0b6f58)!important;opacity:.75}.task-check.checked::after{width:10px;height:6px;border-width:2.5px;}
+.med-photo-wrap{border-radius:16px!important;border:none!important;background:var(--green-50)!important;box-shadow:inset 0 0 0 1px var(--green-100);}
+.task-item[data-type="exer"] .task-check,.task-item[data-type="fisio"] .task-check{background:linear-gradient(135deg,#0f8f77,#21a37f)!important}.task-item[data-type="cons"] .task-check{background:linear-gradient(135deg,#6b65d8,#5046b8)!important}.task-item[data-type="exam"] .task-check{background:linear-gradient(135deg,#1c90c8,#12628f)!important}
+.task-item-med-pending{border-left:0!important;background:linear-gradient(90deg,#fff,#f6fffb)!important}.task-item-med-late{border-left:0!important;background:linear-gradient(90deg,#fff5f5,#fff)!important;box-shadow:0 10px 28px rgba(239,79,72,.12)!important;}
+.btn-quick-take{border-radius:16px!important;padding:12px!important;background:linear-gradient(135deg,#e93937,#bd2424)!important;}
+/* Cuidador e emergência */
+#caregiver-summary-card{background:linear-gradient(135deg,#ecfbf4,#ffffff)!important;border:1px solid #d4efe4!important;}
+#caregiver-summary-card .card-title{color:var(--green-700)!important;}
+.btn-samu-trigger,[onclick="openSamuMode()"].btn-add{background:linear-gradient(135deg,#e93937,#c51d28)!important;box-shadow:0 12px 28px rgba(197,29,40,.26)!important;}
+button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{background:linear-gradient(135deg,#b91524,#e4373f)!important;box-shadow:0 16px 38px rgba(192,25,45,.24)!important;}
+/* Botões */
+.btn-add,.btn-confirm,.btn-visto{border-radius:20px!important;background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;box-shadow:0 16px 34px rgba(0,107,88,.24)!important;padding:16px!important;}
+.btn-secondary{background:#fff!important;color:var(--green-700)!important;box-shadow:none!important;border:1px solid var(--green-100)!important;}
+/* Modal medicação — mais próximo da tela 2 do mockup */
+.confirm-overlay,.med-info-overlay,.appt-confirm-overlay,.modal-overlay{backdrop-filter:blur(10px)}
+.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{border-radius:30px 30px 0 0!important;background:linear-gradient(180deg,#fff 0%,#f8fcfa 100%)!important;box-shadow:0 -22px 60px rgba(0,63,54,.22)!important;}
+.confirm-photo-big,.confirm-photo-placeholder{width:136px!important;height:136px!important;border-radius:34px!important;box-shadow:0 16px 34px rgba(0,63,54,.16)!important;}
+.confirm-name{font-size:24px!important;letter-spacing:-.03em;color:var(--green-800)!important}.confirm-time-badge{background:var(--green-50)!important;color:var(--green-700)!important;border:1px solid var(--green-100);}.confirm-obs{border-radius:18px!important;}
+.med-info-hero{background:linear-gradient(135deg,#005847,#006b58);border-radius:26px;padding:18px;color:white;box-shadow:0 18px 38px rgba(0,86,72,.20);}.med-info-title,.med-info-subtitle{color:white!important}.med-info-subtitle{opacity:.8}.mi-row{border-radius:16px!important;background:#fff!important;}
+/* Perfil / Família e Ajustes */
+#screen-profile .header-sub,#screen-calendar .header-sub,#screen-reports .header-sub,#screen-ocr .header-sub,#screen-dashboard .header-sub,#screen-appt .header-sub{
+  background:linear-gradient(135deg,#004d42,#006b58)!important;border-radius:0 0 28px 28px;box-shadow:0 12px 32px rgba(0,63,54,.20);
+}
+.header-sub-title{font-size:22px!important;font-weight:900!important}.setting-row{border-radius:18px!important;padding:15px!important}.setting-icon{border-radius:15px!important;background:var(--green-50)!important;color:var(--green-700)!important}.setting-label{font-weight:900!important;color:var(--green-800)!important}.setting-desc{font-weight:600!important}.toggle.on{background:linear-gradient(135deg,var(--green-600),var(--teal-400))!important;}
+/* Bottom nav como mockup */
+.bottom-nav{height:76px!important;background:rgba(255,255,255,.92)!important;border-top:1px solid rgba(0,107,88,.08)!important;box-shadow:0 -12px 34px rgba(0,63,54,.12)!important;backdrop-filter:blur(18px);}
+.nav-btn{font-weight:800!important;color:var(--green-800)!important}.nav-btn.active{color:var(--green-600)!important}.nav-btn svg{stroke-width:2.35}.nav-btn-cam .nav-cam-bubble{background:linear-gradient(135deg,#00806a,#004d42)!important;width:62px!important;height:62px!important;box-shadow:0 14px 34px rgba(0,86,72,.34)!important;border-color:#f1faf5!important;}
+/* Listas de consultas/exames geradas inline: dar polimento por descendência */
+#today-tasks-list>div[style*="background:var(--card-bg)"]{border-radius:22px!important;box-shadow:var(--shadow)!important;border:1px solid rgba(255,255,255,.78);}
+/* Desktop/sidebar premium */
+@media (min-width:768px){
+  :root{--sidebar-w:260px;--nav-h:0px!important}
+  body{background:linear-gradient(135deg,#f8fcfa,#e7f5ef)!important;}
+  .bottom-nav{width:260px!important;height:100dvh!important;background:rgba(255,255,255,.90)!important;border-right:1px solid rgba(0,107,88,.08)!important;border-top:0!important;box-shadow:12px 0 40px rgba(0,63,54,.08)!important;padding:18px 14px!important;gap:6px;}
+  .bottom-nav::before{display:none!important}.nav-brand{position:relative!important;height:auto!important;background:transparent!important;padding:6px 6px 22px!important;gap:12px!important;border-bottom:1px solid var(--gray-100);margin-bottom:10px;}.nav-brand-icon{width:48px;height:48px;border-radius:16px;overflow:hidden;box-shadow:0 10px 22px rgba(0,86,72,.20);}.nav-brand-icon img{width:100%;height:100%;display:block}.nav-brand-text{color:var(--green-800)!important;font-size:20px!important;letter-spacing:-.03em}.nav-brand-sub{color:var(--text-light)!important;font-weight:700!important;font-size:11px!important}.nav-btn{border-radius:18px!important;padding:13px 16px!important;border-left:0!important;color:var(--text-muted)!important}.nav-btn.active{background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;color:white!important;box-shadow:0 12px 28px rgba(0,86,72,.24)}.nav-btn:not(.active):hover{background:var(--green-50)!important;color:var(--green-700)!important}.nav-footer{border-top:1px solid var(--gray-100)!important;color:var(--text-light)!important;padding:18px 10px 4px!important}.screen{margin-left:260px!important}.premium-topbar{display:none!important}#screen-home.active{grid-template-columns:minmax(0,1fr) 420px!important;gap:0;max-width:1400px}.screen.active{animation:cbFadeIn .22s ease}.header,#screen-home .header{border-radius:0 0 30px 30px!important;min-height:118px!important;height:auto!important;padding:24px 38px!important}.vitals-bar{max-width:520px;margin-left:auto}.desktop-right-panel{background:rgba(255,255,255,.25);border-left:1px solid rgba(0,107,88,.08)!important}.mobile-only-progress{display:none!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{border-radius:30px!important;}
+}
+@media (max-width:767px){
+  .screen{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.bottom-nav{padding-bottom:env(safe-area-inset-bottom)!important}.nav-btn{font-size:9.2px!important}.header-title{display:block}.vitals-bar{display:none!important}.cat-pills{scrollbar-width:none}.cat-pills::-webkit-scrollbar{display:none}.toast{border-radius:18px!important}.a11y-fab{right:14px!important;bottom:96px!important}.install-banner{bottom:94px!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{max-width:480px!important;}
+}
+@keyframes cbFadeIn{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
 </head>
 <body>
 
 <!-- SCREEN: HOME -->
 <div id="screen-home" class="screen active">
   <div class="header">
+    <div class="premium-topbar">
+      <button class="premium-icon-btn" onclick="goScreen('profile',document.getElementById('nav-profile'))" aria-label="Menu">☰</button>
+      <div class="premium-topbar-brand">CuidarBem</div>
+      <button class="premium-icon-btn premium-bell" onclick="speakSummary()" aria-label="Notificações">🔔<span></span></button>
+    </div>
     <div class="header-greeting" id="greeting">Bom dia ☀️</div>
     <div class="header-title">CuidarBem</div>
 
@@ -2702,6 +2873,22 @@
       <input type="file" id="backup-import-input" accept="application/json,.json" style="display:none" onchange="importBackupJSON(event)">
     </div>
 
+    <div class="card" style="margin-bottom:8px;border:1.5px solid var(--amber-100);background:linear-gradient(180deg,#fff,#fffaf2)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:38px;height:38px;border-radius:10px;background:var(--amber-50);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🧹</div>
+        <div>
+          <div style="font-size:15px;font-weight:900;color:var(--text)">Limpeza inicial</div>
+          <div style="font-size:12px;color:var(--text-light);font-weight:700">Remove os dados demonstrativos para começar com os cuidados reais.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="clearDemoMedications()" style="flex:1;min-width:135px;padding:10px 8px;background:var(--coral-50);color:var(--coral-600);border:1.5px solid var(--coral-400);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer">Limpar remédios demo</button>
+        <button onclick="clearDemoTodayTasks()" style="flex:1;min-width:150px;padding:10px 8px;background:var(--amber-50);color:var(--amber-600);border:1.5px solid var(--amber-400);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer">Limpar tarefas demo</button>
+        <button onclick="clearAllCareData()" style="flex:1;min-width:145px;padding:10px 8px;background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer">Zerar cuidados</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);line-height:1.45;margin-top:9px">Não apaga o código da família nem a conexão Supabase. Depois da limpeza, a alteração também sincroniza automaticamente.</div>
+    </div>
+
     <div class="setting-row">
       <div class="setting-row-left">
         <div class="setting-icon" style="background:var(--green-50)">☁️</div>
@@ -3163,7 +3350,7 @@
 <nav class="bottom-nav">
   <!-- Desktop sidebar brand -->
   <div class="nav-brand">
-    <div class="nav-brand-icon">💚</div>
+    <div class="nav-brand-icon"><img src="icon-72.png" alt="CuidarBem"></div>
     <div>
       <div class="nav-brand-text">CuidarBem</div>
       <div class="nav-brand-sub">Cuidados de Saúde</div>
@@ -3228,7 +3415,7 @@
     Perfil
   </button>
   <div class="nav-spacer"></div>
-  <div class="nav-footer">CuidarBem v1.0<br>Feito com 💚</div>
+  <div class="nav-footer">CuidarBem v25 Premium<br>Cuidado que conecta</div>
 </nav>
 
 <!-- MODAL ADD TASK -->
@@ -3529,6 +3716,7 @@ function init() {
   setInterval(() => {
     renderTodayTasks();
     renderAlerts();
+    renderNextAlarm();
   }, 60000);
 }
 
@@ -3670,13 +3858,13 @@ function addSampleTasks() {
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
   const tomorrowStr_ = tomorrow.toISOString().split('T')[0];
   tasks = [
-    {id:uid(), type:'med',   name:'Losartana 50mg',       dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'Tomar com água em jejum', createdAt: Date.now()},
-    {id:uid(), type:'med',   name:'AAS 100mg',             dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'', createdAt: Date.now()},
-    {id:uid(), type:'med',   name:'Clopidogrel 75mg',      dose:'1 comprimido', date:today,       time:'12:00', repeat:'daily',  obs:'', createdAt: Date.now()},
-    {id:uid(), type:'med',   name:'Atorvastatina 40mg',    dose:'1 comprimido', date:today,       time:'21:00', repeat:'daily',  obs:'Tomar à noite', createdAt: Date.now()},
-    {id:uid(), type:'fisio', name:'Fisioterapia motora',   dose:'', date:today,       time:'10:00', repeat:'daily',  obs:'30 min com a fisioterapeuta', createdAt: Date.now()},
-    {id:uid(), type:'exer',  name:'Exercícios de equilíbrio', dose:'', date:today,    time:'15:00', repeat:'daily',  obs:'10 repetições cada lado', createdAt: Date.now()},
-    {id:uid(), type:'cons', name:'Consulta com neurologista', dose:'', date:tomorrowStr_, time:'09:30', repeat:'none', obs:'Levar últimos exames', local:'Hospital das Clínicas', doctor:'Dr. Carlos Menezes', prep:'Levar exames anteriores e lista de medicamentos', alertMorning:true, alertBefore:true, subtype:'cons', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'med',   name:'Losartana 50mg',       dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'Tomar com água em jejum', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'med',   name:'AAS 100mg',             dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'med',   name:'Clopidogrel 75mg',      dose:'1 comprimido', date:today,       time:'12:00', repeat:'daily',  obs:'', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'med',   name:'Atorvastatina 40mg',    dose:'1 comprimido', date:today,       time:'21:00', repeat:'daily',  obs:'Tomar à noite', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'fisio', name:'Fisioterapia motora',   dose:'', date:today,       time:'10:00', repeat:'daily',  obs:'30 min com a fisioterapeuta', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'exer',  name:'Exercícios de equilíbrio', dose:'', date:today,    time:'15:00', repeat:'daily',  obs:'10 repetições cada lado', createdAt: Date.now()},
+    {id:uid(), demo:true, type:'cons', name:'Consulta com neurologista', dose:'', date:tomorrowStr_, time:'09:30', repeat:'none', obs:'Levar últimos exames', local:'Hospital das Clínicas', doctor:'Dr. Carlos Menezes', prep:'Levar exames anteriores e lista de medicamentos', alertMorning:true, alertBefore:true, subtype:'cons', createdAt: Date.now()},
   ];
   saveTasks();
   renderAll();
@@ -4002,6 +4190,65 @@ function saveTasks() {
   localStorage.setItem('cuidarbem_tasks', JSON.stringify(tasks));
 }
 
+function isDemoTask(t) {
+  if (!t) return false;
+  const demoNames = [
+    'Losartana 50mg','AAS 100mg','Clopidogrel 75mg','Atorvastatina 40mg',
+    'Fisioterapia motora','Exercícios de equilíbrio','Consulta com neurologista'
+  ];
+  return t.demo === true || demoNames.includes(t.name);
+}
+
+function removeCompletionsForTaskIds(ids) {
+  const idSet = new Set(ids);
+  Object.keys(completions || {}).forEach(k => {
+    const id = k.split('_')[0];
+    if (idSet.has(id)) delete completions[k];
+  });
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+}
+
+function clearDemoMedications() {
+  const removeIds = tasks.filter(t => isDemoTask(t) && t.type === 'med').map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhum remédio demo encontrado'); return; }
+  if (!confirm('Remover os remédios demonstrativos da tela inicial?')) return;
+  tasks = tasks.filter(t => !(isDemoTask(t) && t.type === 'med'));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-meds');
+  showToast('🧹 Remédios demo removidos');
+}
+
+function clearDemoTodayTasks() {
+  const removeIds = tasks.filter(t => isDemoTask(t)).map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhuma tarefa demo encontrada'); return; }
+  if (!confirm('Remover remédios, exercícios, fisioterapia e consulta demonstrativos?')) return;
+  tasks = tasks.filter(t => !isDemoTask(t));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-tasks');
+  showToast('🧹 Tarefas demo removidas');
+}
+
+function clearAllCareData() {
+  if (!confirm('Zerar todos os cuidados cadastrados, confirmações, eventos e sinais vitais? A família/Supabase continuará configurada.')) return;
+  tasks = []; completions = {};
+  localStorage.setItem('cuidarbem_tasks', '[]');
+  localStorage.setItem('cuidarbem_completions', '{}');
+  localStorage.setItem('cb_care_events', '[]');
+  localStorage.setItem('cb_vitals', '[]');
+  localStorage.setItem('cb_vital_freq', '{}');
+  try { careEvents = []; } catch(e) {}
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-all-care-data');
+  showToast('🧹 Cuidados zerados');
+}
+
 // ─── RENDER ALL ───────────────────────────────────────────────────────────
 function renderAll() {
   renderTodayTasks();
@@ -4259,6 +4506,7 @@ function toggleTask(id) {
   }
   localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
   renderAll();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
 }
 
 // ─── FILTER ───────────────────────────────────────────────────────────────
@@ -4353,6 +4601,7 @@ function toggleTaskDay(id, day) {
   else { completions[key]=true; showToast('✅ Concluído!'); }
   localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
   renderAll();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
 }
 
 // ─── REPORTS ──────────────────────────────────────────────────────────────
@@ -4536,27 +4785,86 @@ function saveTask() {
   });
 })();
 
+function getTaskDateTimeToday(task) {
+  if (!task || !task.time) return null;
+  const [h, m] = task.time.split(':').map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return null;
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+function getTaskAlertProfile(task) {
+  const isCare = ['med','fisio','exer'].includes(task.type);
+  const isAppt = ['cons','exam'].includes(task.type);
+  return {
+    enabled: isCare || isAppt,
+    beforeMin: isCare ? 15 : (task.alertBefore ? 60 : 15),
+    afterMin: isCare ? 15 : 0,
+    repeatEveryMin: isCare ? 5 : 0,
+    repeatForMin: task.type === 'med' ? 180 : (['fisio','exer'].includes(task.type) ? 90 : 0),
+    requireInteraction: isCare
+  };
+}
+
+function buildSmartAlarmPayload(task, fireAt, phase, minutesInfo) {
+  const typeEmoji = {med:'💊',fisio:'🦾',exer:'🏃',cons:'🩺',exam:'🔬'}[task.type] || '🔔';
+  const typeLabel = {med:'medicamento',fisio:'fisioterapia',exer:'exercício',cons:'consulta',exam:'exame'}[task.type] || 'cuidado';
+  let title = `${typeEmoji} CuidarBem`;
+  let body = '';
+  if (phase === 'before') {
+    title = `${typeEmoji} Em ${minutesInfo} min: ${task.name}`;
+    body = `Prepare-se para o ${typeLabel} das ${task.time}. ${[task.dose, task.obs].filter(Boolean).join(' · ')}`.trim();
+  } else if (phase === 'due') {
+    title = `${typeEmoji} Hora de confirmar: ${task.name}`;
+    body = `${task.time} · ${[task.dose, task.obs].filter(Boolean).join(' · ') || 'Toque para abrir e confirmar.'}`;
+  } else {
+    title = `⚠️ Ainda não confirmado: ${task.name}`;
+    body = `Previsto às ${task.time}. Abra o CuidarBem e marque como tomado/feito.`;
+  }
+  return {
+    taskId: task.id,
+    fireAt,
+    title,
+    body,
+    tag: `cb_${task.id}_${todayStr()}_${phase}_${fireAt}`,
+    requireInteraction: !!getTaskAlertProfile(task).requireInteraction,
+    renotify: phase !== 'before',
+    phase
+  };
+}
+
 function scheduleAlarmsOnSW() {
   if (!window._swRegistration || !window._swRegistration.active) return;
-  const today = todayStr();
   const now = new Date();
   const alarms = [];
 
   getTodayTasks().forEach(t => {
     if (!t.time || isCompletedToday(t)) return;
-    const [h, m] = t.time.split(':').map(Number);
-    const fireDate = new Date(today);
-    fireDate.setHours(h, m, 0, 0);
-    if (fireDate <= now) return; // já passou
-    const typeEmoji = {med:'💊',fisio:'🦾',exer:'🏃',cons:'🩺',exam:'🔬'}[t.type]||'🔔';
-    alarms.push({
-      taskId: t.id,
-      fireAt: fireDate.getTime(),
-      title: `${typeEmoji} Hora do(a): ${t.name}`,
-      body: [t.dose, t.obs].filter(Boolean).join(' · ') || 'Toque para abrir o app',
-      tag: `cb_${t.id}_${t.time}`,
-      requireInteraction: t.type === 'med',
-    });
+    const base = getTaskDateTimeToday(t);
+    if (!base) return;
+    const profile = getTaskAlertProfile(t);
+    if (!profile.enabled) return;
+
+    const addAlarm = (dt, phase, minutesInfo) => {
+      if (dt <= now) return;
+      if (dt.getTime() - now.getTime() > 24 * 60 * 60 * 1000) return;
+      alarms.push(buildSmartAlarmPayload(t, dt.getTime(), phase, minutesInfo));
+    };
+
+    if (profile.beforeMin > 0) {
+      addAlarm(new Date(base.getTime() - profile.beforeMin * 60000), 'before', profile.beforeMin);
+    }
+    addAlarm(base, 'due', 0);
+
+    if (profile.afterMin > 0) {
+      addAlarm(new Date(base.getTime() + profile.afterMin * 60000), 'after', profile.afterMin);
+      if (profile.repeatEveryMin > 0 && profile.repeatForMin > profile.afterMin) {
+        for (let min = profile.afterMin + profile.repeatEveryMin; min <= profile.repeatForMin; min += profile.repeatEveryMin) {
+          addAlarm(new Date(base.getTime() + min * 60000), 'repeat', min);
+        }
+      }
+    }
   });
 
   window._swRegistration.active.postMessage({ type: 'SCHEDULE_ALARMS', alarms });
@@ -4585,57 +4893,81 @@ function setupNotifications() {
   checkNotifications();
 }
 
+function notifyCareTask(task, title, body, key, requireInteraction = true) {
+  if (sessionStorage.getItem(key)) return;
+  sessionStorage.setItem(key, '1');
+  try {
+    new Notification(title, {
+      body,
+      icon: 'icon-192.png',
+      badge: 'icon-192.png',
+      tag: key,
+      renotify: true,
+      requireInteraction,
+      vibrate: [200, 100, 200, 100, 200]
+    });
+  } catch(e) {
+    new Notification(title, { body, icon: 'icon-192.png' });
+  }
+  if (typeof playAlertSound === 'function') playAlertSound();
+}
+
 function checkNotifications() {
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   const now = new Date();
-  const hm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const today = todayStr();
+  const hm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-  // Med/fisio/exer notifications
   getTodayTasks().forEach(t => {
-    if (t.time !== hm) return;
-    if (isCompletedToday(t)) return;
-    const notified = sessionStorage.getItem(`notif_${t.id}_${hm}`);
-    if (notified) return;
-    sessionStorage.setItem(`notif_${t.id}_${hm}`, '1');
-    new Notification('CuidarBem 💚', {
-      body: `Hora de: ${t.name}${t.dose?' — '+t.dose:''}`,
-      icon: 'icon-192.png'
-    });
+    if (!t.time || isCompletedToday(t)) return;
+    const base = getTaskDateTimeToday(t);
+    if (!base) return;
+    const profile = getTaskAlertProfile(t);
+    if (!profile.enabled) return;
+    const diffMin = Math.floor((now.getTime() - base.getTime()) / 60000);
+    const typeEmoji = {med:'💊',fisio:'🦾',exer:'🏃',cons:'🩺',exam:'🔬'}[t.type] || '🔔';
+
+    if (diffMin === -profile.beforeMin) {
+      notifyCareTask(
+        t,
+        `${typeEmoji} Em ${profile.beforeMin} min: ${t.name}`,
+        `Previsto para ${t.time}. ${[t.dose, t.obs].filter(Boolean).join(' · ')}`,
+        `notif_before_${t.id}_${today}_${profile.beforeMin}`,
+        false
+      );
+    }
+
+    if (diffMin === 0) {
+      notifyCareTask(
+        t,
+        `${typeEmoji} Hora de confirmar: ${t.name}`,
+        `${t.time} · ${[t.dose, t.obs].filter(Boolean).join(' · ') || 'Abra o app e confirme.'}`,
+        `notif_due_${t.id}_${today}`,
+        profile.requireInteraction
+      );
+    }
+
+    if (profile.afterMin > 0 && diffMin >= profile.afterMin && diffMin <= profile.repeatForMin) {
+      if (diffMin === profile.afterMin || (profile.repeatEveryMin > 0 && (diffMin - profile.afterMin) % profile.repeatEveryMin === 0)) {
+        notifyCareTask(
+          t,
+          `⚠️ Ainda não confirmado: ${t.name}`,
+          `Previsto às ${t.time}. Marque como tomado/feito para parar os alertas.`,
+          `notif_after_${t.id}_${today}_${diffMin}`,
+          true
+        );
+      }
+    }
   });
 
-  // Appointment alerts
+  // Appointment alerts específicos mantidos para consulta/exame
   tasks.forEach(t => {
     if (t.type !== 'cons' && t.type !== 'exam') return;
     if (t.date !== today) return;
 
-    // Morning alert at 07:00
     if (t.alertMorning && hm === '07:00') {
       const key = `appt_morning_${t.id}_${today}`;
-      if (!sessionStorage.getItem(key)) {
-        sessionStorage.setItem(key, '1');
-        new Notification('🩺 Lembrete de hoje', {
-          body: `${t.name}${t.time ? ' às ' + t.time : ''}${t.local ? ' — ' + t.local : ''}`,
-          icon: 'icon-192.png'
-        });
-      }
-    }
-
-    // 1h before alert
-    if (t.alertBefore && t.time) {
-      const [h, m] = t.time.split(':').map(Number);
-      const alertDate = new Date(); alertDate.setHours(h, m - 60, 0);
-      const alertHM = `${String(alertDate.getHours()).padStart(2,'0')}:${String(alertDate.getMinutes()).padStart(2,'0')}`;
-      if (hm === alertHM) {
-        const key = `appt_before_${t.id}_${today}`;
-        if (!sessionStorage.getItem(key)) {
-          sessionStorage.setItem(key, '1');
-          new Notification('⏰ Em 1 hora!', {
-            body: `${t.name} às ${t.time}${t.local ? ' — ' + t.local : ''}`,
-            icon: 'icon-192.png'
-          });
-        }
-      }
+      notifyCareTask(t, '🩺 Lembrete de hoje', `${t.name}${t.time ? ' às ' + t.time : ''}${t.local ? ' — ' + t.local : ''}`, key, false);
     }
   });
 }
@@ -5095,6 +5427,7 @@ function confirmTake() {
   localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
   closeConfirmModal();
   renderAll();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
 }
 
 
@@ -5147,6 +5480,7 @@ function quickTake(taskId, btn) {
   // Update streak badge if available
   if (typeof updateStreakBadge === 'function') setTimeout(updateStreakBadge, 450);
   if (typeof doLocalBackup     === 'function') setTimeout(doLocalBackup,     500);
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
 }
 let apptOcrImageBase64 = null;
 let apptOcrResults = [];
@@ -5552,6 +5886,7 @@ function confirmSeen() {
   showToast(isExam ? '🔬 Exame confirmado!' : '👁️ Compromisso confirmado!');
   renderAll();
   renderApptUpcoming();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
 }
 
 function closeSeenModal() {
@@ -8206,7 +8541,7 @@ function falar(texto){
 // ── Ponte local para sincronização em nuvem (Supabase Realtime) ─────────────
 window.cbCollectSnapshot = function cbCollectSnapshot() {
   return {
-    version: 23,
+    version: 24,
     app: 'CuidarBem',
     ts: new Date().toISOString(),
     tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
@@ -8270,7 +8605,7 @@ window.cbMarkLocalChange = function cbMarkLocalChange(reason) {
 </script>
 
 <script type="module">
-// ── Supabase Realtime sync — CuidarBem v23 — auto sync ─────────────────
+// ── Supabase Realtime sync — CuidarBem v24 — auto sync + intelligent alerts ─────────────────
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 
 const SUPABASE_URL = 'https://lwldroopbooeocchgngg.supabase.co';

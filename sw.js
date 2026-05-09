@@ -1,5 +1,5 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v23-supabase-auto-sync';
+const CACHE_NAME = 'cuidarbem-pwa-v25-premium-layout';
 const APP_SHELL = [
   './',
   './index.html',
@@ -62,10 +62,11 @@ function scheduleAlarms(alarms) {
         icon: alarm.icon || './icon-192.png',
         badge: './icon-192.png',
         tag: alarm.tag || 'cb-alarm',
-        renotify: true,
+        renotify: alarm.renotify !== false,
         requireInteraction: alarm.requireInteraction || false,
-        vibrate: [200, 100, 200, 100, 200],
-        data: { taskId: alarm.taskId, url: self.registration.scope }
+        vibrate: alarm.phase === 'before' ? [160, 80, 160] : [220, 100, 220, 100, 220],
+        actions: [{ action: 'open', title: 'Abrir CuidarBem' }],
+        data: { taskId: alarm.taskId, phase: alarm.phase, url: self.registration.scope }
       });
     }, delay);
     alarmTimers.push(id);

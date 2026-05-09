@@ -46,3 +46,24 @@ Atualização v23:
 - Ao marcar remédio tomado, exercício/fisioterapia feito ou compromisso confirmado na tela inicial, o app envia para o Supabase sem precisar clicar em enviar.
 - Botão manual renomeado para Forçar envio.
 - Cache do Service Worker atualizado para v23.
+
+Atualização v24 — Alerta Inteligente + Limpeza inicial
+- Configurações > Dados > Limpeza inicial:
+  * Limpar remédios demo
+  * Limpar tarefas demo
+  * Zerar cuidados
+- Alertas inteligentes para remédios, fisioterapia e exercícios:
+  * 15 minutos antes
+  * no horário
+  * 15 minutos depois
+  * repetição a cada 5 minutos enquanto estiver pendente (remédios por até 3h; fisio/exercícios por até 1h30)
+- Ao confirmar tomado/feito, o app reagenda os alarmes e sincroniza automaticamente com a família.
+
+Observação importante: Android/Chrome e PWAs não garantem toque contínuo infinito como despertador nativo. O app usa notificações persistentes, vibração, renotificação e repetição programada, respeitando as limitações do navegador/sistema.
+
+
+CuidarBem v25 Premium Layout
+- Redesign visual inspirado no mockup premium aprovado.
+- Nova camada visual para Home, tarefas, cards, bottom nav/sidebar, perfil, modais e confirmação de medicação.
+- Mantém a lógica operacional da v24: Supabase Sync, alertas inteligentes, limpeza de dados demo e PWA.
+- Cache atualizado para cuidarbem-pwa-v25-premium-layout.
