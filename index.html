@@ -2477,6 +2477,51 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 }
 </style>
 
+
+
+<style id="cuidarbem-v37-med-info-centered">
+/* v37 — centraliza a janela de detalhes do medicamento e adiciona ação de exclusão */
+.med-info-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+}
+.med-info-inner{
+  width:100%!important;
+  max-width:440px!important;
+  max-height:86dvh!important;
+  overflow-y:auto!important;
+  margin:0!important;
+  border-radius:28px!important;
+  padding:22px 18px 24px!important;
+  transform:translateY(14px) scale(.96)!important;
+  box-shadow:0 22px 70px rgba(0,63,54,.28)!important;
+}
+.med-info-overlay.open .med-info-inner{
+  transform:translateY(0) scale(1)!important;
+}
+.med-info-danger-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:var(--coral-50);
+  color:var(--coral-600);
+  font-family:'Nunito',sans-serif;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+  margin-bottom:8px;
+  border:1.5px solid rgba(216,90,48,.18);
+}
+.med-info-danger-btn:active{transform:scale(.98);background:#ffe1d8;}
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -5444,6 +5489,7 @@ let pendingProofPhoto = null;
 function openConfirmModal(taskId) {
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
+  currentMedInfoTaskId = taskId;
   pendingConfirmId = taskId;
   pendingProofPhoto = null;
 
@@ -5562,6 +5608,8 @@ function getMedStatus(task) {
   return result;
 }
 
+let currentMedInfoTaskId = null;
+
 function openMedInfo(taskId) {
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
@@ -5649,6 +5697,30 @@ function openMedInfo(taskId) {
 
   if (typeof haptic === 'function') haptic([15]);
   document.getElementById('med-info-sheet').classList.add('open');
+}
+
+
+function deleteCurrentMedFromInfo() {
+  const taskId = currentMedInfoTaskId;
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const nome = task.name || 'este medicamento';
+  if (!confirm(`Excluir ${nome} da rotina?
+
+Essa ação remove o medicamento da tela inicial e apaga as confirmações dele neste aparelho.`)) return;
+  tasks = tasks.filter(t => t.id !== taskId);
+  if (typeof removeCompletionsForTaskIds === 'function') removeCompletionsForTaskIds([taskId]);
+  else {
+    Object.keys(completions || {}).forEach(k => { if (k.split('_')[0] === taskId) delete completions[k]; });
+    localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+  }
+  saveTasks();
+  closeMedInfo();
+  renderAll();
+  buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('delete-medication');
+  showToast('🗑️ Medicamento excluído');
 }
 
 function closeMedInfo() { document.getElementById('med-info-sheet').classList.remove('open'); }
@@ -6757,6 +6829,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
 
+    <button class="med-info-danger-btn" onclick="deleteCurrentMedFromInfo()">🗑️ Excluir medicamento</button>
     <button class="btn-confirm-cancel" style="margin-top:8px" onclick="closeMedInfo()">Fechar</button>
   </div>
 </div>

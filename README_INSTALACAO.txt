@@ -113,3 +113,24 @@ Versão v32:
 Versão v33:
 - Ajuste mobile: o primeiro painel da tela inicial foi rebaixado ainda mais para ficar totalmente abaixo da topbar fixa.
 - Cache PWA atualizado para v33.
+
+
+Versão v34:
+- Ajuste fino mobile: primeiro painel subiu um pouco, mas ainda com folga da topbar fixa.
+- Cache PWA atualizado para v34.
+
+
+Versão v35:
+- Ajuste mobile: o primeiro painel da tela inicial subiu mais dois ajustes visuais, mantendo margem contra a topbar fixa.
+- Cache PWA atualizado para v35.
+
+
+Versão v36:
+- Ajuste intermediário da tela inicial: o primeiro painel fica entre a v34 e a v35, subindo apenas um tanto.
+- Cache PWA atualizado para v36.
+
+
+Versão v37:
+- Janela de detalhes do medicamento centralizada no mobile.
+- Adicionado botão Excluir medicamento dentro dos detalhes.
+- Cache PWA atualizado para v37.
