@@ -6452,6 +6452,7 @@ function goScreen(name, btn) {
   // scrollTo após o próximo frame — evita flash branco antes do conteúdo pintar
   requestAnimationFrame(() => {
     window.scrollTo({top: 0, behavior: 'instant'});
+    if (name==='home' && typeof updateVitals === 'function') updateVitals();
     if (name==='reports') renderReports();
     if (name==='calendar') { buildWeekStrip(); renderCalendar(); }
     if (name==='appt') renderApptUpcoming();
@@ -10323,13 +10324,17 @@ function updateVitals(){
   const legado = JSON.parse(localStorage.getItem('paciente') || '[]');
   const leg    = legado.length ? legado[legado.length - 1] : null;
 
-  // Pressão arterial
+  // Pressão arterial — usa sys e dia diretamente (mais confiável que o label)
   const lastBp = vitals.find(v => v.type === 'bp');
-  bpEl.textContent = lastBp ? lastBp.label.split(' ')[0] : (leg && leg.sistolica ? leg.sistolica+'/'+leg.diastolica : '—');
+  if (lastBp) {
+    bpEl.textContent = lastBp.sys && lastBp.dia ? lastBp.sys + '/' + lastBp.dia : lastBp.label.split(' ')[0];
+  } else {
+    bpEl.textContent = leg && leg.sistolica ? leg.sistolica + '/' + leg.diastolica : '—';
+  }
 
-  // Batimentos (frequência cardíaca) — campo pulse do registro de pressão
+  // Batimentos — pulse do registro de pressão, ou do legado
   const lastHr = vitals.find(v => v.type === 'bp' && v.pulse);
-  hrEl.textContent = lastHr ? (lastHr.pulse + '') : (leg && leg.bpm ? leg.bpm + '' : '—');
+  hrEl.textContent = lastHr ? lastHr.pulse + '' : (leg && leg.bpm ? leg.bpm + '' : '—');
 
   // SpO₂
   const lastO2 = vitals.find(v => v.type === 'spo2');
@@ -10341,7 +10346,7 @@ function updateVitals(){
 
   // Glicemia
   const lastGluc = vitals.find(v => v.type === 'gluc');
-  if (glucEl) glucEl.textContent = lastGluc ? (lastGluc.val + '') : '—';
+  if (glucEl) glucEl.textContent = lastGluc ? lastGluc.val + ' mg/dL' : '—';
 }
 
 // Roda ao carregar e a cada vez que um vital é gravado
@@ -14255,9 +14260,11 @@ body.dark-theme .bottom-nav{
    - Mantém topbar/menu estabilizados da v70
 ========================================================= */
 
-/* O card de IA deve ter respiro próprio logo abaixo dos controles */
-#screen-home #ai-active-card{
+/* O card de IA só tem margem quando visível — evita espaço em branco */
+#screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
   margin-top: 18px !important;
+}
+#screen-home #ai-active-card{
   scroll-margin-top: 280px !important;
 }
 
@@ -14288,7 +14295,7 @@ body.dark-theme .bottom-nav{
   #screen-home #ai-active-card{
     transform: translateY(0) !important;
   }
-  #screen-home #ai-active-card{
+  #screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
     margin-top: 20px !important;
   }
 
@@ -14305,7 +14312,7 @@ body.dark-theme .bottom-nav{
   #screen-home .content{
     padding-top: 38px !important;
   }
-  #screen-home #ai-active-card{
+  #screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
     margin-top: 20px !important;
   }
 
@@ -14438,6 +14445,41 @@ body.dark-theme .bottom-nav{
   setTimeout(positionVitalsStrip, 400);
 })();
 </script>
+
+
+<!-- v74 — corrige padding-top conflitante e painéis fantasma no mobile -->
+<style id="cuidarbem-v74-home-layout-fix">
+/* =========================================================
+   CuidarBem v74 — layout definitivo da guia Início no mobile
+   - Uma única regra de padding-top que vence todas as anteriores
+   - Painéis neuro e IA nunca criam espaço quando vazios/ocultos
+   - Pressão: garante atualização via cb:vital:saved
+========================================================= */
+
+/* Neuro card: oculto quando vazio (innerHTML só espaços) */
+#screen-home #neuro-priority-card:empty {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* IA card: sem dimensão quando display:none */
+#screen-home #ai-active-card[style*="display:none"],
+#screen-home #ai-active-card[style*="display: none"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 767px) {
+  /* Padding-top definitivo: altura do header (~192px) + faixa de vitais (~50px) + respiro (16px) */
+  /* O JS do v73 ajusta dinamicamente; este valor é o fallback seguro */
+  #screen-home .content {
+    padding-top: 258px !important;
+  }
+}
+</style>
 
 </body>
 </html>
