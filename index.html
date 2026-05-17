@@ -13908,6 +13908,264 @@ body.dark-theme #screen-appt .header-sub{
 }
 </style>
 
+
+
+<!-- v70 — inspeção geral e estabilização visual do PWA -->
+<style id="cuidarbem-v70-visual-stability-audit">
+/* =========================================================
+   CuidarBem v70 — INSPEÇÃO GERAL DE ESTABILIDADE VISUAL
+   Corrige flicker branco, cortes em relatórios e conflitos de menu/topbar.
+   Mantém o visual premium, mas remove efeitos instáveis em áreas persistentes.
+========================================================= */
+:root{
+  --cb-chrome-z: 700;
+  --cb-sidebar-z: 760;
+  --cb-modal-z: 9800;
+  --cb-safe-topbar-mobile: 92px;
+  --cb-safe-topbar-desktop: 78px;
+}
+
+html,
+body{
+  overflow-x: hidden !important;
+  background: var(--bg) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Evita “flash branco” em PWA instalado causado por repaint de blur/fixed/sticky */
+.header,
+.header-sub,
+.bottom-nav,
+.mobile-bell-btn,
+.mobile-header-action,
+.vital-item,
+#screen-home .header > div[style*="justify-content:space-between"] > *,
+.nav-btn,
+.nav-brand,
+.nav-brand-icon{
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Topbars: premium estável, sem contain/translateZ que cortava trechos em relatórios */
+.header,
+.header-sub,
+#screen-home .header,
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  isolation: auto !important;
+  will-change: auto !important;
+  background: linear-gradient(135deg,#005647 0%,#006b58 58%,#0b8068 100%) !important;
+  box-shadow: 0 10px 26px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.13) !important;
+}
+
+/* HOME mobile permanece fixa; desktop fica sticky normal */
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    transform: translateX(-50%) !important;
+    -webkit-transform: translateX(-50%) !important;
+    z-index: var(--cb-chrome-z) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+  }
+  #screen-home .content{
+    padding-top: 258px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 0 -10px 28px rgba(0,63,54,.12) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: var(--cb-chrome-z) !important;
+    min-height: 184px !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 12px 0 34px rgba(0,63,54,.08) !important;
+  }
+
+  .screen{
+    overflow: visible !important;
+  }
+}
+
+/* Guias internas: topbar fica sticky, mas sem corte de conteúdo */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub,
+.screen:not(#screen-home) .header{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-chrome-z) !important;
+  min-height: var(--cb-safe-topbar-mobile) !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Remove enfeites que viravam sombra/faixa branca quando a rolagem repintava */
+.header-sub::before,
+.header-sub::after,
+.screen:not(#screen-home) .header::before,
+.screen:not(#screen-home) .header::after{
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Relatórios: impedir sumiço/corte de cards e gráficos */
+#screen-reports,
+#screen-reports.active,
+#screen-reports .content,
+#screen-reports .stats-grid,
+#screen-reports .card,
+#screen-reports .stat-card,
+#screen-reports .cb-analytics-card,
+#screen-reports .cb-chart-wrap,
+#screen-reports .report-card,
+#screen-reports .analytics-card{
+  overflow: visible !important;
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+}
+
+#screen-reports canvas,
+#screen-reports svg{
+  display: block !important;
+  max-width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#screen-reports .content{
+  padding-top: 20px !important;
+  padding-bottom: calc(var(--nav-h) + 28px) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Sidebar/menu: sempre acima do conteúdo, mas abaixo de modais */
+.bottom-nav,
+.bottom-nav *{
+  pointer-events: auto !important;
+}
+
+/* Garante que o conteúdo nunca suba por cima do chrome */
+.screen,
+.content,
+.card,
+.stat-card,
+.task-item,
+.appt-card,
+.setting-row{
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Modais, alertas e SAMU continuam no topo */
+.modal-overlay,
+.confirm-overlay,
+.appt-confirm-overlay,
+.med-info-overlay,
+.photo-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.samu-overlay{
+  z-index: var(--cb-modal-z) !important;
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  .screen:not(#screen-home) .header{
+    min-height: var(--cb-safe-topbar-desktop) !important;
+    height: var(--cb-safe-topbar-desktop) !important;
+    padding: 0 36px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content,
+  .screen:not(#screen-home) .content{
+    padding-top: 24px !important;
+    padding-bottom: 36px !important;
+  }
+}
+
+/* Tema escuro sem flash claro */
+body.dark,
+body.dark-theme{
+  background: var(--bg) !important;
+}
+body.dark .bottom-nav,
+body.dark-theme .bottom-nav{
+  background: rgba(26,32,25,.98) !important;
+}
+</style>
+
+<script id="cuidarbem-v70-stability-script">
+(function(){
+  'use strict';
+  const rerender = () => {
+    try{
+      if (typeof renderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(renderReports, 80);
+      }
+      if (typeof rerenderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(rerenderReports, 120);
+      }
+    }catch(e){ console.warn('[CuidarBem v70] estabilidade visual:', e); }
+  };
+  window.addEventListener('resize', rerender, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(rerender, 220), { passive:true });
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) setTimeout(rerender, 160); });
+})();
+</script>
+
 </body>
 </html>
 
