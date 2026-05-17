@@ -14166,6 +14166,80 @@ body.dark-theme .bottom-nav{
 })();
 </script>
 
+
+
+<!-- v71 — ajuste fino: início/saúde abaixo da topbar -->
+<style id="cuidarbem-v71-ajuste-inicio-saude-topbar">
+/* =========================================================
+   CuidarBem v71 — ajuste fino de espaçamento visual
+   - Início: impede a Inteligência Ativa de ficar coberta pela topbar
+   - Saúde: aproxima o bloco "Hoje" da topbar, removendo respiro duplicado
+   - Mantém topbar/menu estabilizados da v70
+========================================================= */
+
+/* O card de IA deve ter respiro próprio logo abaixo dos controles */
+#screen-home #ai-active-card{
+  margin-top: 18px !important;
+  scroll-margin-top: 280px !important;
+}
+
+/* Remove qualquer margem negativa herdada que puxe o conteúdo para baixo da topbar */
+#screen-home .content{
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+}
+
+/* Saúde não usa .content; o painel é .health-dashboard. Havia padding duplicado. */
+#screen-dashboard .health-dashboard{
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+}
+#screen-dashboard .health-dashboard > .health-section-label:first-child{
+  margin-top: 0 !important;
+}
+
+@media (max-width: 767px){
+  /* Início mobile/PWA instalado: desce um pouco o conteúdo para não entrar sob o header fixo */
+  #screen-home .content{
+    padding-top: 286px !important;
+  }
+  #screen-home #patient-mode-banner,
+  #screen-home #neuro-priority-card,
+  #screen-home #ai-active-card{
+    transform: translateY(0) !important;
+  }
+  #screen-home #ai-active-card{
+    margin-top: 20px !important;
+  }
+
+  /* Saúde mobile: aproxima "Hoje" do topbar sem encostar */
+  #screen-dashboard .health-dashboard{
+    padding-top: 106px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+@media (min-width: 768px){
+  /* Início desktop: mantém o header sticky e dá respiro seguro ao primeiro painel */
+  #screen-home .content{
+    padding-top: 38px !important;
+  }
+  #screen-home #ai-active-card{
+    margin-top: 20px !important;
+  }
+
+  /* Saúde desktop: remove distância exagerada logo abaixo da topbar */
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 38px !important;
+    padding-right: 38px !important;
+  }
+}
+</style>
+
 </body>
 </html>
 
