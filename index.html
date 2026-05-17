@@ -103,10 +103,19 @@
 
   /* SCREENS */
   .screen {
-    display: none; padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    display: block; padding: 0 0 calc(var(--nav-h) + 16px) 0;
     min-height: 100dvh;
+    visibility: hidden;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    pointer-events: none;
+    /* Evita repaint ao trocar guias — sem display:none/block */
   }
-  .screen.active { display: block; }
+  .screen.active {
+    visibility: visible;
+    position: relative;
+    pointer-events: auto;
+  }
 
   /* HEADER */
   .header {
@@ -1750,7 +1759,7 @@
       min-height: 100dvh;
       overflow-y: auto;
     }
-    .screen.active { display: block; }
+    .screen.active { visibility: visible; position: relative; pointer-events: auto; }
 
     /* Home screen: 2-column layout */
     #screen-home.active {
@@ -3073,12 +3082,6 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
       <button class="mobile-bell-btn" onclick="openAlertsCenter()" aria-label="Central de alertas">🔔<span id="mobile-alert-dot"></span></button>
     </div>
 
-<div class="vitals-bar">
-  <div class="vital-item" id="vital-hr"><div>❤️</div><div><div class="vital-value">--</div><div class="vital-label">BPM</div></div></div>
-  <div class="vital-item" id="vital-bp"><div>🩸</div><div><div class="vital-value">--/--</div><div class="vital-label">mmHg</div></div></div>
-  <div class="vital-item" id="vital-o2"><div>🫁</div><div><div class="vital-value">--%</div><div class="vital-label">SpO₂</div></div></div>
-  <div class="vital-item" id="vital-temp"><div>🌡️</div><div><div class="vital-value">--°</div><div class="vital-label">Temp</div></div></div>
-</div>
 
     <div class="header-date" id="today-date"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
@@ -3106,6 +3109,15 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
         👤 Modo Paciente
       </span>
     </div>
+  </div>
+
+  <!-- VITALS STRIP — faixa abaixo do header mobile / dentro do header desktop -->
+  <div class="vitals-bar" id="vitals-bar-main">
+    <div class="vital-item" id="vital-hr"><div>❤️</div><div><div class="vital-value">--</div><div class="vital-label">BPM</div></div></div>
+    <div class="vital-item" id="vital-bp"><div>🩸</div><div><div class="vital-value">--/--</div><div class="vital-label">mmHg</div></div></div>
+    <div class="vital-item" id="vital-o2"><div>🫁</div><div><div class="vital-value">--%</div><div class="vital-label">SpO₂</div></div></div>
+    <div class="vital-item" id="vital-temp"><div>🌡️</div><div><div class="vital-value">--°</div><div class="vital-label">Temp</div></div></div>
+    <div class="vital-item" id="vital-gluc"><div>🍬</div><div><div class="vital-value">--</div><div class="vital-label">Glicemia</div></div></div>
   </div>
 
   <!-- LEFT: main task list -->
@@ -4513,7 +4525,14 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
 <nav class="bottom-nav">
   <!-- Desktop sidebar brand -->
   <div class="nav-brand">
-    <div class="nav-brand-icon"><img src="icon-72.png" alt="CuidarBem"></div>
+    <div class="nav-brand-icon">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Coração com pulso médico -->
+        <path d="M13 22 C13 22 4 16.5 4 10.5 C4 7.9 6.1 6 8.5 6 C10.2 6 11.7 7 13 8.5 C14.3 7 15.8 6 17.5 6 C19.9 6 22 7.9 22 10.5 C22 16.5 13 22 13 22Z" fill="white" opacity="0.92"/>
+        <!-- Linha de pulso (ECG) sobre o coração -->
+        <polyline points="7,12 9.5,12 11,9 13,15 14.5,10.5 16,12 19,12" stroke="rgba(26,107,92,0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </div>
     <div>
       <div class="nav-brand-text">CuidarBem</div>
       <div class="nav-brand-sub">Cuidados de Saúde</div>
@@ -6430,10 +6449,13 @@ function goScreen(name, btn) {
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(`screen-${name}`).classList.add('active');
   btn.classList.add('active');
-  if (name==='reports') renderReports();
-  if (name==='calendar') { buildWeekStrip(); renderCalendar(); }
-  if (name==='appt') renderApptUpcoming();
-  window.scrollTo(0,0);
+  // scrollTo após o próximo frame — evita flash branco antes do conteúdo pintar
+  requestAnimationFrame(() => {
+    window.scrollTo({top: 0, behavior: 'instant'});
+    if (name==='reports') renderReports();
+    if (name==='calendar') { buildWeekStrip(); renderCalendar(); }
+    if (name==='appt') renderApptUpcoming();
+  });
 }
 
 // v60: método único de inclusão — cadastros sempre pela Agenda.
@@ -9381,6 +9403,7 @@ function saveVital(type) {
   vitals.unshift(entry);
   if (vitals.length > 300) vitals.length = 300;
   localStorage.setItem('cb_vitals', JSON.stringify(vitals));
+  document.dispatchEvent(new CustomEvent('cb:vital:saved'));
 
   const cls = entry.cls;
   showToast(`${cls.emoji} ${type === 'bp' ? 'Pressão' : 'Glicemia'} salva! ${cls.label}`);
@@ -10287,17 +10310,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 <script>
-function r(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+// Lê os últimos valores reais de cb_vitals e atualiza o topbar
 function updateVitals(){
-  const hr=document.querySelector('#vital-hr .vital-value');
-  if(!hr) return;
-  hr.textContent=r(60,100);
-  document.querySelector('#vital-bp .vital-value').textContent=r(110,140)+"/"+r(70,90);
-  document.querySelector('#vital-o2 .vital-value').textContent=r(95,100)+"%";
-  document.querySelector('#vital-temp .vital-value').textContent=(36+Math.random()).toFixed(1)+"°";
+  const bpEl   = document.querySelector('#vital-bp .vital-value');
+  const hrEl   = document.querySelector('#vital-hr .vital-value');
+  const o2El   = document.querySelector('#vital-o2 .vital-value');
+  const tmpEl  = document.querySelector('#vital-temp .vital-value');
+  const glucEl = document.querySelector('#vital-gluc .vital-value');
+  if (!bpEl) return;
+
+  const vitals = JSON.parse(localStorage.getItem('cb_vitals') || '[]');
+  const legado = JSON.parse(localStorage.getItem('paciente') || '[]');
+  const leg    = legado.length ? legado[legado.length - 1] : null;
+
+  // Pressão arterial
+  const lastBp = vitals.find(v => v.type === 'bp');
+  bpEl.textContent = lastBp ? lastBp.label.split(' ')[0] : (leg && leg.sistolica ? leg.sistolica+'/'+leg.diastolica : '—');
+
+  // Batimentos (frequência cardíaca) — campo pulse do registro de pressão
+  const lastHr = vitals.find(v => v.type === 'bp' && v.pulse);
+  hrEl.textContent = lastHr ? (lastHr.pulse + '') : (leg && leg.bpm ? leg.bpm + '' : '—');
+
+  // SpO₂
+  const lastO2 = vitals.find(v => v.type === 'spo2');
+  if (o2El) o2El.textContent = lastO2 ? lastO2.val + '%' : (leg && leg.o2 ? leg.o2 + '%' : '—');
+
+  // Temperatura
+  const lastTemp = vitals.find(v => v.type === 'temp');
+  if (tmpEl) tmpEl.textContent = lastTemp ? lastTemp.val + '°' : (leg && leg.temp ? leg.temp + '°' : '—');
+
+  // Glicemia
+  const lastGluc = vitals.find(v => v.type === 'gluc');
+  if (glucEl) glucEl.textContent = lastGluc ? (lastGluc.val + '') : '—';
 }
-setInterval(updateVitals,2000);
+
+// Roda ao carregar e a cada vez que um vital é gravado
 updateVitals();
+document.addEventListener('cb:vital:saved', updateVitals);
 </script>
 
 <!-- V14: estrutura preparada para vitais reais -->
@@ -10338,6 +10387,7 @@ function salvarVitais(){
 
   atualizarUIReal(p);
   renderHistorico();
+  document.dispatchEvent(new CustomEvent('cb:vital:saved'));
 }
 
 function carregarUltimo(){
@@ -13861,13 +13911,12 @@ body.dark-theme #screen-appt .header-sub{
 
 <!-- v69 — correção do logo duplicado/estourado na sidebar desktop -->
 <style id="cuidarbem-v69-logo-sidebar-fix">
-/* O img icon-72.png estava herdando tamanho natural e criando impressão de segundo logo.
-   Aqui o ícone fica preso dentro do box oficial do brand. */
+/* O ícone agora é SVG inline — sem img externo que quebrava.
+   Mantém o box contido mas sem cortar o SVG. */
 @media (min-width: 768px){
   .bottom-nav .nav-brand{
     display: flex !important;
     align-items: center !important;
-    overflow: hidden !important;
   }
 
   .bottom-nav .nav-brand-icon{
@@ -13877,7 +13926,7 @@ body.dark-theme #screen-appt .header-sub{
     max-width: 44px !important;
     min-height: 44px !important;
     max-height: 44px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     position: relative !important;
     border-radius: 14px !important;
     background: rgba(255,255,255,.16) !important;
@@ -13886,18 +13935,10 @@ body.dark-theme #screen-appt .header-sub{
     justify-content: center !important;
   }
 
-  .bottom-nav .nav-brand-icon img{
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
+  .bottom-nav .nav-brand-icon svg{
+    width: 26px !important;
+    height: 26px !important;
     display: block !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    border-radius: inherit !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    transform: none !important;
   }
 
   .bottom-nav .nav-brand-icon::before,
@@ -13980,8 +14021,7 @@ body{
     transform: translateX(-50%) !important;
     -webkit-transform: translateX(-50%) !important;
     z-index: var(--cb-chrome-z) !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
+    /* Removido backface-visibility: avoids GPU flicker on iOS/Android */
   }
   #screen-home .content{
     padding-top: 258px !important;
@@ -14082,17 +14122,8 @@ body{
   pointer-events: auto !important;
 }
 
-/* Garante que o conteúdo nunca suba por cima do chrome */
-.screen,
-.content,
-.card,
-.stat-card,
-.task-item,
-.appt-card,
-.setting-row{
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
+/* Removido backface-visibility de elementos não animados — causava piscar no iOS/Android */
+/* .screen, .content, .card, .task-item, .appt-card, .setting-row: sem backface-visibility */
 
 /* Modais, alertas e SAMU continuam no topo */
 .modal-overlay,
@@ -14136,7 +14167,54 @@ body{
   }
 }
 
-/* Tema escuro sem flash claro */
+/* =========================================================
+   CuidarBem v72 — correção de piscar/flash no mobile
+   Causa: display:none→block + backface-visibility desnecessário
+          + scrollTo síncrono + stacking context no header fixo
+========================================================= */
+
+/* Guia Saúde: reduz espaço excessivo entre topbar e primeiro card */
+@media (max-width: 767px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 12px !important;
+  }
+}
+
+/* Impede flash branco de telas ocultas no Safari/Chrome mobile */
+.screen:not(.active) {
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  /* NÃO usa display:none para evitar layout thrash ao trocar guia */
+}
+
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */
+.bottom-nav {
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+}
+
+/* Transição suave e curta ao trocar de guia — sem flash */
+.screen.active {
+  animation: cbScreenIn 0.14s ease both !important;
+}
+@keyframes cbScreenIn {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* Evita que o header fixo da Início crie stacking context extra */
+#screen-home .header {
+  isolation: auto !important;
+}
+
+
 body.dark,
 body.dark-theme{
   background: var(--bg) !important;
@@ -14239,6 +14317,127 @@ body.dark-theme .bottom-nav{
   }
 }
 </style>
+
+
+
+<!-- v73 — vitais: faixa scrollável abaixo do header mobile (estilo Apple Health) -->
+<style id="cuidarbem-v73-vitais-mobile">
+/* =========================================================
+   CuidarBem v73 — Vitais abaixo do header no mobile
+   Faixa fixa colada ao header, scrollável horizontalmente.
+   No desktop continua dentro do header como antes.
+========================================================= */
+@media (max-width: 767px) {
+
+  /* Faixa fixa colada logo abaixo do header verde */
+  #screen-home #vitals-bar-main {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    gap: 8px !important;
+    padding: 10px 16px 10px !important;
+    position: fixed !important;
+    top: var(--mobile-header-h, 192px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    z-index: 699 !important;
+    background: var(--green-800) !important;
+    border-bottom: 1px solid rgba(255,255,255,.10) !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15) !important;
+  }
+  #screen-home #vitals-bar-main::-webkit-scrollbar { display: none !important; }
+
+  /* Chips estilo pill — fundo branco translúcido sobre verde escuro */
+  #screen-home #vitals-bar-main .vital-item {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    background: rgba(255,255,255,.13) !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    white-space: nowrap !important;
+    color: white !important;
+    cursor: pointer !important;
+    transition: background .15s !important;
+  }
+  #screen-home #vitals-bar-main .vital-item:active {
+    background: rgba(255,255,255,.24) !important;
+  }
+
+  #screen-home #vitals-bar-main .vital-item > div:first-child {
+    font-size: 14px !important;
+    line-height: 1 !important;
+  }
+  #screen-home #vitals-bar-main .vital-item > div:last-child {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  #screen-home #vitals-bar-main .vital-value {
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    color: white !important;
+    letter-spacing: -.02em !important;
+  }
+  #screen-home #vitals-bar-main .vital-label {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: rgba(255,255,255,.65) !important;
+    line-height: 1 !important;
+    margin-top: 1px !important;
+    text-transform: uppercase !important;
+    letter-spacing: .04em !important;
+  }
+
+  /* Conteúdo empurrado abaixo da faixa de vitais (~44px a mais) */
+  #screen-home .content {
+    padding-top: 248px !important;
+  }
+}
+
+/* Desktop: vitals-bar continua dentro do header, sem mudança */
+@media (min-width: 768px) {
+  #screen-home #vitals-bar-main {
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}
+</style>
+
+
+<script id="cuidarbem-v73-vitais-position">
+(function(){
+  function positionVitalsStrip() {
+    const header = document.querySelector('#screen-home .header');
+    const strip  = document.getElementById('vitals-bar-main');
+    if (!header || !strip || window.innerWidth >= 768) return;
+    const h = header.getBoundingClientRect().height;
+    strip.style.top = h + 'px';
+    // Ajusta padding-top do conteúdo: altura do header + faixa de vitais
+    const content = document.querySelector('#screen-home .content');
+    if (content) content.style.paddingTop = (h + strip.offsetHeight + 8) + 'px';
+  }
+  // Roda ao carregar e ao redimensionar
+  window.addEventListener('load', positionVitalsStrip);
+  window.addEventListener('resize', positionVitalsStrip, { passive: true });
+  // Pequeno delay para garantir que o header já está pintado
+  setTimeout(positionVitalsStrip, 120);
+  setTimeout(positionVitalsStrip, 400);
+})();
+</script>
 
 </body>
 </html>
