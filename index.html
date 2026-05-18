@@ -8,11 +8,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CuidarBem">
-<meta name="description" content="App de cuidados de saúde para pacientes com AVC">
+<meta name="description" content="CuidarBem v75: app PWA de cuidados domiciliares pós-AVC para familiares e cuidadores">
 <link rel="manifest" href="manifest.webmanifest" id="pwa-manifest">
 <link rel="icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>CuidarBem — Cuidados de Saúde</title>
+<title>CuidarBem v75.22 — Estabilidade e limpeza visual</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -2280,6 +2280,34 @@ body.dark .header-sub{
   }
 }
 
+
+
+/* ===== v75.2 — Agenda: data atual em vermelho acessível =====
+   A classe .actual-today marca o dia real de hoje. A classe .today continua
+   sendo usada para o dia selecionado, sem confundir seleção com data atual. */
+.week-day.actual-today,
+body.dark-theme .week-day.actual-today{
+  background:linear-gradient(135deg,#b42318,#c0192d) !important;
+  border-color:#7f1d1d !important;
+  box-shadow:0 8px 18px rgba(192,25,45,.28) !important;
+}
+.week-day.actual-today .week-day-name,
+.week-day.actual-today .week-day-num,
+body.dark-theme .week-day.actual-today .week-day-name,
+body.dark-theme .week-day.actual-today .week-day-num{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.28) !important;
+}
+.week-day.actual-today.has-tasks::after,
+body.dark-theme .week-day.actual-today.has-tasks::after{
+  background:#ffffff !important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35) !important;
+}
+.week-day.actual-today:focus-visible{
+  outline:3px solid rgba(255,255,255,.95) !important;
+  outline-offset:2px !important;
+}
+
 </style>
 
 <style>
@@ -2983,6 +3011,60 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
 }
 </style>
 
+
+
+<!-- v75.4 — Saúde: aproxima primeiro card da topbar -->
+<style id="cuidarbem-v75-4-saude-gap-topbar">
+/*
+  Ajuste solicitado: reduzir o espaço entre a topbar da guia Saúde
+  e o primeiro card Cuidado diário v75.
+  A guia Saúde usa .health-dashboard, não .content. Por isso o antigo
+  padding-top de segurança ficou excessivo em alguns celulares.
+*/
+@media (max-width: 767px){
+  #screen-dashboard .header-sub{
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+
+  #screen-dashboard #cb75-patient-checkin{
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 390px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 14px !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 16px !important;
+  }
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -3273,15 +3355,21 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
   <div class="header-sub">
     <div class="header-sub-title">📅 Calendário</div>
   </div>
-  <div class="content" style="padding-top:16px; padding-bottom: calc(var(--nav-h) + 80px)">
+  <div class="content" style="padding-top:16px; padding-bottom: calc(var(--nav-h) + 18px)">
     <div class="card" style="padding: 14px 10px 10px;">
 
-      <!-- Mês + botão Hoje -->
-      <div style="display:flex; align-items:center; justify-content:space-between; padding: 0 4px 10px;">
-        <div id="cal-month" style="font-size:15px; font-weight:800; color:var(--text); letter-spacing:-.02em;"></div>
-        <button onclick="shiftWeek(0)" id="cal-today-btn" style="font-size:11px; font-weight:800; color:var(--green-600); background:var(--green-50); border:1px solid var(--green-100); border-radius:20px; padding:4px 12px; cursor:pointer; font-family:inherit; display:none;">
-          Hoje
-        </button>
+      <!-- Mês + ações rápidas: comando Nova tarefa agora fica dentro do painel do calendário -->
+      <div class="cal-panel-head">
+        <div id="cal-month" class="cal-month-label"></div>
+        <div class="cal-panel-actions">
+          <button onclick="shiftWeek(0)" id="cal-today-btn" class="cal-today-btn" style="display:none;">
+            Hoje
+          </button>
+          <button class="cal-panel-add" onclick="openAddModal()" title="Nova tarefa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" width="17" height="17"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nova tarefa</span>
+          </button>
+        </div>
       </div>
 
       <!-- Setas + dias -->
@@ -3309,11 +3397,6 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
     <div id="cal-tasks-list"></div>
   </div>
 
-  <!-- FAB fixo de nova tarefa -->
-  <button class="cal-fab-add" onclick="openAddModal()" title="Nova tarefa">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Nova tarefa
-  </button>
 </div>
 
 <!-- SCREEN: RELATÓRIOS -->
@@ -4597,7 +4680,7 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
     Perfil
   </button>
   <div class="nav-spacer"></div>
-  <div class="nav-footer">CuidarBem v60 Premium<br>Cuidado que conecta</div>
+  <div class="nav-footer">CuidarBem v75.22 Premium<br>Cuidado que conecta</div>
 </nav>
 
 <!-- MODAL ADD TASK -->
@@ -4686,7 +4769,7 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
         </div>
         <div class="form-group">
           <label class="form-label">Local / Clínica</label>
-          <input class="form-input" id="task-location" placeholder="Ex: Hospital das Clínicas, Sala 204">
+          <input class="form-input" id="task-location-cons" placeholder="Ex: Hospital das Clínicas, Sala 204">
         </div>
       </div>
       <!-- Campos exclusivos de Exame -->
@@ -4701,7 +4784,7 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
         </div>
         <div class="form-group">
           <label class="form-label">Laboratório / Clínica</label>
-          <input class="form-input" id="task-location" placeholder="Ex: Laboratório Fleury, UPA Centro">
+          <input class="form-input" id="task-location-exam" placeholder="Ex: Laboratório Fleury, UPA Centro">
         </div>
         <div class="form-group">
           <label class="form-label">Resultado disponível em (estimativa)</label>
@@ -6124,7 +6207,10 @@ function openAddModal() {
   document.getElementById('task-obs').value = '';
   document.getElementById('task-date').value = selectedCalDay || todayStr();
   document.getElementById('task-repeat').value = 'none';
-  document.querySelectorAll('.type-opt').forEach(o=>o.classList.remove(...['sel-med','sel-cons','sel-fisio','sel-exer']));
+  // v75.17 — limpeza operacional: campos escondidos não carregam dados da tarefa anterior
+  ['task-indication','task-treatment-end','task-rx-expiry','task-pickup-source','task-next-pickup','task-doctor','task-location-cons','task-location-exam','task-preparo','task-levar','task-exam-type','task-exam-doctor','task-results-date'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  ['task-continuous','alert-morning','alert-1h','alert-eve','task-high-risk'].forEach(id=>{ const el=document.getElementById(id); if(el) el.checked = id==='alert-morning' || id==='alert-1h'; });
+  document.querySelectorAll('.type-opt').forEach(o=>o.classList.remove(...['sel-med','sel-cons','sel-fisio','sel-exer','sel-exam']));
   document.getElementById('field-dose').style.display='none';
   document.getElementById('field-photo').style.display='none';
   // Reset photo preview
@@ -6178,9 +6264,11 @@ function saveTask() {
     pickupSource: document.getElementById('task-pickup-source')?.value || '',
     pickupInterval: parseInt(document.getElementById('task-pickup-interval')?.value) || 0,
     nextPickup: document.getElementById('task-next-pickup')?.value || '',
-    // Consulta fields
+    // Consulta/Exame fields — v75.17: IDs separados evitam salvar o laboratório no campo errado
     doctor:      document.getElementById('task-doctor')?.value.trim()   || '',
-    local:       document.getElementById('task-location')?.value.trim() || '',
+    local:       (selectedType === 'exam'
+                  ? document.getElementById('task-location-exam')
+                  : document.getElementById('task-location-cons'))?.value.trim() || '',
     prep:        document.getElementById('task-preparo')?.value.trim()  || '',
     obs2:        document.getElementById('task-levar')?.value.trim()    || '',
     alertMorning: document.getElementById('alert-morning')?.checked ?? true,
@@ -12419,8 +12507,8 @@ body.dark .toast {
 }
 </style>
 
-<!-- v56 — calendar nav arrows + fixed FAB -->
-<style id="cuidarbem-v56-calendar-nav">
+<!-- v75.11 — calendar nav arrows + ação Nova tarefa dentro do painel -->
+<style id="cuidarbem-v75-11-calendar-panel-actions">
 
 /* ── Setas de navegação ── */
 .cal-nav-btn {
@@ -12494,50 +12582,72 @@ body.dark .week-day.actual-today:not(.today) .week-day-name {
   color: var(--teal-400) !important;
 }
 
-/* ── FAB fixo "Nova tarefa" ── */
-.cal-fab-add {
-  position: fixed;
-  bottom: calc(var(--nav-h) + 16px);
-  right: 50%;
-  transform: translateX(50%);
-  max-width: calc(480px - 32px);
-  width: calc(100% - 32px);
-  z-index: 120;
-
-  display: flex; align-items: center; justify-content: center;
+/* ── Cabeçalho do painel do calendário: mês + ações rápidas ── */
+.cal-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 4px 12px;
+}
+.cal-month-label {
+  min-width: 0;
+  flex: 1;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+.cal-panel-actions {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  padding: 15px 20px;
-  border: none; border-radius: 20px;
-  background: linear-gradient(135deg, var(--green-600), var(--green-800));
-  color: white;
-  font-family: inherit;
-  font-size: 15px; font-weight: 800;
+  flex-shrink: 0;
+}
+.cal-today-btn {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--green-600);
+  background: var(--green-50);
+  border: 1px solid var(--green-100);
+  border-radius: 999px;
+  padding: 6px 11px;
   cursor: pointer;
-  box-shadow: 0 8px 28px rgba(10,80,60,.30), 0 2px 8px rgba(0,0,0,.12);
-  transition: box-shadow .2s, transform .15s;
+  font-family: inherit;
+  line-height: 1;
 }
-.cal-fab-add:hover {
-  box-shadow: 0 12px 36px rgba(10,80,60,.38);
-  transform: translateX(50%) translateY(-2px);
+.cal-panel-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, var(--green-600), var(--green-800));
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(10,80,60,.22), 0 1px 4px rgba(0,0,0,.10);
+  transition: transform .15s ease, box-shadow .18s ease, filter .18s ease;
 }
-.cal-fab-add:active {
-  transform: translateX(50%) scale(.97);
+.cal-panel-add svg { flex-shrink: 0; }
+.cal-panel-add:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 9px 22px rgba(10,80,60,.28), 0 2px 8px rgba(0,0,0,.12);
 }
-
-/* Desktop: FAB fica como botão normal alinhado à esquerda */
-@media (min-width: 768px) {
-  .cal-fab-add {
-    position: sticky;
-    bottom: 20px;
-    right: auto;
-    transform: none;
-    width: 100%;
-    max-width: none;
-    border-radius: 16px;
-    margin-top: 16px;
-  }
-  .cal-fab-add:hover  { transform: translateY(-2px); }
-  .cal-fab-add:active { transform: scale(.98); }
+.cal-panel-add:active { transform: scale(.96); }
+@media (max-width: 360px) {
+  .cal-panel-head { gap: 8px; }
+  .cal-panel-actions { gap: 6px; }
+  .cal-panel-add { padding: 8px 10px; font-size: 11px; }
+  .cal-today-btn { padding: 6px 9px; }
 }
 
 /* Dark mode */
@@ -12550,6 +12660,22 @@ body.dark .cal-nav-btn:hover {
   background: var(--green-50);
   color: var(--green-400);
   border-color: var(--gray-200);
+}
+
+body.dark .cal-panel-add,
+body.dark-theme .cal-panel-add {
+  background: linear-gradient(135deg, var(--teal-600), var(--green-800));
+  box-shadow: 0 8px 22px rgba(0,0,0,.32);
+}
+body.dark .cal-today-btn,
+body.dark-theme .cal-today-btn {
+  background: rgba(29,158,117,.16);
+  color: #eafff8;
+  border-color: rgba(29,158,117,.32);
+}
+body.high-contrast .cal-panel-add {
+  background: #0d3d35;
+  border: 2px solid #ffffff;
 }
 
 </style>
@@ -13319,36 +13445,7 @@ body.dark-theme #screen-reports .cb-functional-mini{
   border-color:rgba(148,163,184,.18) !important;
 }
 </style>
-<script id="cuidarbem-v63-relatorios-varredura-script">
-/* v63 — força redesenho dos gráficos quando a guia Relatórios abre ou o aparelho gira */
-(function(){
-  const rerenderReports = () => {
-    try { if (typeof window.renderReports === 'function') window.renderReports(); } catch(e) { console.warn('[CuidarBem v63] renderReports:', e); }
-  };
-  const oldGo = window.goScreen;
-  if (typeof oldGo === 'function' && !oldGo.__cbReportsV63) {
-    const wrapped = function(name, btn){
-      const r = oldGo.apply(this, arguments);
-      if (name === 'reports') setTimeout(rerenderReports, 80);
-      return r;
-    };
-    wrapped.__cbReportsV63 = true;
-    window.goScreen = wrapped;
-  }
-  let resizeT;
-  window.addEventListener('resize', () => {
-    if (!document.getElementById('screen-reports')?.classList.contains('active')) return;
-    clearTimeout(resizeT);
-    resizeT = setTimeout(rerenderReports, 160);
-  }, {passive:true});
-  document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('screen-reports')?.classList.contains('active')) setTimeout(rerenderReports, 120);
-  });
-})();
-</script>
-
-
-
+<!-- v75.9: script v63 de redesenho duplicado de Relatórios removido; renderização agora centralizada. -->
 <!-- v64 — topbar travada de forma firme nas guias, com foco em Relatórios -->
 <style id="cuidarbem-v64-topbar-travada">
 /* =========================================================
@@ -14480,6 +14577,3609 @@ body.dark-theme .bottom-nav{
   }
 }
 </style>
+
+
+
+<!-- CuidarBem v75 major — camada integrada: cuidador, segurança, IA, reabilitação e dados -->
+<style id="cuidarbem-v75-major-style">
+  :root{
+    --cb75-ink:#12342e;
+    --cb75-soft:rgba(225,245,238,.62);
+    --cb75-glass:rgba(255,255,255,.78);
+    --cb75-line:rgba(15,110,86,.16);
+    --cb75-shadow:0 16px 42px rgba(13,61,53,.13);
+  }
+  .cb75-card{position:relative;overflow:hidden;border:1px solid var(--cb75-line);box-shadow:var(--cb75-shadow);background:linear-gradient(180deg,var(--card-bg),rgba(225,245,238,.38));}
+  .cb75-card:before{content:'';position:absolute;inset:-80px -120px auto auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(29,158,117,.18),transparent 66%);pointer-events:none;}
+  .cb75-card-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;position:relative;z-index:1;}
+  .cb75-card-title strong{font-family:'Nunito',sans-serif;font-size:15px;font-weight:950;color:var(--green-800);letter-spacing:-.01em;}
+  .cb75-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 10px;background:var(--green-50);color:var(--green-600);font-size:11.5px;font-weight:900;white-space:nowrap;border:1px solid rgba(61,168,138,.22)}
+  .cb75-muted{font-size:12.5px;color:var(--text-muted);font-weight:650;line-height:1.55;}
+  .cb75-list{display:grid;gap:8px;position:relative;z-index:1;}
+  .cb75-item{display:flex;align-items:flex-start;gap:10px;border-radius:14px;padding:11px 12px;background:rgba(255,255,255,.68);border:1px solid var(--gray-100);}
+  .cb75-item-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--green-50);font-size:17px;flex-shrink:0;}
+  .cb75-item-main{flex:1;min-width:0;}
+  .cb75-item-title{font-size:13.5px;font-weight:900;color:var(--text);line-height:1.25;}
+  .cb75-item-text{font-size:12px;color:var(--text-muted);font-weight:650;line-height:1.45;margin-top:2px;}
+  .cb75-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1;}
+  .cb75-btn{border:0;border-radius:13px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:12.5px;font-weight:950;cursor:pointer;background:var(--green-600);color:#fff;box-shadow:0 9px 20px rgba(15,110,86,.18);}
+  .cb75-btn.secondary{background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);box-shadow:none;}
+  .cb75-btn.warn{background:var(--amber-50);color:var(--amber-600);border:1.5px solid var(--amber-400);box-shadow:none;}
+  .cb75-btn.danger{background:var(--coral-50);color:var(--coral-600);border:1.5px solid var(--coral-400);box-shadow:none;}
+  .cb75-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:relative;z-index:1;}
+  .cb75-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;position:relative;z-index:1;}
+  .cb75-field{background:rgba(255,255,255,.72);border:1px solid var(--gray-100);border-radius:14px;padding:10px;}
+  .cb75-label{display:block;font-size:10.5px;font-weight:950;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  .cb75-input,.cb75-select,.cb75-textarea{width:100%;border:1.5px solid var(--gray-200);border-radius:11px;background:var(--white);padding:9px 10px;font-family:'Nunito Sans',sans-serif;font-size:13px;color:var(--text);outline:none;}
+  .cb75-textarea{min-height:70px;resize:vertical;line-height:1.45;}
+  .cb75-pill-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .cb75-choice{border:1.5px solid var(--gray-200);background:var(--white);color:var(--text-muted);border-radius:999px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer;}
+  .cb75-choice.active{background:linear-gradient(135deg,var(--green-600),var(--teal-600));border-color:transparent;color:#fff;box-shadow:0 8px 18px rgba(15,110,86,.18);}
+  .cb75-score{height:8px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-top:8px;}
+  .cb75-score span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal-400),var(--green-600));width:0%;transition:width .35s ease;}
+  .cb75-risk-critical{border-left:4px solid var(--coral-400);background:var(--coral-50)!important;}
+  .cb75-risk-warn{border-left:4px solid var(--amber-400);background:var(--amber-50)!important;}
+  .cb75-risk-ok{border-left:4px solid var(--teal-400);background:var(--teal-50)!important;}
+  .cb75-mini-stat{border-radius:14px;background:rgba(255,255,255,.72);border:1px solid var(--gray-100);padding:11px;text-align:center;}
+  .cb75-mini-num{font-size:21px;font-weight:950;color:var(--green-800);line-height:1;}
+  .cb75-mini-label{font-size:10.5px;font-weight:850;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;margin-top:4px;}
+  .cb75-one-hand-bar{display:none;position:fixed;left:50%;bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:680;width:min(440px,calc(100% - 24px));padding:10px;border-radius:22px;background:rgba(255,255,255,.86);border:1px solid rgba(15,110,86,.18);box-shadow:0 18px 48px rgba(0,0,0,.18);backdrop-filter:blur(18px);gap:8px;}
+  body.cb75-one-hand .cb75-one-hand-bar{display:grid;grid-template-columns:repeat(3,1fr);}
+  body.cb75-one-hand .cb75-one-hand-bar button{min-height:54px;border-radius:16px;border:0;background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:#fff;font-family:'Nunito',sans-serif;font-size:12px;font-weight:950;}
+  body.cb75-one-hand .nav-btn{font-size:12px;min-height:72px;}
+  body.cb75-one-hand .task-check,body.cb75-one-hand .med-check-btn{transform:scale(1.14);}
+  body.cb75-one-hand .content{padding-bottom:calc(var(--nav-h) + 96px)!important;}
+  .cb75-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:790;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .24s ease;}
+  .cb75-modal-overlay.open{opacity:1;pointer-events:auto;}
+  .cb75-modal{width:100%;max-width:480px;margin:0 auto;background:var(--white);border-radius:26px 26px 0 0;padding:22px 18px 42px;max-height:92dvh;overflow:auto;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);}
+  .cb75-modal-overlay.open .cb75-modal{transform:translateY(0);}
+  .cb75-video-wrap{border-radius:18px;overflow:hidden;background:#0d3d35;position:relative;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;text-align:center;}
+  #cb75-pose-video{width:100%;height:100%;object-fit:cover;display:none;}
+  #cb75-pose-canvas{display:none;}
+  .cb75-motion-meter{height:10px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:10px;}
+  .cb75-motion-meter span{display:block;height:100%;width:0%;background:#99f6e4;transition:width .16s linear;}
+  .cb75-focus:focus,.cb75-btn:focus,.cb75-choice:focus{outline:3px solid rgba(29,158,117,.44);outline-offset:2px;}
+  @media (max-width:380px){.cb75-grid-2,.cb75-grid-3{grid-template-columns:1fr}.cb75-actions{display:grid}.cb75-btn{width:100%;}.cb75-card-title{align-items:flex-start;flex-direction:column;}}
+  @media (min-width:768px){.cb75-grid-2{grid-template-columns:1fr 1fr}.cb75-grid-3{grid-template-columns:repeat(3,1fr)}}
+  body.dark .cb75-card,body.dark-theme .cb75-card{background:linear-gradient(180deg,#111827,#0f2f2a)!important;border-color:#374151!important;}
+  body.dark .cb75-item,body.dark-theme .cb75-item,body.dark .cb75-field,body.dark-theme .cb75-field,body.dark .cb75-mini-stat,body.dark-theme .cb75-mini-stat{background:#1f2937!important;border-color:#374151!important;}
+  body.dark .cb75-card-title strong,body.dark-theme .cb75-card-title strong,body.dark .cb75-mini-num,body.dark-theme .cb75-mini-num{color:#99f6e4!important;}
+  body.dark .cb75-muted,body.dark-theme .cb75-muted,body.dark .cb75-item-text,body.dark-theme .cb75-item-text{color:#d1d5db!important;}
+  body.dark .cb75-item-title,body.dark-theme .cb75-item-title{color:#f9fafb!important;}
+</style>
+
+<div class="cb75-one-hand-bar" id="cb75-one-hand-bar" aria-label="Atalhos do modo mão única">
+  <button onclick="startCB75Voice()">🎙️ Voz</button>
+  <button onclick="openAddModal()">➕ Cuidado</button>
+  <button onclick="openSamuMode()">🆘 SAMU</button>
+</div>
+
+<div class="cb75-modal-overlay" id="cb75-fall-modal" onclick="if(event.target.id==='cb75-fall-modal')closeCB75FallFlow()">
+  <div class="cb75-modal" role="dialog" aria-modal="true" aria-labelledby="cb75-fall-title">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="cb75-fall-title">🚨 Fluxo guiado — queda ou sintoma novo</div>
+    <div class="cb75-list" style="margin-bottom:12px">
+      <label class="cb75-item cb75-risk-critical"><input id="cb75-fall-head" type="checkbox" style="margin-top:4px;accent-color:var(--coral-400)"><div><div class="cb75-item-title">Bateu a cabeça, desmaiou, vomitou ou ficou sonolento/confuso?</div><div class="cb75-item-text">Se sim, trate como urgência e procure atendimento.</div></div></label>
+      <label class="cb75-item cb75-risk-critical"><input id="cb75-fall-neuro" type="checkbox" style="margin-top:4px;accent-color:var(--coral-400)"><div><div class="cb75-item-title">Apareceu face torta, fala alterada ou fraqueza nova?</div><div class="cb75-item-text">Sinal neurológico novo exige atendimento imediato/SAMU 192.</div></div></label>
+      <label class="cb75-item cb75-risk-warn"><input id="cb75-fall-pain" type="checkbox" style="margin-top:4px;accent-color:var(--amber-400)"><div><div class="cb75-item-title">Dor forte, sangramento ou dificuldade para apoiar?</div><div class="cb75-item-text">Registre e considere avaliação médica.</div></div></label>
+    </div>
+    <div class="form-group"><label class="form-label">Descrição rápida</label><textarea id="cb75-fall-desc" class="form-input" rows="3" placeholder="Ex: caiu no banheiro às 08:10, sem perda de consciência, dor no quadril..." style="resize:vertical;min-height:80px"></textarea></div>
+    <div class="cb75-actions"><button class="cb75-btn danger" onclick="saveCB75FallFlow()">💾 Registrar evento</button><button class="cb75-btn secondary" onclick="closeCB75FallFlow()">Fechar</button></div>
+  </div>
+</div>
+
+<div class="cb75-modal-overlay" id="cb75-pose-modal" onclick="if(event.target.id==='cb75-pose-modal')stopCB75PoseCheck()">
+  <div class="cb75-modal" role="dialog" aria-modal="true" aria-labelledby="cb75-pose-title">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="cb75-pose-title">📷 Progresso por câmera — membro superior</div>
+    <div class="cb75-muted" style="margin-bottom:12px">Opcional e local: a câmera mede movimento geral do braço durante o exercício. Não envia imagem e não substitui fisioterapia.</div>
+    <div class="cb75-video-wrap"><video id="cb75-pose-video" autoplay muted playsinline></video><canvas id="cb75-pose-canvas"></canvas><div id="cb75-pose-placeholder">Toque em iniciar para ativar a câmera.</div></div>
+    <div class="cb75-motion-meter"><span id="cb75-motion-fill"></span></div>
+    <div id="cb75-pose-feedback" class="cb75-muted" style="margin-top:8px;text-align:center">Movimento detectado: 0%</div>
+    <div class="cb75-actions"><button class="cb75-btn" onclick="startCB75PoseCamera()">▶️ Iniciar</button><button class="cb75-btn warn" onclick="saveCB75PoseScore()">✅ Salvar progresso</button><button class="cb75-btn secondary" onclick="stopCB75PoseCheck()">Fechar</button></div>
+  </div>
+</div>
+
+<script id="cuidarbem-v75-major-js">
+(function(){
+  'use strict';
+  const LS_DAILY = 'cb75_daily_log_v75';
+  const LS_FAMILY = 'cb75_family_caregivers_v75';
+  const LS_HOSP = 'cb75_hospital_history_v75';
+  const LS_POSE = 'cb75_pose_progress_v75';
+  const LS_SETTINGS = 'cb75_settings_v75';
+  const versionTag = '75.17-mega-auditoria';
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (v) => String(v ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  const read = (key, fallback) => { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch(e) { return fallback; } };
+  const write = (key, value, reason) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) { console.warn('[CuidarBem v75] localStorage:', e); }
+    try { if (typeof window.cbSupabaseQueuePush === 'function') setTimeout(() => window.cbSupabaseQueuePush(reason || key), 80); } catch(e) {}
+  };
+  const today = () => (typeof todayStr === 'function' ? todayStr() : new Date().toISOString().slice(0,10));
+  const fmt = (d) => { try { return new Date(d+'T00:00:00').toLocaleDateString('pt-BR'); } catch(e) { return d || '—'; } };
+  const toast = (msg) => { try { if (typeof showToast === 'function') showToast(msg); else alert(msg); } catch(e) { console.log(msg); } };
+  const pushHaptic = (p) => { try { if (typeof haptic === 'function') haptic(p || [18]); else if (navigator.vibrate) navigator.vibrate(p || [18]); } catch(e) {} };
+
+  function taskList(){ try { return (typeof tasks !== 'undefined' && Array.isArray(tasks)) ? tasks : read('cuidarbem_tasks', []); } catch(e) { return read('cuidarbem_tasks', []); } }
+  function completionMap(){ try { return (typeof completions !== 'undefined' && completions) ? completions : read('cuidarbem_completions', {}); } catch(e) { return read('cuidarbem_completions', {}); } }
+  function profile(){ try { return typeof getProfile === 'function' ? getProfile() : read('cb_medical_profile', {}); } catch(e) { return read('cb_medical_profile', {}); } }
+  function settings(){ try { return (typeof window.settings !== 'undefined' ? window.settings : read('cuidarbem_settings', {})) || read('cuidarbem_settings', {}); } catch(e) { return read('cuidarbem_settings', {}); } }
+  function todayTasks(){ const d=today(); return taskList().filter(t => t && (t.repeat === 'daily' || t.date === d)); }
+  function doneToday(t){ return !!completionMap()[`${t.id}_${today()}`]; }
+  function medName(t){ return `${t?.name||''} ${t?.dose||''} ${t?.obs||''}`.toLowerCase(); }
+
+  function getDaily(){ return read(LS_DAILY, {}); }
+  function getTodayLog(){
+    const all = getDaily(); const d = today();
+    if (!all[d]) all[d] = {date:d, mood:'', appetite:'', sleep:'', mobility:'', patientFeeling:'', water:0, meals:0, ndd:'', sleepHours:'', sleepQuality:'', reposition:false, skinCheck:false, redness:false, notes:'', updatedAt:Date.now()};
+    return all[d];
+  }
+  function saveTodayLog(log, reason){ const all = getDaily(); all[today()] = {...all[today()], ...log, date:today(), updatedAt:Date.now()}; write(LS_DAILY, all, reason || 'cb75-daily-log'); renderCB75All(); }
+
+  function latestVital(type){
+    const data = read('cb_vitals', {});
+    const arr = Array.isArray(data) ? data.filter(x => x.type===type) : (data[type] || []);
+    return Array.isArray(arr) && arr.length ? arr[arr.length-1] : null;
+  }
+
+  function isHighRiskMed(t){
+    const txt = medName(t);
+    return !!(t && (t.highRisk || /varfarina|warfarin|rivaroxabana|apixabana|dabigatrana|edoxabana|heparina|enoxaparina|insulina|clonazepam|diazepam|alprazolam|morfina|oxicodona|tramadol|metotrexato|digoxina|amiodarona|lítio|litio|fenitoína|fenitoina|carbamazepina/.test(txt)));
+  }
+
+  const interactions = [
+    {a:/varfarina|warfarin/, b:/aas|aspirina|ácido acetilsalicílico|acido acetilsalicilico|clopidogrel|ibuprofeno|naproxeno|diclofenaco/, level:'critical', msg:'risco aumentado de sangramento'},
+    {a:/rivaroxabana|apixabana|dabigatrana|edoxabana|heparina|enoxaparina/, b:/aas|aspirina|clopidogrel|ibuprofeno|naproxeno|diclofenaco/, level:'critical', msg:'anticoagulante + antiagregante/anti-inflamatório: atenção a sangramentos'},
+    {a:/losartana|enalapril|captopril|ramipril/, b:/espironolactona|cloreto de potássio|potassio|potássio/, level:'warn', msg:'pode aumentar potássio; confirme monitorização médica'},
+    {a:/fluoxetina|sertralina|paroxetina|escitalopram/, b:/tramadol|linezolida|lítio|litio/, level:'warn', msg:'pode aumentar efeitos no sistema nervoso/serotonina'},
+    {a:/sinvastatina|atorvastatina|rosuvastatina/, b:/claritromicina|eritromicina|itraconazol|cetoconazol/, level:'warn', msg:'pode elevar risco de dor muscular/efeitos da estatina'},
+    {a:/metformina/, b:/contraste|iodado|tomografia/, level:'warn', msg:'atenção se houver exame com contraste; siga orientação do médico'}
+  ];
+
+  function findInteractions(){
+    const meds = taskList().filter(t => t && t.type === 'med');
+    const out = [];
+    for (let i=0;i<meds.length;i++) for (let j=i+1;j<meds.length;j++) {
+      const ai = medName(meds[i]), bj = medName(meds[j]);
+      interactions.forEach(rule => {
+        if ((rule.a.test(ai) && rule.b.test(bj)) || (rule.a.test(bj) && rule.b.test(ai))) {
+          const key = [meds[i].id, meds[j].id, rule.msg].join('|');
+          if (!out.some(x => x.key === key)) out.push({key, level:rule.level, a:meds[i].name, b:meds[j].name, msg:rule.msg});
+        }
+      });
+    }
+    return out;
+  }
+
+  function riskPredictions(){
+    const p = profile(); const log = getTodayLog(); const bp = latestVital('bp'); const spo2 = latestVital('spo2'); const temp = latestVital('temp');
+    const events = (typeof getCareEvents === 'function' ? getCareEvents() : read('cb_care_events', [])).slice(0,12);
+    const medAlerts = findInteractions();
+    const risks = [];
+    const dys = !!(p.neuroDysphagia || /disfag|engasg|deglut/i.test(`${p.conditions||''} ${p.importantNotes||''}`));
+    let pneumonia = 12 + (dys?30:0) + ((Number(log.water)||0)<4?12:0) + ((spo2 && Number(spo2.value||spo2.spo2||spo2.o2) < 94)?18:0) + ((temp && Number(temp.value||temp.temp) >= 37.8)?16:0);
+    risks.push({icon:'🫁', title:'Pneumonia / aspiração', score:Math.min(96,pneumonia), text:dys?'Disfagia/engasgos pedem atenção com postura, consistência e febre.':'Sem sinal forte registrado hoje.'});
+    let pressure = 10 + (/baixa|acamado|cadeira|pouca/i.test(log.mobility||'')?25:0) + (p.neuroDependency==='high'?20:0) + (!log.reposition?14:0) + (log.redness?28:0);
+    risks.push({icon:'🛏️', title:'Lesão por pressão', score:Math.min(96,pressure), text:log.redness?'Vermelhidão marcada: alivie pressão e avalie pele.':'Use mudança de posição e inspeção de pele como rotina.'});
+    let mood = 10 + (/triste|ansioso|irritado|apatia/i.test(`${log.mood} ${log.patientFeeling}`)?30:0) + (Number(log.sleepHours||0)>0 && Number(log.sleepHours)<5?12:0) + (/ruim|pouco/i.test(log.sleep||'')?12:0);
+    risks.push({icon:'🌙', title:'Humor / depressão', score:Math.min(90,mood), text:'Observe sono, apetite, isolamento e perda de interesse ao longo da semana.'});
+    let fall = 10 + (p.neuroFallRisk?25:0) + (/baixa|instável|apoio/i.test(log.mobility||'')?20:0) + (events.some(e => /queda/i.test(`${e.type} ${e.desc}`))?18:0);
+    risks.push({icon:'🚶', title:'Queda', score:Math.min(94,fall), text:'Reforce banheiro seguro, iluminação, calçado e supervisão nas transferências.'});
+    let med = 8 + medAlerts.length*28 + todayTasks().filter(t=>t.type==='med' && !doneToday(t)).length*7 + todayTasks().filter(isHighRiskMed).length*10;
+    risks.push({icon:'💊', title:'Medicamentos', score:Math.min(98,med), text:medAlerts.length?`${medAlerts.length} possível(is) interação(ões) localizadas.`:'Sem interação local relevante identificada.'});
+    return risks;
+  }
+
+  function riskClass(score){ return score >= 70 ? 'cb75-risk-critical' : score >= 40 ? 'cb75-risk-warn' : 'cb75-risk-ok'; }
+  function riskLabel(score){ return score >= 70 ? 'Atenção alta' : score >= 40 ? 'Observar' : 'Estável'; }
+
+  function buildDailyBriefHTML(){
+    const items = todayTasks();
+    const meds = items.filter(t=>t.type==='med');
+    const pending = items.filter(t=>!doneToday(t)).sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
+    const nowMed = pending.find(t=>t.type==='med') || pending[0];
+    const highPending = pending.filter(isHighRiskMed);
+    const inter = findInteractions();
+    const log = getTodayLog();
+    let rows = [];
+    if (nowMed) rows.push({icon: nowMed.type==='med'?'💊':'⏰', title: nowMed.type==='med' ? `Agora/próximo: ${esc(nowMed.name)}` : `Próximo cuidado: ${esc(nowMed.name)}`, text:`${nowMed.time || 'sem horário'}${nowMed.dose ? ' · '+esc(nowMed.dose) : ''}${nowMed.obs ? ' · '+esc(nowMed.obs) : ''}`});
+    else rows.push({icon:'🌿', title:'Rotina em dia', text:'Nenhuma pendência imediata cadastrada para hoje.'});
+    if (highPending.length) rows.push({icon:'🛡️', title:'Medicamento de alto risco pendente', text:`${highPending.map(t=>esc(t.name)).slice(0,2).join(', ')} — exige checklist e dupla confirmação.`});
+    if (inter.length) rows.push({icon:'⚠️', title:'Possível interação medicamentosa', text:`${esc(inter[0].a)} + ${esc(inter[0].b)}: ${esc(inter[0].msg)}.`});
+    if (!log.mood || !log.sleep || !log.mobility) rows.push({icon:'📝', title:'Estado geral ainda não preenchido', text:'Registre humor, apetite, sono e mobilidade para a IA contextual funcionar melhor.'});
+    if (Number(log.water||0) < 4) rows.push({icon:'💧', title:'Hidratação baixa no registro', text:`${Number(log.water||0)} copo(s) hoje. Ajuste conforme orientação clínica/deglutição.`});
+    return rows.slice(0,5).map(r=>`<div class="cb75-item"><div class="cb75-item-icon">${r.icon}</div><div class="cb75-item-main"><div class="cb75-item-title">${r.title}</div><div class="cb75-item-text">${r.text}</div></div></div>`).join('');
+  }
+
+  function ensureHomeCards(){
+    const content = document.querySelector('#screen-home .content'); if (!content) return;
+    if (!$('cb75-resumo-dia')) {
+      const after = content.querySelector('.voice-kiosk-actions');
+      const html = `
+        <section class="card cb75-card" id="cb75-resumo-dia">
+          <div class="cb75-card-title"><strong>🧠 Resumo do Dia v75</strong><span class="cb75-chip" id="cb75-brief-chip">Cuidador ativo</span></div>
+          <div class="cb75-list" id="cb75-brief-list"></div>
+          <div class="cb75-actions">
+            <button class="cb75-btn" onclick="startCB75Voice()">🎙️ Comando por voz</button>
+            <button class="cb75-btn secondary" onclick="toggleCB75OneHand()">🤲 Mão única</button>
+            <button class="cb75-btn danger" onclick="openCB75FallFlow()">🚨 Queda/sintoma</button>
+          </div>
+        </section>
+        <section class="card cb75-card" id="cb75-state-card">
+          <div class="cb75-card-title"><strong>💚 Estado Geral do Paciente</strong><span class="cb75-chip" id="cb75-state-date">Hoje</span></div>
+          <div class="cb75-grid-2">
+            ${quickGroup('mood','Humor',['calmo','triste','ansioso','irritado'],['🙂','😔','😟','😠'])}
+            ${quickGroup('appetite','Apetite',['bom','regular','baixo','recusou'],['🍽️','🥄','⬇️','⚠️'])}
+            ${quickGroup('sleep','Sono',['bom','interrompido','pouco','sonolento'],['🌙','🔁','😴','💤'])}
+            ${quickGroup('mobility','Mobilidade',['boa','com apoio','baixa','acamado'],['🚶','🦯','⚠️','🛏️'])}
+          </div>
+          <div class="cb75-actions"><button class="cb75-btn secondary" onclick="renderCB75All()">Atualizar leitura</button><button class="cb75-btn" onclick="goScreen('dashboard',document.getElementById('nav-dashboard'))">Abrir Saúde</button></div>
+        </section>
+        <section class="card cb75-card" id="cb75-risk-panel">
+          <div class="cb75-card-title"><strong>🤖 CuidarBem IA — riscos previstos</strong><span class="cb75-chip">Triagem local</span></div>
+          <div class="cb75-list" id="cb75-risk-list"></div>
+        </section>`;
+      if (after) after.insertAdjacentHTML('afterend', html); else content.insertAdjacentHTML('afterbegin', html);
+    }
+  }
+
+  function quickGroup(key,label,values,icons){
+    return `<div class="cb75-field"><span class="cb75-label">${label}</span><div class="cb75-pill-row">${values.map((v,i)=>`<button type="button" class="cb75-choice" data-cb75-key="${key}" data-cb75-val="${v}" onclick="setCB75Quick('${key}','${v}',this)">${icons[i]} ${v}</button>`).join('')}</div></div>`;
+  }
+
+  function ensureDashboardCards(){
+    const dash = document.querySelector('#screen-dashboard .health-dashboard'); if (!dash) return;
+    const firstLabel = dash.querySelector('.health-section-label');
+    if (!$('cb75-patient-checkin')) {
+      const html = `
+        <div class="health-section-label" id="cb75-care-label">Cuidado diário v75</div>
+        <section class="card cb75-card" id="cb75-patient-checkin">
+          <div class="cb75-card-title"><strong>🗣️ Como estou hoje?</strong><span class="cb75-chip">Paciente capaz</span></div>
+          <div class="cb75-muted" style="margin-bottom:10px">Tela simples para o próprio paciente tocar quando conseguir participar do cuidado.</div>
+          <div class="cb75-pill-row"><button class="cb75-choice" onclick="setCB75PatientFeeling('bem',this)">🙂 Bem</button><button class="cb75-choice" onclick="setCB75PatientFeeling('cansado',this)">😴 Cansado</button><button class="cb75-choice" onclick="setCB75PatientFeeling('dor',this)">😣 Dor</button><button class="cb75-choice" onclick="setCB75PatientFeeling('triste',this)">😔 Triste</button><button class="cb75-choice" onclick="setCB75PatientFeeling('confuso',this)">❓ Confuso</button></div>
+        </section>
+        <section class="card cb75-card" id="cb75-nutrition-card">
+          <div class="cb75-card-title"><strong>🥣 Sono, alimentação e hidratação</strong><span class="cb75-chip">NDD / deglutição</span></div>
+          <div class="cb75-grid-2">
+            <div class="cb75-field"><label class="cb75-label">Horas de sono</label><input id="cb75-sleep-hours" class="cb75-input" type="number" min="0" max="24" step="0.5" placeholder="Ex: 7" onchange="saveCB75Inputs()"></div>
+            <div class="cb75-field"><label class="cb75-label">Qualidade do sono</label><select id="cb75-sleep-quality" class="cb75-select" onchange="saveCB75Inputs()"><option value="">Selecionar</option><option>bom</option><option>interrompido</option><option>ruim</option></select></div>
+            <div class="cb75-field"><label class="cb75-label">Água / líquidos seguros</label><div style="display:flex;gap:8px;align-items:center"><button class="cb75-btn secondary" onclick="addCB75Water(-1)">−</button><div class="cb75-mini-num" id="cb75-water-count">0</div><button class="cb75-btn secondary" onclick="addCB75Water(1)">+</button></div></div>
+            <div class="cb75-field"><label class="cb75-label">Refeições aceitas</label><div style="display:flex;gap:8px;align-items:center"><button class="cb75-btn secondary" onclick="addCB75Meal(-1)">−</button><div class="cb75-mini-num" id="cb75-meal-count">0</div><button class="cb75-btn secondary" onclick="addCB75Meal(1)">+</button></div></div>
+            <div class="cb75-field" style="grid-column:1/-1"><label class="cb75-label">Consistência / NDD</label><select id="cb75-ndd" class="cb75-select" onchange="saveCB75Inputs()"><option value="">Não definido</option><option>normal</option><option>pastosa</option><option>branda</option><option>líquido espessado</option><option>restrição por fono</option></select></div>
+          </div>
+        </section>
+        <section class="card cb75-card" id="cb75-pressure-card">
+          <div class="cb75-card-title"><strong>🛏️ Prevenção de lesão por pressão</strong><span class="cb75-chip">Pele e posição</span></div>
+          <div class="cb75-list">
+            <label class="cb75-item"><input type="checkbox" id="cb75-reposition" onchange="saveCB75Inputs()" style="margin-top:4px;accent-color:var(--teal-400)"><div><div class="cb75-item-title">Mudança de posição / alívio de pressão feita</div><div class="cb75-item-text">Principalmente se há pouca mobilidade, cadeira ou cama por longos períodos.</div></div></label>
+            <label class="cb75-item"><input type="checkbox" id="cb75-skin-check" onchange="saveCB75Inputs()" style="margin-top:4px;accent-color:var(--teal-400)"><div><div class="cb75-item-title">Inspeção de pele realizada</div><div class="cb75-item-text">Sacro, calcanhares, cotovelos e regiões de apoio.</div></div></label>
+            <label class="cb75-item cb75-risk-warn"><input type="checkbox" id="cb75-redness" onchange="saveCB75Inputs()" style="margin-top:4px;accent-color:var(--amber-400)"><div><div class="cb75-item-title">Há vermelhidão persistente?</div><div class="cb75-item-text">Se não clareia ao aliviar pressão, acompanhe e procure orientação.</div></div></label>
+          </div>
+        </section>`;
+      if (firstLabel) firstLabel.insertAdjacentHTML('beforebegin', html); else dash.insertAdjacentHTML('afterbegin', html);
+    }
+    const rehab = $('rehab-card');
+    if (rehab && !$('cb75-rehab-ai-card')) {
+      rehab.insertAdjacentHTML('beforebegin', `
+        <section class="card cb75-card" id="cb75-rehab-ai-card">
+          <div class="cb75-card-title"><strong>🦾 Reabilitação IA personalizada</strong><span class="cb75-chip">fase + déficit + Barthel</span></div>
+          <div id="cb75-rehab-ai-content" class="cb75-list"></div>
+          <div class="cb75-actions"><button class="cb75-btn" onclick="cb75PlanRehabExercise()">📅 Agendar exercício sugerido</button><button class="cb75-btn secondary" onclick="openCB75PoseCheck()">📷 Câmera opcional</button></div>
+        </section>`);
+    }
+    if (!$('cb75-edu-card')) {
+      dash.insertAdjacentHTML('beforeend', `
+        <section class="card cb75-card" id="cb75-edu-card">
+          <div class="cb75-card-title"><strong>📚 Biblioteca educativa pós-AVC</strong><span class="cb75-chip">orientações por fase</span></div>
+          <div class="cb75-list">
+            <div class="cb75-item"><div class="cb75-item-icon">🚨</div><div><div class="cb75-item-title">Sinais de alerta FAST</div><div class="cb75-item-text">Face, braço, fala e tempo. Em suspeita, SAMU 192.</div></div></div>
+            <div class="cb75-item"><div class="cb75-item-icon">🥣</div><div><div class="cb75-item-title">Deglutição segura</div><div class="cb75-item-text">Postura sentada, consistência orientada, observar tosse/voz molhada.</div></div></div>
+            <div class="cb75-item"><div class="cb75-item-icon">🛏️</div><div><div class="cb75-item-title">Prevenção de lesão por pressão</div><div class="cb75-item-text">Mudança de posição, pele seca, inspeção diária e atenção a vermelhidão.</div></div></div>
+            <div class="cb75-item"><div class="cb75-item-icon">🧠</div><div><div class="cb75-item-title">Reabilitação por fase</div><div class="cb75-item-text">Aguda: segurança. Subaguda: repetição orientada. Crônica: manutenção e independência.</div></div></div>
+          </div>
+        </section>`);
+    }
+  }
+
+  function ensureReportsCards(){
+    const content = document.querySelector('#screen-reports .content'); if (!content || $('cb75-weekly-report-card')) return;
+    const stats = content.querySelector('.stats-grid');
+    const html = `<section class="card cb75-card" id="cb75-weekly-report-card">
+      <div class="cb75-card-title"><strong>📝 Resumo semanal para médico/família</strong><span class="cb75-chip">texto + voz + PDF</span></div>
+      <div id="cb75-weekly-summary" class="cb75-item" style="display:block;white-space:pre-wrap;line-height:1.55;font-size:12.8px;color:var(--text-muted);font-weight:650"></div>
+      <div class="cb75-actions"><button class="cb75-btn" onclick="generateCB75WeeklySummary()">🤖 Gerar resumo</button><button class="cb75-btn secondary" onclick="speakCB75WeeklySummary()">🔊 Ler</button><button class="cb75-btn secondary" onclick="exportPDF()">🖨️ PDF completo</button></div>
+    </section>`;
+    if (stats) stats.insertAdjacentHTML('afterend', html); else content.insertAdjacentHTML('afterbegin', html);
+  }
+
+  function ensureProfileCards(){
+    const content = document.querySelector('#screen-profile .content'); if (!content) return;
+    if (!$('cb75-family-card')) {
+      const afterSamu = content.querySelector('.btn-samu-trigger');
+      const html = `<section class="card cb75-card" id="cb75-family-card">
+        <div class="cb75-card-title"><strong>👨‍👩‍👧 Compartilhamento familiar</strong><span class="cb75-chip">múltiplos cuidadores</span></div>
+        <div class="cb75-grid-2"><div class="cb75-field"><label class="cb75-label">Nome do cuidador</label><input id="cb75-caregiver-name" class="cb75-input" placeholder="Ex: Ana filha"></div><div class="cb75-field"><label class="cb75-label">Contato / WhatsApp</label><input id="cb75-caregiver-phone" class="cb75-input" placeholder="(11) 99999-0000"></div></div>
+        <div class="cb75-actions"><button class="cb75-btn" onclick="addCB75Caregiver()">➕ Adicionar</button><button class="cb75-btn secondary" onclick="copyCB75WhatsAppReminder()">📲 Lembrete WhatsApp</button></div>
+        <div id="cb75-caregiver-list" class="cb75-list" style="margin-top:10px"></div>
+      </section>
+      <section class="card cb75-card" id="cb75-hospital-card">
+        <div class="cb75-card-title"><strong>🏥 Internações e cirurgias</strong><span class="cb75-chip">histórico estruturado</span></div>
+        <div class="cb75-grid-2"><div class="cb75-field"><label class="cb75-label">Data</label><input id="cb75-hosp-date" class="cb75-input" type="date"></div><div class="cb75-field"><label class="cb75-label">Tipo</label><select id="cb75-hosp-type" class="cb75-select"><option>Internação</option><option>Cirurgia</option><option>Pronto-socorro</option><option>Exame relevante</option></select></div></div>
+        <div class="cb75-field" style="margin-top:8px"><label class="cb75-label">Descrição</label><input id="cb75-hosp-desc" class="cb75-input" placeholder="Ex: internação por AVC isquêmico, hospital, alta..."></div>
+        <div class="cb75-actions"><button class="cb75-btn" onclick="addCB75HospitalEvent()">💾 Salvar histórico</button></div><div id="cb75-hospital-list" class="cb75-list" style="margin-top:10px"></div>
+      </section>
+      <section class="card cb75-card" id="cb75-integrations-card">
+        <div class="cb75-card-title"><strong>🔗 Integrações futuras</strong><span class="cb75-chip">pronto para evoluir</span></div>
+        <div class="cb75-list"><div class="cb75-item"><div class="cb75-item-icon">🍎</div><div><div class="cb75-item-title">Apple Health / Google Fit / Samsung Health</div><div class="cb75-item-text">Espaço reservado para importar passos, sono, frequência cardíaca e exercícios quando a integração for ativada.</div></div></div><div class="cb75-item"><div class="cb75-item-icon">📲</div><div><div class="cb75-item-title">Web push + fallback WhatsApp/SMS</div><div class="cb75-item-text">O PWA usa notificações do navegador; fallback gera mensagem pronta para familiar.</div></div></div></div>
+      </section>`;
+      if (afterSamu) afterSamu.insertAdjacentHTML('afterend', html); else content.insertAdjacentHTML('afterbegin', html);
+    }
+  }
+
+  function ensureTaskModalEnhancement(){
+    const medExtra = $('field-med-extra');
+    if (medExtra && !$('cb75-med-risk-fields')) {
+      medExtra.insertAdjacentHTML('beforeend', `<div id="cb75-med-risk-fields" style="border-top:1px solid var(--gray-100);margin:6px 0 14px;padding-top:14px">
+        <div style="font-size:11px;font-weight:900;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">🛡️ Segurança v75</div>
+        <label style="display:flex;align-items:flex-start;gap:10px;padding:11px 12px;background:var(--amber-50);border:1.5px solid var(--amber-400);border-radius:12px;cursor:pointer;margin-bottom:8px">
+          <input type="checkbox" id="task-high-risk" style="margin-top:2px;width:18px;height:18px;accent-color:var(--amber-400)"><span style="font-size:13px;font-weight:800;color:var(--amber-600);line-height:1.35">Medicamento de alto risco / exige dupla confirmação</span>
+        </label>
+        <label class="form-label">Observação de segurança</label><input class="form-input" id="task-risk-note" placeholder="Ex: anticoagulante, insulina, dose crítica, conferir pressão antes...">
+      </div>`);
+    }
+  }
+
+  function renderCB75Brief(){
+    const list = $('cb75-brief-list'); if (list) list.innerHTML = buildDailyBriefHTML();
+    const chip = $('cb75-brief-chip'); if (chip) { const pend = todayTasks().filter(t=>!doneToday(t)).length; chip.textContent = pend ? `${pend} pendência(s)` : 'Tudo em dia'; }
+  }
+
+  function renderCB75State(){
+    const log = getTodayLog();
+    const date = $('cb75-state-date'); if (date) date.textContent = fmt(today());
+    document.querySelectorAll('.cb75-choice[data-cb75-key]').forEach(btn => btn.classList.toggle('active', log[btn.dataset.cb75Key] === btn.dataset.cb75Val));
+    const setVal = (id, val, prop='value') => { const el=$(id); if(el && el[prop] !== undefined) el[prop] = val ?? ''; };
+    setVal('cb75-sleep-hours', log.sleepHours || ''); setVal('cb75-sleep-quality', log.sleepQuality || ''); setVal('cb75-ndd', log.ndd || '');
+    const wc=$('cb75-water-count'); if(wc) wc.textContent = Number(log.water||0);
+    const mc=$('cb75-meal-count'); if(mc) mc.textContent = Number(log.meals||0);
+    const rep=$('cb75-reposition'); if(rep) rep.checked=!!log.reposition;
+    const skin=$('cb75-skin-check'); if(skin) skin.checked=!!log.skinCheck;
+    const red=$('cb75-redness'); if(red) red.checked=!!log.redness;
+    document.querySelectorAll('#cb75-patient-checkin .cb75-choice').forEach(b => b.classList.toggle('active', (b.textContent||'').toLowerCase().includes(log.patientFeeling||'__none__')));
+  }
+
+  function renderCB75Risks(){
+    const list = $('cb75-risk-list'); if (!list) return;
+    const risks = riskPredictions();
+    list.innerHTML = risks.map(r => `<div class="cb75-item ${riskClass(r.score)}"><div class="cb75-item-icon">${r.icon}</div><div class="cb75-item-main"><div class="cb75-item-title">${r.title} · ${riskLabel(r.score)}</div><div class="cb75-item-text">${esc(r.text)}</div><div class="cb75-score"><span style="width:${Math.max(4,Math.min(100,r.score))}%"></span></div></div></div>`).join('');
+  }
+
+  function latestBarthel(){
+    const rows = read('cb_rehab_scales_v55', []);
+    if (!Array.isArray(rows) || !rows.length) return null;
+    return rows.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  }
+  function rehabSuggestion(){
+    const p = profile(); const last = latestBarthel();
+    const barthel = last && Number(last.barthel || last.barthel===0 ? last.barthel : NaN);
+    const side = p.neuroSide || 'lado afetado não definido';
+    let phase = 'subaguda';
+    if (Number.isFinite(barthel)) phase = barthel < 40 ? 'aguda/alta dependência' : barthel < 80 ? 'subaguda/moderada' : 'crônica/manutenção';
+    let focus = [];
+    if (p.neuroFallRisk || p.neuroDependency === 'high') focus.push('transferência segura e equilíbrio sentado/em pé');
+    if (p.neuroAphasia) focus.push('comandos curtos e comunicação simples');
+    if (p.neuroDysphagia) focus.push('pausas e postura segura antes/depois das refeições');
+    if (/braço|braco|mão|mao|hemiparesia|hemiplegia/i.test(`${p.importantNotes||''} ${p.conditions||''}`) || p.neuroSide) focus.push(`mobilidade de braço/mão no ${side}`);
+    if (!focus.length) focus.push('mobilidade global leve, marcha assistida e autonomia nas AVDs');
+    return {phase, barthel:Number.isFinite(barthel)?barthel:null, focus, title: focus[0] || 'mobilidade funcional'};
+  }
+
+  function renderCB75RehabAI(){
+    const el = $('cb75-rehab-ai-content'); if(!el) return;
+    const s = rehabSuggestion();
+    el.innerHTML = `<div class="cb75-item"><div class="cb75-item-icon">🧠</div><div><div class="cb75-item-title">Fase sugerida: ${esc(s.phase)}${s.barthel!==null?' · Barthel '+s.barthel:''}</div><div class="cb75-item-text">Foco do programa: ${esc(s.focus.join('; '))}.</div></div></div>
+      <div class="cb75-item"><div class="cb75-item-icon">🦾</div><div><div class="cb75-item-title">Exercício IA de hoje</div><div class="cb75-item-text">10–15 min, 1–2 séries, sem dor, com supervisão. Repetição de alcance à frente, abrir/fechar mão e tocar alvo na mesa, adaptando ao déficit.</div></div></div>`;
+  }
+
+  function generateWeeklyText(){
+    const dlog = getDaily();
+    const dates = Object.keys(dlog).sort().slice(-7);
+    const items = taskList();
+    const comp = completionMap();
+    let total=0, done=0;
+    dates.forEach(d => items.forEach(t => { if (t.repeat==='daily' || t.date===d) { total++; if (comp[`${t.id}_${d}`]) done++; } }));
+    const pct = total ? Math.round(done/total*100) : 0;
+    const waterAvg = dates.length ? Math.round(dates.reduce((s,d)=>s+Number(dlog[d].water||0),0)/dates.length*10)/10 : 0;
+    const moodBad = dates.filter(d => /triste|ansioso|irritado|confuso|dor/i.test(`${dlog[d].mood||''} ${dlog[d].patientFeeling||''}`)).length;
+    const riskTop = riskPredictions().sort((a,b)=>b.score-a.score)[0];
+    const inter = findInteractions();
+    const events = (typeof getCareEvents === 'function' ? getCareEvents() : read('cb_care_events', [])).filter(e => dates.includes(e.date));
+    return `Resumo semanal CuidarBem v75\n\nAdesão aos cuidados: ${pct}% (${done}/${total}).\nHidratação média registrada: ${waterAvg} copo(s)/dia.\nHumor/sintomas de atenção em ${moodBad} dia(s).\nEventos registrados: ${events.length}.\nMaior ponto de atenção atual: ${riskTop ? riskTop.title + ' (' + riskLabel(riskTop.score) + ')' : 'sem leitura suficiente'}.\nPossíveis interações locais: ${inter.length ? inter.map(x=>x.a+' + '+x.b).join('; ') : 'nenhuma relevante identificada.'}\n\nLevar ao médico: confirmar metas de pressão/glicemia, risco de queda, deglutição/NDD, prevenção de lesão por pressão e revisar medicamentos de alto risco.\n\nObservação: resumo de apoio ao cuidador, não substitui avaliação profissional.`;
+  }
+
+  function renderCB75Weekly(){
+    const el=$('cb75-weekly-summary'); if(el && !el.textContent.trim()) el.textContent = generateWeeklyText();
+  }
+
+  function renderFamily(){
+    const el=$('cb75-caregiver-list'); if(!el) return;
+    const rows=read(LS_FAMILY, []);
+    el.innerHTML = rows.length ? rows.map((r,i)=>`<div class="cb75-item"><div class="cb75-item-icon">👤</div><div class="cb75-item-main"><div class="cb75-item-title">${esc(r.name)}</div><div class="cb75-item-text">${esc(r.phone||'sem contato')} · ${esc(r.role||'cuidador/familiar')}</div></div><button class="cb75-btn secondary" onclick="removeCB75Caregiver(${i})">✕</button></div>`).join('') : '<div class="hist-empty">Nenhum cuidador familiar cadastrado ainda.</div>';
+  }
+  function renderHospital(){
+    const el=$('cb75-hospital-list'); if(!el) return;
+    const rows=read(LS_HOSP, []).slice(0,8);
+    el.innerHTML = rows.length ? rows.map((r,i)=>`<div class="cb75-item"><div class="cb75-item-icon">🏥</div><div class="cb75-item-main"><div class="cb75-item-title">${esc(r.type)} · ${fmt(r.date)}</div><div class="cb75-item-text">${esc(r.desc)}</div></div><button class="cb75-btn secondary" onclick="removeCB75HospitalEvent(${i})">✕</button></div>`).join('') : '<div class="hist-empty">Nenhum histórico estruturado cadastrado.</div>';
+  }
+
+  window.setCB75Quick = function(key,val,btn){ saveTodayLog({[key]:val}, 'cb75-state'); pushHaptic([12]); };
+  window.setCB75PatientFeeling = function(val,btn){ saveTodayLog({patientFeeling:val}, 'cb75-patient-feeling'); toast('✅ Como estou hoje registrado'); };
+  window.addCB75Water = function(delta){ const log=getTodayLog(); saveTodayLog({water:Math.max(0,Number(log.water||0)+delta)}, 'cb75-water'); };
+  window.addCB75Meal = function(delta){ const log=getTodayLog(); saveTodayLog({meals:Math.max(0,Number(log.meals||0)+delta)}, 'cb75-meals'); };
+  window.saveCB75Inputs = function(){
+    saveTodayLog({
+      sleepHours:$('cb75-sleep-hours')?.value || '', sleepQuality:$('cb75-sleep-quality')?.value || '', ndd:$('cb75-ndd')?.value || '',
+      reposition:!!$('cb75-reposition')?.checked, skinCheck:!!$('cb75-skin-check')?.checked, redness:!!$('cb75-redness')?.checked
+    }, 'cb75-daily-inputs');
+  };
+  window.toggleCB75OneHand = function(){
+    const on = !document.body.classList.contains('cb75-one-hand'); document.body.classList.toggle('cb75-one-hand', on);
+    const s=read(LS_SETTINGS,{}); s.oneHand=on; write(LS_SETTINGS,s,'cb75-one-hand'); toast(on?'🤲 Modo mão única ativado':'Modo mão única desligado');
+  };
+
+  function normalizeText(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+  function markTaskByName(spoken){
+    const n = normalizeText(spoken).replace(/^(ok google|cuidarbem|cuidador|tomei|fiz|feito|marcar|marquei|confirmar|confirmei|tomou|tomar)\s+/g,'').trim();
+    if (!n) return false;
+    const found = todayTasks().find(t => normalizeText(t.name).includes(n) || n.includes(normalizeText(t.name).slice(0,8)));
+    if (!found) return false;
+    try {
+      if (found.type === 'med' && typeof openConfirmModal === 'function') { openConfirmModal(found.id); toast('🎙️ Encontrei o remédio. Confirme pelo checklist.'); }
+      else if (typeof toggleTask === 'function' && !doneToday(found)) toggleTask(found.id);
+      else toast('✅ Já estava marcado.');
+      return true;
+    } catch(e) { return false; }
+  }
+  window.startCB75Voice = function(){
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { toast('🎙️ Voz indisponível neste navegador. Use Chrome/Edge no celular.'); return; }
+    const rec = new SR(); rec.lang='pt-BR'; rec.continuous=false; rec.interimResults=false; rec.maxAlternatives=1;
+    rec.onstart=()=>toast('🎙️ Pode falar: “tomei Losartana”');
+    rec.onerror=()=>toast('⚠️ Não consegui ouvir. Tente novamente.');
+    rec.onresult=(ev)=>{ const spoken = ev.results?.[0]?.[0]?.transcript || ''; if (!markTaskByName(spoken)) toast('Não encontrei essa tarefa hoje: '+spoken); };
+    try { rec.start(); } catch(e) { toast('🎙️ Microfone já está em uso.'); }
+  };
+
+  window.openCB75FallFlow = function(){ const m=$('cb75-fall-modal'); if(m) m.classList.add('open'); };
+  window.closeCB75FallFlow = function(){ const m=$('cb75-fall-modal'); if(m) m.classList.remove('open'); };
+  window.saveCB75FallFlow = function(){
+    const critical = !!($('cb75-fall-head')?.checked || $('cb75-fall-neuro')?.checked); const pain = !!$('cb75-fall-pain')?.checked;
+    const desc = ($('cb75-fall-desc')?.value || '').trim();
+    const txt = `${critical?'ALERTA CRÍTICO. ':''}${pain?'Dor/sangramento/apoio marcado. ':''}${desc || 'Queda/sintoma novo registrado pelo fluxo guiado v75.'}`;
+    const events = (typeof getCareEvents === 'function' ? getCareEvents() : read('cb_care_events', []));
+    events.unshift({id:(typeof uid==='function'?uid():'cb75_'+Date.now()), date:today(), type: critical?'sintoma':'queda', desc:txt, createdAt:Date.now(), source:'cb75-guided-flow'});
+    if (typeof saveCareEvents === 'function') saveCareEvents(events.slice(0,100)); else write('cb_care_events', events.slice(0,100), 'cb75-fall-event');
+    ['cb75-fall-head','cb75-fall-neuro','cb75-fall-pain'].forEach(id=>{ const el=$(id); if(el) el.checked=false; }); if($('cb75-fall-desc')) $('cb75-fall-desc').value='';
+    window.closeCB75FallFlow(); toast(critical?'🚨 Evento crítico registrado. Considere SAMU/urgência.':'✅ Evento registrado no histórico.');
+    try { if (typeof renderCareEvents==='function') renderCareEvents(); if (typeof renderActiveIntelligence==='function') renderActiveIntelligence(); } catch(e) {}
+  };
+
+  window.generateCB75WeeklySummary = function(){ const el=$('cb75-weekly-summary'); if(el) el.textContent = generateWeeklyText(); toast('📝 Resumo semanal atualizado'); };
+  window.speakCB75WeeklySummary = function(){ const text = ($('cb75-weekly-summary')?.textContent || generateWeeklyText()); try { speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.lang='pt-BR'; u.rate=.92; speechSynthesis.speak(u); } catch(e) { toast('🔊 Leitura por voz indisponível.'); } };
+
+  window.addCB75Caregiver = function(){
+    const name=($('cb75-caregiver-name')?.value||'').trim(), phone=($('cb75-caregiver-phone')?.value||'').trim();
+    if(!name){toast('Informe o nome do cuidador.');return;}
+    const rows=read(LS_FAMILY,[]); rows.push({name,phone,role:'cuidador/familiar',createdAt:Date.now()}); write(LS_FAMILY,rows,'cb75-family');
+    if($('cb75-caregiver-name')) $('cb75-caregiver-name').value=''; if($('cb75-caregiver-phone')) $('cb75-caregiver-phone').value=''; renderFamily(); toast('✅ Cuidador adicionado');
+  };
+  window.removeCB75Caregiver = function(i){ const rows=read(LS_FAMILY,[]); rows.splice(i,1); write(LS_FAMILY,rows,'cb75-family-remove'); renderFamily(); };
+  window.copyCB75WhatsAppReminder = async function(){
+    const s = settings(); const msg = `CuidarBem: lembrete de cuidados de hoje para ${s.patient||'paciente'} — ${todayTasks().filter(t=>!doneToday(t)).map(t=>(t.time||'')+' '+t.name).join(' | ') || 'rotina em dia'}`;
+    try { await navigator.clipboard.writeText(msg); toast('📲 Mensagem copiada para WhatsApp/SMS'); } catch(e) { prompt('Copie a mensagem:', msg); }
+  };
+  window.addCB75HospitalEvent = function(){
+    const date=$('cb75-hosp-date')?.value||today(), type=$('cb75-hosp-type')?.value||'Internação', desc=($('cb75-hosp-desc')?.value||'').trim();
+    if(!desc){toast('Descreva o histórico.');return;} const rows=read(LS_HOSP,[]); rows.unshift({date,type,desc,createdAt:Date.now()}); write(LS_HOSP,rows.slice(0,60),'cb75-hospital'); if($('cb75-hosp-desc')) $('cb75-hosp-desc').value=''; renderHospital(); toast('✅ Histórico salvo');
+  };
+  window.removeCB75HospitalEvent = function(i){ const rows=read(LS_HOSP,[]); rows.splice(i,1); write(LS_HOSP,rows,'cb75-hospital-remove'); renderHospital(); };
+
+  window.cb75PlanRehabExercise = function(){
+    const s=rehabSuggestion(); const name='Reabilitação IA: '+s.title;
+    try {
+      const list = taskList(); const d = today();
+      const item = {id:'cb75_rehab_'+Date.now(), type:'fisio', name, date:d, time:'15:00', repeat:'none', obs:'Plano v75 personalizado por fase/Barthel/déficit. Faça com segurança e orientação profissional.', createdAt:Date.now()};
+      list.push(item); if (typeof saveTasks === 'function') saveTasks(); else write('cuidarbem_tasks', list, 'cb75-rehab-plan');
+      toast('📅 Exercício sugerido adicionado à agenda'); try{renderAll();buildWeekStrip();}catch(e){}
+    } catch(e) { toast('Não consegui agendar o exercício.'); }
+  };
+
+  let poseStream=null, poseTimer=null, poseScore=0, posePrev=null;
+  window.openCB75PoseCheck = function(){ const m=$('cb75-pose-modal'); if(m)m.classList.add('open'); };
+  window.startCB75PoseCamera = async function(){
+    try{
+      const video=$('cb75-pose-video'), ph=$('cb75-pose-placeholder');
+      poseStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+      video.srcObject=poseStream; video.style.display='block'; if(ph) ph.style.display='none'; poseScore=0; posePrev=null;
+      const canvas=$('cb75-pose-canvas'), ctx=canvas.getContext('2d',{willReadFrequently:true});
+      poseTimer=setInterval(()=>{
+        if(!video.videoWidth) return; canvas.width=96; canvas.height=128; ctx.drawImage(video,0,0,96,128); const data=ctx.getImageData(0,0,96,128).data;
+        if(posePrev){ let diff=0; for(let i=0;i<data.length;i+=16) diff += Math.abs(data[i]-posePrev[i]); const motion=Math.min(100,Math.round(diff/260)); poseScore=Math.round((poseScore*.82)+(motion*.18)); const fill=$('cb75-motion-fill'); if(fill) fill.style.width=poseScore+'%'; const fb=$('cb75-pose-feedback'); if(fb) fb.textContent='Movimento detectado: '+poseScore+'%'; }
+        posePrev = new Uint8ClampedArray(data);
+      },220);
+      toast('📷 Câmera ativa localmente');
+    }catch(e){ toast('Não foi possível acessar a câmera.'); }
+  };
+  window.saveCB75PoseScore = function(){ const rows=read(LS_POSE,[]); rows.push({date:today(),score:poseScore,createdAt:Date.now()}); write(LS_POSE,rows.slice(-80),'cb75-pose'); toast('✅ Progresso por câmera salvo: '+poseScore+'%'); };
+  window.stopCB75PoseCheck = function(){ if(poseTimer) clearInterval(poseTimer); poseTimer=null; if(poseStream){ poseStream.getTracks().forEach(t=>t.stop()); poseStream=null; } const v=$('cb75-pose-video'); if(v){v.srcObject=null;v.style.display='none';} const ph=$('cb75-pose-placeholder'); if(ph) ph.style.display='block'; const m=$('cb75-pose-modal'); if(m)m.classList.remove('open'); };
+
+  async function highRiskGate(task){
+    if (!isHighRiskMed(task)) return true;
+    const hasBio = !!(window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable);
+    let bioText = 'Medicamento de alto risco. Confirme novamente antes de registrar a tomada.';
+    try { if (hasBio && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()) bioText = 'Biometria/passkey disponível neste dispositivo. Como este PWA é local/offline, use esta dupla confirmação antes de registrar.'; } catch(e) {}
+    const ok = confirm(bioText + '\n\nPaciente certo? Medicamento certo? Dose certa? Horário certo? Via/orientação certa?');
+    if(!ok) { toast('Confirmação cancelada.'); return false; }
+    pushHaptic([20,40,20]); return true;
+  }
+
+  function patchMedicationSafety(){
+    try {
+      if (typeof openConfirmModal === 'function' && !openConfirmModal.__cb75) {
+        const oldOpen = openConfirmModal;
+        window.openConfirmModal = openConfirmModal = function(taskId){
+          oldOpen.apply(this, arguments);
+          const t = taskList().find(x=>x.id===taskId); if(!t) return;
+          const listEl=$('med-checklist-items'); if(listEl){
+            const patient = settings().patient || profile().name || 'paciente';
+            const items = [
+              {id:'chk-name', q:'Medicamento certo', val:t.name||'—'},
+              {id:'chk-dose', q:'Dose certa', val:t.dose||'conforme prescrição'},
+              {id:'chk-time', q:'Horário certo', val:t.time||'agora'},
+              {id:'chk-patient', q:'Paciente certo', val:patient},
+              {id:'chk-route', q:'Via/orientação certa', val:t.obs||t.riskNote||'conforme orientação'}
+            ];
+            listEl.innerHTML = items.map(item => `<div class="med-check-item" id="${item.id}-row"><div class="med-check-question">${item.q}: <em>${esc(item.val)}</em>?</div><div class="med-check-btns"><button class="med-check-btn" id="${item.id}-yes" onclick="medCheckAnswer('${item.id}','yes')" title="Sim">✅</button><button class="med-check-btn" id="${item.id}-no" onclick="medCheckAnswer('${item.id}','no')" title="Não">❌</button></div></div>`).join('');
+            window._medCheckAnswers = {};
+          }
+          const warn=$('confirm-warning');
+          if(warn && isHighRiskMed(t)){ warn.style.display='block'; warn.innerHTML = '🛡️ <strong>Alto risco:</strong> este remédio exige dupla confirmação antes do registro.' + (t.riskNote ? '<br>'+esc(t.riskNote) : ''); }
+        };
+        openConfirmModal.__cb75 = true;
+      }
+      if (typeof confirmTake === 'function' && !confirmTake.__cb75) {
+        const oldConfirm = confirmTake;
+        window.confirmTake = confirmTake = async function(){
+          const id = (typeof pendingConfirmId !== 'undefined') ? pendingConfirmId : null;
+          const t = id ? taskList().find(x=>x.id===id) : null;
+          if (t && !(await highRiskGate(t))) return;
+          return oldConfirm.apply(this, arguments);
+        };
+        confirmTake.__cb75 = true;
+      }
+      if (typeof saveTask === 'function' && !saveTask.__cb75) {
+        const oldSave = saveTask;
+        window.saveTask = saveTask = function(){
+          const before = new Set(taskList().map(t=>t.id));
+          const high = !!$('task-high-risk')?.checked; const note = $('task-risk-note')?.value || '';
+          const res = oldSave.apply(this, arguments);
+          const created = taskList().find(t=>!before.has(t.id));
+          if (created) { created.highRisk = high || isHighRiskMed(created); created.riskNote = note; try { if (typeof saveTasks==='function') saveTasks(); else write('cuidarbem_tasks', taskList(), 'cb75-save-task-risk'); } catch(e){} }
+          return res;
+        };
+        saveTask.__cb75 = true;
+      }
+      if (typeof openAddModal === 'function' && !openAddModal.__cb75) {
+        const oldAdd = openAddModal;
+        window.openAddModal = openAddModal = function(){ const res=oldAdd.apply(this,arguments); setTimeout(()=>{ if($('task-high-risk')) $('task-high-risk').checked=false; if($('task-risk-note')) $('task-risk-note').value=''; },30); return res; };
+        openAddModal.__cb75 = true;
+      }
+    } catch(e) { console.warn('[CuidarBem v75] patch segurança:', e); }
+  }
+
+  function renderInteractionsInAlerts(){
+    const container=$('alerts-container'); if(!container || $('cb75-interactions-alert')) return;
+    const inter=findInteractions(); if(!inter.length) return;
+    const html=`<div id="cb75-interactions-alert" class="alert-card" style="border-left-color:var(--amber-400);background:var(--amber-50)"><div class="alert-icon">⚠️</div><div class="alert-text" style="color:var(--amber-600)"><strong>Possível interação:</strong> ${esc(inter[0].a)} + ${esc(inter[0].b)} — ${esc(inter[0].msg)}. Confirme com médico/farmacêutico.</div></div>`;
+    container.insertAdjacentHTML('afterbegin', html);
+  }
+
+  window.renderCB75All = function(){
+    ensureHomeCards(); ensureDashboardCards(); ensureReportsCards(); ensureProfileCards(); ensureTaskModalEnhancement(); patchMedicationSafety();
+    renderCB75Brief(); renderCB75State(); renderCB75Risks(); renderCB75RehabAI(); renderCB75Weekly(); renderFamily(); renderHospital(); renderInteractionsInAlerts();
+  };
+
+  function patchRenderAll(){
+    try {
+      if (typeof renderAll === 'function' && !renderAll.__cb75) {
+        const old = renderAll;
+        window.renderAll = renderAll = function(){ const r = old.apply(this, arguments); setTimeout(()=>{ try{ window.renderCB75All(); }catch(e){ console.warn('[CuidarBem v75] render:', e); } }, 0); return r; };
+        renderAll.__cb75 = true;
+      }
+    } catch(e) {}
+  }
+
+  function init(){
+    localStorage.setItem('cuidarbem_major_version', versionTag);
+    const s=read(LS_SETTINGS,{}); if(s.oneHand) document.body.classList.add('cb75-one-hand');
+    patchRenderAll(); window.renderCB75All(); setTimeout(window.renderCB75All,250); setTimeout(window.renderCB75All,900);
+    try { document.dispatchEvent(new CustomEvent('cuidarbem:v75:ready', {detail:{version:versionTag}})); } catch(e) {}
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, {once:true}); else init();
+})();
+</script>
+
+
+
+<!-- v75.1 — correção crítica: gráficos de Relatórios isolados por guia -->
+<style id="cuidarbem-v75-1-fix-graficos-relatorios">
+/*
+  Correção: regras antigas deixavam os canvas dos Relatórios visíveis mesmo
+  quando #screen-reports estava oculto por visibility:hidden. Isso fazia
+  Adesão mensal e Evolução funcional aparecerem por cima de Início, Agenda
+  e Saúde. A partir daqui, gráficos só existem visualmente na guia ativa.
+*/
+#screen-reports:not(.active) canvas,
+#screen-reports:not(.active) svg,
+#screen-reports:not(.active) .cb-analytics-card canvas{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+#screen-reports.active canvas,
+#screen-reports.active svg{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative !important;
+  z-index:1 !important;
+}
+
+#screen-reports.active .cb-analytics-card{
+  position:relative !important;
+  z-index:1 !important;
+  overflow:hidden !important;
+}
+
+#monthly-adherence-chart,
+#functional-evolution-chart{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:150px !important;
+  border-radius:16px !important;
+}
+
+/* Defesa adicional contra vazamento visual entre guias. */
+.screen:not(.active) #monthly-adherence-chart,
+.screen:not(.active) #functional-evolution-chart{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+}
+</style>
+<!-- v75.9: scheduler v75.1 de gráficos removido; Relatórios redesenha uma vez ao abrir a guia. -->
+<!-- v75.4 — reforço final: data atual da Agenda sempre vermelha -->
+<style id="cuidarbem-v75-3-agenda-today-red-final">
+  #screen-calendar .week-day.actual-today,
+  #screen-calendar .week-day.actual-today.today,
+  #screen-calendar .week-day.actual-today:not(.today),
+  body.dark #screen-calendar .week-day.actual-today,
+  body.dark #screen-calendar .week-day.actual-today.today,
+  body.dark #screen-calendar .week-day.actual-today:not(.today),
+  body.dark-theme #screen-calendar .week-day.actual-today,
+  body.dark-theme #screen-calendar .week-day.actual-today.today,
+  body.dark-theme #screen-calendar .week-day.actual-today:not(.today),
+  body.low-stress #screen-calendar .week-day.actual-today,
+  body.high-contrast #screen-calendar .week-day.actual-today {
+    background: linear-gradient(135deg, #b91c1c 0%, #c0192d 54%, #991b1b 100%) !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(192,25,45,.34) !important;
+  }
+
+  #screen-calendar .week-day.actual-today:hover,
+  #screen-calendar .week-day.actual-today.today:hover,
+  #screen-calendar .week-day.actual-today:not(.today):hover {
+    background: linear-gradient(135deg, #991b1b 0%, #c0192d 58%, #7f1d1d 100%) !important;
+    border-color: #7f1d1d !important;
+    color: #ffffff !important;
+  }
+
+  #screen-calendar .week-day.actual-today .week-day-name,
+  #screen-calendar .week-day.actual-today .week-day-num,
+  #screen-calendar .week-day.actual-today.today .week-day-name,
+  #screen-calendar .week-day.actual-today.today .week-day-num,
+  #screen-calendar .week-day.actual-today:not(.today) .week-day-name,
+  #screen-calendar .week-day.actual-today:not(.today) .week-day-num,
+  body.dark #screen-calendar .week-day.actual-today .week-day-name,
+  body.dark #screen-calendar .week-day.actual-today .week-day-num,
+  body.dark-theme #screen-calendar .week-day.actual-today .week-day-name,
+  body.dark-theme #screen-calendar .week-day.actual-today .week-day-num {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,.32) !important;
+  }
+
+  /* Remove o círculo teal herdado quando hoje não está selecionado. */
+  #screen-calendar .week-day.actual-today:not(.today) .week-day-num {
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  #screen-calendar .week-day.actual-today.has-tasks::after,
+  body.dark #screen-calendar .week-day.actual-today.has-tasks::after,
+  body.dark-theme #screen-calendar .week-day.actual-today.has-tasks::after {
+    background: #ffffff !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.35) !important;
+  }
+</style>
+
+
+
+<!-- v75.5 — ajuste final: Saúde com espaçamento igual às demais guias -->
+<style id="cuidarbem-v75-5-saude-gap-final">
+/*
+  Correção final solicitada:
+  A guia Saúde era a única destoando porque estilos antigos (v71/v43)
+  ainda aplicavam padding-top alto em .health-dashboard. Como a topbar
+  de Saúde é sticky e participa do fluxo, não precisa de compensação grande.
+*/
+@media (max-width: 767px){
+  #screen-dashboard .header-sub{
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    z-index: var(--cb-safe-topbar-z, 900) !important;
+  }
+
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-top: 0 !important;
+  }
+
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+
+  #screen-dashboard #cb75-patient-checkin{
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 390px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 14px !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    margin-top: 0 !important;
+  }
+}
+</style>
+
+
+
+
+<!-- v75.9 — varredura de renderização: gerenciador limpo sem repaint forçado -->
+<style id="cuidarbem-v75-7-render-estavel-css">
+/*
+  Objetivo: estabilizar navegação e renderização sem "gambiarras" visuais.
+  Removidos os repaints artificiais e os timers em cascata que faziam a tela piscar ou re-renderizar sem necessidade.
+*/
+.screen:not(.active){
+  visibility:hidden;
+  pointer-events:none;
+}
+.screen.active{
+  visibility:visible;
+  pointer-events:auto;
+}
+#screen-appt .content{
+  min-height:calc(100dvh - var(--nav-h) - 110px);
+  padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom));
+}
+#screen-appt.active #appt-upload-zone,
+#screen-appt.active #appt-preview-zone,
+#screen-appt.active #appt-loading,
+#screen-appt.active #appt-result-zone,
+#screen-appt.active #appt-manual-zone{
+  opacity:1;
+}
+#screen-reports:not(.active) canvas,
+#screen-reports:not(.active) .report-canvas,
+#screen-reports:not(.active) .chart-canvas{
+  pointer-events:none !important;
+}
+</style>
+<script id="cuidarbem-v75-7-render-estavel-js">
+(function(){
+  'use strict';
+  if (window.__CB75_RENDER_STABLE__) return;
+  window.__CB75_RENDER_STABLE__ = true;
+
+  const S = (fn, label) => {
+    try { if (typeof fn === 'function') return fn(); }
+    catch (e) { console.warn('[CuidarBem v75.9]', label || 'render', e); }
+  };
+  const activeScreenName = () => {
+    const el = document.querySelector('.screen.active');
+    return el && el.id ? el.id.replace(/^screen-/, '') : 'home';
+  };
+  const navButtonFor = (name) => document.getElementById('nav-' + name) || document.querySelector(`[onclick*="goScreen('${name}'"]`);
+
+  function normalizeApptState(){
+    const screen = document.getElementById('screen-appt');
+    if (!screen) return;
+    const zones = ['appt-upload-zone','appt-preview-zone','appt-loading','appt-result-zone','appt-manual-zone']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+    if (!zones.length) return;
+
+    // Só corrige quando TODAS as etapas estão fechadas. Não interfere quando usuário está lendo foto,
+    // OCR, resultado ou formulário manual.
+    const visible = zones.some(el => getComputedStyle(el).display !== 'none');
+    if (!visible) {
+      zones.forEach(el => { el.style.display = el.id === 'appt-upload-zone' ? 'block' : 'none'; });
+    }
+  }
+
+  function renderCommon(){
+    S(window.setGreeting, 'setGreeting');
+    S(window.setTodayDate, 'setTodayDate');
+    S(window.updateAlertsBell, 'updateAlertsBell');
+    S(window.updateVitals, 'updateVitals');
+  }
+
+  function renderHome(){
+    S(window.renderTodayTasks, 'renderTodayTasks');
+    S(window.renderProgress, 'renderProgress');
+    S(window.renderAlerts, 'renderAlerts');
+    S(window.renderNextAlarm, 'renderNextAlarm');
+    S(window.renderActiveIntelligence, 'renderActiveIntelligence');
+    S(window.renderNeuroProfileUI, 'renderNeuroProfileUI');
+    S(window.renderCareEvents, 'renderCareEvents');
+    S(window.renderCaregiverSummary, 'renderCaregiverSummary');
+    S(window.renderHomeRightPanel, 'renderHomeRightPanel');
+    S(window.updateStreakBadge, 'updateStreakBadge');
+  }
+
+  function renderCalendarScreen(){
+    S(window.buildWeekStrip, 'buildWeekStrip');
+    S(window.renderCalendar, 'renderCalendar');
+  }
+
+  function renderReportsScreen(){
+    // Uma renderização direta é suficiente; os schedulers duplicados foram removidos.
+    S(window.renderReports, 'renderReports');
+  }
+
+  function renderApptScreen(){
+    normalizeApptState();
+    S(window.renderApptUpcoming, 'renderApptUpcoming');
+  }
+
+  function renderDashboardScreen(){
+    S(window.renderDashboard, 'renderDashboard');
+    S(window.renderVitalChart, 'renderVitalChart');
+    S(window.renderVitalHistory, 'renderVitalHistory');
+  }
+
+  function renderProfileScreen(){
+    S(window.renderFamily, 'renderFamily');
+    S(window.renderHospital, 'renderHospital');
+  }
+
+  function renderHealthScreen(){
+    S(window.updateVitals, 'updateVitals');
+    S(window.renderCB75State, 'renderCB75State');
+    S(window.renderCB75Risks, 'renderCB75Risks');
+  }
+
+  let rendering = false;
+  let pending = false;
+  function renderForScreen(name){
+    renderCommon();
+    S(window.renderCB75All, 'renderCB75All');
+
+    switch(name){
+      case 'home':      renderHome(); break;
+      case 'calendar':  renderCalendarScreen(); break;
+      case 'reports':   renderReportsScreen(); break;
+      case 'appt':      renderApptScreen(); break;
+      case 'dashboard': renderDashboardScreen(); break;
+      case 'profile':   renderProfileScreen(); break;
+      case 'health':    renderHealthScreen(); break;
+      default:
+        // Guia desconhecida: atualiza apenas o essencial, sem varrer telas ocultas.
+        break;
+    }
+  }
+
+  function stableRenderAll(reason){
+    if (rendering) { pending = true; return; }
+    rendering = true;
+    try { renderForScreen(activeScreenName(), reason || 'renderAll'); }
+    finally {
+      rendering = false;
+      if (pending) {
+        pending = false;
+        queueMicrotask(() => stableRenderAll('coalesced'));
+      }
+    }
+  }
+
+  function cleanGoScreen(name, btn){
+    const target = document.getElementById('screen-' + name);
+    if (!target) return;
+
+    document.querySelectorAll('.screen.active').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn.active').forEach(b => b.classList.remove('active'));
+    target.classList.add('active');
+    (btn || navButtonFor(name))?.classList?.add('active');
+
+    // Sem requestAnimationFrame e sem repaint artificial: troca a guia e renderiza a guia ativa uma vez.
+    window.scrollTo(0, 0);
+    stableRenderAll('nav:' + name);
+  }
+
+  function install(){
+    try {
+      window.renderAll = renderAll = stableRenderAll;
+    } catch(e) {
+      window.renderAll = stableRenderAll;
+    }
+    try {
+      window.goScreen = goScreen = cleanGoScreen;
+    } catch(e) {
+      window.goScreen = cleanGoScreen;
+    }
+    // Primeira estabilização depois que todos os patches antigos registraram seus listeners.
+    stableRenderAll('install');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => queueMicrotask(install), { once:true });
+  } else {
+    queueMicrotask(install);
+  }
+
+  // Redesenha só quando necessário e só a guia ativa. Sem cascata de timers.
+  let resizeQueued = false;
+  window.addEventListener('resize', () => {
+    if (resizeQueued) return;
+    resizeQueued = true;
+    requestAnimationFrame(() => {
+      resizeQueued = false;
+      const name = activeScreenName();
+      if (name === 'reports' || name === 'dashboard') stableRenderAll('resize:' + name);
+    });
+  }, { passive:true });
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) stableRenderAll('visible');
+  });
+
+  window.cb75RenderStable = stableRenderAll;
+})();
+</script>
+
+
+
+<!-- v75.9 — limite real do scrollbar vertical por guia -->
+<style id="cuidarbem-v75-8-scrollbar-vertical-limitado">
+/*
+  Objetivo: eliminar rolagem vertical sobrando além do último card/painel.
+  Causa recorrente: a .screen tinha padding-bottom próprio + a .content também,
+  criando dupla compensação da bottom nav em algumas guias.
+  A partir daqui, só o conteúdo interno da guia ativa recebe respiro inferior.
+*/
+:root{
+  --cb-bottom-safe-mobile: calc(var(--nav-h) + 14px + env(safe-area-inset-bottom));
+  --cb-bottom-safe-desktop: 32px;
+  --cb-bottom-safe-current: var(--cb-bottom-safe-mobile);
+}
+
+html,
+body{
+  overflow-x: hidden !important;
+  overscroll-behavior-y: contain;
+  scroll-padding-bottom: var(--cb-bottom-safe-current);
+}
+
+/* A tela não deve somar padding extra ao conteúdo; quem compensa a nav é .content/.health-dashboard. */
+.screen,
+.screen.active{
+  padding-bottom: 0 !important;
+}
+
+/* Tela oculta não pode contribuir com altura, scroll ou área fantasma. */
+.screen:not(.active){
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  overflow: hidden !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Tela ativa cresce apenas até o conteúdo real. */
+.screen.active{
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Respiro único no final: suficiente para a bottom nav sem virar área branca longa. */
+.screen.active > .content,
+#screen-dashboard.active > .health-dashboard,
+#screen-home.active > .desktop-right-panel{
+  padding-bottom: var(--cb-bottom-safe-current) !important;
+}
+
+/* Consulta/Exame tinha min-height herdado para evitar tela branca; agora não precisa criar scroll artificial. */
+#screen-appt.active .content{
+  min-height: 0 !important;
+  padding-bottom: var(--cb-bottom-safe-current) !important;
+}
+
+/* Remove margem extra no último bloco de cada área rolável. */
+.screen.active > .content > :last-child,
+#screen-dashboard.active > .health-dashboard > :last-child,
+#screen-home.active > .desktop-right-panel > :last-child{
+  margin-bottom: 0 !important;
+}
+
+@media (min-width: 768px){
+  :root{ --cb-bottom-safe-current: var(--cb-bottom-safe-desktop); }
+  html, body{ scroll-padding-bottom: var(--cb-bottom-safe-desktop); }
+  .screen.active > .content,
+  #screen-dashboard.active > .health-dashboard,
+  #screen-home.active > .desktop-right-panel,
+  #screen-appt.active .content{
+    padding-bottom: var(--cb-bottom-safe-desktop) !important;
+  }
+}
+</style>
+
+
+
+<!-- v75.9 — scrollbar global por guia ativa: corrige guias que perderam rolagem após v75.8 -->
+<style id="cuidarbem-v75-9-scrollbar-global-por-guia">
+/*
+  Correção cirúrgica:
+  - No mobile, quem rola é sempre a guia ativa (.screen.active), não o body.
+  - Isso devolve a rolagem em Início, Relatórios, Saúde e Perfil.
+  - Mantém a limitação contra “área fantasma” depois do último painel.
+*/
+@media (max-width: 767px){
+  html,
+  body{
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden !important;
+    overscroll-behavior-y: none;
+  }
+
+  body{
+    height: 100dvh;
+  }
+
+  .screen{
+    display: block !important;
+    position: absolute !important;
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    padding-bottom: 0 !important;
+  }
+
+  .screen.active{
+    position: relative !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    padding-bottom: 0 !important;
+    scrollbar-width: thin;
+  }
+
+  .screen.active::-webkit-scrollbar{
+    width: 5px;
+  }
+  .screen.active::-webkit-scrollbar-track{
+    background: transparent;
+  }
+  .screen.active::-webkit-scrollbar-thumb{
+    background: rgba(15,110,86,.24);
+    border-radius: 999px;
+  }
+
+  .screen.active > .content,
+  #screen-dashboard.active > .health-dashboard,
+  #screen-home.active > .content,
+  #screen-appt.active > .content{
+    padding-bottom: var(--cb-bottom-safe-mobile) !important;
+  }
+
+  .screen.active > .content > :last-child,
+  #screen-dashboard.active > .health-dashboard > :last-child,
+  #screen-appt.active > .content > :last-child{
+    margin-bottom: 0 !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-9-scroll-reset-guia-ativa">
+(function(){
+  'use strict';
+  if (window.__CB75_SCROLL_ACTIVE_SCREEN__) return;
+  window.__CB75_SCROLL_ACTIVE_SCREEN__ = true;
+
+  function scrollActiveScreenToTop(name){
+    const screen = document.getElementById('screen-' + name) || document.querySelector('.screen.active');
+    if (!screen) return;
+    try { screen.scrollTop = 0; } catch(e) {}
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e) {}
+  }
+
+  const previousGoScreen = window.goScreen;
+  if (typeof previousGoScreen === 'function') {
+    window.goScreen = function(name, btn){
+      const result = previousGoScreen.apply(this, arguments);
+      scrollActiveScreenToTop(name);
+      return result;
+    };
+  }
+
+  window.cb75ScrollActiveScreenToTop = scrollActiveScreenToTop;
+})();
+</script>
+
+
+
+<!-- v75.10 — correção final: scrollbar vertical da guia Relatórios -->
+<style id="cuidarbem-v75-10-scrollbar-relatorios">
+/*
+  Correção cirúrgica para Relatórios:
+  Uma regra antiga mais específica (#screen-reports.active) ainda forçava
+  overflow:visible!important e vencia a regra global de .screen.active.
+  Resultado: a guia Relatórios perdia a rolagem própria no mobile.
+  Aqui o seletor ganha a disputa de especificidade e devolve o scroll só na guia ativa.
+*/
+@media (max-width: 767px){
+  #screen-reports.screen.active,
+  #screen-reports.active.screen{
+    position: relative !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    max-height: 100dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    scrollbar-width: thin !important;
+    padding-bottom: 0 !important;
+  }
+
+  #screen-reports.screen.active > .content{
+    min-height: auto !important;
+    padding-bottom: var(--cb-bottom-safe-mobile) !important;
+  }
+
+  #screen-reports.screen.active > .content > :last-child{
+    margin-bottom: 0 !important;
+  }
+
+  #screen-reports.screen.active::-webkit-scrollbar{
+    width: 5px;
+  }
+  #screen-reports.screen.active::-webkit-scrollbar-track{
+    background: transparent;
+  }
+  #screen-reports.screen.active::-webkit-scrollbar-thumb{
+    background: rgba(15,110,86,.26);
+    border-radius: 999px;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-reports.screen.active{
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-10-scrollbar-relatorios-js">
+(function(){
+  'use strict';
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.11-agenda-panel-action'); } catch(e) {}
+})();
+</script>
+
+
+
+<!-- v75.11 — segurança visual: antigo FAB fixo não reserva mais espaço nem sobrepõe a Agenda -->
+<style id="cuidarbem-v75-11-agenda-no-fixed-fab">
+  #screen-calendar .cal-fab-add { display: none !important; }
+</style>
+<script id="cuidarbem-v75-11-agenda-panel-version">
+(function(){
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.11-agenda-panel-action'); } catch(e) {}
+})();
+</script>
+
+
+<!-- v75.12 — auditoria global de contraste claro/escuro -->
+<style id="cuidarbem-v75-12-contraste-global">
+/* =========================================================
+   CuidarBem v75.12 — Auditoria global de contraste
+   Objetivo: leitura mais forte no tema claro e escuro sem
+   mudar a identidade verde/teal nem pesar o visual premium.
+========================================================= */
+:root{
+  --text:#111916;
+  --text-muted:#33443e;
+  --text-light:#536b62;
+  --gray-400:#62736b;
+  --gray-600:#33443e;
+  --gray-800:#17231f;
+  --green-600:#0f6b56;
+  --green-800:#0a3f36;
+  --teal-600:#075f4c;
+  --blue-600:#155995;
+  --purple-600:#4b42a8;
+  --amber-600:#76480b;
+  --coral-600:#873318;
+  --cb-contrast-line:rgba(15,110,86,.15);
+  --cb-contrast-line-strong:rgba(15,110,86,.26);
+  --cb-contrast-chip-bg:rgba(232,245,241,.92);
+}
+
+body{
+  color:var(--text) !important;
+  text-rendering:optimizeLegibility;
+}
+
+/* Cards e painéis: borda visível para separar planos no tema claro */
+.card,
+.stat-card,
+.setting-row,
+.appt-card,
+.ocr-appt-card,
+.report-card,
+.dash-card,
+.result-card,
+.care-event-card,
+.cb-analytics-card,
+.cb-benefit-card,
+.cb75-card{
+  border:1px solid var(--cb-contrast-line) !important;
+}
+
+/* Hierarquia textual global */
+.section-title,
+.task-name,
+.hist-name,
+.appt-title,
+.setting-label,
+.confirm-name,
+.modal-title,
+.health-section-title,
+.rehab-title,
+.cb75-item-title{
+  color:var(--text) !important;
+}
+
+.card-title,
+.form-label,
+.health-section-label,
+.result-section-title,
+.med-checklist-title,
+.mi-section-title,
+.cb75-label{
+  color:#29453d !important;
+  font-weight:900 !important;
+}
+
+.task-meta,
+.hist-meta,
+.setting-desc,
+.progress-label,
+.progress-count,
+.stat-label,
+.appt-subtitle,
+.appt-detail-row,
+.task-time,
+.med-info-subtitle,
+.confirm-dose,
+.cb75-muted,
+.cb75-item-text,
+.cb75-mini-label,
+.rehab-sub,
+.rehab-phase-desc,
+.rehab-ex-meta,
+.rehab-scale-note,
+.cb-report-insight,
+.cb-functional-mini{
+  color:var(--text-muted) !important;
+}
+
+.header-date,
+.header-greeting,
+.header-patient,
+.header-sub-title{
+  color:#ffffff !important;
+  opacity:.96 !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.18);
+}
+
+/* Inputs, selects e placeholders mais legíveis */
+.form-input,
+.cb75-input,
+.cb75-select,
+.cb75-textarea,
+select,
+textarea,
+input{
+  color:var(--text) !important;
+  border-color:rgba(15,110,86,.24) !important;
+}
+.form-input::placeholder,
+.cb75-input::placeholder,
+.cb75-textarea::placeholder,
+input::placeholder,
+textarea::placeholder{
+  color:#60746b !important;
+  opacity:1 !important;
+}
+.form-input:focus,
+.cb75-input:focus,
+.cb75-select:focus,
+.cb75-textarea:focus,
+select:focus,
+textarea:focus,
+input:focus{
+  border-color:var(--teal-600) !important;
+  box-shadow:0 0 0 3px rgba(29,158,117,.18) !important;
+}
+
+/* Botões secundários e chips: antes alguns ficavam apagados */
+.btn-secondary,
+.btn-confirm-cancel,
+.btn-action-small,
+.cb75-btn.secondary,
+.chip,
+.cat-pill,
+.type-opt,
+.cb75-choice,
+.alert-chip.inactive,
+.cal-today-btn,
+.cal-panel-add{
+  color:#21352f !important;
+  border-color:rgba(15,110,86,.24) !important;
+}
+
+.btn-secondary,
+.btn-confirm-cancel,
+.btn-action-small,
+.cb75-btn.secondary,
+.chip,
+.cb75-choice,
+.type-opt{
+  background:#f7fbf8 !important;
+}
+
+.chip.active,
+.cat-pill.active,
+.cb75-choice.active,
+.vital-tab.active,
+.nav-btn.active{
+  color:#ffffff !important;
+}
+
+/* Badges coloridos com texto mais escuro no tema claro */
+.badge-med,
+.result-badge.has,
+.rx-ok,
+.med-alert-pill.warn,
+.alert-pill,
+.cb75-chip{
+  font-weight:900 !important;
+}
+.badge-med,
+.result-badge.has{ color:#114f86 !important; }
+.badge-fisio,
+.result-badge.pending,
+.rx-warn,
+.alert-pill{ color:#6b3e06 !important; }
+.badge-exer,
+.rx-ok,
+.cb75-chip{ color:#075f4c !important; }
+.badge-cons{ color:#40359d !important; }
+.task-badge,
+.result-badge,
+.rx-pill,
+.med-alert-pill,
+.alert-pill{
+  border:1px solid rgba(0,0,0,.06) !important;
+}
+
+/* Lista v75: remove aparência lavada em fundos translúcidos */
+.cb75-item,
+.cb75-field,
+.cb75-mini-stat{
+  background:rgba(255,255,255,.88) !important;
+  border-color:rgba(15,110,86,.16) !important;
+}
+.cb75-card-title strong,
+.cb75-mini-num{
+  color:var(--green-800) !important;
+}
+
+/* Navegação inferior: ícones inativos mais legíveis */
+.nav-btn:not(.active){
+  color:#50645b !important;
+}
+.bottom-nav{
+  border-top-color:rgba(15,110,86,.18) !important;
+}
+
+/* Scrollbar mais visível sem ficar grosseiro */
+@media (max-width:767px){
+  .screen.active::-webkit-scrollbar-thumb,
+  #screen-reports.screen.active::-webkit-scrollbar-thumb{
+    background:rgba(15,110,86,.42) !important;
+  }
+  .screen.active{
+    scrollbar-color:rgba(15,110,86,.42) transparent;
+  }
+}
+
+/* ========================== TEMA ESCURO ========================== */
+body.dark,
+body.dark-theme{
+  --bg:#07110e;
+  --card-bg:#14211d;
+  --white:#172722;
+  --text:#f4fbf8;
+  --text-muted:#d3e1dc;
+  --text-light:#b8cac4;
+  --gray-50:#111d19;
+  --gray-100:#21322d;
+  --gray-200:#3a5149;
+  --gray-400:#b8cac4;
+  --gray-600:#d3e1dc;
+  --gray-800:#f4fbf8;
+  --green-50:#0b241b;
+  --green-100:#12382a;
+  --blue-50:#0b2236;
+  --amber-50:#2a1e07;
+  --coral-50:#2a100b;
+  --purple-50:#191432;
+  --teal-50:#08251b;
+  --cb-contrast-line:rgba(174,211,198,.18);
+  --cb-contrast-line-strong:rgba(174,211,198,.34);
+}
+
+body.dark .screen,
+body.dark-theme .screen,
+body.dark .content,
+body.dark-theme .content,
+body.dark .health-dashboard,
+body.dark-theme .health-dashboard{
+  background:var(--bg) !important;
+}
+
+body.dark .card,
+body.dark-theme .card,
+body.dark .stat-card,
+body.dark-theme .stat-card,
+body.dark .setting-row,
+body.dark-theme .setting-row,
+body.dark .appt-card,
+body.dark-theme .appt-card,
+body.dark .ocr-appt-card,
+body.dark-theme .ocr-appt-card,
+body.dark .report-card,
+body.dark-theme .report-card,
+body.dark .dash-card,
+body.dark-theme .dash-card,
+body.dark .result-card,
+body.dark-theme .result-card,
+body.dark .care-event-card,
+body.dark-theme .care-event-card,
+body.dark .cb-analytics-card,
+body.dark-theme .cb-analytics-card,
+body.dark .cb-benefit-card,
+body.dark-theme .cb-benefit-card,
+body.dark .cb75-card,
+body.dark-theme .cb75-card{
+  background:linear-gradient(180deg,#172722,#111d19) !important;
+  border-color:var(--cb-contrast-line) !important;
+  box-shadow:0 10px 28px rgba(0,0,0,.36) !important;
+}
+
+body.dark .section-title,
+body.dark-theme .section-title,
+body.dark .task-name,
+body.dark-theme .task-name,
+body.dark .hist-name,
+body.dark-theme .hist-name,
+body.dark .appt-title,
+body.dark-theme .appt-title,
+body.dark .setting-label,
+body.dark-theme .setting-label,
+body.dark .confirm-name,
+body.dark-theme .confirm-name,
+body.dark .modal-title,
+body.dark-theme .modal-title,
+body.dark .health-section-title,
+body.dark-theme .health-section-title,
+body.dark .rehab-title,
+body.dark-theme .rehab-title,
+body.dark .cb75-item-title,
+body.dark-theme .cb75-item-title{
+  color:#f7fffb !important;
+}
+
+body.dark .card-title,
+body.dark-theme .card-title,
+body.dark .form-label,
+body.dark-theme .form-label,
+body.dark .health-section-label,
+body.dark-theme .health-section-label,
+body.dark .result-section-title,
+body.dark-theme .result-section-title,
+body.dark .med-checklist-title,
+body.dark-theme .med-checklist-title,
+body.dark .mi-section-title,
+body.dark-theme .mi-section-title,
+body.dark .cb75-label,
+body.dark-theme .cb75-label{
+  color:#99f6e4 !important;
+}
+
+body.dark .task-meta,
+body.dark-theme .task-meta,
+body.dark .hist-meta,
+body.dark-theme .hist-meta,
+body.dark .setting-desc,
+body.dark-theme .setting-desc,
+body.dark .progress-label,
+body.dark-theme .progress-label,
+body.dark .progress-count,
+body.dark-theme .progress-count,
+body.dark .stat-label,
+body.dark-theme .stat-label,
+body.dark .appt-subtitle,
+body.dark-theme .appt-subtitle,
+body.dark .appt-detail-row,
+body.dark-theme .appt-detail-row,
+body.dark .task-time,
+body.dark-theme .task-time,
+body.dark .med-info-subtitle,
+body.dark-theme .med-info-subtitle,
+body.dark .confirm-dose,
+body.dark-theme .confirm-dose,
+body.dark .cb75-muted,
+body.dark-theme .cb75-muted,
+body.dark .cb75-item-text,
+body.dark-theme .cb75-item-text,
+body.dark .cb75-mini-label,
+body.dark-theme .cb75-mini-label,
+body.dark .rehab-sub,
+body.dark-theme .rehab-sub,
+body.dark .rehab-phase-desc,
+body.dark-theme .rehab-phase-desc,
+body.dark .rehab-ex-meta,
+body.dark-theme .rehab-ex-meta,
+body.dark .rehab-scale-note,
+body.dark-theme .rehab-scale-note,
+body.dark .cb-report-insight,
+body.dark-theme .cb-report-insight,
+body.dark .cb-functional-mini,
+body.dark-theme .cb-functional-mini{
+  color:#d3e1dc !important;
+}
+
+body.dark .form-input,
+body.dark-theme .form-input,
+body.dark .cb75-input,
+body.dark-theme .cb75-input,
+body.dark .cb75-select,
+body.dark-theme .cb75-select,
+body.dark .cb75-textarea,
+body.dark-theme .cb75-textarea,
+body.dark select,
+body.dark-theme select,
+body.dark textarea,
+body.dark-theme textarea,
+body.dark input,
+body.dark-theme input{
+  background:#0d1b17 !important;
+  color:#f7fffb !important;
+  border-color:#48645a !important;
+}
+
+body.dark .form-input::placeholder,
+body.dark-theme .form-input::placeholder,
+body.dark .cb75-input::placeholder,
+body.dark-theme .cb75-input::placeholder,
+body.dark input::placeholder,
+body.dark-theme input::placeholder,
+body.dark textarea::placeholder,
+body.dark-theme textarea::placeholder{
+  color:#aec1ba !important;
+  opacity:1 !important;
+}
+
+body.dark .btn-secondary,
+body.dark-theme .btn-secondary,
+body.dark .btn-confirm-cancel,
+body.dark-theme .btn-confirm-cancel,
+body.dark .btn-action-small,
+body.dark-theme .btn-action-small,
+body.dark .cb75-btn.secondary,
+body.dark-theme .cb75-btn.secondary,
+body.dark .chip,
+body.dark-theme .chip,
+body.dark .cat-pill,
+body.dark-theme .cat-pill,
+body.dark .type-opt,
+body.dark-theme .type-opt,
+body.dark .cb75-choice,
+body.dark-theme .cb75-choice,
+body.dark .alert-chip.inactive,
+body.dark-theme .alert-chip.inactive,
+body.dark .cal-today-btn,
+body.dark-theme .cal-today-btn,
+body.dark .cal-panel-add,
+body.dark-theme .cal-panel-add{
+  background:#10201b !important;
+  color:#e2f0eb !important;
+  border-color:#48645a !important;
+}
+
+body.dark .cb75-item,
+body.dark-theme .cb75-item,
+body.dark .cb75-field,
+body.dark-theme .cb75-field,
+body.dark .cb75-mini-stat,
+body.dark-theme .cb75-mini-stat,
+body.dark .mi-row,
+body.dark-theme .mi-row,
+body.dark .appt-info-grid,
+body.dark-theme .appt-info-grid,
+body.dark .appt-check-item,
+body.dark-theme .appt-check-item,
+body.dark .med-checklist,
+body.dark-theme .med-checklist{
+  background:#10201b !important;
+  border-color:#334d43 !important;
+}
+
+body.dark .bottom-nav,
+body.dark-theme .bottom-nav{
+  background:rgba(12,25,21,.98) !important;
+  border-top-color:#334d43 !important;
+}
+body.dark .nav-btn:not(.active),
+body.dark-theme .nav-btn:not(.active){
+  color:#bfd0c9 !important;
+}
+body.dark .nav-btn.active,
+body.dark-theme .nav-btn.active{
+  color:#ffffff !important;
+  background:rgba(29,158,117,.22) !important;
+}
+
+body.dark .week-day,
+body.dark-theme .week-day{
+  background:#0f1f1a !important;
+  border-color:#334d43 !important;
+}
+body.dark .week-day-name,
+body.dark-theme .week-day-name,
+body.dark .week-day-num,
+body.dark-theme .week-day-num{
+  color:#e7f4ef !important;
+}
+body.dark .week-day.actual-today,
+body.dark-theme .week-day.actual-today{
+  background:#b4232f !important;
+  border-color:#ffb4bd !important;
+}
+body.dark .week-day.actual-today .week-day-name,
+body.dark-theme .week-day.actual-today .week-day-name,
+body.dark .week-day.actual-today .week-day-num,
+body.dark-theme .week-day.actual-today .week-day-num{
+  color:#ffffff !important;
+}
+
+body.dark .cb75-card-title strong,
+body.dark-theme .cb75-card-title strong,
+body.dark .cb75-mini-num,
+body.dark-theme .cb75-mini-num,
+body.dark .progress-pct,
+body.dark-theme .progress-pct,
+body.dark .stat-number,
+body.dark-theme .stat-number{
+  color:#99f6e4 !important;
+}
+
+body.dark .cb75-chip,
+body.dark-theme .cb75-chip,
+body.dark .rx-ok,
+body.dark-theme .rx-ok,
+body.dark .badge-exer,
+body.dark-theme .badge-exer{
+  background:#0b2b20 !important;
+  color:#99f6e4 !important;
+  border-color:#2dd4bf !important;
+}
+body.dark .rx-warn,
+body.dark-theme .rx-warn,
+body.dark .alert-pill,
+body.dark-theme .alert-pill,
+body.dark .badge-fisio,
+body.dark-theme .badge-fisio,
+body.dark .result-badge.pending,
+body.dark-theme .result-badge.pending{
+  background:#2a1e07 !important;
+  color:#fde68a !important;
+  border-color:#d69e2e !important;
+}
+body.dark .badge-med,
+body.dark-theme .badge-med,
+body.dark .result-badge.has,
+body.dark-theme .result-badge.has{
+  background:#0b2236 !important;
+  color:#bfdbfe !important;
+  border-color:#60a5fa !important;
+}
+body.dark .badge-cons,
+body.dark-theme .badge-cons{
+  background:#191432 !important;
+  color:#ddd6fe !important;
+  border-color:#a78bfa !important;
+}
+
+/* Relatórios: cartões e mini análises mais legíveis nos dois temas */
+#screen-reports .cb-report-insight,
+#screen-reports .cb-functional-mini,
+#screen-reports canvas{
+  border:1px solid var(--cb-contrast-line) !important;
+}
+body.dark #screen-reports canvas,
+body.dark-theme #screen-reports canvas{
+  background:#0f1f1a !important;
+  border-color:#334d43 !important;
+}
+
+/* Alto contraste opcional: reforça sem destruir a paleta */
+body.high-contrast{
+  --text:#06130f;
+  --text-muted:#16251f;
+  --text-light:#263932;
+}
+body.high-contrast.dark,
+body.high-contrast.dark-theme{
+  --text:#ffffff;
+  --text-muted:#eefaf6;
+  --text-light:#d8ebe4;
+}
+body.high-contrast .card,
+body.high-contrast .stat-card,
+body.high-contrast .setting-row,
+body.high-contrast .appt-card,
+body.high-contrast .cb75-card{
+  border-width:2px !important;
+}
+
+@media (prefers-contrast: more){
+  .card,
+  .stat-card,
+  .setting-row,
+  .appt-card,
+  .cb75-card{
+    border-width:2px !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-12-contraste-global-js">
+(function(){
+  'use strict';
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.12-contraste-global'); } catch(e) {}
+})();
+</script>
+
+
+
+<!-- v75.13 — contraste reforçado de cobertura total -->
+<style id="cuidarbem-v75-13-contraste-cobertura">
+/* =========================================================
+   CuidarBem v75.13 — Contraste reforçado de cobertura total
+   Segunda varredura: captura painéis com classes próprias que
+   escapavam do padrão global no tema claro e escuro.
+========================================================= */
+:root{
+  --cb-panel-bg:#ffffff;
+  --cb-panel-bg-soft:#f6fbf8;
+  --cb-panel-bg-teal:#eefaf5;
+  --cb-panel-border:rgba(9,91,74,.22);
+  --cb-panel-border-strong:rgba(9,91,74,.34);
+  --cb-title-strong:#10231d;
+  --cb-text-strong:#17231f;
+  --cb-text-readable:#2d423a;
+  --cb-text-soft:#465d54;
+  --cb-teal-readable:#075f4c;
+  --cb-blue-readable:#114f86;
+  --cb-amber-readable:#693c05;
+  --cb-red-readable:#8f1d2c;
+  --cb-purple-readable:#3f369b;
+}
+
+/* Painéis que tinham CSS próprio e não recebiam a primeira auditoria */
+.ai-active-card,
+.ai-suggestion,
+.alerts-center-sheet,
+.alerts-center-stat,
+.alerts-center-item,
+.complication-card,
+.complication-check,
+.complication-log-item,
+.neuro-profile-card,
+.neuro-priority-card,
+.neuro-check,
+.health-ring-card,
+.health-trend-card,
+.rehab-card,
+.rehab-phase-box,
+.rehab-phase-item,
+.rehab-ex,
+.rehab-metric,
+.rehab-form,
+.rehab-history-row,
+.cb-functional-mini,
+.cb-report-badge,
+.vital-tab,
+.vital-smart-alert,
+.prep-box,
+.pr-section,
+.modal,
+.confirm-sheet,
+.appt-confirm-sheet,
+.seen-sheet,
+.med-info-inner,
+.photo-modal,
+.edit-task-card,
+.edit-med-card,
+.appt-info-grid,
+.appt-check-item,
+.med-checklist,
+.mi-row,
+.result-section,
+.ocr-med-card,
+.appt-ocr-card,
+.ocr-appt-card,
+.fast-item,
+.install-banner,
+.cb-delete-dialog{
+  border-color:var(--cb-panel-border) !important;
+}
+
+.ai-active-card,
+.alerts-center-sheet,
+.alerts-center-item,
+.neuro-profile-card,
+.health-ring-card,
+.health-trend-card,
+.rehab-ex,
+.rehab-metric,
+.modal,
+.confirm-sheet,
+.appt-confirm-sheet,
+.seen-sheet,
+.med-info-inner,
+.photo-modal,
+.edit-task-card,
+.edit-med-card,
+.cb-delete-dialog{
+  background:linear-gradient(180deg, var(--cb-panel-bg) 0%, var(--cb-panel-bg-soft) 100%) !important;
+  color:var(--cb-text-strong) !important;
+  box-shadow:0 10px 28px rgba(9,91,74,.10) !important;
+}
+
+.cb75-card,
+.card,
+.stat-card,
+.setting-row,
+.appt-card,
+.report-card,
+.health-ring-card,
+.health-trend-card,
+.rehab-card,
+.neuro-profile-card,
+.ai-active-card,
+.complication-card{
+  border:1.5px solid var(--cb-panel-border) !important;
+}
+
+/* Títulos e textos de painéis que estavam claros demais */
+.ai-active-title,
+.ai-sug-title,
+.alerts-center-title,
+.alerts-center-name,
+.complication-title,
+.neuro-priority-title,
+.neuro-check,
+.health-trend-title,
+.rehab-ex-title,
+.rehab-phase-name,
+.rehab-history-main,
+.cb-functional-value,
+.cb-report-number,
+.vital-value,
+.seen-info-value,
+.edit-task-title,
+.edit-med-title,
+.mi-row-val,
+.appt-info-val,
+.ocr-med-name,
+.ocr-appt-name,
+.fast-letter{
+  color:var(--cb-title-strong) !important;
+  font-weight:900 !important;
+}
+
+.ai-active-sub,
+.ai-active-foot,
+.ai-sug-text,
+.ai-sug-action,
+.alerts-center-sub,
+.alerts-center-meta,
+.alerts-center-stat span,
+.complication-sub,
+.complication-check span,
+.complication-log-title,
+.complication-log-item,
+.neuro-priority-sub,
+.neuro-chip,
+.health-ring-label,
+.health-trend-sub,
+.health-trend-pct,
+.rehab-metric-label,
+.rehab-history-sub,
+.rehab-phase-desc,
+.rehab-ex-meta,
+.cb-report-caption,
+.cb-functional-label,
+.vital-label,
+.seen-info-label,
+.edit-task-sub,
+.edit-med-sub,
+.mi-row-label,
+.appt-info-label,
+.appt-confirm-sub,
+.ocr-med-dose,
+.ocr-med-para,
+.fast-label,
+.pr-section h2,
+.prep-box{
+  color:var(--cb-text-readable) !important;
+  opacity:1 !important;
+}
+
+/* Corrige textos inline antigos que ficavam apagados */
+[style*="color:#aaa"],
+[style*="color: #aaa"],
+[style*="color:#999"],
+[style*="color: #999"],
+[style*="color:var(--text-light)"],
+[style*="color: var(--text-light)"],
+[style*="opacity:0.75"],
+[style*="opacity:.75"],
+[style*="opacity: 0.75"],
+[style*="opacity: .75"]{
+  color:var(--cb-text-readable) !important;
+  opacity:1 !important;
+}
+
+/* Fundos coloridos: mantém a cor, mas sobe contraste do texto */
+.ai-suggestion.ok,
+.vital-smart-alert.ok,
+.complication-alert.ok,
+.neuro-chip,
+.cb-report-badge,
+.rx-ok,
+.badge-exer,
+.cb75-chip{
+  color:var(--cb-teal-readable) !important;
+  border-color:rgba(7,95,76,.28) !important;
+}
+.ai-suggestion.info,
+.neuro-chip.info,
+.badge-med,
+.result-badge.has{
+  color:var(--cb-blue-readable) !important;
+  border-color:rgba(17,79,134,.28) !important;
+}
+.ai-suggestion.warn,
+.vital-smart-alert.warn,
+.neuro-chip.warn,
+.cb-report-badge.warn,
+.prep-box,
+.rx-warn,
+.alert-pill,
+.badge-fisio,
+.result-badge.pending{
+  color:var(--cb-amber-readable) !important;
+  border-color:rgba(105,60,5,.28) !important;
+}
+.ai-suggestion.critical,
+.vital-smart-alert.danger,
+.neuro-chip.danger,
+.complication-alert.danger,
+.result-badge.overdue,
+.med-alert-pill.alert{
+  color:var(--cb-red-readable) !important;
+  border-color:rgba(143,29,44,.30) !important;
+}
+.badge-cons{
+  color:var(--cb-purple-readable) !important;
+  border-color:rgba(63,54,155,.28) !important;
+}
+
+/* Estado rápido do paciente e saúde: cartões pequenos com leitura firme */
+.health-ring-card::before{ opacity:.035 !important; }
+.health-ring-val,
+.health-trend-pct,
+.stat-number,
+.progress-pct{
+  color:var(--cb-teal-readable) !important;
+  text-shadow:none !important;
+}
+.health-trend-change.ok{ color:var(--cb-teal-readable) !important; }
+.health-trend-change.warn{ color:var(--cb-amber-readable) !important; }
+.health-trend-change.danger{ color:var(--cb-red-readable) !important; }
+
+/* Modais, bottom sheets e formulários: contraste igual em toda tela */
+.modal-title,
+.confirm-name,
+.appt-confirm-title,
+.med-info-title,
+.seen-type-badge,
+.edit-task-title,
+.edit-med-title{
+  color:var(--green-800) !important;
+}
+.form-label,
+.mi-section-title,
+.med-checklist-title,
+.result-section-title,
+.seen-info-label{
+  color:#25453c !important;
+  font-weight:950 !important;
+}
+.appt-check-label,
+.med-check-question,
+.complication-check strong{
+  color:var(--cb-text-strong) !important;
+}
+
+/* Alertas centrais e overlays */
+.alerts-center-head{ background:var(--cb-panel-bg) !important; }
+.alerts-center-stat strong{ color:var(--green-800) !important; }
+.alerts-center-close{
+  background:var(--cb-panel-bg-soft) !important;
+  border-color:var(--cb-panel-border) !important;
+  color:var(--cb-text-strong) !important;
+}
+.alerts-center-action{
+  background:var(--green-50) !important;
+  color:var(--green-800) !important;
+  border:1px solid rgba(7,95,76,.20) !important;
+}
+
+/* Reabilitação: caixas internas que estavam lavadas */
+.rehab-phase-box,
+.rehab-phase-item,
+.rehab-form{
+  background:rgba(255,255,255,.94) !important;
+  border-color:var(--cb-panel-border) !important;
+}
+.rehab-card{
+  background:linear-gradient(180deg,#ffffff 0%,#eefaf5 100%) !important;
+  color:var(--cb-text-strong) !important;
+}
+
+/* Consulta/exame/OCR */
+.appt-ocr-card,
+.ocr-med-card,
+.ocr-appt-card{
+  background:linear-gradient(180deg,#ffffff,#f6fbf8) !important;
+  color:var(--cb-text-strong) !important;
+  border-color:var(--cb-panel-border) !important;
+}
+
+/* Botões suaves com contraste AA melhor */
+.btn-green-soft,
+.btn-action-small,
+.rehab-mini-btn,
+.appt-edit-btn,
+.med-info-btn{
+  color:var(--green-800) !important;
+  background:var(--green-50) !important;
+  border:1px solid rgba(7,95,76,.24) !important;
+  font-weight:900 !important;
+}
+.btn-danger-soft,
+.appt-delete-btn,
+.task-delete-btn,
+.med-info-danger-btn{
+  color:var(--cb-red-readable) !important;
+  background:#fff1f2 !important;
+  border:1px solid rgba(143,29,44,.24) !important;
+  font-weight:900 !important;
+}
+
+/* ========================== TEMA ESCURO — cobertura total ========================== */
+body.dark,
+body.dark-theme{
+  --cb-panel-bg:#15241f;
+  --cb-panel-bg-soft:#0d1b17;
+  --cb-panel-bg-teal:#0b2c22;
+  --cb-panel-border:rgba(174,211,198,.30);
+  --cb-panel-border-strong:rgba(174,211,198,.48);
+  --cb-title-strong:#f7fffb;
+  --cb-text-strong:#f0faf6;
+  --cb-text-readable:#d6e8e1;
+  --cb-text-soft:#bfd0c9;
+  --cb-teal-readable:#99f6e4;
+  --cb-blue-readable:#bfdbfe;
+  --cb-amber-readable:#fde68a;
+  --cb-red-readable:#fecaca;
+  --cb-purple-readable:#ddd6fe;
+}
+
+body.dark .ai-active-card,
+body.dark-theme .ai-active-card,
+body.dark .alerts-center-sheet,
+body.dark-theme .alerts-center-sheet,
+body.dark .alerts-center-item,
+body.dark-theme .alerts-center-item,
+body.dark .neuro-profile-card,
+body.dark-theme .neuro-profile-card,
+body.dark .neuro-priority-card,
+body.dark-theme .neuro-priority-card,
+body.dark .health-ring-card,
+body.dark-theme .health-ring-card,
+body.dark .health-trend-card,
+body.dark-theme .health-trend-card,
+body.dark .rehab-card,
+body.dark-theme .rehab-card,
+body.dark .rehab-ex,
+body.dark-theme .rehab-ex,
+body.dark .rehab-metric,
+body.dark-theme .rehab-metric,
+body.dark .rehab-phase-box,
+body.dark-theme .rehab-phase-box,
+body.dark .rehab-phase-item,
+body.dark-theme .rehab-phase-item,
+body.dark .modal,
+body.dark-theme .modal,
+body.dark .confirm-sheet,
+body.dark-theme .confirm-sheet,
+body.dark .appt-confirm-sheet,
+body.dark-theme .appt-confirm-sheet,
+body.dark .seen-sheet,
+body.dark-theme .seen-sheet,
+body.dark .med-info-inner,
+body.dark-theme .med-info-inner,
+body.dark .photo-modal,
+body.dark-theme .photo-modal,
+body.dark .edit-task-card,
+body.dark-theme .edit-task-card,
+body.dark .edit-med-card,
+body.dark-theme .edit-med-card,
+body.dark .cb-delete-dialog,
+body.dark-theme .cb-delete-dialog,
+body.dark .appt-info-grid,
+body.dark-theme .appt-info-grid,
+body.dark .appt-check-item,
+body.dark-theme .appt-check-item,
+body.dark .med-checklist,
+body.dark-theme .med-checklist,
+body.dark .mi-row,
+body.dark-theme .mi-row,
+body.dark .ocr-med-card,
+body.dark-theme .ocr-med-card,
+body.dark .appt-ocr-card,
+body.dark-theme .appt-ocr-card,
+body.dark .ocr-appt-card,
+body.dark-theme .ocr-appt-card{
+  background:linear-gradient(180deg,#15241f 0%,#0d1b17 100%) !important;
+  color:var(--cb-text-strong) !important;
+  border-color:var(--cb-panel-border) !important;
+  box-shadow:0 12px 32px rgba(0,0,0,.44) !important;
+}
+
+body.dark .ai-active-title,
+body.dark-theme .ai-active-title,
+body.dark .ai-sug-title,
+body.dark-theme .ai-sug-title,
+body.dark .alerts-center-title,
+body.dark-theme .alerts-center-title,
+body.dark .alerts-center-name,
+body.dark-theme .alerts-center-name,
+body.dark .complication-title,
+body.dark-theme .complication-title,
+body.dark .neuro-priority-title,
+body.dark-theme .neuro-priority-title,
+body.dark .neuro-check,
+body.dark-theme .neuro-check,
+body.dark .health-trend-title,
+body.dark-theme .health-trend-title,
+body.dark .rehab-ex-title,
+body.dark-theme .rehab-ex-title,
+body.dark .rehab-phase-name,
+body.dark-theme .rehab-phase-name,
+body.dark .rehab-history-main,
+body.dark-theme .rehab-history-main,
+body.dark .cb-functional-value,
+body.dark-theme .cb-functional-value,
+body.dark .cb-report-number,
+body.dark-theme .cb-report-number,
+body.dark .vital-value,
+body.dark-theme .vital-value,
+body.dark .seen-info-value,
+body.dark-theme .seen-info-value,
+body.dark .edit-task-title,
+body.dark-theme .edit-task-title,
+body.dark .edit-med-title,
+body.dark-theme .edit-med-title,
+body.dark .mi-row-val,
+body.dark-theme .mi-row-val,
+body.dark .appt-info-val,
+body.dark-theme .appt-info-val,
+body.dark .ocr-med-name,
+body.dark-theme .ocr-med-name,
+body.dark .ocr-appt-name,
+body.dark-theme .ocr-appt-name,
+body.dark .fast-letter,
+body.dark-theme .fast-letter,
+body.dark .modal-title,
+body.dark-theme .modal-title,
+body.dark .med-info-title,
+body.dark-theme .med-info-title,
+body.dark .confirm-name,
+body.dark-theme .confirm-name,
+body.dark .appt-confirm-title,
+body.dark-theme .appt-confirm-title{
+  color:#f7fffb !important;
+}
+
+body.dark .ai-active-sub,
+body.dark-theme .ai-active-sub,
+body.dark .ai-active-foot,
+body.dark-theme .ai-active-foot,
+body.dark .ai-sug-text,
+body.dark-theme .ai-sug-text,
+body.dark .ai-sug-action,
+body.dark-theme .ai-sug-action,
+body.dark .alerts-center-sub,
+body.dark-theme .alerts-center-sub,
+body.dark .alerts-center-meta,
+body.dark-theme .alerts-center-meta,
+body.dark .alerts-center-stat span,
+body.dark-theme .alerts-center-stat span,
+body.dark .complication-sub,
+body.dark-theme .complication-sub,
+body.dark .complication-check span,
+body.dark-theme .complication-check span,
+body.dark .complication-log-title,
+body.dark-theme .complication-log-title,
+body.dark .complication-log-item,
+body.dark-theme .complication-log-item,
+body.dark .neuro-priority-sub,
+body.dark-theme .neuro-priority-sub,
+body.dark .health-ring-label,
+body.dark-theme .health-ring-label,
+body.dark .health-trend-sub,
+body.dark-theme .health-trend-sub,
+body.dark .health-trend-pct,
+body.dark-theme .health-trend-pct,
+body.dark .rehab-metric-label,
+body.dark-theme .rehab-metric-label,
+body.dark .rehab-history-sub,
+body.dark-theme .rehab-history-sub,
+body.dark .rehab-phase-desc,
+body.dark-theme .rehab-phase-desc,
+body.dark .rehab-ex-meta,
+body.dark-theme .rehab-ex-meta,
+body.dark .cb-report-caption,
+body.dark-theme .cb-report-caption,
+body.dark .cb-functional-label,
+body.dark-theme .cb-functional-label,
+body.dark .vital-label,
+body.dark-theme .vital-label,
+body.dark .seen-info-label,
+body.dark-theme .seen-info-label,
+body.dark .edit-task-sub,
+body.dark-theme .edit-task-sub,
+body.dark .edit-med-sub,
+body.dark-theme .edit-med-sub,
+body.dark .mi-row-label,
+body.dark-theme .mi-row-label,
+body.dark .appt-info-label,
+body.dark-theme .appt-info-label,
+body.dark .appt-confirm-sub,
+body.dark-theme .appt-confirm-sub,
+body.dark .ocr-med-dose,
+body.dark-theme .ocr-med-dose,
+body.dark .ocr-med-para,
+body.dark-theme .ocr-med-para,
+body.dark .fast-label,
+body.dark-theme .fast-label,
+body.dark .pr-section h2,
+body.dark-theme .pr-section h2,
+body.dark .prep-box,
+body.dark-theme .prep-box{
+  color:#d6e8e1 !important;
+  opacity:1 !important;
+}
+
+body.dark [style*="color:#aaa"],
+body.dark-theme [style*="color:#aaa"],
+body.dark [style*="color: #aaa"],
+body.dark-theme [style*="color: #aaa"],
+body.dark [style*="color:#999"],
+body.dark-theme [style*="color:#999"],
+body.dark [style*="color: #999"],
+body.dark-theme [style*="color: #999"],
+body.dark [style*="color:var(--text-light)"],
+body.dark-theme [style*="color:var(--text-light)"],
+body.dark [style*="color: var(--text-light)"],
+body.dark-theme [style*="color: var(--text-light)"]{
+  color:#d6e8e1 !important;
+  opacity:1 !important;
+}
+
+body.dark .ai-suggestion,
+body.dark-theme .ai-suggestion{
+  background:#10201b !important;
+  border-color:var(--cb-panel-border) !important;
+}
+body.dark .ai-suggestion.ok,
+body.dark-theme .ai-suggestion.ok,
+body.dark .vital-smart-alert.ok,
+body.dark-theme .vital-smart-alert.ok,
+body.dark .complication-alert.ok,
+body.dark-theme .complication-alert.ok,
+body.dark .neuro-chip,
+body.dark-theme .neuro-chip,
+body.dark .cb-report-badge,
+body.dark-theme .cb-report-badge,
+body.dark .rx-ok,
+body.dark-theme .rx-ok,
+body.dark .badge-exer,
+body.dark-theme .badge-exer,
+body.dark .cb75-chip,
+body.dark-theme .cb75-chip{
+  background:#0b2b20 !important;
+  color:#99f6e4 !important;
+  border-color:#2dd4bf !important;
+}
+body.dark .ai-suggestion.info,
+body.dark-theme .ai-suggestion.info,
+body.dark .neuro-chip.info,
+body.dark-theme .neuro-chip.info,
+body.dark .badge-med,
+body.dark-theme .badge-med,
+body.dark .result-badge.has,
+body.dark-theme .result-badge.has{
+  background:#0b2236 !important;
+  color:#bfdbfe !important;
+  border-color:#60a5fa !important;
+}
+body.dark .ai-suggestion.warn,
+body.dark-theme .ai-suggestion.warn,
+body.dark .vital-smart-alert.warn,
+body.dark-theme .vital-smart-alert.warn,
+body.dark .neuro-chip.warn,
+body.dark-theme .neuro-chip.warn,
+body.dark .cb-report-badge.warn,
+body.dark-theme .cb-report-badge.warn,
+body.dark .prep-box,
+body.dark-theme .prep-box,
+body.dark .rx-warn,
+body.dark-theme .rx-warn,
+body.dark .alert-pill,
+body.dark-theme .alert-pill,
+body.dark .badge-fisio,
+body.dark-theme .badge-fisio,
+body.dark .result-badge.pending,
+body.dark-theme .result-badge.pending{
+  background:#2a1e07 !important;
+  color:#fde68a !important;
+  border-color:#d69e2e !important;
+}
+body.dark .ai-suggestion.critical,
+body.dark-theme .ai-suggestion.critical,
+body.dark .vital-smart-alert.danger,
+body.dark-theme .vital-smart-alert.danger,
+body.dark .neuro-chip.danger,
+body.dark-theme .neuro-chip.danger,
+body.dark .complication-alert.danger,
+body.dark-theme .complication-alert.danger,
+body.dark .result-badge.overdue,
+body.dark-theme .result-badge.overdue,
+body.dark .med-alert-pill.alert,
+body.dark-theme .med-alert-pill.alert{
+  background:#3f1111 !important;
+  color:#fecaca !important;
+  border-color:#ef4444 !important;
+}
+body.dark .badge-cons,
+body.dark-theme .badge-cons{
+  background:#191432 !important;
+  color:#ddd6fe !important;
+  border-color:#a78bfa !important;
+}
+
+body.dark .alerts-center-head,
+body.dark-theme .alerts-center-head{
+  background:#15241f !important;
+}
+body.dark .alerts-center-stat,
+body.dark-theme .alerts-center-stat,
+body.dark .alerts-center-close,
+body.dark-theme .alerts-center-close{
+  background:#0d1b17 !important;
+  border-color:var(--cb-panel-border) !important;
+}
+body.dark .alerts-center-stat strong,
+body.dark-theme .alerts-center-stat strong,
+body.dark .health-ring-val,
+body.dark-theme .health-ring-val,
+body.dark .health-trend-pct,
+body.dark-theme .health-trend-pct,
+body.dark .stat-number,
+body.dark-theme .stat-number,
+body.dark .progress-pct,
+body.dark-theme .progress-pct{
+  color:#99f6e4 !important;
+}
+
+body.dark .btn-green-soft,
+body.dark-theme .btn-green-soft,
+body.dark .btn-action-small,
+body.dark-theme .btn-action-small,
+body.dark .rehab-mini-btn,
+body.dark-theme .rehab-mini-btn,
+body.dark .appt-edit-btn,
+body.dark-theme .appt-edit-btn,
+body.dark .med-info-btn,
+body.dark-theme .med-info-btn{
+  color:#99f6e4 !important;
+  background:#0b2b20 !important;
+  border-color:#2dd4bf !important;
+}
+body.dark .btn-danger-soft,
+body.dark-theme .btn-danger-soft,
+body.dark .appt-delete-btn,
+body.dark-theme .appt-delete-btn,
+body.dark .task-delete-btn,
+body.dark-theme .task-delete-btn,
+body.dark .med-info-danger-btn,
+body.dark-theme .med-info-danger-btn{
+  color:#fecaca !important;
+  background:#3f1111 !important;
+  border-color:#ef4444 !important;
+}
+
+/* Low-stress não pode apagar demais os textos */
+body.low-stress .card,
+body.low-stress .cb75-card,
+body.low-stress .ai-active-card,
+body.low-stress .health-ring-card,
+body.low-stress .health-trend-card,
+body.low-stress .rehab-card{
+  filter:none !important;
+}
+body.low-stress .task-meta,
+body.low-stress .setting-desc,
+body.low-stress .cb75-muted,
+body.low-stress .health-ring-label,
+body.low-stress .rehab-ex-meta,
+body.low-stress .ai-active-sub{
+  color:var(--cb-text-readable) !important;
+}
+
+@media (prefers-contrast: more){
+  .ai-active-card,
+  .health-ring-card,
+  .health-trend-card,
+  .rehab-card,
+  .neuro-profile-card,
+  .complication-card,
+  .alerts-center-item,
+  .modal,
+  .confirm-sheet,
+  .appt-confirm-sheet,
+  .med-info-inner,
+  .edit-task-card,
+  .edit-med-card{
+    border-width:2px !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-13-contraste-cobertura-js">
+(function(){
+  'use strict';
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.14-tutorial-uso-seguro'); } catch(e) {}
+})();
+</script>
+
+
+
+<!-- v75.14/v75.15 — Tutorial inicial + Uso Seguro / Modo SAMU / Privacidade + centralização -->
+<style id="cuidarbem-v75-14-tutorial-uso-seguro-style">
+  .cb75-safe-card{
+    border:1.5px solid rgba(15,110,86,.22);
+    background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(232,245,241,.72));
+    box-shadow:0 10px 30px rgba(0,86,72,.10);
+    overflow:hidden;
+  }
+  .cb75-safe-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;
+  }
+  .cb75-safe-title{
+    font-family:'Nunito',sans-serif;font-size:17px;font-weight:900;color:var(--green-800);letter-spacing:-.02em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .cb75-safe-sub{font-size:12px;font-weight:800;color:var(--text-muted);line-height:1.45;margin-top:4px;}
+  .cb75-safe-pill{
+    flex-shrink:0;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+    background:var(--teal-50);color:var(--teal-600);font-size:11px;font-weight:900;border:1.5px solid rgba(15,110,86,.18);
+    white-space:nowrap;
+  }
+  .cb75-samu-meter{
+    background:var(--gray-50);border:1.5px solid var(--gray-100);border-radius:14px;padding:12px;margin:12px 0;
+  }
+  .cb75-samu-meter-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;}
+  .cb75-samu-meter-label{font-size:12px;font-weight:900;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+  .cb75-samu-meter-score{font-size:13px;font-weight:900;color:var(--green-800);}
+  .cb75-samu-bar{height:9px;background:var(--gray-100);border-radius:999px;overflow:hidden;}
+  .cb75-samu-fill{height:100%;background:linear-gradient(90deg,var(--teal-400),var(--green-600));border-radius:999px;transition:width .25s ease;}
+  .cb75-samu-missing{font-size:12px;color:var(--text-muted);line-height:1.55;margin-top:8px;font-weight:700;}
+  .cb75-safe-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 10px;}
+  .cb75-safe-btn{
+    border:none;border-radius:12px;padding:12px 10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:900;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;transition:transform .12s ease,filter .12s ease,background .12s ease;
+  }
+  .cb75-safe-btn:active{transform:scale(.98);}
+  .cb75-safe-btn.primary{background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:#fff;box-shadow:0 8px 18px rgba(0,86,72,.20);}
+  .cb75-safe-btn.secondary{background:var(--gray-50);color:var(--green-800);border:1.5px solid var(--gray-200);}
+  .cb75-safe-guides{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .cb75-safe-guide{
+    border:1.5px solid var(--gray-100);border-radius:13px;background:rgba(255,255,255,.86);overflow:hidden;
+  }
+  .cb75-safe-guide summary{
+    list-style:none;cursor:pointer;padding:12px 13px;font-size:14px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:8px;
+  }
+  .cb75-safe-guide summary::-webkit-details-marker{display:none;}
+  .cb75-safe-guide summary::after{content:'⌄';margin-left:auto;color:var(--text-muted);font-weight:900;transition:transform .16s ease;}
+  .cb75-safe-guide[open] summary::after{transform:rotate(180deg);}
+  .cb75-safe-guide-body{padding:0 13px 13px;font-size:13px;font-weight:700;color:var(--text-muted);line-height:1.65;}
+  .cb75-safe-guide-body ul{padding-left:18px;margin:8px 0 0;}
+  .cb75-safe-guide-body li{margin-bottom:5px;}
+  .cb75-safe-note{
+    background:var(--amber-50);border-left:4px solid var(--amber-400);border-radius:0 12px 12px 0;padding:10px 12px;
+    font-size:12px;font-weight:800;color:var(--amber-600);line-height:1.55;margin-top:10px;
+  }
+
+  .cb75-onboarding-overlay{
+    position:fixed;inset:0;z-index:9800;background:rgba(6,24,20,.68);backdrop-filter:blur(12px);
+    display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s ease;
+    padding:calc(env(safe-area-inset-top) + 14px) 12px calc(env(safe-area-inset-bottom) + 14px);
+    min-height:100dvh;
+  }
+  .cb75-onboarding-overlay.open{opacity:1;pointer-events:all;}
+  .cb75-onboarding-sheet{
+    width:100%;max-width:480px;max-height:calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:auto;background:var(--card-bg);color:var(--text);
+    border-radius:28px;box-shadow:0 26px 70px rgba(0,0,0,.32);border:1.5px solid rgba(255,255,255,.40);
+    transform:translateY(10px) scale(.985);transition:transform .28s cubic-bezier(.32,.72,0,1);
+  }
+  .cb75-onboarding-overlay.open .cb75-onboarding-sheet{transform:translateY(0) scale(1);}  
+.cb75-onboarding-hero{
+    background:linear-gradient(135deg,#0f6e56,#1a6b5c 58%,#0d3d35);color:#fff;padding:18px 18px 16px;position:relative;overflow:hidden;
+  }
+  .cb75-onboarding-hero::after{content:'';position:absolute;right:-40px;top:-50px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.12);}
+  .cb75-onboarding-kicker{font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;opacity:.86;margin-bottom:8px;}
+  .cb75-onboarding-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;line-height:1.15;letter-spacing:-.03em;position:relative;z-index:1;}
+  .cb75-onboarding-progress{display:flex;gap:6px;margin-top:16px;position:relative;z-index:1;}
+  .cb75-onboarding-dot{height:5px;flex:1;border-radius:999px;background:rgba(255,255,255,.28);}
+  .cb75-onboarding-dot.active{background:#fff;}
+  .cb75-onboarding-body{padding:18px;}
+  .cb75-step-icon{width:54px;height:54px;border-radius:18px;background:var(--green-50);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:12px;border:1.5px solid rgba(15,110,86,.14);}
+  .cb75-step-title{font-family:'Nunito',sans-serif;font-size:19px;font-weight:900;color:var(--green-800);letter-spacing:-.02em;margin-bottom:8px;}
+  .cb75-step-text{font-size:14px;font-weight:700;color:var(--text-muted);line-height:1.65;margin-bottom:12px;}
+  .cb75-step-list{display:flex;flex-direction:column;gap:7px;margin:12px 0;}
+  .cb75-step-item{display:flex;gap:9px;align-items:flex-start;background:var(--gray-50);border:1.5px solid var(--gray-100);border-radius:12px;padding:10px 11px;font-size:13px;font-weight:800;color:var(--text);line-height:1.45;}
+  .cb75-step-item span:first-child{flex-shrink:0;}
+  .cb75-onboarding-warning{background:var(--coral-50);border-left:4px solid var(--coral-400);border-radius:0 12px 12px 0;padding:10px 12px;font-size:13px;font-weight:900;color:var(--coral-600);line-height:1.55;margin:12px 0;}
+  .cb75-onboarding-footer{display:flex;gap:8px;padding:0 18px 18px;}
+  .cb75-onboarding-btn{flex:1;min-height:46px;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+  .cb75-onboarding-btn.back{background:var(--gray-50);color:var(--text-muted);border:1.5px solid var(--gray-200);}
+  .cb75-onboarding-btn.next{background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:#fff;box-shadow:0 9px 20px rgba(0,86,72,.22);}
+  .cb75-onboarding-small{background:none;border:none;color:var(--text-light);font-size:12px;font-weight:900;text-decoration:underline;margin:0 auto 14px;display:block;cursor:pointer;font-family:'Nunito',sans-serif;}
+
+  body.dark .cb75-safe-card,body.dark-theme .cb75-safe-card{
+    background:linear-gradient(180deg,#102821,#0b1f1a)!important;border-color:#2dd4bf!important;box-shadow:0 14px 34px rgba(0,0,0,.36)!important;
+  }
+  body.dark .cb75-safe-title,body.dark-theme .cb75-safe-title,
+  body.dark .cb75-samu-meter-score,body.dark-theme .cb75-samu-meter-score,
+  body.dark .cb75-step-title,body.dark-theme .cb75-step-title{color:#99f6e4!important;}
+  body.dark .cb75-safe-sub,body.dark-theme .cb75-safe-sub,
+  body.dark .cb75-samu-missing,body.dark-theme .cb75-samu-missing,
+  body.dark .cb75-safe-guide-body,body.dark-theme .cb75-safe-guide-body,
+  body.dark .cb75-step-text,body.dark-theme .cb75-step-text{color:#d7fff5!important;}
+  body.dark .cb75-samu-meter,body.dark-theme .cb75-samu-meter,
+  body.dark .cb75-safe-guide,body.dark-theme .cb75-safe-guide,
+  body.dark .cb75-step-item,body.dark-theme .cb75-step-item{
+    background:#09231d!important;border-color:#1f6f60!important;color:#f0fdf9!important;
+  }
+  body.dark .cb75-onboarding-sheet,body.dark-theme .cb75-onboarding-sheet{background:#071b17!important;color:#f0fdf9!important;border-color:#1f6f60!important;}
+  body.dark .cb75-step-icon,body.dark-theme .cb75-step-icon{background:#0b2b20!important;border-color:#2dd4bf!important;}
+  body.dark .cb75-onboarding-btn.back,body.dark-theme .cb75-onboarding-btn.back,
+  body.dark .cb75-safe-btn.secondary,body.dark-theme .cb75-safe-btn.secondary{background:#09231d!important;color:#d7fff5!important;border-color:#1f6f60!important;}
+  body.dark .cb75-onboarding-small,body.dark-theme .cb75-onboarding-small{color:#99f6e4!important;}
+  @media (min-width:768px){
+    .cb75-onboarding-overlay{align-items:center;padding:24px;}
+    .cb75-onboarding-sheet{border-radius:28px;}
+  }
+  @media (max-width:360px){.cb75-safe-actions{grid-template-columns:1fr}.cb75-onboarding-footer{flex-direction:column}.cb75-onboarding-btn{width:100%;}}
+</style>
+<script id="cuidarbem-v75-14-tutorial-uso-seguro-js">
+(function(){
+  'use strict';
+  const PATCH = 'v75.17-mega-auditoria-operacional-visual';
+  const SEEN_KEY = 'cb_safe_onboarding_seen_v75_14';
+  const STEP_KEY = 'cb_safe_onboarding_step_v75_14';
+  let currentStep = 0;
+
+  const steps = [
+    {
+      icon:'🤝', title:'Finalidade do CuidarBem',
+      text:'O CuidarBem é um app de apoio ao cuidado domiciliar pós-AVC. Ele organiza remédios, consultas, sinais vitais, reabilitação, alimentação, hidratação, sono e alertas importantes.',
+      items:['Ajuda o cuidador a lembrar, registrar e acompanhar a rotina.','Não substitui médico, enfermeiro, fisioterapeuta, farmacêutico ou atendimento de emergência.'],
+      warn:''
+    },
+    {
+      icon:'🚨', title:'Quando procurar ajuda',
+      text:'Diante de piora súbita, o app não deve atrasar a busca por socorro. Use os registros para informar melhor a equipe de saúde.',
+      items:['Fraqueza ou formigamento em um lado do corpo.','Boca torta, fala enrolada, confusão repentina, perda de equilíbrio ou alteração visual.','Dor de cabeça súbita intensa, queda com dor forte ou qualquer sintoma neurológico novo.'],
+      warn:'Em suspeita de AVC ou piora neurológica súbita, trate como urgência e acione atendimento de emergência.'
+    },
+    {
+      icon:'🆘', title:'Conferência do Modo SAMU',
+      text:'Antes de depender do Modo SAMU, confira se a ficha de emergência está completa e fácil de ler.',
+      items:['Nome, idade/data de nascimento e diagnóstico principal.','Alergias, medicações em uso e doenças importantes.','Contato principal, segundo contato, médico/unidade de referência e observações críticas.'],
+      warn:'Se algo estiver faltando, complete em Perfil antes do uso real.'
+    },
+    {
+      icon:'🔐', title:'Privacidade e compartilhamento',
+      text:'O app guarda informações sensíveis de saúde. Compartilhe apenas com familiares ou cuidadores autorizados.',
+      items:['Cadastre dados de outra pessoa somente com ciência dela ou do responsável.','Evite enviar prints com dados pessoais para grupos ou pessoas não envolvidas no cuidado.','Use o compartilhamento familiar apenas com quem participa da rotina.'],
+      warn:''
+    },
+    {
+      icon:'✅', title:'Pronto para começar',
+      text:'Use a primeira semana como piloto familiar: configure a rotina, observe o que confunde e ajuste junto com a cuidadora.',
+      items:['Comece por remédios, contatos de emergência e próximas consultas.','Depois registre sinais vitais, alimentação, hidratação, sono e reabilitação.','Leve o resumo semanal ao médico quando necessário.'],
+      warn:''
+    }
+  ];
+
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const readJson = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch(e) { return fallback; } };
+  const settingsObj = () => readJson('cuidarbem_settings', {});
+  const profileObj = () => (typeof window.getProfile === 'function' ? (window.getProfile() || {}) : readJson('cb_medical_profile', {}));
+  const taskList = () => readJson('cuidarbem_tasks', []);
+  const familyList = () => readJson('cb75_family_caregivers_v75', []);
+
+  function getSamuStatus(){
+    const p = profileObj();
+    const st = settingsObj();
+    const meds = taskList().filter(t => t && t.type === 'med' && t.name);
+    const family = familyList();
+    const patientName = (st.patient || document.getElementById('patient-name-input')?.value || '').trim();
+    const diagnosis = (st.diagnosis || document.getElementById('diagnosis-input')?.value || '').trim();
+    const allergyText = [p.allergyMeds, p.allergyFood, p.allergyOther].filter(Boolean).join(' ').trim();
+    const checks = [
+      {ok:!!patientName, label:'nome completo do paciente'},
+      {ok:!!p.birthday, label:'data de nascimento / idade'},
+      {ok:!!diagnosis, label:'diagnóstico principal'},
+      {ok:!!allergyText, label:'alergias ou registrar “sem alergias conhecidas”'},
+      {ok:meds.length > 0, label:'medicações em uso'},
+      {ok:!!p.conditions || !!p.importantNotes, label:'doenças importantes / observações críticas'},
+      {ok:!!p.emergName && !!p.emergPhone, label:'contato principal de emergência'},
+      {ok:family.length > 0 || !!p.emergRel, label:'segundo contato ou relação familiar'},
+      {ok:!!p.mainDoctor, label:'médico ou unidade de referência'}
+    ];
+    const done = checks.filter(c => c.ok).length;
+    const pct = Math.round((done / checks.length) * 100);
+    return {pct, done, total:checks.length, missing:checks.filter(c => !c.ok).map(c => c.label)};
+  }
+
+  function statusTone(pct){
+    if (pct >= 90) return ['Completo','✅'];
+    if (pct >= 65) return ['Quase pronto','⚠️'];
+    return ['Precisa revisar','🛡️'];
+  }
+
+  function renderProgressDots(){
+    return steps.map((_,i)=>`<div class="cb75-onboarding-dot ${i===currentStep?'active':''}" aria-hidden="true"></div>`).join('');
+  }
+
+  function renderOnboardingStep(){
+    const box = document.getElementById('cb75-onboarding');
+    if (!box) return;
+    const s = steps[currentStep];
+    const isLast = currentStep === steps.length - 1;
+    const isSamu = currentStep === 2;
+    const status = getSamuStatus();
+    box.innerHTML = `
+      <div class="cb75-onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="cb75-onboarding-title">
+        <div class="cb75-onboarding-hero">
+          <div class="cb75-onboarding-kicker">Tutorial inicial seguro · ${PATCH}</div>
+          <div class="cb75-onboarding-title" id="cb75-onboarding-title">${esc(s.title)}</div>
+          <div class="cb75-onboarding-progress">${renderProgressDots()}</div>
+        </div>
+        <div class="cb75-onboarding-body">
+          <div class="cb75-step-icon" aria-hidden="true">${s.icon}</div>
+          <div class="cb75-step-title">${esc(s.title)}</div>
+          <div class="cb75-step-text">${esc(s.text)}</div>
+          <div class="cb75-step-list">
+            ${s.items.map(item=>`<div class="cb75-step-item"><span>•</span><span>${esc(item)}</span></div>`).join('')}
+          </div>
+          ${isSamu ? `
+            <div class="cb75-samu-meter" aria-live="polite">
+              <div class="cb75-samu-meter-top"><div class="cb75-samu-meter-label">Modo SAMU</div><div class="cb75-samu-meter-score">${status.pct}% preenchido</div></div>
+              <div class="cb75-samu-bar"><div class="cb75-samu-fill" style="width:${status.pct}%"></div></div>
+              <div class="cb75-samu-missing">${status.missing.length ? 'Falta conferir: ' + esc(status.missing.slice(0,5).join(', ')) + (status.missing.length>5?'...':'') : 'Ficha essencial preenchida para uso familiar.'}</div>
+            </div>` : ''}
+          ${s.warn ? `<div class="cb75-onboarding-warning">${esc(s.warn)}</div>` : ''}
+        </div>
+        <div class="cb75-onboarding-footer">
+          <button class="cb75-onboarding-btn back" type="button" onclick="CB75SafeOnboarding.prev()">${currentStep===0?'Fechar':'Voltar'}</button>
+          ${isSamu ? `<button class="cb75-onboarding-btn back" type="button" onclick="CB75SafeOnboarding.reviewSamu()">Revisar SAMU</button>` : ''}
+          <button class="cb75-onboarding-btn next" type="button" onclick="CB75SafeOnboarding.next()">${isLast?'Entrar no CuidarBem':'Continuar'}</button>
+        </div>
+        ${!isLast ? `<button class="cb75-onboarding-small" type="button" onclick="CB75SafeOnboarding.postpone()">Ver depois em Perfil &gt; Uso Seguro</button>` : ''}
+      </div>`;
+  }
+
+  function ensureOnboardingShell(){
+    let el = document.getElementById('cb75-onboarding');
+    if (!el){
+      el = document.createElement('div');
+      el.id = 'cb75-onboarding';
+      el.className = 'cb75-onboarding-overlay';
+      el.setAttribute('aria-hidden','true');
+      document.body.appendChild(el);
+      el.addEventListener('click', function(ev){ if (ev.target === el) { window.CB75SafeOnboarding.postpone(); } });
+    }
+    return el;
+  }
+
+  function openOnboarding(force){
+    currentStep = Math.max(0, Math.min(Number(localStorage.getItem(STEP_KEY) || 0) || 0, steps.length-1));
+    if (!force && localStorage.getItem(SEEN_KEY) === '1') return;
+    const el = ensureOnboardingShell();
+    renderOnboardingStep();
+    el.classList.add('open');
+    el.setAttribute('aria-hidden','false');
+    setTimeout(()=>{ try { el.querySelector('button')?.focus({preventScroll:true}); } catch(e) {} }, 50);
+  }
+
+  function closeOnboarding(markSeen){
+    const el = document.getElementById('cb75-onboarding');
+    if (markSeen) localStorage.setItem(SEEN_KEY,'1');
+    if (el){ el.classList.remove('open'); el.setAttribute('aria-hidden','true'); }
+    updateSafeGuide();
+  }
+
+  function guideHtml(){
+    const status = getSamuStatus();
+    const [label, icon] = statusTone(status.pct);
+    const missing = status.missing.length ? status.missing.map(m=>`<li>${esc(m)}</li>`).join('') : '<li>Ficha essencial preenchida para uso familiar.</li>';
+    return `
+      <div id="cb75-safe-guide" class="card cb75-safe-card" style="margin-bottom:16px">
+        <div class="cb75-safe-head">
+          <div>
+            <div class="cb75-safe-title">🧭 Uso Seguro do CuidarBem</div>
+            <div class="cb75-safe-sub">Guia rápido para piloto familiar: finalidade do app, emergência, Modo SAMU, privacidade e primeira semana.</div>
+          </div>
+          <div class="cb75-safe-pill">${icon} ${label}</div>
+        </div>
+        <div class="cb75-samu-meter">
+          <div class="cb75-samu-meter-top"><div class="cb75-samu-meter-label">Checklist Modo SAMU</div><div class="cb75-samu-meter-score">${status.done}/${status.total} · ${status.pct}%</div></div>
+          <div class="cb75-samu-bar"><div class="cb75-samu-fill" style="width:${status.pct}%"></div></div>
+          <div class="cb75-samu-missing"><b>Conferir:</b><ul style="margin:6px 0 0 18px">${missing}</ul></div>
+        </div>
+        <div class="cb75-safe-actions">
+          <button class="cb75-safe-btn primary" type="button" onclick="CB75SafeOnboarding.open(true)">▶️ Ver tutorial</button>
+          <button class="cb75-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.reviewSamu()">🆘 Revisar SAMU</button>
+          <button class="cb75-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.printGuide()">🖨️ Guia para família</button>
+          <button class="cb75-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.resetTutorial()">🔁 Reabrir no início</button>
+        </div>
+        <div class="cb75-safe-guides">
+          <details class="cb75-safe-guide" open>
+            <summary>🤝 Finalidade do app</summary>
+            <div class="cb75-safe-guide-body">O CuidarBem organiza, lembra, registra, alerta e prepara a família para conversar melhor com profissionais de saúde. Ele não diagnostica, não prescreve e não substitui atendimento profissional.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🚨 Emergência e sinais de alerta</summary>
+            <div class="cb75-safe-guide-body">Fraqueza de um lado, boca torta, fala alterada, confusão súbita, alteração visual, perda de equilíbrio, queda importante ou piora neurológica nova exigem ação imediata. O app não deve atrasar a procura por socorro.<div class="cb75-safe-note">Na dúvida, priorize a segurança: acione atendimento de emergência e use o Modo SAMU para informar a equipe.</div></div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🆘 Modo SAMU</summary>
+            <div class="cb75-safe-guide-body">Antes do uso real, confira: nome, idade, alergias, medicações, doenças importantes, contato principal, segundo contato, médico/unidade de referência e observações críticas.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🔐 Privacidade familiar</summary>
+            <div class="cb75-safe-guide-body">Dados de saúde são sensíveis. Cadastre apenas com ciência do paciente ou responsável e compartilhe somente com familiares/cuidadores autorizados.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🗓️ Primeira semana de uso</summary>
+            <div class="cb75-safe-guide-body"><ul><li>Dia 1: cadastrar remédios, contatos e Modo SAMU.</li><li>Dias 2 a 3: testar lembretes, consultas e sinais vitais.</li><li>Dias 4 a 7: registrar sono, humor, alimentação, hidratação e reabilitação.</li><li>No fim da semana: gerar resumo e corrigir o que confundiu.</li></ul></div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🩺 Como levar ao médico</summary>
+            <div class="cb75-safe-guide-body">Leve o resumo semanal com adesão, sinais vitais, quedas/sintomas, alimentação, hidratação, sono, humor e dúvidas sobre remédios. O relatório deve apoiar a consulta, não substituir avaliação clínica.</div>
+          </details>
+        </div>
+      </div>`;
+  }
+
+  function injectSafeGuide(){
+    const content = document.querySelector('#screen-profile .content');
+    if (!content || document.getElementById('cb75-safe-guide')) return;
+    const samuBtn = content.querySelector('.btn-samu-trigger');
+    if (samuBtn) samuBtn.insertAdjacentHTML('afterend', guideHtml());
+    else content.insertAdjacentHTML('afterbegin', guideHtml());
+  }
+
+  function updateSafeGuide(){
+    const old = document.getElementById('cb75-safe-guide');
+    if (!old) { injectSafeGuide(); return; }
+    const openIndexes = Array.from(old.querySelectorAll('details')).map((d,i)=>d.open?i:null).filter(i=>i!==null);
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = guideHtml().trim();
+    old.replaceWith(wrapper.firstElementChild);
+    const next = document.getElementById('cb75-safe-guide');
+    if (next) Array.from(next.querySelectorAll('details')).forEach((d,i)=>{ d.open = openIndexes.includes(i); });
+  }
+
+  function goProfileAndScroll(target){
+    try {
+      const btn = document.getElementById('nav-profile');
+      if (typeof window.goScreen === 'function' && btn) window.goScreen('profile', btn);
+    } catch(e) {}
+    setTimeout(()=>{
+      const el = document.querySelector(target || '#cb75-safe-guide');
+      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 90);
+  }
+
+  function printGuide(){
+    const status = getSamuStatus();
+    const st = settingsObj();
+    const p = profileObj();
+    const patient = st.patient || 'Paciente';
+    const missing = status.missing.length ? status.missing.map(x=>`<li>${esc(x)}</li>`).join('') : '<li>Ficha essencial preenchida.</li>';
+    const doc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>CuidarBem — Guia de Uso Seguro</title><style>
+      body{font-family:Arial,sans-serif;margin:28px;color:#10201b;line-height:1.55} h1{color:#0f6e56;margin-bottom:4px} h2{color:#1a6b5c;margin-top:22px} .box{border:1px solid #b7ddd1;border-radius:14px;padding:14px;margin:12px 0;background:#f1faf7}.warn{border-left:5px solid #d85a30;background:#fff4ee}.small{color:#52615c;font-size:13px}@media print{body{margin:18mm}.box{break-inside:avoid}}</style></head><body>
+      <h1>CuidarBem — Guia de Uso Seguro</h1><div class="small">Paciente: <b>${esc(patient)}</b> · Checklist Modo SAMU: <b>${status.pct}%</b></div>
+      <div class="box warn"><b>Finalidade:</b> o app organiza, lembra, registra e alerta. Não substitui profissionais de saúde nem atendimento de emergência.</div>
+      <h2>Quando procurar ajuda</h2><p>Fraqueza de um lado, boca torta, fala alterada, confusão súbita, alteração visual, perda de equilíbrio, queda importante ou piora neurológica nova devem ser tratados como urgência.</p>
+      <h2>Checklist Modo SAMU</h2><ul>${missing}</ul>
+      <h2>Privacidade</h2><p>Dados de saúde são sensíveis. Compartilhe apenas com familiares e cuidadores autorizados.</p>
+      <h2>Primeira semana</h2><ol><li>Cadastrar remédios, contatos e Modo SAMU.</li><li>Testar lembretes, consultas e sinais vitais.</li><li>Registrar sono, humor, alimentação, hidratação e reabilitação.</li><li>Gerar resumo semanal para revisar com a família ou médico.</li></ol>
+      <h2>Dados rápidos</h2><p><b>Alergias:</b> ${esc([p.allergyMeds,p.allergyFood,p.allergyOther].filter(Boolean).join('; ') || 'não informado')}</p><p><b>Contato:</b> ${esc([p.emergName,p.emergPhone].filter(Boolean).join(' — ') || 'não informado')}</p>
+      
+<!-- v75.15 — Tutorial inicial centralizado -->
+<style id="cuidarbem-v75-15-tutorial-centralizado-ajuste">
+  @media (max-width:380px){
+    .cb75-onboarding-sheet{max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;}
+    .cb75-onboarding-hero{padding:14px 16px 13px!important;}
+    .cb75-onboarding-body{padding:14px 16px!important;}
+    .cb75-onboarding-footer{padding:0 16px 14px!important;}
+  }
+</style>
+
+</body></html>`;
+    const w = window.open('', '_blank');
+    if (!w) { alert('Permita pop-ups para imprimir o guia.'); return; }
+    w.document.open(); w.document.write(doc); w.document.close();
+    setTimeout(()=>{ try { w.focus(); w.print(); } catch(e) {} }, 350);
+  }
+
+  function patchSaveProfile(){
+    if (window.__cb75_safe_save_patch) return;
+    const original = window.saveProfile;
+    if (typeof original === 'function'){
+      window.saveProfile = function(){ const r = original.apply(this, arguments); setTimeout(updateSafeGuide, 0); return r; };
+      window.__cb75_safe_save_patch = true;
+    }
+  }
+
+  window.CB75SafeOnboarding = {
+    open: openOnboarding,
+    next(){
+      if (currentStep < steps.length - 1){ currentStep++; localStorage.setItem(STEP_KEY, String(currentStep)); renderOnboardingStep(); }
+      else { localStorage.removeItem(STEP_KEY); closeOnboarding(true); try { showToast('✅ Tutorial de uso seguro concluído'); } catch(e) {} }
+    },
+    prev(){
+      if (currentStep > 0){ currentStep--; localStorage.setItem(STEP_KEY, String(currentStep)); renderOnboardingStep(); }
+      else closeOnboarding(false);
+    },
+    postpone(){ closeOnboarding(false); try { showToast('🧭 Guia salvo em Perfil > Uso Seguro'); } catch(e) {} },
+    reviewSamu(){ closeOnboarding(false); goProfileAndScroll('#cb75-safe-guide'); try { showToast('🆘 Confira o Modo SAMU antes do uso real'); } catch(e) {} },
+    resetTutorial(){ localStorage.removeItem(SEEN_KEY); localStorage.removeItem(STEP_KEY); openOnboarding(true); },
+    printGuide,
+    refresh: updateSafeGuide
+  };
+
+  function boot(){
+    try { localStorage.setItem('cuidarbem_patch_version', PATCH); } catch(e) {}
+    injectSafeGuide();
+    patchSaveProfile();
+    setTimeout(updateSafeGuide, 120);
+    if (localStorage.getItem(SEEN_KEY) !== '1') setTimeout(()=>openOnboarding(false), 550);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
+})();
+</script>
+
+<style id="cuidarbem-v75-16-confirmacao-medicamento-estavel-css">
+/* =========================================================
+   CuidarBem v75.16 — confirmação de medicamento estável
+   - remove flashes brancos em toques/botões
+   - estabiliza o bottom sheet de confirmação
+   - substitui o confirm() nativo por diálogo visual do próprio app
+========================================================= */
+#confirm-modal.confirm-overlay{
+  background:rgba(4,18,15,.72)!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+  transition:opacity .18s ease!important;
+  contain:layout paint style;
+  overscroll-behavior:contain;
+}
+#confirm-modal .confirm-sheet{
+  background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(246,251,249,.98) 100%)!important;
+  overflow:hidden;
+  isolation:isolate;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:translate3d(0,100%,0)!important;
+  will-change:transform, opacity;
+  contain:paint;
+}
+#confirm-modal.open .confirm-sheet{
+  transform:translate3d(0,0,0)!important;
+}
+#confirm-modal *,
+.cb75-risk-overlay *,
+.med-check-btn,
+.btn-confirm,
+.btn-confirm-cancel{
+  -webkit-tap-highlight-color:transparent!important;
+}
+#confirm-modal .med-checklist{
+  background:rgba(236,247,243,.78)!important;
+  border-color:rgba(26,107,92,.20)!important;
+}
+#confirm-modal .med-check-item{
+  border-bottom-color:rgba(26,107,92,.14)!important;
+}
+#confirm-modal .med-check-btn{
+  background:rgba(255,255,255,.82)!important;
+  color:var(--text)!important;
+  border-color:rgba(26,107,92,.18)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.62), 0 3px 10px rgba(0,60,50,.08)!important;
+  transition:transform .12s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease!important;
+}
+#confirm-modal .med-check-btn:focus-visible{
+  outline:3px solid rgba(29,158,117,.35)!important;
+  outline-offset:2px;
+}
+#confirm-modal .med-check-btn.yes{
+  background:#dff6ef!important;
+  border-color:#15906f!important;
+  box-shadow:0 0 0 3px rgba(29,158,117,.16)!important;
+}
+#confirm-modal .med-check-btn.no{
+  background:#fde9e5!important;
+  border-color:#d85a30!important;
+  box-shadow:0 0 0 3px rgba(216,90,48,.14)!important;
+}
+#confirm-modal .btn-confirm,
+#confirm-modal .btn-confirm-cancel{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+body.dark #confirm-modal .confirm-sheet,
+body.dark-theme #confirm-modal .confirm-sheet{
+  background:linear-gradient(180deg,#1d271f 0%, #141d17 100%)!important;
+  border-color:rgba(143,207,188,.18)!important;
+}
+body.dark #confirm-modal .med-checklist,
+body.dark-theme #confirm-modal .med-checklist{
+  background:rgba(11,30,24,.86)!important;
+  border-color:rgba(143,207,188,.22)!important;
+}
+body.dark #confirm-modal .med-check-item,
+body.dark-theme #confirm-modal .med-check-item{
+  border-bottom-color:rgba(143,207,188,.14)!important;
+}
+body.dark #confirm-modal .med-check-btn,
+body.dark-theme #confirm-modal .med-check-btn{
+  background:#223026!important;
+  color:#f5fff9!important;
+  border-color:rgba(195,230,218,.22)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.05), 0 3px 12px rgba(0,0,0,.24)!important;
+}
+body.dark #confirm-modal .med-check-btn.yes,
+body.dark-theme #confirm-modal .med-check-btn.yes{
+  background:#123f32!important;
+  border-color:#4ad3aa!important;
+}
+body.dark #confirm-modal .med-check-btn.no,
+body.dark-theme #confirm-modal .med-check-btn.no{
+  background:#421b16!important;
+  border-color:#f08a67!important;
+}
+.cb75-risk-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10050;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(4,18,15,.74);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease;
+}
+.cb75-risk-overlay.open{
+  opacity:1;
+  pointer-events:all;
+}
+.cb75-risk-box{
+  width:min(430px,100%);
+  background:linear-gradient(180deg,#ffffff 0%,#f5fbf8 100%);
+  color:var(--text);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 28px 80px rgba(0,30,26,.34);
+  border:1px solid rgba(255,255,255,.72);
+  transform:scale(.96) translateY(8px);
+  transition:transform .18s ease;
+}
+.cb75-risk-overlay.open .cb75-risk-box{
+  transform:scale(1) translateY(0);
+}
+.cb75-risk-icon{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  background:#eaf8f3;
+  margin:0 auto 10px;
+  font-size:24px;
+}
+.cb75-risk-box h3{
+  text-align:center;
+  color:var(--green-800);
+  font-size:20px;
+  font-weight:900;
+  margin:0 0 8px;
+}
+.cb75-risk-box p{
+  color:var(--text-muted);
+  font-size:14px;
+  line-height:1.5;
+  text-align:center;
+  margin:0 0 14px;
+  font-weight:700;
+}
+.cb75-risk-checks{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:6px;
+  margin:0 0 16px;
+}
+.cb75-risk-checks span{
+  background:rgba(26,107,92,.08);
+  color:var(--green-800);
+  border:1px solid rgba(26,107,92,.16);
+  border-radius:12px;
+  padding:9px 12px;
+  font-size:13px;
+  font-weight:800;
+}
+.cb75-risk-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.cb75-risk-actions button{
+  border:0;
+  border-radius:15px;
+  padding:14px;
+  font-family:'Nunito',sans-serif;
+  font-weight:900;
+  cursor:pointer;
+}
+.cb75-risk-cancel{
+  background:var(--gray-100);
+  color:var(--text-muted);
+  border:1px solid var(--gray-200)!important;
+}
+.cb75-risk-ok{
+  background:linear-gradient(135deg,var(--green-600),var(--green-800));
+  color:white;
+  box-shadow:0 14px 28px rgba(0,107,88,.22);
+}
+body.dark .cb75-risk-box,
+body.dark-theme .cb75-risk-box{
+  background:linear-gradient(180deg,#1d271f 0%,#141d17 100%);
+  color:#f5fff9;
+  border-color:rgba(143,207,188,.20);
+}
+body.dark .cb75-risk-box h3,
+body.dark-theme .cb75-risk-box h3{color:#dff6ef;}
+body.dark .cb75-risk-box p,
+body.dark-theme .cb75-risk-box p{color:#d4e4dc;}
+body.dark .cb75-risk-icon,
+body.dark-theme .cb75-risk-icon{background:#123f32;}
+body.dark .cb75-risk-checks span,
+body.dark-theme .cb75-risk-checks span{
+  background:rgba(143,207,188,.10);
+  color:#eaf8f3;
+  border-color:rgba(143,207,188,.20);
+}
+body.dark .cb75-risk-cancel,
+body.dark-theme .cb75-risk-cancel{
+  background:#223026;
+  color:#f5fff9;
+  border-color:rgba(143,207,188,.22)!important;
+}
+@media (min-width:768px){
+  #confirm-modal.confirm-overlay{align-items:center!important;justify-content:center!important;}
+  #confirm-modal .confirm-sheet{
+    border-radius:26px!important;
+    transform:scale(.96) translate3d(0,10px,0)!important;
+  }
+  #confirm-modal.open .confirm-sheet{
+    transform:scale(1) translate3d(0,0,0)!important;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  #confirm-modal.confirm-overlay,
+  #confirm-modal .confirm-sheet,
+  .cb75-risk-overlay,
+  .cb75-risk-box,
+  #confirm-modal .med-check-btn{transition:none!important;}
+}
+</style>
+<script id="cuidarbem-v75-16-confirmacao-medicamento-estavel-js">
+(function(){
+  'use strict';
+  if (window.__CB75_CONFIRM_STABLE__) return;
+  window.__CB75_CONFIRM_STABLE__ = true;
+  function safePatch(){
+    try{
+      const modal=document.getElementById('confirm-modal');
+      if(!modal) return;
+      modal.addEventListener('click', function(e){
+        const btn=e.target.closest && e.target.closest('.med-check-btn,.btn-confirm,.btn-confirm-cancel');
+        if(!btn) return;
+        btn.style.willChange='transform,background-color,border-color';
+        setTimeout(()=>{ btn.style.willChange=''; }, 180);
+      }, {passive:true});
+    }catch(e){ console.warn('[CuidarBem v75.16] confirmação estável:', e); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', safePatch); else safePatch();
+})();
+</script>
+
+<style id="cuidarbem-v75-17-mega-auditoria-css">
+/* =========================================================
+   CuidarBem v75.17 — mega auditoria operacional e visual
+   Foco: isolamento real de guias, scroll consistente, menos repaint,
+   prevenção de flashes e contraste final em painéis próprios.
+========================================================= */
+html, body{
+  overscroll-behavior-y:none;
+  background:var(--bg)!important;
+}
+body.dark, body.dark-theme{ color-scheme:dark; }
+body:not(.dark):not(.dark-theme){ color-scheme:light; }
+
+/* Isolamento real de guias: tela oculta não pinta, não recebe foco e não interfere no scroll. */
+.screen:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  opacity:0!important;
+  height:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+.screen.active{
+  visibility:visible!important;
+  pointer-events:auto!important;
+  opacity:1!important;
+  min-height:100dvh!important;
+  background:var(--bg)!important;
+  isolation:isolate;
+  contain:layout paint;
+}
+@media (max-width:767px){
+  .screen.active{display:block!important; overflow-y:auto!important; overflow-x:hidden!important;}
+}
+@media (min-width:768px){
+  .screen.active:not(#screen-home){display:block!important; overflow-y:auto!important; overflow-x:hidden!important;}
+  #screen-home.active{display:grid!important; overflow:hidden!important;}
+}
+
+/* Evita flashes brancos em painéis/overlays durante confirmações e transições. */
+.card,.stat-card,.setting-row,.modal,.modal-overlay,.confirm-overlay,.confirm-sheet,.appt-confirm-sheet,.med-info-inner,.photo-modal,.cb75-onboarding-sheet,.cb75-safe-card,.cb75-risk-box{
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.confirm-sheet,.modal,.appt-confirm-sheet,.med-info-inner,.photo-modal,.cb75-onboarding-sheet{
+  background:linear-gradient(180deg, rgba(255,255,255,.99), rgba(247,251,249,.99))!important;
+}
+body.dark .confirm-sheet, body.dark-theme .confirm-sheet,
+body.dark .modal, body.dark-theme .modal,
+body.dark .appt-confirm-sheet, body.dark-theme .appt-confirm-sheet,
+body.dark .med-info-inner, body.dark-theme .med-info-inner,
+body.dark .photo-modal, body.dark-theme .photo-modal,
+body.dark .cb75-onboarding-sheet, body.dark-theme .cb75-onboarding-sheet{
+  background:linear-gradient(180deg,#17231f,#101a17)!important;
+  color:#f5fff9!important;
+}
+body.cb-modal-open{overflow:hidden!important;}
+body.cb-modal-open .screen.active{overscroll-behavior:contain!important;}
+
+/* Campos de consulta/exame corrigidos: mantém consistência visual nos IDs separados. */
+#task-location-cons,#task-location-exam{min-height:44px;}
+
+/* Painéis com estilos próprios que ainda escapavam de contraste. */
+.cb75-safe-guide-panel,.cb75-safe-guide-panel *,
+.cb75-card,.cb75-card *,
+.cb75-panel,.cb75-panel *,
+.health-card,.health-card *,
+.rehab-card,.rehab-card *,
+.complication-card,.complication-card *{
+  text-rendering:optimizeLegibility;
+}
+body.dark .cb75-safe-guide-panel,
+body.dark-theme .cb75-safe-guide-panel,
+body.dark .cb75-card,
+body.dark-theme .cb75-card,
+body.dark .cb75-panel,
+body.dark-theme .cb75-panel,
+body.dark .health-card,
+body.dark-theme .health-card,
+body.dark .rehab-card,
+body.dark-theme .rehab-card,
+body.dark .complication-card,
+body.dark-theme .complication-card{
+  background:#17231f!important;
+  border-color:rgba(142,207,188,.22)!important;
+  color:#f4fff9!important;
+}
+body.dark .form-input,
+body.dark-theme .form-input,
+body.dark input,
+body.dark-theme input,
+body.dark textarea,
+body.dark-theme textarea,
+body.dark select,
+body.dark-theme select{
+  background:#101a17!important;
+  color:#f4fff9!important;
+  border-color:rgba(142,207,188,.30)!important;
+}
+body.dark .form-input::placeholder,
+body.dark-theme .form-input::placeholder,
+body.dark input::placeholder,
+body.dark-theme input::placeholder,
+body.dark textarea::placeholder,
+body.dark-theme textarea::placeholder{color:#9fb4ad!important;}
+
+/* Botões e chips: impede estado branco no toque rápido. */
+button,.chip,.cat-pill,.task-check,.med-check-btn{
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+button:focus-visible,.nav-btn:focus-visible,.form-input:focus-visible,.chip:focus-visible{
+  outline:3px solid rgba(29,158,117,.55)!important;
+  outline-offset:2px!important;
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important;}
+}
+</style>
+
+
+<script id="cuidarbem-v75-17-mega-auditoria-js">
+(function(){
+  'use strict';
+  if (window.__CB75_MEGA_AUDIT__) return;
+  window.__CB75_MEGA_AUDIT__ = true;
+  const PATCH = 'v75.17-mega-auditoria-operacional-visual';
+
+  function qsa(sel, root=document){ return Array.from(root.querySelectorAll(sel)); }
+  function activeScreen(){ return document.querySelector('.screen.active') || document.getElementById('screen-home'); }
+
+  function syncModalState(){
+    const open = !!document.querySelector('.modal-overlay.open,.confirm-overlay.open,.appt-confirm-overlay.open,.med-info-overlay.open,.photo-modal-overlay.open,.samu-overlay.open,.cb75-onboarding-overlay.open,.cb75-risk-overlay.open');
+    document.body.classList.toggle('cb-modal-open', open);
+  }
+
+  function installMutationGuard(){
+    const obs = new MutationObserver(syncModalState);
+    obs.observe(document.body, {attributes:true, subtree:true, attributeFilter:['class','style']});
+    syncModalState();
+  }
+
+  function installRenderGuards(){
+    // Guarda contra recursão e rajadas curtas, sem atrasar a resposta visual normal.
+    ['renderAll','renderCB75All','renderReports','renderCalendar','renderTodayTasks'].forEach(name=>{
+      const fn = window[name];
+      if (typeof fn !== 'function' || fn.__cb75AuditGuard) return;
+      let running = false;
+      let queued = false;
+      const wrapped = function(){
+        if (running){ queued = true; return; }
+        running = true;
+        try { return fn.apply(this, arguments); }
+        catch(e){ console.warn('[CuidarBem v75.17]', name, e); }
+        finally {
+          running = false;
+          if (queued){
+            queued = false;
+            queueMicrotask(()=>{ try { wrapped.call(this); } catch(e){} });
+          }
+        }
+      };
+      wrapped.__cb75AuditGuard = true;
+      wrapped.__original = fn;
+      try { window[name] = wrapped; } catch(e) {}
+    });
+  }
+
+  function installNavigationAudit(){
+    const oldGo = window.goScreen;
+    if (typeof oldGo === 'function' && !oldGo.__cb75AuditNav){
+      const wrapped = function(name, btn){
+        const result = oldGo.apply(this, arguments);
+        queueMicrotask(()=>{
+          try{
+            qsa('.screen:not(.active)').forEach(s=>{ s.scrollTop = 0; });
+            const screen = activeScreen();
+            if (screen) screen.scrollTop = 0;
+            syncModalState();
+          }catch(e){}
+        });
+        return result;
+      };
+      wrapped.__cb75AuditNav = true;
+      try { window.goScreen = wrapped; } catch(e) {}
+    }
+  }
+
+  function fixDuplicateFieldRuntime(){
+    // Segurança adicional para instalações que ainda tiverem HTML antigo em cache.
+    const locs = qsa('#task-location');
+    if (locs.length > 1){
+      locs[0].id = 'task-location-cons';
+      locs[1].id = 'task-location-exam';
+    }
+  }
+
+  function auditOnce(){
+    try{
+      fixDuplicateFieldRuntime();
+      document.documentElement.dataset.cbAudit = PATCH;
+      localStorage.setItem('cuidarbem_patch_version', PATCH);
+      const ids = qsa('[id]').map(el=>el.id).filter(Boolean);
+      const dup = ids.filter((id,i)=>ids.indexOf(id)!==i && !/^\$\{/.test(id));
+      if (dup.length) console.warn('[CuidarBem v75.17] IDs duplicados remanescentes:', Array.from(new Set(dup)));
+    }catch(e){ console.warn('[CuidarBem v75.17] auditoria:', e); }
+  }
+
+  function boot(){
+    installMutationGuard();
+    installRenderGuards();
+    installNavigationAudit();
+    auditOnce();
+    setTimeout(syncModalState, 300);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
+})();
+</script>
+
+
+
+
+<!-- v75.22 — limpeza de texto vazado e confirmação isolada segura -->
+<style id="cuidarbem-v75-22-limpeza-final-css">
+  /* Consulta/Exame centralizado de forma isolada, sem tocar no fluxo de medicação. */
+  #seen-modal.confirm-overlay.open,
+  #appt-confirm-modal.appt-confirm-overlay.open{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 14px) !important;
+    overflow:hidden !important;
+  }
+  #seen-modal .seen-sheet,
+  #appt-confirm-modal .appt-confirm-sheet{
+    width:min(100%,448px) !important;
+    max-width:448px !important;
+    margin:auto !important;
+    border-radius:28px !important;
+    max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    overscroll-behavior:contain !important;
+    transform:none !important;
+    opacity:1 !important;
+  }
+  #seen-modal.open .seen-sheet,
+  #appt-confirm-modal.open .appt-confirm-sheet{
+    transform:none !important;
+    opacity:1 !important;
+  }
+  #seen-modal .confirm-handle,
+  #appt-confirm-modal .confirm-handle{
+    display:none !important;
+  }
+  @media (max-height:660px){
+    #seen-modal .seen-sheet,
+    #appt-confirm-modal .appt-confirm-sheet{
+      max-height:calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
+      border-radius:24px !important;
+      padding-top:18px !important;
+      padding-bottom:18px !important;
+    }
+  }
+  /* Proteção: confirmação de medicamento fica no seu fluxo próprio antigo/estável. */
+  #confirm-modal.confirm-overlay.open{
+    display:flex;
+  }
+  #confirm-modal .confirm-sheet{
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+</style>
+<script id="cuidarbem-v75-22-limpeza-final-js">
+(function(){
+  'use strict';
+  const PATCH = 'v75.22-limpeza-texto-final-e-confirmacoes';
+
+  function safeSetVersion(){
+    try { localStorage.setItem('cuidarbem_patch_version', PATCH); } catch(e) {}
+    try { document.documentElement.dataset.cbPatch = PATCH; } catch(e) {}
+    try {
+      document.querySelectorAll('.nav-footer').forEach(el => {
+        el.innerHTML = 'CuidarBem v75.22 Premium<br>Cuidado que conecta';
+      });
+    } catch(e) {}
+  }
+
+  function centerConsultaExame(){
+    ['seen-modal','appt-confirm-modal'].forEach(id => {
+      const modal = document.getElementById(id);
+      if (!modal) return;
+      const sheet = modal.querySelector('.seen-sheet,.appt-confirm-sheet');
+      if (sheet) {
+        try { sheet.scrollTop = 0; } catch(e) {}
+      }
+    });
+  }
+
+  function patchOpeners(){
+    if (typeof window.openSeenModal === 'function' && !window.openSeenModal.__cb7522SafeCentered){
+      const original = window.openSeenModal;
+      const wrapped = function(){
+        const result = original.apply(this, arguments);
+        requestAnimationFrame(centerConsultaExame);
+        return result;
+      };
+      wrapped.__cb7522SafeCentered = true;
+      window.openSeenModal = wrapped;
+      try { openSeenModal = wrapped; } catch(e) {}
+    }
+  }
+
+  function sanitizeVisibleLeak(){
+    /* Remoção defensiva para instalações que receberam cache quebrado da v75.21.
+       Não mexe em scripts reais, apenas remove nós de texto visíveis com fragmentos JS vazados. */
+    try {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node){
+          const t = (node.nodeValue || '').trim();
+          if (!t) return NodeFilter.FILTER_REJECT;
+          if (t.includes('const w = window.open') || t.includes('function patchSaveProfile') || t.includes('window.CB75SafeOnboarding =')) return NodeFilter.FILTER_ACCEPT;
+          return NodeFilter.FILTER_REJECT;
+        }
+      });
+      const bad = [];
+      while (walker.nextNode()) bad.push(walker.currentNode);
+      bad.forEach(n => n.parentNode && n.parentNode.removeChild(n));
+    } catch(e) {}
+  }
+
+  function boot(){
+    safeSetVersion();
+    patchOpeners();
+    sanitizeVisibleLeak();
+    setTimeout(sanitizeVisibleLeak, 250);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true});
+  else boot();
+})();
+</script>
 
 </body>
 </html>
