@@ -18299,10 +18299,83 @@ button:focus-visible,.nav-btn:focus-visible,.form-input:focus-visible,.chip:focu
   white-space: nowrap !important;
 }
 
-/* 6) Padding-top do content no mobile */
+/* 6) Padding-top do content — será sobrescrito pelo fix-final abaixo */
 @media (max-width: 767px) {
-  #screen-home .content { padding-top: 200px !important; }
+  #screen-home .content { padding-top: 16px !important; }
 }
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FIX MOBILE v75-audit: resolve flashes, header sumindo, animações
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-mobile-fix-final">
+
+/*
+ * CAUSA RAIZ #1 — position:fixed dentro de scroll container no iOS
+ * ----------------------------------------------------------------
+ * No mobile, .screen.active tem overflow-y:auto + height:100svh.
+ * position:fixed dentro desse container é tratado pelo iOS Safari
+ * como position:absolute — o header rola com o conteúdo e some.
+ * Fix: converter para position:sticky no mobile.
+ */
+@media (max-width: 767px) {
+
+  #screen-home .header,
+  .screen.active .header {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  .screen.active .header-sub {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  /* Com header sticky o conteúdo não precisa de padding compensatório */
+  #screen-home.active .content,
+  #screen-home .content {
+    padding-top: 16px !important;
+    margin-top: 0 !important;
+  }
+}
+
+/*
+ * CAUSA RAIZ #2 — Animações GLOBAIS em .screen.active (sem media query)
+ * cbDesktopFadeIn (L12333) e cbScreenIn (L14337) disparam no mobile
+ * em cada troca de guia causando flash de opacity:0 + translateY.
+ */
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior aparecendo brevemente ao trocar guias.
+ */
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
 </style>
 
 </body>
