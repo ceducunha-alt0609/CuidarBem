@@ -9,11 +9,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CuidarBem">
 <meta name="description" content="CuidarBem v75: app PWA de cuidados domiciliares pós-AVC para familiares e cuidadores">
-<link rel="manifest" href="manifest.webmanifest" id="pwa-manifest">
-<link rel="icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="icon-192.png">
+<!-- manifest, favicon e icon-192 omitidos — app single-file, arquivos externos causariam 404 -->
 <title>CuidarBem v75.22 — Estabilidade e limpeza visual</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Fallback offline: se Google Fonts falhar, usa fontes do sistema */
+body { font-family: 'Nunito Sans', ui-rounded, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+h1,h2,h3,h4,.nav-btn,.card-title { font-family: 'Nunito', ui-rounded, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+</style>
 <style>
   :root {
     --green-50: #e8f5f1;
@@ -60,22 +63,29 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
+  html {
+    overscroll-behavior: none;
+    background: var(--bg);
+  }
+
   body {
     font-family: 'Nunito Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
-    min-height: 100dvh;
+    min-height: 100svh; /* svh = viewport estável, não muda com barra do browser */
     max-width: 480px;
     margin: 0 auto;
     position: relative;
     overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
 
   /* NAV */
   .bottom-nav {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);
     width: 100%; max-width: 480px;
     background: var(--white);
     border-top: 1px solid var(--gray-100);
@@ -83,6 +93,9 @@
     height: var(--nav-h);
     z-index: 100;
     padding-bottom: env(safe-area-inset-bottom);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* will-change omitido: criaria containing block para position:fixed filhos no desktop */
   }
   .nav-btn {
     flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -103,17 +116,12 @@
 
   /* SCREENS */
   .screen {
-    display: block; padding: 0 0 calc(var(--nav-h) + 16px) 0;
-    min-height: 100dvh;
-    visibility: hidden;
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    pointer-events: none;
-    /* Evita repaint ao trocar guias — sem display:none/block */
+    display: none; /* fora do render tree = sem flash de scroll */
+    padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100svh;
   }
   .screen.active {
-    visibility: visible;
-    position: relative;
+    display: block;
     pointer-events: auto;
   }
 
@@ -1655,21 +1663,21 @@
 
     body {
       max-width: 100%;
-      min-height: 100dvh;
+      min-height: 100svh;
       overflow-x: hidden;
     }
 
     /* Screens pushed right of sidebar */
     .screen {
       margin-left: var(--sidebar-w);
-      min-height: 100dvh;
+      min-height: 100svh;
     }
 
     /* ── Sidebar replaces bottom nav ── */
     .bottom-nav {
       position: fixed; top: 0; left: 0; bottom: 0;
       width: var(--sidebar-w);
-      height: 100dvh;
+      height: 100svh;
       flex-direction: column;
       align-items: stretch;
       border-top: none;
@@ -1756,17 +1764,18 @@
     .screen {
       display: none;
       padding: 0;
-      min-height: 100dvh;
-      overflow-y: auto;
+      min-height: 100svh;
+      overflow: visible; /* não captura wheel — body rola naturalmente */
     }
-    .screen.active { visibility: visible; position: relative; pointer-events: auto; }
+    .screen.active { display: block; pointer-events: auto; }
 
-    /* Home screen: 2-column layout */
+    /* Home screen: 2-column layout com scroll interno por painel */
     #screen-home.active {
       display: grid;
       grid-template-rows: auto 1fr;
       grid-template-columns: 1fr 360px;
-      min-height: 100dvh;
+      height: 100svh;        /* altura fixa — painéis internos rolam */
+      overflow: hidden;      /* clipa os painéis internos */
     }
     #screen-home .header {
       grid-column: 1 / -1;
@@ -2547,8 +2556,8 @@ button[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{
 @media (min-width:768px){
   :root{--sidebar-w:260px;--nav-h:0px!important}
   body{background:linear-gradient(135deg,#f8fcfa,#e7f5ef)!important;}
-  .bottom-nav{width:260px!important;height:100dvh!important;background:rgba(255,255,255,.90)!important;border-right:1px solid rgba(0,107,88,.08)!important;border-top:0!important;box-shadow:12px 0 40px rgba(0,63,54,.08)!important;padding:18px 14px!important;gap:6px;}
-  .bottom-nav::before{display:none!important}.nav-brand{position:relative!important;height:auto!important;background:transparent!important;padding:6px 6px 22px!important;gap:12px!important;border-bottom:1px solid var(--gray-100);margin-bottom:10px;}.nav-brand-icon{width:48px;height:48px;border-radius:16px;overflow:hidden;box-shadow:0 10px 22px rgba(0,86,72,.20);}.nav-brand-icon img{width:100%;height:100%;display:block}.nav-brand-text{color:var(--green-800)!important;font-size:20px!important;letter-spacing:-.03em}.nav-brand-sub{color:var(--text-light)!important;font-weight:700!important;font-size:11px!important}.nav-btn{border-radius:18px!important;padding:13px 16px!important;border-left:0!important;color:var(--text-muted)!important}.nav-btn.active{background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;color:white!important;box-shadow:0 12px 28px rgba(0,86,72,.24)}.nav-btn:not(.active):hover{background:var(--green-50)!important;color:var(--green-700)!important}.nav-footer{border-top:1px solid var(--gray-100)!important;color:var(--text-light)!important;padding:18px 10px 4px!important}.screen{margin-left:260px!important}.premium-topbar{display:none!important}#screen-home.active{grid-template-columns:minmax(0,1fr) 420px!important;gap:0;max-width:1400px}.screen.active{animation:cbFadeIn .22s ease}.header,#screen-home .header{border-radius:0 0 30px 30px!important;min-height:118px!important;height:auto!important;padding:24px 38px!important}.vitals-bar{max-width:520px;margin-left:auto}.desktop-right-panel{background:rgba(255,255,255,.25);border-left:1px solid rgba(0,107,88,.08)!important}.mobile-only-progress{display:none!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{border-radius:30px!important;}
+  .bottom-nav{width:260px!important;height:100svh!important;background:rgba(255,255,255,.90)!important;border-right:1px solid rgba(0,107,88,.08)!important;border-top:0!important;box-shadow:12px 0 40px rgba(0,63,54,.08)!important;padding:18px 14px!important;gap:6px;}
+  .bottom-nav::before{display:none!important}.nav-brand{position:relative!important;height:auto!important;background:transparent!important;padding:6px 6px 22px!important;gap:12px!important;border-bottom:1px solid var(--gray-100);margin-bottom:10px;}.nav-brand-icon{width:48px;height:48px;border-radius:16px;overflow:hidden;box-shadow:0 10px 22px rgba(0,86,72,.20);}.nav-brand-icon img{width:100%;height:100%;display:block}.nav-brand-text{color:var(--green-800)!important;font-size:20px!important;letter-spacing:-.03em}.nav-brand-sub{color:var(--text-light)!important;font-weight:700!important;font-size:11px!important}.nav-btn{border-radius:18px!important;padding:13px 16px!important;border-left:0!important;color:var(--text-muted)!important}.nav-btn.active{background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;color:white!important;box-shadow:0 12px 28px rgba(0,86,72,.24)}.nav-btn:not(.active):hover{background:var(--green-50)!important;color:var(--green-700)!important}.nav-footer{border-top:1px solid var(--gray-100)!important;color:var(--text-light)!important;padding:18px 10px 4px!important}.screen{margin-left:260px!important}.premium-topbar{display:none!important}#screen-home.active{grid-template-columns:minmax(0,1fr) 420px!important;gap:0;max-width:1400px}.header,#screen-home .header{border-radius:0 0 30px 30px!important;min-height:118px!important;height:auto!important;padding:24px 38px!important}.vitals-bar{max-width:520px;margin-left:auto}.desktop-right-panel{background:rgba(255,255,255,.25);border-left:1px solid rgba(0,107,88,.08)!important}.mobile-only-progress{display:none!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{border-radius:30px!important;}
 }
 @media (max-width:767px){
   .screen{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.bottom-nav{padding-bottom:env(safe-area-inset-bottom)!important}.nav-btn{font-size:9.2px!important}.header-title{display:block}.vitals-bar{display:none!important}.cat-pills{scrollbar-width:none}.cat-pills::-webkit-scrollbar{display:none}.toast{border-radius:18px!important}.a11y-fab{right:14px!important;bottom:96px!important}.install-banner{bottom:94px!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{max-width:480px!important;}
@@ -3193,17 +3202,52 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
     </div>
   </div>
 
-  <!-- VITALS STRIP — faixa abaixo do header mobile / dentro do header desktop -->
-  <div class="vitals-bar" id="vitals-bar-main">
-    <div class="vital-item" id="vital-hr"><div>❤️</div><div><div class="vital-value">--</div><div class="vital-label">BPM</div></div></div>
-    <div class="vital-item" id="vital-bp"><div>🩸</div><div><div class="vital-value">--/--</div><div class="vital-label">mmHg</div></div></div>
-    <div class="vital-item" id="vital-o2"><div>🫁</div><div><div class="vital-value">--%</div><div class="vital-label">SpO₂</div></div></div>
-    <div class="vital-item" id="vital-temp"><div>🌡️</div><div><div class="vital-value">--°</div><div class="vital-label">Temp</div></div></div>
-    <div class="vital-item" id="vital-gluc"><div>🍬</div><div><div class="vital-value">--</div><div class="vital-label">Glicemia</div></div></div>
-  </div>
-
   <!-- LEFT: main task list -->
   <div class="content">
+
+    <!-- VITALS CARDS — faixa horizontal de medições -->
+    <div class="vitals-bar vitals-cards-grid" id="vitals-bar-main">
+      <div class="vital-item vital-card-item" id="vital-bp" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('bp',document.getElementById('tab-bp')),200)">
+        <div class="vci-icon" style="background:var(--coral-50);color:var(--coral-600)">🩸</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--/--</div>
+          <div class="vital-label vci-label">Pressão</div>
+          <div class="vci-unit">mmHg</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-hr" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('bp',document.getElementById('tab-bp')),200)">
+        <div class="vci-icon" style="background:#fce8e8;color:#c0392b">❤️</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--</div>
+          <div class="vital-label vci-label">Batimentos</div>
+          <div class="vci-unit">BPM</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-gluc" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('gluc',document.getElementById('tab-gluc')),200)">
+        <div class="vci-icon" style="background:var(--amber-50);color:var(--amber-600)">🍬</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--</div>
+          <div class="vital-label vci-label">Glicemia</div>
+          <div class="vci-unit">mg/dL</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-o2" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('spo2',document.getElementById('tab-spo2')),200)">
+        <div class="vci-icon" style="background:var(--blue-50);color:var(--blue-600)">🫁</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--%</div>
+          <div class="vital-label vci-label">Saturação</div>
+          <div class="vci-unit">SpO₂</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-temp" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('temp',document.getElementById('tab-temp')),200)">
+        <div class="vci-icon" style="background:var(--purple-50);color:var(--purple-600)">🌡️</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--°</div>
+          <div class="vital-label vci-label">Temperatura</div>
+          <div class="vci-unit">°C</div>
+        </div>
+      </div>
+    </div>
 
     <!-- VOICE + KIOSK actions -->
     <div class="voice-kiosk-actions" style="display:flex;gap:8px;margin-bottom:12px">
@@ -10227,6 +10271,8 @@ function _stopBackupTimers() {
 // ── Inicialização ──────────────────────────────────────────────────────────
 
 function initAutoBackup() {
+  if (window.__CB_BACKUP_INITED__) return; // guard: evita duplo registro de intervals
+  window.__CB_BACKUP_INITED__ = true;
   const on  = localStorage.getItem('cb_autobackup_on') !== '0'; // default on
   const btn = document.getElementById('autobackup-toggle');
   if (btn) btn.classList.toggle('on', on);
@@ -10445,22 +10491,7 @@ document.addEventListener('cb:vital:saved', updateVitals);
 <!-- V14: estrutura preparada para vitais reais -->
 
 <!-- NOVA TELA REGISTRO -->
-<div class="screen" id="screen-registro" style="display:none;">
-  <div class="card">
-    <div class="card-title">Registrar Vitais</div>
-    <input type="number" id="input-bpm" placeholder="BPM">
-    <input type="number" id="input-sis" placeholder="Sistólica">
-    <input type="number" id="input-dia" placeholder="Diastólica">
-    <input type="number" id="input-o2" placeholder="SpO₂">
-    <input type="number" step="0.1" id="input-temp" placeholder="Temperatura">
-    <button onclick="salvarVitais()">Salvar</button>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Histórico</div>
-    <div id="historico-lista"></div>
-  </div>
-</div>
+<!-- screen-registro removido (v75 audit): tela orphã sem navegação, substituída pelo dashboard de saúde -->
 
 
 <script>
@@ -14523,24 +14554,7 @@ body.dark-theme .bottom-nav{
 
 
 <script id="cuidarbem-v73-vitais-position">
-(function(){
-  function positionVitalsStrip() {
-    const header = document.querySelector('#screen-home .header');
-    const strip  = document.getElementById('vitals-bar-main');
-    if (!header || !strip || window.innerWidth >= 768) return;
-    const h = header.getBoundingClientRect().height;
-    strip.style.top = h + 'px';
-    // Ajusta padding-top do conteúdo: altura do header + faixa de vitais
-    const content = document.querySelector('#screen-home .content');
-    if (content) content.style.paddingTop = (h + strip.offsetHeight + 8) + 'px';
-  }
-  // Roda ao carregar e ao redimensionar
-  window.addEventListener('load', positionVitalsStrip);
-  window.addEventListener('resize', positionVitalsStrip, { passive: true });
-  // Pequeno delay para garantir que o header já está pintado
-  setTimeout(positionVitalsStrip, 120);
-  setTimeout(positionVitalsStrip, 400);
-})();
+/* v73 positionVitalsStrip desativado — vitais agora são cards no fluxo normal */
 </script>
 
 
@@ -15396,7 +15410,7 @@ body.dark-theme .bottom-nav{
   pointer-events:auto;
 }
 #screen-appt .content{
-  min-height:calc(100dvh - var(--nav-h) - 110px);
+  min-height:calc(100svh - var(--nav-h) - 110px);
   padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom));
 }
 #screen-appt.active #appt-upload-zone,
@@ -15683,7 +15697,7 @@ body{
   }
 
   body{
-    height: 100dvh;
+    height: 100svh;
   }
 
   .screen{
@@ -15702,9 +15716,9 @@ body{
 
   .screen.active{
     position: relative !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    max-height: 100svh !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
@@ -15781,9 +15795,9 @@ body{
   #screen-reports.screen.active,
   #screen-reports.active.screen{
     position: relative !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    max-height: 100dvh !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    max-height: 100svh !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch !important;
@@ -17864,17 +17878,19 @@ body:not(.dark):not(.dark-theme){ color-scheme:light; }
   visibility:visible!important;
   pointer-events:auto!important;
   opacity:1!important;
-  min-height:100dvh!important;
+  min-height:100svh!important;
   background:var(--bg)!important;
   isolation:isolate;
-  contain:layout paint;
 }
 @media (max-width:767px){
   .screen.active{display:block!important; overflow-y:auto!important; overflow-x:hidden!important;}
 }
 @media (min-width:768px){
-  .screen.active:not(#screen-home){display:block!important; overflow-y:auto!important; overflow-x:hidden!important;}
-  #screen-home.active{display:grid!important; overflow:hidden!important;}
+  /* Desktop: o body é quem rola — telas não podem ter overflow-y:auto sem altura fixa
+     pois capturam os eventos de wheel sem scrollar, bloqueando o scroll do mouse */
+  .screen.active:not(#screen-home){display:block!important; overflow:visible!important;}
+  #screen-home.active{display:grid!important; overflow:visible!important;}
+  html, body { overflow-y: auto !important; }
 }
 
 /* Evita flashes brancos em painéis/overlays durante confirmações e transições. */
@@ -18180,6 +18196,114 @@ button:focus-visible,.nav-btn:focus-visible,.form-input:focus-visible,.chip:focu
   else boot();
 })();
 </script>
+
+<style id="vitals-cards-home">
+/* =====================================================
+   VITALS — faixa horizontal de cards no início
+   ===================================================== */
+
+/* 0) Cancela os display:none legados do vitals-bar (v29/v30) que ainda existem */
+@media (max-width: 767px) {
+  #screen-home .vitals-bar,
+  #screen-home #vitals-bar-main { display: flex !important; }
+}
+
+/* 1) Cancela todo o posicionamento fixo do v73 */
+#screen-home #vitals-bar-main,
+#screen-home .vitals-bar {
+  position: static !important;
+  top: auto !important; left: auto !important;
+  transform: none !important;
+  width: auto !important; max-width: none !important;
+  z-index: auto !important;
+  background: transparent !important;
+  border: none !important; box-shadow: none !important;
+  overflow: visible !important;
+}
+
+/* 2) Faixa horizontal que rola se necessário */
+#screen-home .vitals-cards-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  margin-bottom: 18px !important;
+  padding: 4px 2px 8px !important;
+}
+#screen-home .vitals-cards-grid::-webkit-scrollbar { display: none !important; }
+
+/* 3) Cada card — horizontal: ícone esquerda, texto direita */
+#screen-home .vital-card-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex: 0 0 auto !important;       /* não encolhe, não cresce */
+  background: var(--card-bg) !important;
+  border-radius: 14px !important;
+  padding: 12px 16px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07) !important;
+  border: 1.5px solid rgba(0,0,0,0.04) !important;
+  cursor: pointer !important;
+  transition: transform 0.15s, box-shadow 0.15s !important;
+  white-space: nowrap !important;
+  color: var(--text) !important;
+  min-width: 0 !important;
+}
+#screen-home .vital-card-item:active {
+  transform: scale(0.96) !important;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.06) !important;
+}
+
+/* 4) Ícone redondo */
+#screen-home .vci-icon {
+  width: 40px !important; height: 40px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important; justify-content: center !important;
+  font-size: 20px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+/* 5) Texto: valor em cima, label embaixo */
+#screen-home .vci-body {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+}
+#screen-home .vci-value {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: var(--text) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  white-space: nowrap !important;
+}
+#screen-home .vci-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--text-light) !important;
+  white-space: nowrap !important;
+  line-height: 1.3 !important;
+}
+#screen-home .vci-unit {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--text-light) !important;
+  opacity: .7 !important;
+  white-space: nowrap !important;
+}
+
+/* 6) Padding-top do content no mobile */
+@media (max-width: 767px) {
+  #screen-home .content { padding-top: 200px !important; }
+}
+</style>
 
 </body>
 </html>
