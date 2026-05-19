@@ -18378,6 +18378,194 @@ button:focus-visible,.nav-btn:focus-visible,.form-input:focus-visible,.chip:focu
 
 </style>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     MODO DIAGNÓSTICO — desativa efeitos visuais para isolar flashes
+     Ativar: body.cb-diag-mode  |  botão flutuante no canto
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-diag-css">
+
+/* ── Botão flutuante de diagnóstico ── */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h, 72px) + 12px + env(safe-area-inset-bottom));
+  right: 14px;
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: .75;
+  transition: opacity .2s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+#cb-diag-btn:active { opacity: 1; transform: scale(.96); }
+#cb-diag-btn .cb-diag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ff4444;
+  flex-shrink: 0;
+}
+body.cb-diag-mode #cb-diag-btn { background: #0d5c4f; opacity: 1; }
+body.cb-diag-mode #cb-diag-btn .cb-diag-dot { background: #4ade80; }
+
+/* ── Painel de status ── */
+#cb-diag-panel {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99998;
+  background: rgba(10,20,18,.96);
+  color: #e0f2ec;
+  border-radius: 20px;
+  padding: 20px 22px;
+  width: min(320px, calc(100vw - 32px));
+  font-size: 12px;
+  line-height: 1.7;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  display: none;
+  font-family: 'Courier New', monospace;
+}
+#cb-diag-panel.open { display: block; }
+#cb-diag-panel h4 {
+  font-size: 13px; font-weight: 800; color: #4ade80;
+  margin-bottom: 10px; font-family: inherit;
+}
+#cb-diag-panel .cb-drow {
+  display: flex; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  padding: 3px 0;
+}
+#cb-diag-panel .cb-dval { color: #86efac; font-weight: 700; }
+#cb-diag-panel .cb-dval.off { color: #f87171; }
+#cb-diag-panel button {
+  margin-top: 14px; width: 100%;
+  background: #0d5c4f; color: #fff; border: none;
+  border-radius: 10px; padding: 10px;
+  font-weight: 800; font-size: 13px; cursor: pointer;
+}
+
+/* ════════════════════════════════════════════════════
+   KILLSWITCH — ativado por body.cb-diag-mode
+   Desativa em cascata todos os suspeitos de flash
+   ════════════════════════════════════════════════════ */
+
+/* 1. Backdrop-filter (GPU mais pesado — 40 ocorrências) */
+body.cb-diag-mode *,
+body.cb-diag-mode *::before,
+body.cb-diag-mode *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 2. Todas as animações e transitions */
+body.cb-diag-mode *,
+body.cb-diag-mode *::before,
+body.cb-diag-mode *::after {
+  animation: none !important;
+  animation-duration: 0s !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+}
+
+/* 3. will-change — força layers desnecessárias */
+body.cb-diag-mode * {
+  will-change: auto !important;
+}
+
+/* 4. isolation: isolate — cria stacking contexts que interferem com sticky */
+body.cb-diag-mode * {
+  isolation: auto !important;
+}
+
+/* 5. Premium glass backgrounds → opaco simples */
+body.cb-diag-mode .bottom-nav,
+body.cb-diag-mode .header,
+body.cb-diag-mode .header-sub,
+body.cb-diag-mode .card,
+body.cb-diag-mode .modal,
+body.cb-diag-mode .sheet,
+body.cb-diag-mode .confirm-sheet,
+body.cb-diag-mode .med-info-inner {
+  background: var(--card-bg) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08) !important;
+}
+
+body.cb-diag-mode .header,
+body.cb-diag-mode .header-sub {
+  background: var(--green-700, #0f6e56) !important;
+}
+
+body.cb-diag-mode .bottom-nav {
+  background: var(--white, #fff) !important;
+}
+
+/* 6. Gradientes decorativos no body */
+body.cb-diag-mode body,
+body.cb-diag-mode html {
+  background: var(--bg) !important;
+}
+
+/* 7. Efeitos de transform em hover/active (causa reflow) */
+body.cb-diag-mode *:hover,
+body.cb-diag-mode *:active {
+  transform: none !important;
+}
+
+</style>
+
+<!-- Botão + lógica do diagnóstico -->
+<div id="cb-diag-btn" onclick="cbDiagToggle()">
+  <span class="cb-diag-dot"></span>
+  <span id="cb-diag-label">DIAG</span>
+</div>
+
+<div id="cb-diag-panel">
+  <h4>🔬 Modo Diagnóstico</h4>
+  <div class="cb-drow"><span>backdrop-filter</span><span class="cb-dval" id="cd-bf">40 ocorr.</span></div>
+  <div class="cb-drow"><span>animation</span><span class="cb-dval" id="cd-an">16 ocorr.</span></div>
+  <div class="cb-drow"><span>transition</span><span class="cb-dval" id="cd-tr">108 ocorr.</span></div>
+  <div class="cb-drow"><span>will-change</span><span class="cb-dval" id="cd-wc">5 ocorr.</span></div>
+  <div class="cb-drow"><span>isolation:isolate</span><span class="cb-dval" id="cd-is">7 ocorr.</span></div>
+  <div class="cb-drow"><span>glass/premium/blur</span><span class="cb-dval" id="cd-gl">87 refs</span></div>
+  <div style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6">
+    🟢 Efeitos DESLIGADOS<br>
+    Se os flashes sumirem → efeitos são culpados.<br>
+    Se continuarem → problema é estrutural.
+  </div>
+  <button onclick="cbDiagClose()">Fechar</button>
+</div>
+
+<script id="cb-diag-script">
+(function(){
+  var ACTIVE = false;
+  window.cbDiagToggle = function() {
+    ACTIVE = !ACTIVE;
+    document.body.classList.toggle('cb-diag-mode', ACTIVE);
+    document.getElementById('cb-diag-label').textContent = ACTIVE ? 'DIAG ON' : 'DIAG';
+    if (ACTIVE) {
+      document.getElementById('cb-diag-panel').classList.add('open');
+      // update labels to show OFF state
+      ['cd-bf','cd-an','cd-tr','cd-wc','cd-is','cd-gl'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el){ el.textContent = '✗ OFF'; el.classList.add('off'); }
+      });
+    }
+  };
+  window.cbDiagClose = function() {
+    document.getElementById('cb-diag-panel').classList.remove('open');
+  };
+})();
+</script>
+
 </body>
 </html>
 
