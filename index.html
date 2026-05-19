@@ -1790,16 +1790,18 @@ h1,h2,h3,h4,.nav-btn,.card-title { font-family: 'Nunito', ui-rounded, -apple-sys
     #screen-home .header > div { margin: 0; }
     #screen-home .header::after { display: none; }
     #screen-home .content {
-      padding: 28px 20px 28px 36px;
+      padding: 16px 20px 28px 36px;  /* reduzido de 28px → 16px no topo */
       overflow-y: auto;
+      scroll-behavior: smooth;
     }
 
-    /* Right panel on home */
+    /* Right panel on home — empurrado para baixo para alinhar com conteúdo */
     .desktop-right-panel {
       display: block;
-      padding: 28px 32px 28px 8px;
+      padding: 48px 32px 28px 8px;   /* 48px topo = visualmente abaixo da linha dos cards */
       overflow-y: auto;
       border-left: 1px solid var(--gray-100);
+      scroll-behavior: smooth;
     }
 
     /* Calendar, Reports, Profile, OCR, Dashboard, Appt: single scrollable column */
@@ -18221,38 +18223,39 @@ button:focus-visible,.nav-btn:focus-visible,.form-input:focus-visible,.chip:focu
   overflow: visible !important;
 }
 
-/* 2) Faixa horizontal que rola se necessário */
+/* 2) Faixa horizontal — distribui igualmente no espaço disponível */
 #screen-home .vitals-cards-grid {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  gap: 10px !important;
+  gap: 8px !important;
   overflow-x: auto !important;
   overflow-y: visible !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  margin-bottom: 18px !important;
-  padding: 4px 2px 8px !important;
+  margin-bottom: 14px !important;
+  margin-top: 0 !important;
+  padding: 2px 2px 6px !important;
 }
 #screen-home .vitals-cards-grid::-webkit-scrollbar { display: none !important; }
 
-/* 3) Cada card — horizontal: ícone esquerda, texto direita */
+/* 3) Cada card — cresce para preencher espaço; mínimo para não sumir */
 #screen-home .vital-card-item {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   gap: 10px !important;
-  flex: 0 0 auto !important;       /* não encolhe, não cresce */
+  flex: 1 1 0 !important;          /* todos crescem igualmente */
+  min-width: 120px !important;      /* temperatura não some */
+  max-width: 200px !important;
   background: var(--card-bg) !important;
   border-radius: 14px !important;
-  padding: 12px 16px !important;
+  padding: 12px 14px !important;
   box-shadow: 0 2px 10px rgba(0,0,0,0.07) !important;
   border: 1.5px solid rgba(0,0,0,0.04) !important;
   cursor: pointer !important;
-  transition: transform 0.15s, box-shadow 0.15s !important;
   white-space: nowrap !important;
   color: var(--text) !important;
-  min-width: 0 !important;
 }
 #screen-home .vital-card-item:active {
   transform: scale(0.96) !important;
@@ -18535,6 +18538,35 @@ body.dark .bottom-nav {
 #cb-diag-panel .cb-dval.ok { color: #4ade80; }
 #cb-diag-panel button { margin-top: 14px; width: 100%; background: #0d5c4f; color: #fff; border: none; border-radius: 10px; padding: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
 
+/* ── 10. SCROLL DE MOUSE no desktop ──────────────────────────────
+   Os painéis .content e .desktop-right-panel são os scroll containers.
+   Garantir que recebem wheel events e que o body não compete. */
+@media (min-width: 768px) {
+  /* Painéis do home: scroll contido */
+  #screen-home .content,
+  .desktop-right-panel {
+    overscroll-behavior: contain !important;
+    pointer-events: auto !important;
+  }
+
+  /* Outras telas: cada uma é seu próprio scroll container */
+  #screen-calendar.active,
+  #screen-reports.active,
+  #screen-profile.active,
+  #screen-ocr.active,
+  #screen-dashboard.active,
+  #screen-appt.active {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100svh !important;
+    overscroll-behavior: contain !important;
+  }
+
+  /* Body não rola — os containers filhos rolam */
+  body { overflow: hidden !important; }
+  html { overflow: hidden !important; }
+}
+
 </style>
 
 <!-- Botão de diagnóstico (informacional — efeitos agora são permanentemente removidos) -->
@@ -18557,6 +18589,34 @@ body.dark .bottom-nav {
   </div>
   <button onclick="this.closest('#cb-diag-panel').classList.remove('open')">Fechar</button>
 </div>
+
+<script id="cb-wheel-router">
+/* Roteia wheel events no desktop para o painel scrollável sob o cursor.
+   Necessário porque #screen-home.active tem overflow:hidden (para o grid
+   funcionar) mas os filhos .content e .desktop-right-panel rolam. */
+(function(){
+  function onWheel(e) {
+    if (window.innerWidth < 768) return;
+    var el = e.target;
+    // Sobe na árvore até achar um container com scroll
+    while (el && el !== document.body) {
+      var st = window.getComputedStyle(el);
+      var oy = st.overflowY;
+      var canScroll = (oy === 'auto' || oy === 'scroll');
+      if (canScroll) {
+        var atTop    = el.scrollTop === 0;
+        var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+        // Se pode rolar nessa direção, deixa o evento natural fluir
+        if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) return;
+      }
+      el = el.parentElement;
+    }
+    // Se chegou aqui, nenhum container pôde absorver — previne bounce
+    e.preventDefault();
+  }
+  document.addEventListener('wheel', onWheel, { passive: false });
+})();
+</script>
 
 </body>
 </html>
