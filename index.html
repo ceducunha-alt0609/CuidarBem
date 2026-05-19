@@ -14464,78 +14464,89 @@ body.dark-theme .bottom-nav{
 ========================================================= */
 @media (max-width: 767px) {
 
-  /* Faixa fixa colada logo abaixo do header verde */
+  /* Vitais no mobile: saem do header fixo, ficam no content como cards */
   #screen-home #vitals-bar-main {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 8px !important;
-    padding: 10px 16px 10px !important;
-    position: fixed !important;
-    top: var(--mobile-header-h, 192px) !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: 100% !important;
-    max-width: 480px !important;
-    z-index: 699 !important;
-    background: var(--green-800) !important;
-    border-bottom: 1px solid rgba(255,255,255,.10) !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,.15) !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    width: auto !important;
+    max-width: none !important;
+    z-index: auto !important;
+    margin-bottom: 12px !important;
   }
   #screen-home #vitals-bar-main::-webkit-scrollbar { display: none !important; }
 
-  /* Chips estilo pill — fundo branco translúcido sobre verde escuro */
+  /* Cards individuais — fundo sólido, tema claro/escuro */
   #screen-home #vitals-bar-main .vital-item {
-    display: inline-flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 6px !important;
-    flex: 0 0 auto !important;
-    padding: 6px 12px !important;
-    border-radius: 999px !important;
-    background: rgba(255,255,255,.13) !important;
-    border: 1px solid rgba(255,255,255,.22) !important;
-    white-space: nowrap !important;
-    color: white !important;
-    cursor: pointer !important;
-    transition: background .15s !important;
-  }
-  #screen-home #vitals-bar-main .vital-item:active {
-    background: rgba(255,255,255,.24) !important;
-  }
-
-  #screen-home #vitals-bar-main .vital-item > div:first-child {
-    font-size: 14px !important;
-    line-height: 1 !important;
-  }
-  #screen-home #vitals-bar-main .vital-item > div:last-child {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
+    gap: 6px !important;
+    flex: unset !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+    background: var(--card-bg) !important;
+    border: 1.5px solid rgba(0,0,0,.06) !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,.07) !important;
+    white-space: normal !important;
+    color: var(--text) !important;
+    cursor: pointer !important;
   }
-  #screen-home #vitals-bar-main .vital-value {
-    font-size: 13px !important;
-    font-weight: 900 !important;
-    line-height: 1.1 !important;
-    color: white !important;
-    letter-spacing: -.02em !important;
-  }
-  #screen-home #vitals-bar-main .vital-label {
-    font-size: 9px !important;
-    font-weight: 700 !important;
-    color: rgba(255,255,255,.65) !important;
-    line-height: 1 !important;
-    margin-top: 1px !important;
-    text-transform: uppercase !important;
-    letter-spacing: .04em !important;
+  #screen-home #vitals-bar-main .vital-item:active {
+    opacity: .85 !important;
   }
 
-  /* Conteúdo empurrado abaixo da faixa de vitais (~44px a mais) */
+  /* Ícone colorido próprio de cada vital */
+  #screen-home #vitals-bar-main .vci-icon {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 9px !important;
+    font-size: 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #screen-home #vitals-bar-main .vci-value,
+  #screen-home #vitals-bar-main .vital-value {
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    color: var(--text) !important;
+    letter-spacing: -.02em !important;
+    line-height: 1.1 !important;
+  }
+  #screen-home #vitals-bar-main .vci-label,
+  #screen-home #vitals-bar-main .vital-label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: var(--text-light) !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+  #screen-home #vitals-bar-main .vci-unit {
+    font-size: 9px !important;
+    color: var(--text-muted) !important;
+    opacity: .8 !important;
+  }
+
+  /* 5º card (temperatura) ocupa a linha inteira sozinho */
+  #screen-home #vitals-bar-main .vital-item:nth-child(5) {
+    grid-column: 1 / -1 !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  /* Content: sem padding compensatório (vitais no fluxo normal) */
   #screen-home .content {
-    padding-top: 248px !important;
+    padding-top: 16px !important;
   }
 }
 
@@ -18896,6 +18907,82 @@ body.dark .bottom-nav {
 .cb75-modal {
   position: relative;
 }
+</style>
+
+<!-- ═══════════════════════════════════════════════
+     CONTRASTE — corrige cores hardcoded problemáticas
+     em ambos os temas (claro e escuro)
+     ═══════════════════════════════════════════════ -->
+<style id="cb-contrast-fix">
+
+/* ── Textos de status/badge que usam cores hardcoded ── */
+/* Textos cinza claro (#aaa, #999, #888) invisíveis no modo escuro */
+.task-time, .task-sub, .med-sub, .card-meta,
+.vital-label, .stat-label, .dash-label,
+.section-label, .report-label {
+  color: var(--text-light) !important;
+}
+
+/* Fundos de card hardcoded (#f5fff9, #f9fafb) invisíveis no escuro */
+.highlight-card, .info-card, .summary-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--gray-100) !important;
+}
+
+/* Textos sobre fundo verde (devem ser sempre brancos) */
+.header, .header-sub,
+.btn-primary, .nav-btn.active,
+[class*="green-bg"], [class*="teal-bg"] {
+  color: #fff !important;
+}
+
+/* Badges e pills com fundo claro hardcoded */
+.badge, .pill, .tag,
+.status-badge, .alert-badge {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--gray-100) !important;
+}
+
+/* Textos de placeholder e dicas */
+::placeholder {
+  color: var(--text-muted) !important;
+  opacity: .6 !important;
+}
+
+/* Separadores e bordas hardcoded */
+hr, .divider {
+  border-color: var(--gray-100) !important;
+}
+
+/* Textos de rodapé e navegação */
+.nav-footer, .footer-text {
+  color: var(--text-muted) !important;
+}
+
+/* ── Dark mode: corrige fundos hardcoded que ficam brancos ── */
+body.dark .highlight-card,
+body.dark .info-card,
+body.dark .summary-card,
+body.dark .card {
+  background: var(--card-bg) !important;
+  color: var(--text) !important;
+}
+
+/* ── Cards de vitais: ícone com fundo colorido correto ── */
+/* Mobile: cores específicas por vital (fundo claro em light, saturado em dark) */
+#vital-bp    .vci-icon { background: #fce4e8 !important; color: #c0192d !important; }
+#vital-hr    .vci-icon { background: #fce4e8 !important; color: #c0192d !important; }
+#vital-gluc  .vci-icon { background: #fef3c7 !important; color: #b45309 !important; }
+#vital-o2    .vci-icon { background: #dbeafe !important; color: #1d4ed8 !important; }
+#vital-temp  .vci-icon { background: #ede9fe !important; color: #7c3aed !important; }
+
+body.dark #vital-bp    .vci-icon { background: rgba(192,25,45,.25)  !important; color: #fca5a5 !important; }
+body.dark #vital-hr    .vci-icon { background: rgba(192,25,45,.25)  !important; color: #fca5a5 !important; }
+body.dark #vital-gluc  .vci-icon { background: rgba(180,83,9,.25)   !important; color: #fcd34d !important; }
+body.dark #vital-o2    .vci-icon { background: rgba(29,78,216,.25)  !important; color: #93c5fd !important; }
+body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; color: #c4b5fd !important; }
+
 </style>
 
 </body>
