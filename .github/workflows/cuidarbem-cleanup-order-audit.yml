@@ -1,0 +1,21 @@
+name: Run CuidarBem cleanup order audit
+on:
+  push:
+    paths:
+      - '.github/workflows/cuidarbem-cleanup-order-audit.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run audit
+        run: python cuidarbem_cleanup_order_audit.py
+      - name: Commit report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cuidarbem_cleanup_order_report.txt
+          git commit -m 'Report CuidarBem cleanup ordering'
+          git push
