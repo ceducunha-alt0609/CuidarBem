@@ -1,0 +1,26 @@
+name: Run CuidarBem structural cleanup patch
+on:
+  push:
+    paths:
+      - 'cuidarbem_patch_structural_cleanup.py'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python cuidarbem_patch_structural_cleanup.py
+      - name: Verify and commit
+        run: |
+          ! grep -q "_patchedGoScreen" index.html
+          ! grep -q "const _origConfirmTake = window.confirmTake" index.html
+          grep -q "finally {       window.Notification = _origNew;" index.html
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git commit -m 'Remove dead CuidarBem patches and harden notifications' || exit 0
+          git rm -f cuidarbem_patch_structural_cleanup.py .github/workflows/cuidarbem-structural-cleanup.yml cuidarbem_structural_audit.py .github/workflows/cuidarbem-structural-audit.yml cuidarbem_structural_audit.txt
+          git commit -m 'Clean CuidarBem structural audit files' || true
+          git push
