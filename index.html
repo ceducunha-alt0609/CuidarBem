@@ -18913,6 +18913,28 @@ body.dark .bottom-nav {
 
 </style>
 
+<!-- v75.16 — desktop Home: scroll nativo real nos dois painéis -->
+<style id="cuidarbem-v75-16-native-home-scroll">
+@media (min-width: 768px) {
+  #screen-home.active {
+    height: 100svh !important;
+    max-height: 100svh !important;
+    overflow: hidden !important;
+  }
+  #screen-home.active > .content,
+  #screen-home.active > .desktop-right-panel {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0,107,88,.35) transparent !important;
+  }
+}
+</style>
+
 <!-- Data/hora desktop — canto superior direito -->
 <div id="today-date-desktop"></div>
 <script>
