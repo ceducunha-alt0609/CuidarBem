@@ -1,0 +1,3002 @@
+CUIDARBEM RESTORE INTEGRITY AUDIT
+
+=== function buildSnapshot ===
+ount > API Keys
+//    3. Colar a chave no campo de configuração do app
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const JSONBIN_API = 'https://api.jsonbin.io/v3';
+let autoBackupInterval  = null;
+let cloudBackupInterval = null;
+
+// ── Helpers de estado ──────────────────────────────────────────────────────
+
+function getJsonbinKey()   { return localStorage.getItem('cb_jsonbin_key')   || ''; }
+function getJsonbinBinId() { return localStorage.getItem('cb_jsonbin_bin_id') || ''; }
+
+function setJsonbinKey(k)     { localStorage.setItem('cb_jsonbin_key',    k.trim()); }
+function setJsonbinBinId(id)  { localStorage.setItem('cb_jsonbin_bin_id', id.trim()); }
+
+function buildSnapshot() {
+  return {
+    appVersion : '3.0',
+    ts         : new Date().toISOString(),
+    tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
+    completions: localStorage.getItem('cuidarbem_completions') || '{}',
+    settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')     || '{}',
+    careEvents : localStorage.getItem('cb_care_events')         || '[]',
+    vitals     : localStorage.getItem('cb_vitals')             || '[]',
+    vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')         || '{}',
+  };
+}
+
+function applySnapshot(snap) {
+  localStorage.setItem('cuidarbem_tasks',        snap.tasks);
+  localStorage.setItem('cuidarbem_completions',  snap.completions);
+  localStorage.setItem('cuidarbem_settings',     snap.settings);
+  if (snap.profile) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  tasks       = JSON.parse(snap.tasks);
+  completions = JSON.parse(snap.completions);
+  settings    = JSON.parse(snap.settings);
+  if (typeof renderAll === 'function') renderAll();
+}
+
+// ── Nível 1 — Backup local ─────────────────────────────────────────────────
+
+function doLocalBackup() {
+  const snap = buildSnapshot();
+  localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+  _updateBackupUI({ local: snap.ts });
+}
+
+// ── Nível 2 — JSONbin.io ───────────────────────────────────────────────────
+
+async function doCloudBackup({ silent = false } = {}) {
+  const key = getJsonbinKey();
+  if (!key) {
+    if (!silent) showToast('⚠️ Configure a chave JSONbin primeiro');
+    return false;
+  }
+
+  const snap    = buildSnapshot();
+  const binId   = getJsonbinBinId();
+  const url     = binId ? `${JSONBIN_API}/b/${binId}` : `${JSONBIN_API}/b`;
+  const method  = binId ? 'PUT' : 'POST';
+  const headers = {
+    'Content-Type'   : 'application/json',
+    'X-Master-Key'   : key,
+    'X-Bin-Private'  : 'true',
+    ...(method === 'POST' ? { 'X-Bin-Name': `CuidarBem-${settings.patient || 'backup'}` } : {}),
+  };
+
+  _setCloudStatus('syncing');
+  try {
+    const res  = await fetch(url, { method, headers, body: JSON.stringify(snap) });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+
+    // Na primeira vez guarda o bin ID gerado
+    if (method === 'POST' && data.metadata?.id) {
+      setJsonbinBinId(data.metadata.id);
+    }
+
+    // Guarda snapshot local como cache do que está na nuvem
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    if (!silent) showToast('☁️ Backup salvo na nuvem!');
+    haptic([20, 40]);
+    return true;
+
+  } catch (e) {
+    _setCloudStatus('error');
+    if (!silent) showToast(`❌ Falha no backup: ${e.message}`);
+    console.warn('[CuidarBem] Cloud backup error:', e);
+    return false;
+  }
+}
+
+async function doCloudRestore() {
+  const key   = getJsonbinKey();
+  const binId = getJsonbinBinId();
+
+  if (!key)   { showToast('⚠️ Configure a chave JSONbin primeiro'); return; }
+  if (!binId) { showToast('⚠️ Nenhum backup na nuvem encontrado. Salve primeiro.'); return; }
+
+  _setCloudStatus('syncing');
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': key },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const snap = data.record;
+
+    if (!snap?.tasks) throw new Error('Backup inválido ou vazio');
+
+    const ts = new Date(snap.ts).toLocaleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+   
+
+=== function applySnapshot ===
+()); }
+
+function buildSnapshot() {
+  return {
+    appVersion : '3.0',
+    ts         : new Date().toISOString(),
+    tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
+    completions: localStorage.getItem('cuidarbem_completions') || '{}',
+    settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')     || '{}',
+    careEvents : localStorage.getItem('cb_care_events')         || '[]',
+    vitals     : localStorage.getItem('cb_vitals')             || '[]',
+    vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')         || '{}',
+  };
+}
+
+function applySnapshot(snap) {
+  localStorage.setItem('cuidarbem_tasks',        snap.tasks);
+  localStorage.setItem('cuidarbem_completions',  snap.completions);
+  localStorage.setItem('cuidarbem_settings',     snap.settings);
+  if (snap.profile) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  tasks       = JSON.parse(snap.tasks);
+  completions = JSON.parse(snap.completions);
+  settings    = JSON.parse(snap.settings);
+  if (typeof renderAll === 'function') renderAll();
+}
+
+// ── Nível 1 — Backup local ─────────────────────────────────────────────────
+
+function doLocalBackup() {
+  const snap = buildSnapshot();
+  localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+  _updateBackupUI({ local: snap.ts });
+}
+
+// ── Nível 2 — JSONbin.io ───────────────────────────────────────────────────
+
+async function doCloudBackup({ silent = false } = {}) {
+  const key = getJsonbinKey();
+  if (!key) {
+    if (!silent) showToast('⚠️ Configure a chave JSONbin primeiro');
+    return false;
+  }
+
+  const snap    = buildSnapshot();
+  const binId   = getJsonbinBinId();
+  const url     = binId ? `${JSONBIN_API}/b/${binId}` : `${JSONBIN_API}/b`;
+  const method  = binId ? 'PUT' : 'POST';
+  const headers = {
+    'Content-Type'   : 'application/json',
+    'X-Master-Key'   : key,
+    'X-Bin-Private'  : 'true',
+    ...(method === 'POST' ? { 'X-Bin-Name': `CuidarBem-${settings.patient || 'backup'}` } : {}),
+  };
+
+  _setCloudStatus('syncing');
+  try {
+    const res  = await fetch(url, { method, headers, body: JSON.stringify(snap) });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+
+    // Na primeira vez guarda o bin ID gerado
+    if (method === 'POST' && data.metadata?.id) {
+      setJsonbinBinId(data.metadata.id);
+    }
+
+    // Guarda snapshot local como cache do que está na nuvem
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    if (!silent) showToast('☁️ Backup salvo na nuvem!');
+    haptic([20, 40]);
+    return true;
+
+  } catch (e) {
+    _setCloudStatus('error');
+    if (!silent) showToast(`❌ Falha no backup: ${e.message}`);
+    console.warn('[CuidarBem] Cloud backup error:', e);
+    return false;
+  }
+}
+
+async function doCloudRestore() {
+  const key   = getJsonbinKey();
+  const binId = getJsonbinBinId();
+
+  if (!key)   { showToast('⚠️ Configure a chave JSONbin primeiro'); return; }
+  if (!binId) { showToast('⚠️ Nenhum backup na nuvem encontrado. Salve primeiro.'); return; }
+
+  _setCloudStatus('syncing');
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': key },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const snap = data.record;
+
+    if (!snap?.tasks) throw new Error('Backup inválido ou vazio');
+
+    const ts = new Date(snap.ts).toLocaleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    showToast('✅ Dados restaurados da nuvem!');
+    haptic([30, 50, 30]);
+
+  } catch (e) {
+    _setCloudStatus('error');
+    showToast(`❌ Erro ao restaurar: ${e.message}`);
+    console.warn('[CuidarBem] Cloud restore error:', e);
+  }
+}
+
+// Restaurar do backup LOCAL (fallback sem internet)
+function restoreBackup() {
+  const raw = localStorage.getItem('cb_auto_backup');
+  if (!raw) { showToast('⚠️ Nenhum backup local disponível'); return; }
+  const snap = JSON.parse(raw);
+  const ts   = new Date(snap.ts).toLocaleString('pt-BR');
+  if (!confi
+
+=== function importBackupJSON ===
+line-height:1.6"><strong>Últimos eventos:</strong><br>${events.map(e => `• ${new Date((e.date||today)+'T00:00:00').toLocaleDateString('pt-BR')} — ${careEventLabel(e.type)}: ${e.desc}`).join('<br>')}</div>` : ''}
+  `;
+}
+function exportBackupJSON() {
+  const snap = buildSnapshot();
+  const name = `CuidarBem-backup-${new Date().toISOString().slice(0,10)}.json`;
+  const blob = new Blob([JSON.stringify(snap, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  showToast('💾 Backup completo exportado');
+}
+function importBackupJSON(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const snap = JSON.parse(e.target.result);
+      if (!snap || !snap.tasks || !snap.settings) throw new Error('Arquivo inválido');
+      const ts = snap.ts ? new Date(snap.ts).toLocaleString('pt-BR') : 'data desconhecida';
+      if (!confirm(`Importar backup de ${ts}?\n\nIsso substituirá os dados atuais deste aparelho.`)) return;
+      applySnapshot(snap);
+      localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+      loadSettings();
+      renderAll();
+      showToast('✅ Backup importado com sucesso');
+    } catch(err) { showToast('❌ Backup inválido'); console.warn(err); }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ── 9. BACKUP — LOCAL + JSONBIN.IO NUVEM ──────────────────────────────────────
+//
+//  Arquitetura de dois níveis:
+//    Nível 1 — localStorage  (instantâneo, sempre disponível, sem rede)
+//    Nível 2 — JSONbin.io    (nuvem, sobrevive limpeza de cache, compartilhável)
+//
+//  Fluxo:
+//    • A cada 5 min  → salva local (rápido, silencioso)
+//    • A cada 30 min → envia para JSONbin SE a chave API estiver configurada
+//    • Botão "Salvar na nuvem agora" → força envio imediato + feedback visual
+//    • Botão "Restaurar da nuvem"   → busca o bin mais recente e aplica
+//    • Primeiro uso                 → cria um bin novo automaticamente (POST)
+//    • Usos seguintes               → atualiza o mesmo bin (PUT)
+//
+//  Configuração necessária pelo usuário:
+//    1. Criar conta grátis em jsonbin.io
+//    2. Gerar uma Master Key (ou Access Key) em Account > API Keys
+//    3. Colar a chave no campo de configuração do app
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const JSONBIN_API = 'https://api.jsonbin.io/v3';
+let autoBackupInterval  = null;
+let cloudBackupInterval = null;
+
+// ── Helpers de estado ──────────────────────────────────────────────────────
+
+function getJsonbinKey()   { return localStorage.getItem('cb_jsonbin_key')   || ''; }
+function getJsonbinBinId() { return localStorage.getItem('cb_jsonbin_bin_id') || ''; }
+
+function setJsonbinKey(k)     { localStorage.setItem('cb_jsonbin_key',    k.trim()); }
+function setJsonbinBinId(id)  { localStorage.setItem('cb_jsonbin_bin_id', id.trim()); }
+
+function buildSnapshot() {
+  return {
+    appVersion : '3.0',
+    ts         : new Date().toISOString(),
+    tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
+    completions: localStorage.getItem('cuidarbem_completions') || '{}',
+    settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')     || '{}',
+    careEvents : localStorage.getItem('cb_care_events')         || '[]',
+    vitals     : localStorage.getItem('cb_vitals')             || '[]',
+    vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')         || '{}',
+  };
+}
+
+function applySnapshot(snap) {
+  localStorage.setItem('cuidarbem_tasks',        snap.tasks);
+  localStorage.setItem('cuidarbem_completions',  snap.completions);
+  localStorage.setItem('cuidarbem_settings',     snap.settings);
+  if (snap.profile) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  tasks       = JSON.parse(snap.tasks);
+  completions = JSON.parse(snap.completions);
+  settings    = JSON.parse(snap.settings);
+  if (typeof renderAll === 'function') renderAll();
+}
+
+// ── Nível 1 — Backup local ─────────────────────────────────────────────────
+
+function doLocalBackup() {
+  const snap = buildSnapshot();
+  localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+  _updateBackupUI({ local: snap.ts });
+}
+
+// ── Nível 2 — JSONbin.io ───────────────────────────────────────────────────
+
+a
+
+=== function restoreLocalBackup ===
+
+=== function restoreCloudBackup ===
+
+=== cb_auto_backup ===
+lick();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  showToast('💾 Backup completo exportado');
+}
+function importBackupJSON(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const snap = JSON.parse(e.target.result);
+      if (!snap || !snap.tasks || !snap.settings) throw new Error('Arquivo inválido');
+      const ts = snap.ts ? new Date(snap.ts).toLocaleString('pt-BR') : 'data desconhecida';
+      if (!confirm(`Importar backup de ${ts}?\n\nIsso substituirá os dados atuais deste aparelho.`)) return;
+      applySnapshot(snap);
+      localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+      loadSettings();
+      renderAll();
+      showToast('✅ Backup importado com sucesso');
+    } catch(err) { showToast('❌ Backup inválido'); console.warn(err); }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ── 9. BACKUP — LOCAL + JSONBIN.IO NUVEM ──────────────────────────────────────
+//
+//  Arquitetura de dois níveis:
+//    Nível 1 — localStorage  (instantâneo, sempre disponível, sem rede)
+//    Nível 2 — JSONbin.io    (nuvem, sobrevive limpeza de cache, compartilhável)
+//
+//  Fluxo:
+//    • A cada 5 min  → salva local (rápido, silencioso)
+//    • A cada 30 min → envia para JSONbin SE a chave API estiver configurada
+//    • Botão "Salvar na nuvem agora" → força envio imediato + feedback visual
+//    • Botão "Restaurar da nuvem"   → busca o bin mais recente e aplica
+//    • Primeiro uso                 → cria um bin novo automaticamente (POST)
+//    • Usos seguintes               → atualiza o mesmo bin (PUT)
+//
+//  Configuração necessária pelo usuário:
+//    1. Criar conta grátis em jsonbin.io
+//    2. Gerar uma Master Key (ou Access Key) em Account > API Keys
+//    3. Colar a chave no campo de configuração do app
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const JSONBIN_API = 'https://api.jsonbin.io/v3';
+let autoBackupInterval  = null;
+let cloudBackupInterval = null;
+
+// ── Helpers de estado ──────────────────────────────────────────────────────
+
+function getJsonbinKey()   { return localStorage.getItem('cb_jsonbin_key')   || ''; }
+function getJsonbinBinId() { return localStorage.getItem('cb_jsonbin_bin_id') || ''; }
+
+function setJsonbinKey(k)     { localStorage.setItem('cb_jsonbin_key',    k.trim()); }
+function setJsonbinBinId(id)  { localStorage.setItem('cb_jsonbin_bin_id', id.trim()); }
+
+function buildSnapshot() {
+  return {
+    appVersion : '3.0',
+    ts         : new Date().toISOString(),
+    tasks      : localStorage.getItem('cuidarbem_tasks')       || '[]',
+    completions: localStorage.getItem('cuidarbem_completions') || '{}',
+    settings   : localStorage.getItem('cuidarbem_settings')    || '{}',
+    profile    : localStorage.getItem('cb_medical_profile')     || '{}',
+    careEvents : localStorage.getItem('cb_care_events')         || '[]',
+    vitals     : localStorage.getItem('cb_vitals')             || '[]',
+    vitalFreq  : localStorage.getItem('cb_vital_freq')         || '{}',
+    a11y       : localStorage.getItem('cuidarbem_a11y')         || '{}',
+  };
+}
+
+function applySnapshot(snap) {
+  localStorage.setItem('cuidarbem_tasks',        snap.tasks);
+  localStorage.setItem('cuidarbem_completions',  snap.completions);
+  localStorage.setItem('cuidarbem_settings',     snap.settings);
+  if (snap.profile) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  tasks       = JSON.parse(snap.tasks);
+  completions = JSON.parse(snap.completions);
+  settings    = JSON.parse(snap.settings);
+  if (typeof renderAll === 'function') renderAll();
+}
+
+// ── Nível 1 — Backup local ─────────────────────────────────────────────────
+
+function doLocalBackup() {
+  const snap = buildSnapshot();
+  localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+  _updateBackupUI({ local: snap.ts });
+}
+
+// ── Nível 2 — JSONbin.io ───────────────────────────────────────────────────
+
+async function doCloudBackup({ silent = false } = {}) {
+  const key = getJsonbinKey();
+  if (!key) {
+    if (!silent) showToast('⚠️ Configure a chave JSONbin primeiro');
+    return false;
+  }
+
+  const snap    = buildSnapshot();
+  const binId   = getJsonbinBinId();
+  const url     = binId ? `${JSONBIN_API}/b/${binId}` : `${JSONBIN_API}/b`;
+  const method  = binId ? 'PUT' : 'POST';
+  const headers = {
+    'Content-Type'   : 'application/json',
+    'X-Master-Key'   : key,
+    'X-Bin-Private'  : 'true',
+    ...(method === 'POST' ? { 'X-Bin-Name': `CuidarBem-${settings.patient
+e) localStorage.setItem('cb_medical_profile', snap.profile);
+  if (snap.careEvents) localStorage.setItem('cb_care_events', snap.careEvents);
+  if (snap.vitals) localStorage.setItem('cb_vitals', snap.vitals);
+  if (snap.vitalFreq) localStorage.setItem('cb_vital_freq', snap.vitalFreq);
+  if (snap.a11y) localStorage.setItem('cuidarbem_a11y', snap.a11y);
+  tasks       = JSON.parse(snap.tasks);
+  completions = JSON.parse(snap.completions);
+  settings    = JSON.parse(snap.settings);
+  if (typeof renderAll === 'function') renderAll();
+}
+
+// ── Nível 1 — Backup local ─────────────────────────────────────────────────
+
+function doLocalBackup() {
+  const snap = buildSnapshot();
+  localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+  _updateBackupUI({ local: snap.ts });
+}
+
+// ── Nível 2 — JSONbin.io ───────────────────────────────────────────────────
+
+async function doCloudBackup({ silent = false } = {}) {
+  const key = getJsonbinKey();
+  if (!key) {
+    if (!silent) showToast('⚠️ Configure a chave JSONbin primeiro');
+    return false;
+  }
+
+  const snap    = buildSnapshot();
+  const binId   = getJsonbinBinId();
+  const url     = binId ? `${JSONBIN_API}/b/${binId}` : `${JSONBIN_API}/b`;
+  const method  = binId ? 'PUT' : 'POST';
+  const headers = {
+    'Content-Type'   : 'application/json',
+    'X-Master-Key'   : key,
+    'X-Bin-Private'  : 'true',
+    ...(method === 'POST' ? { 'X-Bin-Name': `CuidarBem-${settings.patient || 'backup'}` } : {}),
+  };
+
+  _setCloudStatus('syncing');
+  try {
+    const res  = await fetch(url, { method, headers, body: JSON.stringify(snap) });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+
+    // Na primeira vez guarda o bin ID gerado
+    if (method === 'POST' && data.metadata?.id) {
+      setJsonbinBinId(data.metadata.id);
+    }
+
+    // Guarda snapshot local como cache do que está na nuvem
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    if (!silent) showToast('☁️ Backup salvo na nuvem!');
+    haptic([20, 40]);
+    return true;
+
+  } catch (e) {
+    _setCloudStatus('error');
+    if (!silent) showToast(`❌ Falha no backup: ${e.message}`);
+    console.warn('[CuidarBem] Cloud backup error:', e);
+    return false;
+  }
+}
+
+async function doCloudRestore() {
+  const key   = getJsonbinKey();
+  const binId = getJsonbinBinId();
+
+  if (!key)   { showToast('⚠️ Configure a chave JSONbin primeiro'); return; }
+  if (!binId) { showToast('⚠️ Nenhum backup na nuvem encontrado. Salve primeiro.'); return; }
+
+  _setCloudStatus('syncing');
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': key },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const snap = data.record;
+
+    if (!snap?.tasks) throw new Error('Backup inválido ou vazio');
+
+    const ts = new Date(snap.ts).toLocaleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    showToast('✅ Dados restaurados da nuvem!');
+    haptic([30, 50, 30]);
+
+  } catch (e) {
+    _setCloudStatus('error');
+    showToast(`❌ Erro ao restaurar: ${e.message}`);
+    console.warn('[CuidarBem] Cloud restore error:', e);
+  }
+}
+
+// Restaurar do backup LOCAL (fallback sem internet)
+function restoreBackup() {
+  const raw = localStorage.getItem('cb_auto_backup');
+  if (!raw) { showToast('⚠️ Nenhum backup local disponível'); return; }
+  const snap = JSON.parse(raw);
+  const ts   = new Date(snap.ts).toLocaleString('pt-BR');
+  if (!confirm(`Restaurar backup local de ${ts}?\nIsso substituirá os dados atuais.`)) return;
+  applySnapshot(snap);
+  showToast('✅ Backup local restaurado!');
+  haptic([30, 50, 30]);
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function _updateBackupUI({ local, cloud } = {}) {
+  const localEl = document.getElementById('backup-local-ts');
+  const cloudEl = document.getElementById('backup-cloud-ts');
+  if (local && localEl) localEl.textContent = new Date(local).toLocaleString('pt-BR');
+  if (cloud && cloudEl) cloudEl.textContent = new Date(cloud).toLocaleString('pt-BR');
+  // last-backup-desc backward compat
+  const desc = document.getElementById('last-backup-desc');
+  if (local && desc) desc.textContent = `Local: ${new Date(local).toLocaleTimeString('pt-BR')}`;
+}
+
+function _setCloudStatus(state) {
+  // state: 'idle' | 'syncing' | 'ok' | 'error'
+  const icons  = { idle:'☁️', syncing:'🔄', ok:'✅', error:'❌
+on/json',
+    'X-Master-Key'   : key,
+    'X-Bin-Private'  : 'true',
+    ...(method === 'POST' ? { 'X-Bin-Name': `CuidarBem-${settings.patient || 'backup'}` } : {}),
+  };
+
+  _setCloudStatus('syncing');
+  try {
+    const res  = await fetch(url, { method, headers, body: JSON.stringify(snap) });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+
+    // Na primeira vez guarda o bin ID gerado
+    if (method === 'POST' && data.metadata?.id) {
+      setJsonbinBinId(data.metadata.id);
+    }
+
+    // Guarda snapshot local como cache do que está na nuvem
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    if (!silent) showToast('☁️ Backup salvo na nuvem!');
+    haptic([20, 40]);
+    return true;
+
+  } catch (e) {
+    _setCloudStatus('error');
+    if (!silent) showToast(`❌ Falha no backup: ${e.message}`);
+    console.warn('[CuidarBem] Cloud backup error:', e);
+    return false;
+  }
+}
+
+async function doCloudRestore() {
+  const key   = getJsonbinKey();
+  const binId = getJsonbinBinId();
+
+  if (!key)   { showToast('⚠️ Configure a chave JSONbin primeiro'); return; }
+  if (!binId) { showToast('⚠️ Nenhum backup na nuvem encontrado. Salve primeiro.'); return; }
+
+  _setCloudStatus('syncing');
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': key },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const snap = data.record;
+
+    if (!snap?.tasks) throw new Error('Backup inválido ou vazio');
+
+    const ts = new Date(snap.ts).toLocaleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    showToast('✅ Dados restaurados da nuvem!');
+    haptic([30, 50, 30]);
+
+  } catch (e) {
+    _setCloudStatus('error');
+    showToast(`❌ Erro ao restaurar: ${e.message}`);
+    console.warn('[CuidarBem] Cloud restore error:', e);
+  }
+}
+
+// Restaurar do backup LOCAL (fallback sem internet)
+function restoreBackup() {
+  const raw = localStorage.getItem('cb_auto_backup');
+  if (!raw) { showToast('⚠️ Nenhum backup local disponível'); return; }
+  const snap = JSON.parse(raw);
+  const ts   = new Date(snap.ts).toLocaleString('pt-BR');
+  if (!confirm(`Restaurar backup local de ${ts}?\nIsso substituirá os dados atuais.`)) return;
+  applySnapshot(snap);
+  showToast('✅ Backup local restaurado!');
+  haptic([30, 50, 30]);
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function _updateBackupUI({ local, cloud } = {}) {
+  const localEl = document.getElementById('backup-local-ts');
+  const cloudEl = document.getElementById('backup-cloud-ts');
+  if (local && localEl) localEl.textContent = new Date(local).toLocaleString('pt-BR');
+  if (cloud && cloudEl) cloudEl.textContent = new Date(cloud).toLocaleString('pt-BR');
+  // last-backup-desc backward compat
+  const desc = document.getElementById('last-backup-desc');
+  if (local && desc) desc.textContent = `Local: ${new Date(local).toLocaleTimeString('pt-BR')}`;
+}
+
+function _setCloudStatus(state) {
+  // state: 'idle' | 'syncing' | 'ok' | 'error'
+  const icons  = { idle:'☁️', syncing:'🔄', ok:'✅', error:'❌' };
+  const labels = { idle:'Aguardando', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha' };
+  const colors = { idle:'var(--text-light)', syncing:'var(--amber-600)', ok:'var(--teal-600)', error:'var(--coral-600)' };
+  const el = document.getElementById('cloud-status-badge');
+  if (el) {
+    el.textContent = `${icons[state]} ${labels[state]}`;
+    el.style.color  = colors[state];
+  }
+}
+
+// ── Salvar chave JSONbin (chamado pelo input de configuração) ───────────────
+
+function saveJsonbinKey() {
+  const input = document.getElementById('jsonbin-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { showToast('⚠️ Cole a chave antes de salvar'); return; }
+  // Validação básica: Master Keys do JSONbin começam com $2b$
+  if (!key.startsWith('$2b$') && !key.startsWith('$2a$')) {
+    showToast('⚠️ Chave inválida. Deve começar com $2b$…');
+    return;
+  }
+  setJsonbinKey(key);
+  input.value = key.slice(0, 8) + '••••••••••••••••••••'; // mascarar
+  showToast('🔑 Chave salva! Fazendo primeiro backup…');
+  haptic([20]);
+  doCloudBackup({ silent: false }); // testa de imediato
+}
+
+function clearJsonbinConfig() {
+  if (!confirm('Desconectar do JSONbin?\nSeus backups na nuvem não serão apagados, mas o app deixará de sincronizar.')) return;
+  localStorage.re
+}
+  if (!binId) { showToast('⚠️ Nenhum backup na nuvem encontrado. Salve primeiro.'); return; }
+
+  _setCloudStatus('syncing');
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': key },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const snap = data.record;
+
+    if (!snap?.tasks) throw new Error('Backup inválido ou vazio');
+
+    const ts = new Date(snap.ts).toLocaleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    showToast('✅ Dados restaurados da nuvem!');
+    haptic([30, 50, 30]);
+
+  } catch (e) {
+    _setCloudStatus('error');
+    showToast(`❌ Erro ao restaurar: ${e.message}`);
+    console.warn('[CuidarBem] Cloud restore error:', e);
+  }
+}
+
+// Restaurar do backup LOCAL (fallback sem internet)
+function restoreBackup() {
+  const raw = localStorage.getItem('cb_auto_backup');
+  if (!raw) { showToast('⚠️ Nenhum backup local disponível'); return; }
+  const snap = JSON.parse(raw);
+  const ts   = new Date(snap.ts).toLocaleString('pt-BR');
+  if (!confirm(`Restaurar backup local de ${ts}?\nIsso substituirá os dados atuais.`)) return;
+  applySnapshot(snap);
+  showToast('✅ Backup local restaurado!');
+  haptic([30, 50, 30]);
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function _updateBackupUI({ local, cloud } = {}) {
+  const localEl = document.getElementById('backup-local-ts');
+  const cloudEl = document.getElementById('backup-cloud-ts');
+  if (local && localEl) localEl.textContent = new Date(local).toLocaleString('pt-BR');
+  if (cloud && cloudEl) cloudEl.textContent = new Date(cloud).toLocaleString('pt-BR');
+  // last-backup-desc backward compat
+  const desc = document.getElementById('last-backup-desc');
+  if (local && desc) desc.textContent = `Local: ${new Date(local).toLocaleTimeString('pt-BR')}`;
+}
+
+function _setCloudStatus(state) {
+  // state: 'idle' | 'syncing' | 'ok' | 'error'
+  const icons  = { idle:'☁️', syncing:'🔄', ok:'✅', error:'❌' };
+  const labels = { idle:'Aguardando', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha' };
+  const colors = { idle:'var(--text-light)', syncing:'var(--amber-600)', ok:'var(--teal-600)', error:'var(--coral-600)' };
+  const el = document.getElementById('cloud-status-badge');
+  if (el) {
+    el.textContent = `${icons[state]} ${labels[state]}`;
+    el.style.color  = colors[state];
+  }
+}
+
+// ── Salvar chave JSONbin (chamado pelo input de configuração) ───────────────
+
+function saveJsonbinKey() {
+  const input = document.getElementById('jsonbin-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { showToast('⚠️ Cole a chave antes de salvar'); return; }
+  // Validação básica: Master Keys do JSONbin começam com $2b$
+  if (!key.startsWith('$2b$') && !key.startsWith('$2a$')) {
+    showToast('⚠️ Chave inválida. Deve começar com $2b$…');
+    return;
+  }
+  setJsonbinKey(key);
+  input.value = key.slice(0, 8) + '••••••••••••••••••••'; // mascarar
+  showToast('🔑 Chave salva! Fazendo primeiro backup…');
+  haptic([20]);
+  doCloudBackup({ silent: false }); // testa de imediato
+}
+
+function clearJsonbinConfig() {
+  if (!confirm('Desconectar do JSONbin?\nSeus backups na nuvem não serão apagados, mas o app deixará de sincronizar.')) return;
+  localStorage.removeItem('cb_jsonbin_key');
+  localStorage.removeItem('cb_jsonbin_bin_id');
+  const input = document.getElementById('jsonbin-key-input');
+  if (input) input.value = '';
+  _setCloudStatus('idle');
+  showToast('🔌 JSONbin desconectado');
+}
+
+// ── Controle do toggle de backup automático ────────────────────────────────
+
+function toggleAutoBackup(btn) {
+  btn.classList.toggle('on');
+  const on = btn.classList.contains('on');
+  localStorage.setItem('cb_autobackup_on', on ? '1' : '0');
+  if (on) {
+    _startBackupTimers();
+    showToast('☁️ Backup automático ativado');
+  } else {
+    _stopBackupTimers();
+    showToast('☁️ Backup automático desativado');
+  }
+}
+
+function _startBackupTimers() {
+  _stopBackupTimers();
+  doLocalBackup();
+  autoBackupInterval  = setInterval(doLocalBackup,  5  * 60 * 1000);  // local  a cada  5 min
+  cloudBackupInterval = setInterval(() => doCloudBackup({ silent: true }), 30 * 60 * 1000); // nuvem a cada 30 min
+}
+
+function _stopBackupTimers() {
+  clearInterval(autoBackupInterval);
+  clearInterval(cloudBackupInterval);
+  autoBackupInterval  = null;
+  cloudBackupInterval = null;
+}
+
+// ── Inicialização ──────────────────────────────────────────────────────────
+
+function initAutoBackup() {
+  if (window.__CB_BACKUP_INITED__) return; // guard: evita duplo 
+aleString('pt-BR');
+    if (!confirm(`Restaurar backup da nuvem de ${ts}?\n\nIsso substituirá TODOS os dados locais.`)) {
+      _setCloudStatus('ok');
+      return;
+    }
+
+    applySnapshot(snap);
+    localStorage.setItem('cb_auto_backup', JSON.stringify(snap));
+    _updateBackupUI({ local: snap.ts, cloud: snap.ts });
+    _setCloudStatus('ok');
+    showToast('✅ Dados restaurados da nuvem!');
+    haptic([30, 50, 30]);
+
+  } catch (e) {
+    _setCloudStatus('error');
+    showToast(`❌ Erro ao restaurar: ${e.message}`);
+    console.warn('[CuidarBem] Cloud restore error:', e);
+  }
+}
+
+// Restaurar do backup LOCAL (fallback sem internet)
+function restoreBackup() {
+  const raw = localStorage.getItem('cb_auto_backup');
+  if (!raw) { showToast('⚠️ Nenhum backup local disponível'); return; }
+  const snap = JSON.parse(raw);
+  const ts   = new Date(snap.ts).toLocaleString('pt-BR');
+  if (!confirm(`Restaurar backup local de ${ts}?\nIsso substituirá os dados atuais.`)) return;
+  applySnapshot(snap);
+  showToast('✅ Backup local restaurado!');
+  haptic([30, 50, 30]);
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+
+function _updateBackupUI({ local, cloud } = {}) {
+  const localEl = document.getElementById('backup-local-ts');
+  const cloudEl = document.getElementById('backup-cloud-ts');
+  if (local && localEl) localEl.textContent = new Date(local).toLocaleString('pt-BR');
+  if (cloud && cloudEl) cloudEl.textContent = new Date(cloud).toLocaleString('pt-BR');
+  // last-backup-desc backward compat
+  const desc = document.getElementById('last-backup-desc');
+  if (local && desc) desc.textContent = `Local: ${new Date(local).toLocaleTimeString('pt-BR')}`;
+}
+
+function _setCloudStatus(state) {
+  // state: 'idle' | 'syncing' | 'ok' | 'error'
+  const icons  = { idle:'☁️', syncing:'🔄', ok:'✅', error:'❌' };
+  const labels = { idle:'Aguardando', syncing:'Sincronizando…', ok:'Sincronizado', error:'Falha' };
+  const colors = { idle:'var(--text-light)', syncing:'var(--amber-600)', ok:'var(--teal-600)', error:'var(--coral-600)' };
+  const el = document.getElementById('cloud-status-badge');
+  if (el) {
+    el.textContent = `${icons[state]} ${labels[state]}`;
+    el.style.color  = colors[state];
+  }
+}
+
+// ── Salvar chave JSONbin (chamado pelo input de configuração) ───────────────
+
+function saveJsonbinKey() {
+  const input = document.getElementById('jsonbin-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { showToast('⚠️ Cole a chave antes de salvar'); return; }
+  // Validação básica: Master Keys do JSONbin começam com $2b$
+  if (!key.startsWith('$2b$') && !key.startsWith('$2a$')) {
+    showToast('⚠️ Chave inválida. Deve começar com $2b$…');
+    return;
+  }
+  setJsonbinKey(key);
+  input.value = key.slice(0, 8) + '••••••••••••••••••••'; // mascarar
+  showToast('🔑 Chave salva! Fazendo primeiro backup…');
+  haptic([20]);
+  doCloudBackup({ silent: false }); // testa de imediato
+}
+
+function clearJsonbinConfig() {
+  if (!confirm('Desconectar do JSONbin?\nSeus backups na nuvem não serão apagados, mas o app deixará de sincronizar.')) return;
+  localStorage.removeItem('cb_jsonbin_key');
+  localStorage.removeItem('cb_jsonbin_bin_id');
+  const input = document.getElementById('jsonbin-key-input');
+  if (input) input.value = '';
+  _setCloudStatus('idle');
+  showToast('🔌 JSONbin desconectado');
+}
+
+// ── Controle do toggle de backup automático ────────────────────────────────
+
+function toggleAutoBackup(btn) {
+  btn.classList.toggle('on');
+  const on = btn.classList.contains('on');
+  localStorage.setItem('cb_autobackup_on', on ? '1' : '0');
+  if (on) {
+    _startBackupTimers();
+    showToast('☁️ Backup automático ativado');
+  } else {
+    _stopBackupTimers();
+    showToast('☁️ Backup automático desativado');
+  }
+}
+
+function _startBackupTimers() {
+  _stopBackupTimers();
+  doLocalBackup();
+  autoBackupInterval  = setInterval(doLocalBackup,  5  * 60 * 1000);  // local  a cada  5 min
+  cloudBackupInterval = setInterval(() => doCloudBackup({ silent: true }), 30 * 60 * 1000); // nuvem a cada 30 min
+}
+
+function _stopBackupTimers() {
+  clearInterval(autoBackupInterval);
+  clearInterval(cloudBackupInterval);
+  autoBackupInterval  = null;
+  cloudBackupInterval = null;
+}
+
+// ── Inicialização ──────────────────────────────────────────────────────────
+
+function initAutoBackup() {
+  if (window.__CB_BACKUP_INITED__) return; // guard: evita duplo registro de intervals
+  window.__CB_BACKUP_INITED__ = true;
+  const on  = localStorage.getItem('cb_autobackup_on') !== '0'; // default on
+  const btn = document.getElementById('autobackup-toggle');
+  if (btn) btn.classList.toggle('on', on);
+
+  // Restaurar timestamps da UI
+  const snap = localStorage.getItem('cb_auto_backup');
+  if (snap) {
+    try { _updateBackupUI({ local: JSON.parse(snap).ts }); } catch(e) {}
+  }
+
+  // Mascarar chave se já salva
+  const key = getJsonbin
+}), 30 * 60 * 1000); // nuvem a cada 30 min
+}
+
+function _stopBackupTimers() {
+  clearInterval(autoBackupInterval);
+  clearInterval(cloudBackupInterval);
+  autoBackupInterval  = null;
+  cloudBackupInterval = null;
+}
+
+// ── Inicialização ──────────────────────────────────────────────────────────
+
+function initAutoBackup() {
+  if (window.__CB_BACKUP_INITED__) return; // guard: evita duplo registro de intervals
+  window.__CB_BACKUP_INITED__ = true;
+  const on  = localStorage.getItem('cb_autobackup_on') !== '0'; // default on
+  const btn = document.getElementById('autobackup-toggle');
+  if (btn) btn.classList.toggle('on', on);
+
+  // Restaurar timestamps da UI
+  const snap = localStorage.getItem('cb_auto_backup');
+  if (snap) {
+    try { _updateBackupUI({ local: JSON.parse(snap).ts }); } catch(e) {}
+  }
+
+  // Mascarar chave se já salva
+  const key = getJsonbinKey();
+  const inp = document.getElementById('jsonbin-key-input');
+  if (key && inp) inp.value = key.slice(0, 8) + '••••••••••••••••••••';
+
+  // Status da nuvem
+  if (key && getJsonbinBinId()) {
+    _setCloudStatus('ok');
+    document.getElementById('backup-cloud-ts') &&
+      (document.getElementById('backup-cloud-ts').textContent = 'Conectado');
+  } else if (key) {
+    _setCloudStatus('idle');
+  }
+
+  if (on) _startBackupTimers();
+}
+
+// ── 10. ONBOARDING ────────────────────────────────────────────────────────────
+let obSlide = 0;
+const OB_TOTAL = 4;
+
+function initOnboarding() {
+  if (localStorage.getItem('cb_onboarded')) return;
+  const overlay = document.getElementById('onboarding-overlay');
+  if (overlay) overlay.style.display = 'flex';
+}
+
+function onboardingNext() {
+  obSlide++;
+  if (obSlide >= OB_TOTAL) { finishOnboarding(); return; }
+  for (let i = 0; i < OB_TOTAL; i++) {
+    const s = document.getElementById(`ob-${i}`);
+    const d = document.getElementById(`od-${i}`);
+    if (s) s.style.display = i === obSlide ? 'block' : 'none';
+    if (d) d.classList.toggle('active', i === obSlide);
+  }
+  const btn = document.getElementById('ob-next-btn');
+  if (btn && obSlide === OB_TOTAL - 1) btn.textContent = '✅ Começar!';
+  haptic([15]);
+}
+
+function finishOnboarding() {
+  localStorage.setItem('cb_onboarded', '1');
+  const overlay = document.getElementById('onboarding-overlay');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.4s';
+    setTimeout(() => overlay.style.display = 'none', 400);
+  }
+  haptic([30, 50, 30]);
+}
+
+// ── 11. ALARM SOUND (AudioContext beep) ───────────────────────────────────────
+function playAlarmBeep(freq = 880, duration = 0.3) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
+}
+
+// Patch the existing toggleTask to add haptic + sound + streak update
+const _origToggleTask = window.toggleTask;
+if (typeof toggleTask === 'function') {
+  window.toggleTask = function(id) {
+    const key = `${id}_${(typeof todayStr==='function'?todayStr():new Date().toISOString().split('T')[0])}`;
+    const wasCompleted = completions[key];
+    _origToggleTask(id);
+    if (!wasCompleted) {
+      haptic([40, 20, 40]);
+      playAlarmBeep(660, 0.15);
+      setTimeout(() => playAlarmBeep(880, 0.15), 180);
+    }
+    setTimeout(updateStreakBadge, 200);
+  };
+}
+
+// Patch checkNotifications to also play sound
+const _origCheckNotif = window.checkNotifications;
+if (typeof checkNotifications === 'function') {
+  window.checkNotifications = function() {
+    const _origNew = window.Notification;
+    window.Notification = function(title, opts) {
+      playAlarmBeep(440, 0.2);
+      setTimeout(() => playAlarmBeep(660, 0.2), 250);
+      haptic([50, 100, 50, 100, 50]);
+      return new _origNew(title, opts);
+    };
+    window.Notification.permission = _origNew.permission;
+    window.Notification.requestPermission = _origNew.requestPermission.bind(_origNew);
+    _origCheckNotif();
+    window.Notification = _origNew;
+  };
+}
+
+// ── 12. CONFIRM MED WITH CAMERA PHOTO ────────────────────────────────────────
+// Patch confirmTake to offer camera capture after confirmation
+const _origConfirmTake = window.confirmTake;
+if (typeof confirmTake === 'function') {
+  window.confirmTake = function() {
+    _origConfirmTake();
+    // After confirming, show optional camera prompt
+    setTimeout(() => {
+      const taskId = pendingConfirmId; // captured before it clears
+      // already handled by existing photo modal — no extra needed
+    }, 100);
+  };
+}
+
+// ── INIT ALL NEW FEATURES ──────────────────────────────────────────────
+
+=== JSON.parse ===
+s-center-handle"></div>
+    <div class="alerts-center-head">
+      <div>
+        <div class="alerts-center-title" id="alerts-center-title">Central de Alertas</div>
+        <div class="alerts-center-sub" id="alerts-center-sub">Pendências, próximos horários e sincronização.</div>
+      </div>
+      <button class="alerts-center-close" onclick="closeAlertsCenter()" aria-label="Fechar">×</button>
+    </div>
+    <div class="alerts-center-summary" id="alerts-center-summary"></div>
+    <div class="alerts-center-list" id="alerts-center-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]');
+let completions = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+let settings = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{"patient":"Maria","caregiver":"","diagnosis":"AVC","notif_med":true,"notif_cons":true,"notif_fisio":false}');
+let currentFilter = 'all';
+let calFilter_ = 'all';
+let selectedType = '';
+let selectedCalDay = null;
+let calWeekOffset = 0; // dias de offset do centro da semana exibida
+let currentTaskPhoto = null;
+let pendingConfirmId = null;
+let photoViewTaskId = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  migrateExamType();
+  setGreeting();
+  setTodayDate();
+  setInterval(() => { setGreeting(); setTodayDate(); }, 30000);
+  loadSettings();
+  buildWeekStrip();
+  renderAll();
+  requestNotifPermission();
+  setupNotifications();
+  if (localStorage.getItem('cuidarbem_tasks') === null) addSampleTasks();
+  // Re-render a cada 60s para atualizar status de "atrasado" dos remédios
+  setInterval(() => {
+    renderTodayTasks();
+    renderAlerts();
+    renderNextAlarm();
+  }, 60000);
+}
+
+// ── Migração: type:'cons' com subtype:'exam'|examType → type:'exam' ────────
+function migrateExamType() {
+  let changed = 0;
+  tasks.forEach(t => {
+    if (t.type === 'cons' && (t.subtype === 'exam' || t.examType)) {
+      t.type = 'exam';
+      changed++;
+    }
+  });
+  if (changed) {
+    saveTasks();
+    console.log(`[CuidarBem] Migrated ${changed} record(s) to type:exam`);
+  }
+}
+
+// ── MODO SAMU ─────────────────────────────────────────────────────────────
+function openSamuMode() {
+  const p  = getProfile();
+  const st = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}');
+
+  // ── Identidade ──────────────────────────────────────────────────────────
+  document.getElementById('samu-name').textContent = st.patient || 'Não informado';
+  const age = p.birthday ? calcAge(p.birthday) : null;
+  const birth = p.birthday ? new Date(p.birthday+'T00:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const sexLabel = {F:'Feminino', M:'Masculino', O:'Outro'}[p.sex] || '';
+  document.getElementById('samu-meta').textContent = [
+    age ? `${age} anos` : '',
+    birth ? `Nascido(a) em ${birth}` : '',
+    sexLabel
+  ].filter(Boolean).join(' · ') || '—';
+  document.getElementById('samu-diagnosis').textContent = st.diagnosis
+    ? `Diagnóstico: ${st.diagnosis}` : '';
+
+  // ── Alergias (bloco mais importante) ────────────────────────────────────
+  const allergies = [p.allergyMeds, p.allergyFood, p.allergyOther].filter(Boolean);
+  const allergyEl = document.getElementById('samu-allergy-block');
+  if (allergies.length) {
+    allergyEl.innerHTML = `
+      <div class="samu-section allergy">
+        <div class="samu-section-label">⚠️ ALERGIAS CONHECIDAS</div>
+        <div class="samu-section-content">
+          ${p.allergyMeds  ? `<div>💊 Medicamentos: <strong>${p.allergyMeds}</strong></div>`  : ''}
+          ${p.allergyFood  ? `<div>🍽️ Alimentos: <strong>${p.allergyFood}</strong></div>`      : ''}
+          ${p.allergyOther ? `<div>⚗️ Outros: <strong>${p.allergyOther}</strong></div>`         : ''}
+        </div>
+      </div>`;
+  } else {
+    allergyEl.innerHTML = `<div class="samu-no-allergy">✅ Nenhuma alergia conhecida informada</div>`;
+  }
+
+  // ── Condições ────────────────────────────────────────────────────────────
+  const conditionsEl  = document.getElementById('samu-conditions-block');
+  const conditionsVal = document.getElementById('samu-conditions');
+  const allConditions = [st.diagnosis, p.conditions].filter(Boolean).join(' · ');
+  if (allConditions) {
+    conditionsEl.style.display = 'block';
+    conditionsVal.textContent = allConditions;
+  } else conditionsEl.style.display = 'none';
+
+  const essential = [
+    p.blood ? `🩸 Tipo sanguíneo: ${p.blood}` : '',
+    p.weight ? `⚖️ Peso: ${p.weight}` : '',
+    p.height ? `📏 Altura: ${p.height}` : '',
+    p.mainDoctor ? `🩺 Médico principal: ${p.mainDoctor}` : ''
+  ].filter(Boolean).join('\n');
+  const essentialBlock = document.getElementById('samu-essential-block');
+  const essentialVal = document.getEl
+  <div class="alerts-center-title" id="alerts-center-title">Central de Alertas</div>
+        <div class="alerts-center-sub" id="alerts-center-sub">Pendências, próximos horários e sincronização.</div>
+      </div>
+      <button class="alerts-center-close" onclick="closeAlertsCenter()" aria-label="Fechar">×</button>
+    </div>
+    <div class="alerts-center-summary" id="alerts-center-summary"></div>
+    <div class="alerts-center-list" id="alerts-center-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]');
+let completions = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+let settings = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{"patient":"Maria","caregiver":"","diagnosis":"AVC","notif_med":true,"notif_cons":true,"notif_fisio":false}');
+let currentFilter = 'all';
+let calFilter_ = 'all';
+let selectedType = '';
+let selectedCalDay = null;
+let calWeekOffset = 0; // dias de offset do centro da semana exibida
+let currentTaskPhoto = null;
+let pendingConfirmId = null;
+let photoViewTaskId = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  migrateExamType();
+  setGreeting();
+  setTodayDate();
+  setInterval(() => { setGreeting(); setTodayDate(); }, 30000);
+  loadSettings();
+  buildWeekStrip();
+  renderAll();
+  requestNotifPermission();
+  setupNotifications();
+  if (localStorage.getItem('cuidarbem_tasks') === null) addSampleTasks();
+  // Re-render a cada 60s para atualizar status de "atrasado" dos remédios
+  setInterval(() => {
+    renderTodayTasks();
+    renderAlerts();
+    renderNextAlarm();
+  }, 60000);
+}
+
+// ── Migração: type:'cons' com subtype:'exam'|examType → type:'exam' ────────
+function migrateExamType() {
+  let changed = 0;
+  tasks.forEach(t => {
+    if (t.type === 'cons' && (t.subtype === 'exam' || t.examType)) {
+      t.type = 'exam';
+      changed++;
+    }
+  });
+  if (changed) {
+    saveTasks();
+    console.log(`[CuidarBem] Migrated ${changed} record(s) to type:exam`);
+  }
+}
+
+// ── MODO SAMU ─────────────────────────────────────────────────────────────
+function openSamuMode() {
+  const p  = getProfile();
+  const st = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}');
+
+  // ── Identidade ──────────────────────────────────────────────────────────
+  document.getElementById('samu-name').textContent = st.patient || 'Não informado';
+  const age = p.birthday ? calcAge(p.birthday) : null;
+  const birth = p.birthday ? new Date(p.birthday+'T00:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const sexLabel = {F:'Feminino', M:'Masculino', O:'Outro'}[p.sex] || '';
+  document.getElementById('samu-meta').textContent = [
+    age ? `${age} anos` : '',
+    birth ? `Nascido(a) em ${birth}` : '',
+    sexLabel
+  ].filter(Boolean).join(' · ') || '—';
+  document.getElementById('samu-diagnosis').textContent = st.diagnosis
+    ? `Diagnóstico: ${st.diagnosis}` : '';
+
+  // ── Alergias (bloco mais importante) ────────────────────────────────────
+  const allergies = [p.allergyMeds, p.allergyFood, p.allergyOther].filter(Boolean);
+  const allergyEl = document.getElementById('samu-allergy-block');
+  if (allergies.length) {
+    allergyEl.innerHTML = `
+      <div class="samu-section allergy">
+        <div class="samu-section-label">⚠️ ALERGIAS CONHECIDAS</div>
+        <div class="samu-section-content">
+          ${p.allergyMeds  ? `<div>💊 Medicamentos: <strong>${p.allergyMeds}</strong></div>`  : ''}
+          ${p.allergyFood  ? `<div>🍽️ Alimentos: <strong>${p.allergyFood}</strong></div>`      : ''}
+          ${p.allergyOther ? `<div>⚗️ Outros: <strong>${p.allergyOther}</strong></div>`         : ''}
+        </div>
+      </div>`;
+  } else {
+    allergyEl.innerHTML = `<div class="samu-no-allergy">✅ Nenhuma alergia conhecida informada</div>`;
+  }
+
+  // ── Condições ────────────────────────────────────────────────────────────
+  const conditionsEl  = document.getElementById('samu-conditions-block');
+  const conditionsVal = document.getElementById('samu-conditions');
+  const allConditions = [st.diagnosis, p.conditions].filter(Boolean).join(' · ');
+  if (allConditions) {
+    conditionsEl.style.display = 'block';
+    conditionsVal.textContent = allConditions;
+  } else conditionsEl.style.display = 'none';
+
+  const essential = [
+    p.blood ? `🩸 Tipo sanguíneo: ${p.blood}` : '',
+    p.weight ? `⚖️ Peso: ${p.weight}` : '',
+    p.height ? `📏 Altura: ${p.height}` : '',
+    p.mainDoctor ? `🩺 Médico principal: ${p.mainDoctor}` : ''
+  ].filter(Boolean).join('\n');
+  const essentialBlock = document.getElementById('samu-essential-block');
+  const essentialVal = document.getElementById('samu-essential');
+  if (essential) { essentialBlock.style.display = 
+v>
+        <div class="alerts-center-sub" id="alerts-center-sub">Pendências, próximos horários e sincronização.</div>
+      </div>
+      <button class="alerts-center-close" onclick="closeAlertsCenter()" aria-label="Fechar">×</button>
+    </div>
+    <div class="alerts-center-summary" id="alerts-center-summary"></div>
+    <div class="alerts-center-list" id="alerts-center-list"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]');
+let completions = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+let settings = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{"patient":"Maria","caregiver":"","diagnosis":"AVC","notif_med":true,"notif_cons":true,"notif_fisio":false}');
+let currentFilter = 'all';
+let calFilter_ = 'all';
+let selectedType = '';
+let selectedCalDay = null;
+let calWeekOffset = 0; // dias de offset do centro da semana exibida
+let currentTaskPhoto = null;
+let pendingConfirmId = null;
+let photoViewTaskId = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function init() {
+  migrateExamType();
+  setGreeting();
+  setTodayDate();
+  setInterval(() => { setGreeting(); setTodayDate(); }, 30000);
+  loadSettings();
+  buildWeekStrip();
+  renderAll();
+  requestNotifPermission();
+  setupNotifications();
+  if (localStorage.getItem('cuidarbem_tasks') === null) addSampleTasks();
+  // Re-render a cada 60s para atualizar status de "atrasado" dos remédios
+  setInterval(() => {
+    renderTodayTasks();
+    renderAlerts();
+    renderNextAlarm();
+  }, 60000);
+}
+
+// ── Migração: type:'cons' com subtype:'exam'|examType → type:'exam' ────────
+function migrateExamType() {
+  let changed = 0;
+  tasks.forEach(t => {
+    if (t.type === 'cons' && (t.subtype === 'exam' || t.examType)) {
+      t.type = 'exam';
+      changed++;
+    }
+  });
+  if (changed) {
+    saveTasks();
+    console.log(`[CuidarBem] Migrated ${changed} record(s) to type:exam`);
+  }
+}
+
+// ── MODO SAMU ─────────────────────────────────────────────────────────────
+function openSamuMode() {
+  const p  = getProfile();
+  const st = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}');
+
+  // ── Identidade ──────────────────────────────────────────────────────────
+  document.getElementById('samu-name').textContent = st.patient || 'Não informado';
+  const age = p.birthday ? calcAge(p.birthday) : null;
+  const birth = p.birthday ? new Date(p.birthday+'T00:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const sexLabel = {F:'Feminino', M:'Masculino', O:'Outro'}[p.sex] || '';
+  document.getElementById('samu-meta').textContent = [
+    age ? `${age} anos` : '',
+    birth ? `Nascido(a) em ${birth}` : '',
+    sexLabel
+  ].filter(Boolean).join(' · ') || '—';
+  document.getElementById('samu-diagnosis').textContent = st.diagnosis
+    ? `Diagnóstico: ${st.diagnosis}` : '';
+
+  // ── Alergias (bloco mais importante) ────────────────────────────────────
+  const allergies = [p.allergyMeds, p.allergyFood, p.allergyOther].filter(Boolean);
+  const allergyEl = document.getElementById('samu-allergy-block');
+  if (allergies.length) {
+    allergyEl.innerHTML = `
+      <div class="samu-section allergy">
+        <div class="samu-section-label">⚠️ ALERGIAS CONHECIDAS</div>
+        <div class="samu-section-content">
+          ${p.allergyMeds  ? `<div>💊 Medicamentos: <strong>${p.allergyMeds}</strong></div>`  : ''}
+          ${p.allergyFood  ? `<div>🍽️ Alimentos: <strong>${p.allergyFood}</strong></div>`      : ''}
+          ${p.allergyOther ? `<div>⚗️ Outros: <strong>${p.allergyOther}</strong></div>`         : ''}
+        </div>
+      </div>`;
+  } else {
+    allergyEl.innerHTML = `<div class="samu-no-allergy">✅ Nenhuma alergia conhecida informada</div>`;
+  }
+
+  // ── Condições ────────────────────────────────────────────────────────────
+  const conditionsEl  = document.getElementById('samu-conditions-block');
+  const conditionsVal = document.getElementById('samu-conditions');
+  const allConditions = [st.diagnosis, p.conditions].filter(Boolean).join(' · ');
+  if (allConditions) {
+    conditionsEl.style.display = 'block';
+    conditionsVal.textContent = allConditions;
+  } else conditionsEl.style.display = 'none';
+
+  const essential = [
+    p.blood ? `🩸 Tipo sanguíneo: ${p.blood}` : '',
+    p.weight ? `⚖️ Peso: ${p.weight}` : '',
+    p.height ? `📏 Altura: ${p.height}` : '',
+    p.mainDoctor ? `🩺 Médico principal: ${p.mainDoctor}` : ''
+  ].filter(Boolean).join('\n');
+  const essentialBlock = document.getElementById('samu-essential-block');
+  const essentialVal = document.getElementById('samu-essential');
+  if (essential) { essentialBlock.style.display = 'block'; essentialVal.textContent = essential; }
+  else essentialBlock.style.displ
+der a cada 60s para atualizar status de "atrasado" dos remédios
+  setInterval(() => {
+    renderTodayTasks();
+    renderAlerts();
+    renderNextAlarm();
+  }, 60000);
+}
+
+// ── Migração: type:'cons' com subtype:'exam'|examType → type:'exam' ────────
+function migrateExamType() {
+  let changed = 0;
+  tasks.forEach(t => {
+    if (t.type === 'cons' && (t.subtype === 'exam' || t.examType)) {
+      t.type = 'exam';
+      changed++;
+    }
+  });
+  if (changed) {
+    saveTasks();
+    console.log(`[CuidarBem] Migrated ${changed} record(s) to type:exam`);
+  }
+}
+
+// ── MODO SAMU ─────────────────────────────────────────────────────────────
+function openSamuMode() {
+  const p  = getProfile();
+  const st = JSON.parse(localStorage.getItem('cuidarbem_settings') || '{}');
+
+  // ── Identidade ──────────────────────────────────────────────────────────
+  document.getElementById('samu-name').textContent = st.patient || 'Não informado';
+  const age = p.birthday ? calcAge(p.birthday) : null;
+  const birth = p.birthday ? new Date(p.birthday+'T00:00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'}) : '';
+  const sexLabel = {F:'Feminino', M:'Masculino', O:'Outro'}[p.sex] || '';
+  document.getElementById('samu-meta').textContent = [
+    age ? `${age} anos` : '',
+    birth ? `Nascido(a) em ${birth}` : '',
+    sexLabel
+  ].filter(Boolean).join(' · ') || '—';
+  document.getElementById('samu-diagnosis').textContent = st.diagnosis
+    ? `Diagnóstico: ${st.diagnosis}` : '';
+
+  // ── Alergias (bloco mais importante) ────────────────────────────────────
+  const allergies = [p.allergyMeds, p.allergyFood, p.allergyOther].filter(Boolean);
+  const allergyEl = document.getElementById('samu-allergy-block');
+  if (allergies.length) {
+    allergyEl.innerHTML = `
+      <div class="samu-section allergy">
+        <div class="samu-section-label">⚠️ ALERGIAS CONHECIDAS</div>
+        <div class="samu-section-content">
+          ${p.allergyMeds  ? `<div>💊 Medicamentos: <strong>${p.allergyMeds}</strong></div>`  : ''}
+          ${p.allergyFood  ? `<div>🍽️ Alimentos: <strong>${p.allergyFood}</strong></div>`      : ''}
+          ${p.allergyOther ? `<div>⚗️ Outros: <strong>${p.allergyOther}</strong></div>`         : ''}
+        </div>
+      </div>`;
+  } else {
+    allergyEl.innerHTML = `<div class="samu-no-allergy">✅ Nenhuma alergia conhecida informada</div>`;
+  }
+
+  // ── Condições ────────────────────────────────────────────────────────────
+  const conditionsEl  = document.getElementById('samu-conditions-block');
+  const conditionsVal = document.getElementById('samu-conditions');
+  const allConditions = [st.diagnosis, p.conditions].filter(Boolean).join(' · ');
+  if (allConditions) {
+    conditionsEl.style.display = 'block';
+    conditionsVal.textContent = allConditions;
+  } else conditionsEl.style.display = 'none';
+
+  const essential = [
+    p.blood ? `🩸 Tipo sanguíneo: ${p.blood}` : '',
+    p.weight ? `⚖️ Peso: ${p.weight}` : '',
+    p.height ? `📏 Altura: ${p.height}` : '',
+    p.mainDoctor ? `🩺 Médico principal: ${p.mainDoctor}` : ''
+  ].filter(Boolean).join('\n');
+  const essentialBlock = document.getElementById('samu-essential-block');
+  const essentialVal = document.getElementById('samu-essential');
+  if (essential) { essentialBlock.style.display = 'block'; essentialVal.textContent = essential; }
+  else essentialBlock.style.display = 'none';
+
+  const notesBlock = document.getElementById('samu-notes-block');
+  const notesVal = document.getElementById('samu-notes');
+  if (p.importantNotes?.trim()) { notesBlock.style.display = 'block'; notesVal.textContent = p.importantNotes.trim(); }
+  else notesBlock.style.display = 'none';
+
+  // ── Medicamentos em uso ──────────────────────────────────────────────────
+  const meds = tasks.filter(t => t.type === 'med' && (t.repeat === 'daily' || t.date === todayStr()));
+  const medsEl = document.getElementById('samu-meds');
+  medsEl.innerHTML = meds.length
+    ? meds.map(m => `
+        <div class="samu-med-row">
+          <span>${m.name}</span>
+          ${m.dose ? `<span class="samu-med-dose">${m.dose}</span>` : ''}
+          ${m.time ? `<span class="samu-med-dose">· ${m.time}</span>` : ''}
+        </div>`).join('')
+    : `<div style="font-size:15px;color:#888">Nenhum medicamento cadastrado</div>`;
+
+  // ── Cirurgias ─────────────────────────────────────────────────────────────
+  const surgeriesEl = document.getElementById('samu-surgeries-block');
+  if (p.surgeries?.trim()) {
+    surgeriesEl.style.display = 'block';
+    document.getElementById('samu-surgeries').textContent = p.surgeries.trim();
+  } else surgeriesEl.style.display = 'none';
+
+  // ── Tabagismo + Convênio ──────────────────────────────────────────────────
+  const smokeLabels = { no:'🚭 Não fumante', ex:'🕐 Ex-fumante', yes:'🚬 Fumante ativo' };
+  document.getElementById('samu-smoking').textContent = smokeLabels[p.smoking||'no'];
+  const i
+mentById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    if (p[`${kind}Photo`] && img) {
+      img.src = p[`${kind}Photo`]; img.style.display = 'block';
+      ph.style.display = 'none'; rm.style.display = 'flex';
+    }
+  });
+
+  // Convênio expiry warning
+  if (p.convExpiry && type === 'conv') {
+    const today = new Date(todayStr() + 'T00:00:00');
+    const exp = new Date(p.convExpiry + 'T00:00:00');
+    const days = Math.round((exp - today) / 86400000);
+    if (days < 0) showToast('⚠️ Carteirinha do convênio vencida!');
+    else if (days <= 30) showToast(`⚠️ Carteirinha vence em ${days} dias`);
+  }
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('cb_medical_profile') || '{}'); } catch(e) { return {}; }
+}
+
+function saveProfile() {
+  const prev = getProfile();
+  const p = {
+    birthday:    document.getElementById('patient-birthday')?.value   || '',
+    sex:         document.getElementById('patient-sex')?.value        || '',
+    conditions:  document.getElementById('patient-conditions')?.value || '',
+    importantNotes: document.getElementById('patient-important-notes')?.value || '',
+    blood:       document.getElementById('patient-blood')?.value || '',
+    weight:      document.getElementById('patient-weight')?.value || '',
+    height:      document.getElementById('patient-height')?.value || '',
+    mainDoctor:  document.getElementById('patient-main-doctor')?.value || '',
+    neuroSide:   document.getElementById('neuro-side')?.value || '',
+    neuroDependency: document.getElementById('neuro-dependency')?.value || '',
+    neuroAphasia: !!document.getElementById('neuro-aphasia')?.checked,
+    neuroHemianopsia: !!document.getElementById('neuro-hemianopsia')?.checked,
+    neuroDysphagia: !!document.getElementById('neuro-dysphagia')?.checked,
+    neuroFallRisk: !!document.getElementById('neuro-fallrisk')?.checked,
+    neuroDiet: document.getElementById('neuro-diet')?.value || '',
+    neuroSwallowGuidance: document.getElementById('neuro-swallow-guidance')?.value || '',
+    neuroPriority: document.getElementById('neuro-priority')?.value || 'auto',
+    emergName:   document.getElementById('emerg-name')?.value         || '',
+    emergRel:    document.getElementById('emerg-rel')?.value          || '',
+    emergPhone:  document.getElementById('emerg-phone')?.value        || '',
+    allergyMeds: document.getElementById('allergy-meds')?.value       || '',
+    allergyFood: document.getElementById('allergy-food')?.value       || '',
+    allergyOther:document.getElementById('allergy-other')?.value      || '',
+    surgeries:   document.getElementById('patient-surgeries')?.value  || '',
+    smoking: document.querySelector('input[name="smoking"]:checked')?.value || 'no',
+    ...collectInsuranceFields(),
+    // preserve photos already stored
+    susPhoto:  prev.susPhoto  || '',
+    convPhoto: prev.convPhoto || '',
+  };
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  renderEmergCard(p);
+  updateAgeLabel(p.birthday);
+  if (typeof renderNeuroProfileUI === 'function') renderNeuroProfileUI(p);
+  if (typeof renderCaregiverSummary === 'function') renderCaregiverSummary();
+  if (typeof renderTodayTasks === 'function') renderTodayTasks();
+  if (typeof renderActiveIntelligence === 'function') renderActiveIntelligence();
+  if (typeof renderAlerts === 'function') renderAlerts();
+}
+
+function loadProfile() {
+  const p = getProfile();
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('patient-birthday', p.birthday);
+  set('patient-sex', p.sex);
+  set('patient-conditions', p.conditions);
+  set('patient-important-notes', p.importantNotes);
+  set('patient-blood', p.blood);
+  set('patient-weight', p.weight);
+  set('patient-height', p.height);
+  set('patient-main-doctor', p.mainDoctor);
+  set('emerg-name', p.emergName);
+  set('emerg-rel', p.emergRel);
+  set('emerg-phone', p.emergPhone);
+  set('allergy-meds', p.allergyMeds);
+  set('allergy-food', p.allergyFood);
+  set('allergy-other', p.allergyOther);
+  set('patient-surgeries', p.surgeries);
+  set('neuro-side', p.neuroSide);
+  set('neuro-dependency', p.neuroDependency);
+  set('neuro-diet', p.neuroDiet);
+  set('neuro-swallow-guidance', p.neuroSwallowGuidance);
+  set('neuro-priority', p.neuroPriority || 'auto');
+  const ck = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+  ck('neuro-aphasia', p.neuroAphasia);
+  ck('neuro-hemianopsia', p.neuroHemianopsia);
+  ck('neuro-dysphagia', p.neuroDysphagia);
+  ck('neuro-fallrisk', p.neuroFallRisk);
+  const smokeEl = document.getElementById(`smoke-${p.smoking || 'no'}`);
+  if (smokeEl) smokeEl.checked = true;
+  if (typeof renderNeuroProfileUI === 'function') renderNeuroProfileUI(p);
+  loadInsuranceFields(p);
+  renderEmergCard(p);
+  updateAgeLabel(p.birthday);
+  renderHistT
+ido ou combinação de exames"
+}
+
+Se não conseguir ler: {"erro": "Imagem ilegível. Tente uma foto mais nítida."}`;
+
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:1500,
+        messages:[{role:'user', content:[
+          {type:'image', source:{type:'base64', media_type:'image/jpeg', data:apptOcrImageBase64}},
+          {type:'text', text:prompt}
+        ]}]
+      })
+    });
+    clearInterval(intv);
+    const data = await resp.json();
+    const raw = data.content?.find(b=>b.type==='text')?.text||'';
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if (parsed.erro) { showToast('❌ '+parsed.erro); resetApptOcr(); return; }
+
+    apptOcrResults = (parsed.itens||[]).map((it,i) => ({...it, id:'appt_ocr_'+i, include:true}));
+
+    // Build editable result cards
+    const listEl = document.getElementById('appt-ocr-list');
+    listEl.innerHTML = apptOcrResults.map((it,i) => buildApptFormCard(it, i, false)).join('');
+
+    document.getElementById('appt-loading').style.display = 'none';
+    document.getElementById('appt-result-zone').style.display = 'block';
+
+  } catch(e) {
+    clearInterval(intv);
+    showToast('❌ Erro ao analisar. Tente novamente.');
+    resetApptOcr();
+  }
+}
+
+function addAllAppts() {
+  let added = 0;
+  const imgSrc = document.getElementById('appt-preview-img')?.src;
+  const hasPhoto = imgSrc && imgSrc.startsWith('data:');
+  apptOcrResults.forEach(it => {
+    if (it.include === false) return;
+    if (!it.name) return;
+    const isExamItem = it.subtype === 'exam' || !!it.examType;
+    tasks.push({
+      id: uid(), type: isExamItem ? 'exam' : 'cons',
+      name: it.name, subtype: it.subtype || (isExamItem ? 'exam' : 'cons'),
+      examType: it.examType||'', doctor: it.doctor||'',
+      local: it.local||'', date: it.date||todayStr(),
+      time: it.time||'', repeat:'none',
+      obs: it.prep||'', prep: it.prep||'',
+      alertMorning: it.alertMorning!==false,
+      alertBefore: it.alertBefore!==false,
+      photo: hasPhoto ? imgSrc : null,
+      dose:'', createdAt: Date.now()
+    });
+    added++;
+  });
+  saveTasks(); buildWeekStrip();
+  showToast(`✅ ${added} evento${added!==1?'s':''} adicionado${added!==1?'s':''}!`);
+  setTimeout(()=> {
+    resetApptOcr();
+    renderAll();
+  }, 300);
+}
+
+function saveManualAppt() {
+  addAllAppts();
+  document.getElementById('appt-manual-zone').style.display = 'none';
+  document.getElementById('appt-upload-zone').style.display = 'block';
+}
+
+function renderApptUpcoming() {
+  const todayS = todayStr();
+
+  function buildCard(t) {
+    const isExam = t.type === 'exam';
+    const seen = completions[`${t.id}_${t.date}`];
+    const icon = isExam ? '🔬' : '🩺';
+    const borderColor = isExam ? 'var(--blue-400)' : 'var(--purple-400)';
+    const dateStr = t.date ? new Date(t.date+'T00:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'}) : '';
+    const resultAlert = isExam && t.resultsDate && t.resultsDate <= todayS && !completions[`res_${t.id}`]
+      ? `<div style="padding:8px 16px;background:var(--blue-50);border-top:1px solid var(--blue-100);font-size:12px;color:var(--blue-600);font-weight:700;cursor:pointer">
+           🗂️ Resultado disponível — buscar resultado
+         </div>` : '';
+    const examExtra = isExam && t.examType
+      ? `<div style="font-size:12px;color:var(--text-light)">🔬 ${t.examType}</div>` : '';
+    const doctorLine = (t.doctor || t.examDoctor)
+      ? `<div style="font-size:12px;color:var(--text-light)">👨‍⚕️ ${t.doctor || t.examDoctor}</div>` : '';
+    return `<div style="background:var(--card-bg);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden">
+      <div style="padding:12px 16px;border-left:5px solid ${borderColor};display:flex;align-items:center;gap:12px">
+        <div style="font-size:24px">${icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:800;color:${seen?'var(--text-light)':'var(--text)'};${seen?'text-decoration:line-through':''}">${t.name}</div>
+          ${examExtra}${doctorLine}
+          ${t.local?`<div style="font-size:12px;color:var(--text-light)">🏥 ${t.local}</div>`:''}
+          <div style="font-size:12px;color:var(--text-light)">📅 ${dateStr}${t.time?' · 🕐 '+t.time:''}</div>
+          ${t.prep?`<div style="font-size:11px;font-weight:700;color:var(--amber-600);margin-top:4px">⚠️ ${t.prep}</div>`:''}
+        </div>
+        <div class="task-check ${seen?'checked':''}" style="flex-shrink:0" onclick="openSeenModal('${t.id}')"></div>
+      </div>
+      ${t.photo?`<img src="${t.photo}" style="width:100%;max-height:80px;object-fit:cover;border-top:1px solid var(--gray-100);display:block">` : ''}
+      ${resultAlert}
+    </div>`;
+  }
+
+  co
+Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: ocrImageBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    }, 18000);
+
+    clearInterval(loadInt);
+    if (!response.ok) throw new Error('IA não respondeu (' + response.status + ')');
+    const data = await response.json();
+    const raw = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+
+    if (parsed.erro) {
+      showToast('❌ ' + parsed.erro);
+      resetOcr();
+      return;
+    }
+
+    ocrResults = (parsed.medicamentos || []).map((m, i) => ({...m, id: 'ocr_'+i, include: true, selectedTimes: [...(m.horarios_sugeridos||[])]}));
+    renderOcrResults(parsed.observacoes);
+
+  } catch(e) {
+    clearInterval(loadInt);
+    console.error(e);
+    showToast('⚠️ IA indisponível. Use o preenchimento manual.');
+    showOcrManualFallback(e && e.message ? e.message : 'falha na análise');
+  }
+}
+
+function renderOcrResults(observacoes) {
+  document.getElementById('ocr-loading').style.display = 'none';
+  document.getElementById('ocr-result-zone').style.display = 'block';
+
+  const list = document.getElementById('ocr-meds-list');
+  list.innerHTML = ocrResults.map((m, i) => `
+    <div class="ocr-med-card ${m.include?'':'excluded'}" id="ocr-card-${i}">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1">
+          <div class="ocr-med-name">💊 ${m.nome}</div>
+          <div class="ocr-med-dose">${m.dose} · ${m.frequencia}</div>
+        </div>
+        <button class="toggle ${m.include?'on':''}" onclick="toggleOcrMed(${i})" id="ocr-toggle-${i}"></button>
+      </div>
+
+      <div class="ocr-med-para">
+        <strong>Para que serve:</strong> ${m.para_que_serve}
+        ${m.cuidados_avc ? `<br><br>🧠 <strong>AVC:</strong> ${m.cuidados_avc}` : ''}
+      </div>
+
+      ${m.instrucoes ? `<div style="font-size:12px;color:var(--amber-600);background:var(--amber-50);padding:8px 10px;border-radius:8px;margin-bottom:10px">⚠️ ${m.instrucoes}</div>` : ''}
+
+      <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:6px">Horários sugeridos (toque para remover/adicionar):</div>
+      <div class="ocr-time-row" id="times-${i}">
+        ${(m.selectedTimes||[]).map((t,ti) => `<button class="ocr-time-chip" onclick="toggleOcrTime(${i},${ti})" id="time-${i}-${ti}">${t}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const obsCard = document.getElementById('ocr-obs-card');
+  if (observacoes && observacoes.trim()) {
+    obsCard.style.display = 'block';
+    document.getElementById('ocr-obs-text').textContent = observacoes;
+  } else { obsCard.style.display = 'none'; }
+}
+
+function toggleOcrMed(i) {
+  ocrResults[i].include = !ocrResults[i].include;
+  const card = document.getElementById(`ocr-card-${i}`);
+  const toggle = document.getElementById(`ocr-toggle-${i}`);
+  card.classList.toggle('excluded', !ocrResults[i].include);
+  toggle.classList.toggle('on', ocrResults[i].include);
+}
+
+function toggleOcrTime(medIdx, timeIdx) {
+  const chip = document.getElementById(`time-${medIdx}-${timeIdx}`);
+  chip.classList.toggle('removed');
+  if (chip.classList.contains('removed')) {
+    ocrResults[medIdx].selectedTimes[timeIdx] = null;
+  } else {
+    ocrResults[medIdx].selectedTimes[timeIdx] = ocrResults[medIdx].horarios_sugeridos[timeIdx];
+  }
+}
+
+function addAllOcrMeds() {
+  const today = todayStr();
+  let added = 0;
+  ocrResults.forEach(m => {
+    if (!m.include) return;
+    const times = (m.selectedTimes||[]).filter(Boolean);
+    if (times.length === 0) {
+      tasks.push({
+        id: uid(), type:'med', name: m.nome,
+        dose: m.dose, date: today, time: '', repeat:'daily',
+        obs: [m.instrucoes, m.cuidados_avc].filter(Boolean).join(' | '),
+        createdAt: Date.now()
+      });
+      added++;
+    } else {
+      times.forEach(time => {
+        tasks.push({
+          id: uid(), type:'med', name: m.nome,
+          dose: m.dose, date: today, time, repeat:'daily',
+          obs: [m.instrucoes, m.cuidados_avc].filter(Boolean).join(' | '),
+          createdAt: Date.now()
+        });
+      });
+      added += times.length;
+    }
+  });
+  saveTasks();
+  showToast(`✅ ${added} lembretes adicionados!`);
+  setTimeout(() => goScreen('home', document.getElementById('nav-home')), 400);
+  resetOcr();
+  renderAll();
+}
+
+// ─── PROFILE AUTO-SAVE ────────────────────────────────────────────────────
+document.getElementById('caregiver-input').addEventListener('input', e => { settings.caregiver=e.target.value; saveSettings(); });
+document.getElementById('d
+nclick="rvNav(-1)">‹ Anterior</button>
+    <span class="result-viewer-counter" id="rv-counter">1/1</span>
+    <button class="result-viewer-btn" onclick="rvNav(1)">Próxima ›</button>
+  </div>
+  <div class="result-viewer-bar" onclick="event.stopPropagation()" style="margin-top:8px">
+    <button class="result-viewer-btn" onclick="rvAddMore()" style="gap:6px">📷 + Página</button>
+    <button class="result-viewer-btn" onclick="rvDelete()" style="color:#ff8080">🗑️ Remover</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  ACESSIBILIDADE: DARK MODE, FONT SIZE, LOW STRESS
+// ═══════════════════════════════════════════════════════════
+let a11yState = JSON.parse(localStorage.getItem('cuidarbem_a11y') || '{"dark":false,"font":"sm","lowstress":false}');
+
+function applyA11y() {
+  const body = document.body;
+  body.classList.toggle('dark', a11yState.dark);
+  body.classList.remove('font-sm','font-md','font-lg');
+  if (a11yState.font !== 'sm') body.classList.add('font-' + a11yState.font);
+  body.classList.toggle('low-stress', a11yState.lowstress);
+  // Update toggle UIs (FAB panel + profile screen)
+  ['dark-toggle','dark-toggle-profile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', a11yState.dark);
+  });
+  ['lowstress-toggle','lowstress-toggle-profile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', a11yState.lowstress);
+  });
+  // Font segments
+  ['sm','md','lg'].forEach(s => {
+    ['fs-'+s, 'fs-'+s+'-p'].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.classList.toggle('active', a11yState.font === s);
+    });
+  });
+  // Update FAB emoji
+  const fab = document.getElementById('a11y-fab');
+  if (fab) fab.textContent = a11yState.dark ? '🌙' : '⚙️';
+  localStorage.setItem('cuidarbem_a11y', JSON.stringify(a11yState));
+}
+
+function toggleA11yPanel() {
+  const panel = document.getElementById('a11y-panel');
+  panel.classList.toggle('open');
+}
+
+function toggleDarkMode() {
+  a11yState.dark = !a11yState.dark;
+  applyA11y();
+}
+
+function setFontSize(size) {
+  a11yState.font = size;
+  applyA11y();
+}
+
+function toggleLowStress() {
+  a11yState.lowstress = !a11yState.lowstress;
+  applyA11y();
+}
+
+// Close a11y panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('a11y-panel');
+  const fab = document.getElementById('a11y-fab');
+  if (panel && fab && !panel.contains(e.target) && !fab.contains(e.target)) {
+    panel.classList.remove('open');
+  }
+});
+
+// Apply on load
+applyA11y();
+
+
+// ═══════════════════════════════════════════════════════════
+//  DASHBOARD APPLE HEALTH STYLE
+// ═══════════════════════════════════════════════════════════
+function renderDashboard() {
+  const today = todayStr ? todayStr() : new Date().toISOString().split('T')[0];
+  const todayTasks = typeof getTodayTasks === 'function' ? getTodayTasks() : [];
+  const completionsData = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
+
+  // ── Date label ──
+  const dateEl = document.getElementById('dash-date');
+  if (dateEl) {
+    dateEl.textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+  }
+
+  // ── Count tasks by type ──
+  const byType = {med:0, fisio:0, exer:0, cons:0};
+  const doneByType = {med:0, fisio:0, exer:0, cons:0};
+  todayTasks.forEach(t => {
+    const k = `${t.id}_${today}`;
+    if (byType[t.type] !== undefined) {
+      byType[t.type]++;
+      if (completionsData[k]) doneByType[t.type]++;
+    }
+  });
+
+  const totalToday = todayTasks.length;
+  const doneToday = todayTasks.filter(t => completionsData[`${t.id}_${today}`]).length;
+  const pctToday = totalToday ? Math.round(doneToday/totalToday*100) : 0;
+
+  // ── Rings row ──
+  const ringsEl = document.getElementById('dash-rings');
+  if (ringsEl) {
+    const rings = [
+      { emoji:'💊', label:'Remédios', val: byType.med ? `${doneByType.med}/${byType.med}` : '—', color:'var(--blue-600)', bg:'var(--blue-50)', accent:'#378add' },
+      { emoji:'🦾', label:'Fisio',    val: byType.fisio ? `${doneByType.fisio}/${byType.fisio}` : '—', color:'var(--amber-600)', bg:'var(--amber-50)', accent:'#ba7517' },
+      { emoji:'🏃', label:'Exercício', val: byType.exer ? `${doneByType.exer}/${byType.exer}` : '—', color:'var(--teal-600)', bg:'var(--teal-50)', accent:'#1d9e75' },
+    ];
+    ringsEl.innerHTML = rings.map(r => `
+      <div class="health-ring-card" style="--card-accent:${r.accent}">
+        <div style="font-size:24px">${r.emoji}</div>
+        <div class="health-ring-val" style="color:${r.color}">${r.val}</div>
+        <div class="health-ring-label">${r.label}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Trend cards ──
+  const trendsEl = document.getElementById('dash-trends');
+  if (trendsEl) {
+    const categories = [
+ 
+
+=== localStorage.setItem ===
+nv-fields').style.display = isSus ? 'none'  : 'block';
+
+  const susBt  = document.getElementById('ins-btn-sus');
+  const convBt = document.getElementById('ins-btn-conv');
+  susBt.style.borderColor  = isSus ? 'var(--teal-400)'   : 'var(--gray-200)';
+  susBt.style.background   = isSus ? 'var(--teal-50)'    : 'var(--gray-50)';
+  susBt.style.color        = isSus ? 'var(--teal-600)'   : 'var(--text-muted)';
+  convBt.style.borderColor = isSus ? 'var(--gray-200)'   : 'var(--purple-400)';
+  convBt.style.background  = isSus ? 'var(--gray-50)'    : 'var(--purple-50)';
+  convBt.style.color       = isSus ? 'var(--text-muted)' : 'var(--purple-600)';
+
+  const p = getProfile();
+  p.insuranceType = type;
+  localStorage.setItem('cb_medical_profile', JSON.stringify({...p, ...collectInsuranceFields()}));
+}
+
+function collectInsuranceFields() {
+  return {
+    insuranceType: document.getElementById('ins-sus-fields')?.style.display !== 'none' ? 'sus' : 'conv',
+    susNumber:   document.getElementById('sus-number')?.value   || '',
+    convName:    document.getElementById('conv-name')?.value    || '',
+    convNumber:  document.getElementById('conv-number')?.value  || '',
+    convExpiry:  document.getElementById('conv-expiry')?.value  || '',
+    convPlan:    document.getElementById('conv-plan')?.value    || '',
+  };
+}
+
+function triggerInsPhoto(kind) {
+  document.getElementById(`${kind}-photo-input`).click();
+}
+
+function handleInsPhoto(event, kind) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    // store in profile
+    const p = getProfile();
+    p[`${kind}Photo`] = data;
+    localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+    // update UI
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    img.src = data; img.style.display = 'block';
+    ph.style.display = 'none'; rm.style.display = 'flex';
+    showToast('📷 Foto salva!');
+    if (typeof haptic === 'function') haptic([20, 40]);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeInsPhoto(kind) {
+  const p = getProfile();
+  delete p[`${kind}Photo`];
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  const img = document.getElementById(`${kind}-photo-img`);
+  const ph  = document.getElementById(`${kind}-photo-placeholder`);
+  const rm  = document.getElementById(`${kind}-photo-remove`);
+  img.src = ''; img.style.display = 'none';
+  ph.style.display = 'flex'; rm.style.display = 'none';
+  showToast('🗑️ Foto removida');
+}
+
+function loadInsuranceFields(p) {
+  const type = p.insuranceType || 'sus';
+  switchInsurance(type);
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('sus-number',  p.susNumber);
+  set('conv-name',   p.convName);
+  set('conv-number', p.convNumber);
+  set('conv-expiry', p.convExpiry);
+  set('conv-plan',   p.convPlan);
+
+  // Restore photos
+  ['sus','conv'].forEach(kind => {
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    if (p[`${kind}Photo`] && img) {
+      img.src = p[`${kind}Photo`]; img.style.display = 'block';
+      ph.style.display = 'none'; rm.style.display = 'flex';
+    }
+  });
+
+  // Convênio expiry warning
+  if (p.convExpiry && type === 'conv') {
+    const today = new Date(todayStr() + 'T00:00:00');
+    const exp = new Date(p.convExpiry + 'T00:00:00');
+    const days = Math.round((exp - today) / 86400000);
+    if (days < 0) showToast('⚠️ Carteirinha do convênio vencida!');
+    else if (days <= 30) showToast(`⚠️ Carteirinha vence em ${days} dias`);
+  }
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('cb_medical_profile') || '{}'); } catch(e) { return {}; }
+}
+
+function saveProfile() {
+  const prev = getProfile();
+  const p = {
+    birthday:    document.getElementById('patient-birthday')?.value   || '',
+    sex:         document.getElementById('patient-sex')?.value        || '',
+    conditions:  document.getElementById('patient-conditions')?.value || '',
+    importantNotes: document.getElementById('patient-important-notes')?.value || '',
+    blood:       document.getElementById('patient-blood')?.value || '',
+    weight:      document.getElementById('patient-weight')?.value || '',
+    height:      document.getElementById('patient-height')?.value || '',
+    mainDoctor:  document.getElementById('patient-main-doctor')?.value || '',
+    neuroSide:   document.getElementById('neuro-side')?.value || '',
+    neuroDependency: document.getElementById('neuro-dependency')?.value || '',
+    neuroAphasia: !!document.getElementById('neuro
+tById('sus-number')?.value   || '',
+    convName:    document.getElementById('conv-name')?.value    || '',
+    convNumber:  document.getElementById('conv-number')?.value  || '',
+    convExpiry:  document.getElementById('conv-expiry')?.value  || '',
+    convPlan:    document.getElementById('conv-plan')?.value    || '',
+  };
+}
+
+function triggerInsPhoto(kind) {
+  document.getElementById(`${kind}-photo-input`).click();
+}
+
+function handleInsPhoto(event, kind) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    // store in profile
+    const p = getProfile();
+    p[`${kind}Photo`] = data;
+    localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+    // update UI
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    img.src = data; img.style.display = 'block';
+    ph.style.display = 'none'; rm.style.display = 'flex';
+    showToast('📷 Foto salva!');
+    if (typeof haptic === 'function') haptic([20, 40]);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeInsPhoto(kind) {
+  const p = getProfile();
+  delete p[`${kind}Photo`];
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  const img = document.getElementById(`${kind}-photo-img`);
+  const ph  = document.getElementById(`${kind}-photo-placeholder`);
+  const rm  = document.getElementById(`${kind}-photo-remove`);
+  img.src = ''; img.style.display = 'none';
+  ph.style.display = 'flex'; rm.style.display = 'none';
+  showToast('🗑️ Foto removida');
+}
+
+function loadInsuranceFields(p) {
+  const type = p.insuranceType || 'sus';
+  switchInsurance(type);
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('sus-number',  p.susNumber);
+  set('conv-name',   p.convName);
+  set('conv-number', p.convNumber);
+  set('conv-expiry', p.convExpiry);
+  set('conv-plan',   p.convPlan);
+
+  // Restore photos
+  ['sus','conv'].forEach(kind => {
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    if (p[`${kind}Photo`] && img) {
+      img.src = p[`${kind}Photo`]; img.style.display = 'block';
+      ph.style.display = 'none'; rm.style.display = 'flex';
+    }
+  });
+
+  // Convênio expiry warning
+  if (p.convExpiry && type === 'conv') {
+    const today = new Date(todayStr() + 'T00:00:00');
+    const exp = new Date(p.convExpiry + 'T00:00:00');
+    const days = Math.round((exp - today) / 86400000);
+    if (days < 0) showToast('⚠️ Carteirinha do convênio vencida!');
+    else if (days <= 30) showToast(`⚠️ Carteirinha vence em ${days} dias`);
+  }
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('cb_medical_profile') || '{}'); } catch(e) { return {}; }
+}
+
+function saveProfile() {
+  const prev = getProfile();
+  const p = {
+    birthday:    document.getElementById('patient-birthday')?.value   || '',
+    sex:         document.getElementById('patient-sex')?.value        || '',
+    conditions:  document.getElementById('patient-conditions')?.value || '',
+    importantNotes: document.getElementById('patient-important-notes')?.value || '',
+    blood:       document.getElementById('patient-blood')?.value || '',
+    weight:      document.getElementById('patient-weight')?.value || '',
+    height:      document.getElementById('patient-height')?.value || '',
+    mainDoctor:  document.getElementById('patient-main-doctor')?.value || '',
+    neuroSide:   document.getElementById('neuro-side')?.value || '',
+    neuroDependency: document.getElementById('neuro-dependency')?.value || '',
+    neuroAphasia: !!document.getElementById('neuro-aphasia')?.checked,
+    neuroHemianopsia: !!document.getElementById('neuro-hemianopsia')?.checked,
+    neuroDysphagia: !!document.getElementById('neuro-dysphagia')?.checked,
+    neuroFallRisk: !!document.getElementById('neuro-fallrisk')?.checked,
+    neuroDiet: document.getElementById('neuro-diet')?.value || '',
+    neuroSwallowGuidance: document.getElementById('neuro-swallow-guidance')?.value || '',
+    neuroPriority: document.getElementById('neuro-priority')?.value || 'auto',
+    emergName:   document.getElementById('emerg-name')?.value         || '',
+    emergRel:    document.getElementById('emerg-rel')?.value          || '',
+    emergPhone:  document.getElementById('emerg-phone')?.value        || '',
+    allergyMeds: document.getElementById('allergy-meds')?.value       || '',
+    allergyFood: document.getElementById('allergy-food')?.value       || '',
+    allergyOther:document.getElementById('allergy-other')?.value      || '',
+    surgeries:   document.getElementById(
+e in profile
+    const p = getProfile();
+    p[`${kind}Photo`] = data;
+    localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+    // update UI
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    img.src = data; img.style.display = 'block';
+    ph.style.display = 'none'; rm.style.display = 'flex';
+    showToast('📷 Foto salva!');
+    if (typeof haptic === 'function') haptic([20, 40]);
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+function removeInsPhoto(kind) {
+  const p = getProfile();
+  delete p[`${kind}Photo`];
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  const img = document.getElementById(`${kind}-photo-img`);
+  const ph  = document.getElementById(`${kind}-photo-placeholder`);
+  const rm  = document.getElementById(`${kind}-photo-remove`);
+  img.src = ''; img.style.display = 'none';
+  ph.style.display = 'flex'; rm.style.display = 'none';
+  showToast('🗑️ Foto removida');
+}
+
+function loadInsuranceFields(p) {
+  const type = p.insuranceType || 'sus';
+  switchInsurance(type);
+
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('sus-number',  p.susNumber);
+  set('conv-name',   p.convName);
+  set('conv-number', p.convNumber);
+  set('conv-expiry', p.convExpiry);
+  set('conv-plan',   p.convPlan);
+
+  // Restore photos
+  ['sus','conv'].forEach(kind => {
+    const img = document.getElementById(`${kind}-photo-img`);
+    const ph  = document.getElementById(`${kind}-photo-placeholder`);
+    const rm  = document.getElementById(`${kind}-photo-remove`);
+    if (p[`${kind}Photo`] && img) {
+      img.src = p[`${kind}Photo`]; img.style.display = 'block';
+      ph.style.display = 'none'; rm.style.display = 'flex';
+    }
+  });
+
+  // Convênio expiry warning
+  if (p.convExpiry && type === 'conv') {
+    const today = new Date(todayStr() + 'T00:00:00');
+    const exp = new Date(p.convExpiry + 'T00:00:00');
+    const days = Math.round((exp - today) / 86400000);
+    if (days < 0) showToast('⚠️ Carteirinha do convênio vencida!');
+    else if (days <= 30) showToast(`⚠️ Carteirinha vence em ${days} dias`);
+  }
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('cb_medical_profile') || '{}'); } catch(e) { return {}; }
+}
+
+function saveProfile() {
+  const prev = getProfile();
+  const p = {
+    birthday:    document.getElementById('patient-birthday')?.value   || '',
+    sex:         document.getElementById('patient-sex')?.value        || '',
+    conditions:  document.getElementById('patient-conditions')?.value || '',
+    importantNotes: document.getElementById('patient-important-notes')?.value || '',
+    blood:       document.getElementById('patient-blood')?.value || '',
+    weight:      document.getElementById('patient-weight')?.value || '',
+    height:      document.getElementById('patient-height')?.value || '',
+    mainDoctor:  document.getElementById('patient-main-doctor')?.value || '',
+    neuroSide:   document.getElementById('neuro-side')?.value || '',
+    neuroDependency: document.getElementById('neuro-dependency')?.value || '',
+    neuroAphasia: !!document.getElementById('neuro-aphasia')?.checked,
+    neuroHemianopsia: !!document.getElementById('neuro-hemianopsia')?.checked,
+    neuroDysphagia: !!document.getElementById('neuro-dysphagia')?.checked,
+    neuroFallRisk: !!document.getElementById('neuro-fallrisk')?.checked,
+    neuroDiet: document.getElementById('neuro-diet')?.value || '',
+    neuroSwallowGuidance: document.getElementById('neuro-swallow-guidance')?.value || '',
+    neuroPriority: document.getElementById('neuro-priority')?.value || 'auto',
+    emergName:   document.getElementById('emerg-name')?.value         || '',
+    emergRel:    document.getElementById('emerg-rel')?.value          || '',
+    emergPhone:  document.getElementById('emerg-phone')?.value        || '',
+    allergyMeds: document.getElementById('allergy-meds')?.value       || '',
+    allergyFood: document.getElementById('allergy-food')?.value       || '',
+    allergyOther:document.getElementById('allergy-other')?.value      || '',
+    surgeries:   document.getElementById('patient-surgeries')?.value  || '',
+    smoking: document.querySelector('input[name="smoking"]:checked')?.value || 'no',
+    ...collectInsuranceFields(),
+    // preserve photos already stored
+    susPhoto:  prev.susPhoto  || '',
+    convPhoto: prev.convPhoto || '',
+  };
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  renderEmergCard(p);
+  updateAgeLabel(p.birthday);
+  if (typeof renderNeuroProfileUI === 'function') renderNeuroProfileUI(p);
+  if (typeof renderCaregiverSummary === 'function') renderCaregiverSummary();
+  if (typeof renderTodayTasks === 'function') renderTodayTasks();
+  if (typeof rende
+
+    emergRel:    document.getElementById('emerg-rel')?.value          || '',
+    emergPhone:  document.getElementById('emerg-phone')?.value        || '',
+    allergyMeds: document.getElementById('allergy-meds')?.value       || '',
+    allergyFood: document.getElementById('allergy-food')?.value       || '',
+    allergyOther:document.getElementById('allergy-other')?.value      || '',
+    surgeries:   document.getElementById('patient-surgeries')?.value  || '',
+    smoking: document.querySelector('input[name="smoking"]:checked')?.value || 'no',
+    ...collectInsuranceFields(),
+    // preserve photos already stored
+    susPhoto:  prev.susPhoto  || '',
+    convPhoto: prev.convPhoto || '',
+  };
+  localStorage.setItem('cb_medical_profile', JSON.stringify(p));
+  renderEmergCard(p);
+  updateAgeLabel(p.birthday);
+  if (typeof renderNeuroProfileUI === 'function') renderNeuroProfileUI(p);
+  if (typeof renderCaregiverSummary === 'function') renderCaregiverSummary();
+  if (typeof renderTodayTasks === 'function') renderTodayTasks();
+  if (typeof renderActiveIntelligence === 'function') renderActiveIntelligence();
+  if (typeof renderAlerts === 'function') renderAlerts();
+}
+
+function loadProfile() {
+  const p = getProfile();
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  set('patient-birthday', p.birthday);
+  set('patient-sex', p.sex);
+  set('patient-conditions', p.conditions);
+  set('patient-important-notes', p.importantNotes);
+  set('patient-blood', p.blood);
+  set('patient-weight', p.weight);
+  set('patient-height', p.height);
+  set('patient-main-doctor', p.mainDoctor);
+  set('emerg-name', p.emergName);
+  set('emerg-rel', p.emergRel);
+  set('emerg-phone', p.emergPhone);
+  set('allergy-meds', p.allergyMeds);
+  set('allergy-food', p.allergyFood);
+  set('allergy-other', p.allergyOther);
+  set('patient-surgeries', p.surgeries);
+  set('neuro-side', p.neuroSide);
+  set('neuro-dependency', p.neuroDependency);
+  set('neuro-diet', p.neuroDiet);
+  set('neuro-swallow-guidance', p.neuroSwallowGuidance);
+  set('neuro-priority', p.neuroPriority || 'auto');
+  const ck = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+  ck('neuro-aphasia', p.neuroAphasia);
+  ck('neuro-hemianopsia', p.neuroHemianopsia);
+  ck('neuro-dysphagia', p.neuroDysphagia);
+  ck('neuro-fallrisk', p.neuroFallRisk);
+  const smokeEl = document.getElementById(`smoke-${p.smoking || 'no'}`);
+  if (smokeEl) smokeEl.checked = true;
+  if (typeof renderNeuroProfileUI === 'function') renderNeuroProfileUI(p);
+  loadInsuranceFields(p);
+  renderEmergCard(p);
+  updateAgeLabel(p.birthday);
+  renderHistTab('cons');
+}
+
+function calcAge(birthday) {
+  if (!birthday) return null;
+  const birth = new Date(birthday + 'T00:00:00');
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+function updateAgeLabel(birthday) {
+  const el = document.getElementById('profile-age-label');
+  if (!el) return;
+  if (!birthday) { el.textContent = 'Paciente'; return; }
+  const age = calcAge(birthday);
+  const birth = new Date(birthday + 'T00:00:00');
+  const dateStr = birth.toLocaleDateString('pt-BR', {day:'numeric', month:'long'});
+  el.textContent = `${age} anos · 🎂 ${dateStr}`;
+}
+
+function renderEmergCard(p) {
+  const el = document.getElementById('emerg-card-display');
+  if (!el) return;
+  if (!p.emergName && !p.emergPhone) { el.style.display = 'none'; return; }
+  const smokeLabel = {no:'🚭 Não fumante', ex:'🕐 Ex-fumante', yes:'🚬 Fumante'}[p.smoking||'no'];
+  const tags = [];
+  if (p.smoking && p.smoking !== 'no') tags.push(`<span class="emerg-tag">${smokeLabel}</span>`);
+  if (p.allergyMeds)  tags.push(`<span class="emerg-tag danger">⚠️ Alérgico: ${p.allergyMeds}</span>`);
+  if (p.allergyFood)  tags.push(`<span class="emerg-tag">🍽️ ${p.allergyFood}</span>`);
+  if (p.allergyOther) tags.push(`<span class="emerg-tag">⚗️ ${p.allergyOther}</span>`);
+  if (p.blood) tags.push(`<span class="emerg-tag">🩸 ${p.blood}</span>`);
+  if (p.importantNotes) tags.push(`<span class="emerg-tag danger">📌 Obs. crítica</span>`);
+  const insuranceLine = (() => {
+    if (p.insuranceType === 'conv' && p.convName)
+      return `<span class="emerg-tag">💳 ${p.convName}${p.convNumber ? ' · '+p.convNumber : ''}</span>`;
+    if (p.susNumber)
+      return `<span class="emerg-tag">🆓 SUS · ${p.susNumber}</span>`;
+    return `<span class="emerg-tag">🆓 SUS</span>`;
+  })();
+  tags.push(insuranceLine);
+  el.style.display = 'block';
+  el.innerHTML = `<div class="emerg-card">
+    <div class="emerg-card-title">🆘 Contato de emergência</div>
+    <div class="emerg-contact-row">
+      <div class="emerg-contact-info">
+        <div class="emerg-contact-name">${p.emergName || '—'}</div>
+        <di
+px;border-radius:5px;margin-top:4px;display:inline-block">📷 Sem resultado</span>` : '';
+    return `<div class="hist-item">
+      <div class="hist-icon ${type}">${icons[type]||'📋'}</div>
+      <div class="hist-body">
+        <div class="hist-name">${t.name}</div>
+        ${sub ? `<div class="hist-meta">${sub}</div>` : ''}
+        <div class="hist-meta">📅 ${dateStr}</div>
+        ${thumbs}${noResultBadge}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function saveSettings() {
+  settings.patient = document.getElementById('patient-name-input').value;
+  settings.caregiver = document.getElementById('caregiver-input').value;
+  settings.diagnosis = document.getElementById('diagnosis-input').value;
+  localStorage.setItem('cuidarbem_settings', JSON.stringify(settings));
+}
+
+function updatePatientName(v) {
+  document.getElementById('patient-name-pill').textContent = v || 'Paciente';
+  document.getElementById('profile-name').textContent = v || 'Paciente';
+  settings.patient = v; saveSettings();
+}
+
+function saveTasks() {
+  localStorage.setItem('cuidarbem_tasks', JSON.stringify(tasks));
+}
+
+function isDemoTask(t) {
+  if (!t) return false;
+  const demoNames = [
+    'Losartana 50mg','AAS 100mg','Clopidogrel 75mg','Atorvastatina 40mg',
+    'Fisioterapia motora','Exercícios de equilíbrio','Consulta com neurologista'
+  ];
+  return t.demo === true || demoNames.includes(t.name);
+}
+
+function removeCompletionsForTaskIds(ids) {
+  const idSet = new Set(ids);
+  Object.keys(completions || {}).forEach(k => {
+    const id = k.split('_')[0];
+    if (idSet.has(id)) delete completions[k];
+  });
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+}
+
+function clearDemoMedications() {
+  const removeIds = tasks.filter(t => isDemoTask(t) && t.type === 'med').map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhum remédio demo encontrado'); return; }
+  if (!confirm('Remover os remédios demonstrativos da tela inicial?')) return;
+  tasks = tasks.filter(t => !(isDemoTask(t) && t.type === 'med'));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-meds');
+  showToast('🧹 Remédios demo removidos');
+}
+
+function clearDemoTodayTasks() {
+  const removeIds = tasks.filter(t => isDemoTask(t)).map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhuma tarefa demo encontrada'); return; }
+  if (!confirm('Remover remédios, exercícios, fisioterapia e consulta demonstrativos?')) return;
+  tasks = tasks.filter(t => !isDemoTask(t));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-tasks');
+  showToast('🧹 Tarefas demo removidas');
+}
+
+function clearAllCareData() {
+  if (!confirm('Zerar todos os cuidados cadastrados, confirmações, eventos e sinais vitais? A família/Supabase continuará configurada.')) return;
+  tasks = []; completions = {};
+  localStorage.setItem('cuidarbem_tasks', '[]');
+  localStorage.setItem('cuidarbem_completions', '{}');
+  localStorage.setItem('cb_care_events', '[]');
+  localStorage.setItem('cb_vitals', '[]');
+  localStorage.setItem('cb_vital_freq', '{}');
+  try { careEvents = []; } catch(e) {}
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-all-care-data');
+  showToast('🧹 Cuidados zerados');
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+
+function getNeuroProfile() {
+  const p = getProfile ? getProfile() : {};
+  return {
+    side: p.neuroSide || '',
+    dependency: p.neuroDependency || '',
+    aphasia: !!p.neuroAphasia,
+    hemianopsia: !!p.neuroHemianopsia,
+    dysphagia: !!p.neuroDysphagia,
+    fallRisk: !!p.neuroFallRisk,
+    diet: p.neuroDiet || '',
+    swallowGuidance: p.neuroSwallowGuidance || '',
+    priority: p.neuroPriority || 'auto'
+  };
+}
+
+function neuroHasAnyFlag(n) {
+  return !!(n.side || n.dependency || n.aphasia || n.hemianopsia || n.dysphagia || n.fallRisk || n.diet || n.swallowGuidance || (n.priority && n.priority !== 'auto'));
+}
+
+function getEffectiveNeuroPriority(n) {
+  if (!n) n = getNeuroProfile();
+  if (n.priority && n.priority !== 'auto') return n.priority;
+  if (n.dysphagia) return 'degluticao';
+  if (n.fallRisk || ['moderada','alta','total'].includes(n.dependency)) return 'mobilidade';
+  if (n.aphasia) return 'comunicacao';
+  if (n.hemianopsia) return 'visual';
+  return 'rotina';
+}
+
+function neuroTaskPriorityScore(task) {
+  const n = getNeuroProfile();
+  const priority = getEffectiveNeuroPriority(n);
+  const txt
+        <div class="hist-meta">📅 ${dateStr}</div>
+        ${thumbs}${noResultBadge}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function saveSettings() {
+  settings.patient = document.getElementById('patient-name-input').value;
+  settings.caregiver = document.getElementById('caregiver-input').value;
+  settings.diagnosis = document.getElementById('diagnosis-input').value;
+  localStorage.setItem('cuidarbem_settings', JSON.stringify(settings));
+}
+
+function updatePatientName(v) {
+  document.getElementById('patient-name-pill').textContent = v || 'Paciente';
+  document.getElementById('profile-name').textContent = v || 'Paciente';
+  settings.patient = v; saveSettings();
+}
+
+function saveTasks() {
+  localStorage.setItem('cuidarbem_tasks', JSON.stringify(tasks));
+}
+
+function isDemoTask(t) {
+  if (!t) return false;
+  const demoNames = [
+    'Losartana 50mg','AAS 100mg','Clopidogrel 75mg','Atorvastatina 40mg',
+    'Fisioterapia motora','Exercícios de equilíbrio','Consulta com neurologista'
+  ];
+  return t.demo === true || demoNames.includes(t.name);
+}
+
+function removeCompletionsForTaskIds(ids) {
+  const idSet = new Set(ids);
+  Object.keys(completions || {}).forEach(k => {
+    const id = k.split('_')[0];
+    if (idSet.has(id)) delete completions[k];
+  });
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+}
+
+function clearDemoMedications() {
+  const removeIds = tasks.filter(t => isDemoTask(t) && t.type === 'med').map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhum remédio demo encontrado'); return; }
+  if (!confirm('Remover os remédios demonstrativos da tela inicial?')) return;
+  tasks = tasks.filter(t => !(isDemoTask(t) && t.type === 'med'));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-meds');
+  showToast('🧹 Remédios demo removidos');
+}
+
+function clearDemoTodayTasks() {
+  const removeIds = tasks.filter(t => isDemoTask(t)).map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhuma tarefa demo encontrada'); return; }
+  if (!confirm('Remover remédios, exercícios, fisioterapia e consulta demonstrativos?')) return;
+  tasks = tasks.filter(t => !isDemoTask(t));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-tasks');
+  showToast('🧹 Tarefas demo removidas');
+}
+
+function clearAllCareData() {
+  if (!confirm('Zerar todos os cuidados cadastrados, confirmações, eventos e sinais vitais? A família/Supabase continuará configurada.')) return;
+  tasks = []; completions = {};
+  localStorage.setItem('cuidarbem_tasks', '[]');
+  localStorage.setItem('cuidarbem_completions', '{}');
+  localStorage.setItem('cb_care_events', '[]');
+  localStorage.setItem('cb_vitals', '[]');
+  localStorage.setItem('cb_vital_freq', '{}');
+  try { careEvents = []; } catch(e) {}
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-all-care-data');
+  showToast('🧹 Cuidados zerados');
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+
+function getNeuroProfile() {
+  const p = getProfile ? getProfile() : {};
+  return {
+    side: p.neuroSide || '',
+    dependency: p.neuroDependency || '',
+    aphasia: !!p.neuroAphasia,
+    hemianopsia: !!p.neuroHemianopsia,
+    dysphagia: !!p.neuroDysphagia,
+    fallRisk: !!p.neuroFallRisk,
+    diet: p.neuroDiet || '',
+    swallowGuidance: p.neuroSwallowGuidance || '',
+    priority: p.neuroPriority || 'auto'
+  };
+}
+
+function neuroHasAnyFlag(n) {
+  return !!(n.side || n.dependency || n.aphasia || n.hemianopsia || n.dysphagia || n.fallRisk || n.diet || n.swallowGuidance || (n.priority && n.priority !== 'auto'));
+}
+
+function getEffectiveNeuroPriority(n) {
+  if (!n) n = getNeuroProfile();
+  if (n.priority && n.priority !== 'auto') return n.priority;
+  if (n.dysphagia) return 'degluticao';
+  if (n.fallRisk || ['moderada','alta','total'].includes(n.dependency)) return 'mobilidade';
+  if (n.aphasia) return 'comunicacao';
+  if (n.hemianopsia) return 'visual';
+  return 'rotina';
+}
+
+function neuroTaskPriorityScore(task) {
+  const n = getNeuroProfile();
+  const priority = getEffectiveNeuroPriority(n);
+  const txt = `${task?.name||''} ${task?.obs||''} ${task?.dose||''}`.toLowerCase();
+  if (priority === 'degluticao' || n.dysphagia) {
+    if (/deglut|disfag|dieta|nutri|hidrata|água|agua|peso|engasg|fono|espess/.test(txt)) return 30;
+  }
+  if (priority === 'mobilidade' || n.fallRisk) {
+    if (/fisio|equil|marcha|queda|mobil|exerc|tr
+ment.getElementById('profile-name').textContent = v || 'Paciente';
+  settings.patient = v; saveSettings();
+}
+
+function saveTasks() {
+  localStorage.setItem('cuidarbem_tasks', JSON.stringify(tasks));
+}
+
+function isDemoTask(t) {
+  if (!t) return false;
+  const demoNames = [
+    'Losartana 50mg','AAS 100mg','Clopidogrel 75mg','Atorvastatina 40mg',
+    'Fisioterapia motora','Exercícios de equilíbrio','Consulta com neurologista'
+  ];
+  return t.demo === true || demoNames.includes(t.name);
+}
+
+function removeCompletionsForTaskIds(ids) {
+  const idSet = new Set(ids);
+  Object.keys(completions || {}).forEach(k => {
+    const id = k.split('_')[0];
+    if (idSet.has(id)) delete completions[k];
+  });
+  localStorage.setItem('cuidarbem_completions', JSON.stringify(completions));
+}
+
+function clearDemoMedications() {
+  const removeIds = tasks.filter(t => isDemoTask(t) && t.type === 'med').map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhum remédio demo encontrado'); return; }
+  if (!confirm('Remover os remédios demonstrativos da tela inicial?')) return;
+  tasks = tasks.filter(t => !(isDemoTask(t) && t.type === 'med'));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-meds');
+  showToast('🧹 Remédios demo removidos');
+}
+
+function clearDemoTodayTasks() {
+  const removeIds = tasks.filter(t => isDemoTask(t)).map(t => t.id);
+  if (!removeIds.length) { showToast('✅ Nenhuma tarefa demo encontrada'); return; }
+  if (!confirm('Remover remédios, exercícios, fisioterapia e consulta demonstrativos?')) return;
+  tasks = tasks.filter(t => !isDemoTask(t));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-tasks');
+  showToast('🧹 Tarefas demo removidas');
+}
+
+function clearAllCareData() {
+  if (!confirm('Zerar todos os cuidados cadastrados, confirmações, eventos e sinais vitais? A família/Supabase continuará configurada.')) return;
+  tasks = []; completions = {};
+  localStorage.setItem('cuidarbem_tasks', '[]');
+  localStorage.setItem('cuidarbem_completions', '{}');
+  localStorage.setItem('cb_care_events', '[]');
+  localStorage.setItem('cb_vitals', '[]');
+  localStorage.setItem('cb_vital_freq', '{}');
+  try { careEvents = []; } catch(e) {}
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-all-care-data');
+  showToast('🧹 Cuidados zerados');
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+
+function getNeuroProfile() {
+  const p = getProfile ? getProfile() : {};
+  return {
+    side: p.neuroSide || '',
+    dependency: p.neuroDependency || '',
+    aphasia: !!p.neuroAphasia,
+    hemianopsia: !!p.neuroHemianopsia,
+    dysphagia: !!p.neuroDysphagia,
+    fallRisk: !!p.neuroFallRisk,
+    diet: p.neuroDiet || '',
+    swallowGuidance: p.neuroSwallowGuidance || '',
+    priority: p.neuroPriority || 'auto'
+  };
+}
+
+function neuroHasAnyFlag(n) {
+  return !!(n.side || n.dependency || n.aphasia || n.hemianopsia || n.dysphagia || n.fallRisk || n.diet || n.swallowGuidance || (n.priority && n.priority !== 'auto'));
+}
+
+function getEffectiveNeuroPriority(n) {
+  if (!n) n = getNeuroProfile();
+  if (n.priority && n.priority !== 'auto') return n.priority;
+  if (n.dysphagia) return 'degluticao';
+  if (n.fallRisk || ['moderada','alta','total'].includes(n.dependency)) return 'mobilidade';
+  if (n.aphasia) return 'comunicacao';
+  if (n.hemianopsia) return 'visual';
+  return 'rotina';
+}
+
+function neuroTaskPriorityScore(task) {
+  const n = getNeuroProfile();
+  const priority = getEffectiveNeuroPriority(n);
+  const txt = `${task?.name||''} ${task?.obs||''} ${task?.dose||''}`.toLowerCase();
+  if (priority === 'degluticao' || n.dysphagia) {
+    if (/deglut|disfag|dieta|nutri|hidrata|água|agua|peso|engasg|fono|espess/.test(txt)) return 30;
+  }
+  if (priority === 'mobilidade' || n.fallRisk) {
+    if (/fisio|equil|marcha|queda|mobil|exerc|transfer|andar|fortalec/.test(txt)) return 24;
+  }
+  if (priority === 'comunicacao' || n.aphasia) {
+    if (/fala|comunica|fono|linguagem|afasia/.test(txt)) return 18;
+  }
+  if (priority === 'visual' || n.hemianopsia) {
+    if (/visual|campo|hemian|óculo|oculo|segurança|seguranca/.test(txt)) return 18;
+  }
+  return 0;
+}
+
+function neuroLabelMap() {
+  return {
+    side: {direito:'Lado direito afetado', esquerdo:'Lado esquerdo afetado', bilateral:'Déficit bilateral', nenhum:'Sem déficit motor'},
+    dep: {independente:'Independente', leve:'Dependência leve', moder
+uma tarefa demo encontrada'); return; }
+  if (!confirm('Remover remédios, exercícios, fisioterapia e consulta demonstrativos?')) return;
+  tasks = tasks.filter(t => !isDemoTask(t));
+  removeCompletionsForTaskIds(removeIds);
+  saveTasks();
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-demo-tasks');
+  showToast('🧹 Tarefas demo removidas');
+}
+
+function clearAllCareData() {
+  if (!confirm('Zerar todos os cuidados cadastrados, confirmações, eventos e sinais vitais? A família/Supabase continuará configurada.')) return;
+  tasks = []; completions = {};
+  localStorage.setItem('cuidarbem_tasks', '[]');
+  localStorage.setItem('cuidarbem_completions', '{}');
+  localStorage.setItem('cb_care_events', '[]');
+  localStorage.setItem('cb_vitals', '[]');
+  localStorage.setItem('cb_vital_freq', '{}');
+  try { careEvents = []; } catch(e) {}
+  renderAll(); buildWeekStrip();
+  if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+  if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('clear-all-care-data');
+  showToast('🧹 Cuidados zerados');
+}
+
+// ─── RENDER ALL ───────────────────────────────────────────────────────────
+
+function getNeuroProfile() {
+  const p = getProfile ? getProfile() : {};
+  return {
+    side: p.neuroSide || '',
+    dependency: p.neuroDependency || '',
+    aphasia: !!p.neuroAphasia,
+    hemianopsia: !!p.neuroHemianopsia,
+    dysphagia: !!p.neuroDysphagia,
+    fallRisk: !!p.neuroFallRisk,
+    diet: p.neuroDiet || '',
+    swallowGuidance: p.neuroSwallowGuidance || '',
+    priority: p.neuroPriority || 'auto'
+  };
+}
+
+function neuroHasAnyFlag(n) {
+  return !!(n.side || n.dependency || n.aphasia || n.hemianopsia || n.dysphagia || n.fallRisk || n.diet || n.swallowGuidance || (n.priority && n.priority !== 'auto'));
+}
+
+function getEffectiveNeuroPriority(n) {
+  if (!n) n = getNeuroProfile();
+  if (n.priority && n.priority !== 'auto') return n.priority;
+  if (n.dysphagia) return 'degluticao';
+  if (n.fallRisk || ['moderada','alta','total'].includes(n.dependency)) return 'mobilidade';
+  if (n.aphasia) return 'comunicacao';
+  if (n.hemianopsia) return 'visual';
+  return 'rotina';
+}
+
+function neuroTaskPriorityScore(task) {
+  const n = getNeuroProfile();
+  const priority = getEffectiveNeuroPriority(n);
+  const txt = `${task?.name||''} ${task?.obs||''} ${task?.dose||''}`.toLowerCase();
+  if (priority === 'degluticao' || n.dysphagia) {
+    if (/deglut|disfag|dieta|nutri|hidrata|água|agua|peso|engasg|fono|espess/.test(txt)) return 30;
+  }
+  if (priority === 'mobilidade' || n.fallRisk) {
+    if (/fisio|equil|marcha|queda|mobil|exerc|transfer|andar|fortalec/.test(txt)) return 24;
+  }
+  if (priority === 'comunicacao' || n.aphasia) {
+    if (/fala|comunica|fono|linguagem|afasia/.test(txt)) return 18;
+  }
+  if (priority === 'visual' || n.hemianopsia) {
+    if (/visual|campo|hemian|óculo|oculo|segurança|seguranca/.test(txt)) return 18;
+  }
+  return 0;
+}
+
+function neuroLabelMap() {
+  return {
+    side: {direito:'Lado direito afetado', esquerdo:'Lado esquerdo afetado', bilateral:'Déficit bilateral', nenhum:'Sem déficit motor'},
+    dep: {independente:'Independente', leve:'Dependência leve', moderada:'Dependência moderada', alta:'Alta dependência', total:'Dependência total'},
+    diet: {normal:'Dieta normal', macia:'Dieta macia/branda', pastosa:'Dieta pastosa', 'liquido-espessado':'Líquido espessado', enteral:'Enteral/sonda'},
+    pr: {degluticao:'Deglutição e hidratação', mobilidade:'Mobilidade e quedas', comunicacao:'Comunicação e afasia', visual:'Campo visual e segurança', rotina:'Rotina geral'}
+  };
+}
+
+function renderNeuroProfileUI(profileOverride) {
+  const p = profileOverride || (typeof getProfile === 'function' ? getProfile() : {});
+  const n = getNeuroProfile();
+  const dysFields = document.getElementById('dysphagia-fields');
+  if (dysFields) dysFields.style.display = n.dysphagia ? 'block' : 'none';
+
+  const card = document.getElementById('neuro-priority-card');
+  if (!card) return;
+  if (!neuroHasAnyFlag(n)) { card.style.display = 'none'; return; }
+
+  const map = neuroLabelMap();
+  const priority = getEffectiveNeuroPriority(n);
+  const chips = [];
+  if (n.side) chips.push(`<span class="neuro-chip info">🧭 ${map.side[n.side] || n.side}</span>`);
+  if (n.dependency) chips.push(`<span class="neuro-chip ${['alta','total'].includes(n.dependency)?'danger':'warn'}">🤝 ${map.dep[n.dependency] || n.dependency}</span>`);
+  if (n.aphasia) chips.push(`<span class="neuro-chip info">💬 Afasia</span>`);
+  if (n.hemianopsia) chips.push(`<span class="neuro-chip warn">👁️ Hemianopsia</span>`);
+  if (n.fallRisk) chips.push(`<span class="neuro-chip danger">🚨 Risco de queda</span>`);
+  if (n.dysphagia) chips.push(`<span class="neuro-chip danger">🥣 Disfagia</span>`);
+ 
