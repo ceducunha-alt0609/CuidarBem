@@ -24,4 +24,4 @@ new="""    window.Notification.permission = _origNew.permission;
 if old not in s: raise SystemExit('notification restore anchor not found')
 s=s.replace(old,new,1)
 p.write_text(s,encoding='utf-8')
-# trigger structural cleanup workflow v2
+# trigger structural cleanup workflow v3
