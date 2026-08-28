@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v57-restore-integrity';
+const CACHE_NAME = 'cuidarbem-v58-notification-assets';
 const APP_SHELL = [
   './',
   './index.html',
@@ -19,8 +19,14 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME).map(k => caches.delete(k))))
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
+      .then(() => clients.matchAll({ type: 'window', includeUncontrolled: true }))
+      .then(list => {
+        // In-memory timers do not survive a worker restart. Ask open clients to refresh them.
+        list.forEach(client => client.postMessage({ type: 'REQUEST_ALARM_REFRESH' }));
+      })
   );
 });
 
@@ -55,8 +61,8 @@ function scheduleAlarms(alarms) {
     const id = setTimeout(() => {
       self.registration.showNotification(alarm.title || 'CuidarBem', {
         body: alarm.body || 'Você tem um cuidado programado.',
-        icon: alarm.icon || './icon-192.png',
-        badge: './icon-192.png',
+        icon: alarm.icon || './icons/icon-192.png',
+        badge: './icons/icon-192.png',
         tag: alarm.tag || 'cb-alarm',
         renotify: alarm.renotify !== false,
         requireInteraction: alarm.requireInteraction || false,
@@ -68,15 +74,6 @@ function scheduleAlarms(alarms) {
     alarmTimers.push(id);
   });
 }
-
-self.addEventListener('activate', event => {
-  // In-memory timers do not survive a worker restart. Ask any open client to refresh them.
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
-      list.forEach(client => client.postMessage({ type: 'REQUEST_ALARM_REFRESH' }));
-    })
-  );
-});
 
 self.addEventListener('message', event => {
   if (!event.data) return;
