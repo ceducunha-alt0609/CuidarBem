@@ -1,0 +1,27 @@
+name: Fix CuidarBem home wheel
+on:
+  push:
+    paths:
+      - 'cuidarbem_fix_home_wheel.py'
+      - '.github/workflows/cuidarbem-fix-home-wheel.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python cuidarbem_fix_home_wheel.py
+      - name: Verify and commit
+        run: |
+          ! grep -q "Roteia pelo painel sob o cursor" index.html
+          grep -q "Não interceptar a rodinha aqui" index.html
+          grep -q "cuidarbem-v59-desktop-wheel-fix" sw.js
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html sw.js
+          git commit -m 'Restore native desktop wheel scrolling on home'
+          git rm -f cuidarbem_fix_home_wheel.py .github/workflows/cuidarbem-fix-home-wheel.yml
+          git commit -m 'Clean CuidarBem wheel patch files' || true
+          git push
