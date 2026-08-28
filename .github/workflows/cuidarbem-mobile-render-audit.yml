@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/cuidarbem-mobile-render-audit.yml'
+      - 'cuidarbem_mobile_render_audit.py'
 permissions:
   contents: write
 jobs:
@@ -17,5 +18,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add cuidarbem_mobile_render_report.txt
-          git commit -m 'Report CuidarBem mobile rendering hotspots'
+          git commit -m 'Report CuidarBem desktop scroll routing' || exit 0
           git push
