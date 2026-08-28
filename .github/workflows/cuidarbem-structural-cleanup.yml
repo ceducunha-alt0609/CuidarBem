@@ -14,9 +14,13 @@ jobs:
         run: python cuidarbem_patch_structural_cleanup.py
       - name: Verify and commit
         run: |
-          ! grep -q "_patchedGoScreen" index.html
-          ! grep -q "const _origConfirmTake = window.confirmTake" index.html
-          grep -q "finally {       window.Notification = _origNew;" index.html
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          assert '_patchedGoScreen' not in s
+          assert 'const _origConfirmTake = window.confirmTake' not in s
+          assert 'finally {' in s and 'window.Notification = _origNew;' in s
+          PY
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add index.html
