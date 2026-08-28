@@ -1,0 +1,384 @@
+CUIDARBEM CLEANUP ORDER AUDIT
+cleanup_offset=848524
+index_len=867771
+after_len=19247
+backdrop-filter: before=41 after=4
+will-change: before=8 after=3
+animation:: before=16 after=1
+isolation:isolate: before=3 after=2
+translateZ(0): before=4 after=0
+transform:: before=174 after=2
+
+=== AFTER CLEANUP HEAD ===
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--sidebar-w, 260px) !important;
+    height: 100svh !important;
+    max-width: none !important;
+  }
+}
+
+/* ── 9. Botão e painel de diagnóstico — centrado na área de conteúdo */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h, 72px) + 12px + env(safe-area-inset-bottom));
+  right: 14px;
+  /* Desktop: afasta do sidebar */
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: .75;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+#cb-diag-btn:active { opacity: 1; }
+#cb-diag-btn .cb-diag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; flex-shrink: 0;
+}
+
+/* Painel centralizado NA ÁREA DE CONTEÚDO (desktop: após sidebar) */
+#cb-diag-panel {
+  position: fixed;
+  top: 50%;
+  /* mobile: centrado no viewport; desktop: centrado após sidebar */
+  left: calc(var(--sidebar-w, 0px) / 2 + 50%);
+  transform: translate(-50%, -50%);
+  z-index: 99998;
+  background: rgba(10,20,18,.97);
+  color: #e0f2ec;
+  border-radius: 20px;
+  padding: 20px 22px;
+  width: min(320px, calc(100vw - 32px));
+  font-size: 12px;
+  line-height: 1.7;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  display: none;
+  font-family: 'Courier New', monospace;
+}
+@media (min-width: 768px) {
+  #cb-diag-panel {
+    left: calc(var(--sidebar-w, 260px) + (100vw - var(--sidebar-w, 260px)) / 2);
+  }
+  #cb-diag-btn {
+    bottom: 24px;
+  }
+}
+#cb-diag-panel.open { display: block; }
+#cb-diag-panel h4 { font-size: 13px; font-weight: 800; color: #4ade80; margin-bottom: 10px; font-family: inherit; }
+#cb-diag-panel .cb-drow { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.07); padding: 3px 0; }
+#cb-diag-panel .cb-dval { color: #f87171; font-weight: 700; }
+#cb-diag-panel .cb-dval.ok { color: #4ade80; }
+#cb-diag-panel button { margin-top: 14px; width: 100%; background: #0d5c4f; color: #fff; border: none; border-radius: 10px; padding: 10px; font-weight: 800; font-size: 13px; cursor: pointer; }
+
+/* ── 10. SCROLL DE MOUSE no desktop ──────────────────────────────
+   Os painéis .content e .desktop-right-panel são os scroll containers.
+   Garantir que recebem wheel events e que o body não compete. */
+@media (min-width: 768px) {
+  /* Painéis do home: scroll contido com scrollbar visível */
+  #screen-home .content,
+  .desktop-right-panel {
+    overscroll-behavior: contain !important;
+    pointer-events: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0,107,88,.35) transparent !important;
+  }
+
+  /* Outras telas: scroll container com scrollbar visível */
+  #screen-calendar.active,
+  #screen-reports.active,
+  #screen-profile.active,
+  #screen-ocr.active,
+  #screen-dashboard.active,
+  #screen-appt.active {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100svh !important;
+    overscroll-behavior: contain !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0,107,88,.35) transparent !important;
+  }
+
+  /* Body e HTML visíveis — NÃO esconder overflow no desktop.
+     O scroll acontece nos containers filhos; body hidden mata o scrollbar nativo. */
+  html, body {
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+</style>
+
+<!-- Botão de diagnóstico (informacional — efeitos agora são permanentemente removidos) -->
+<div id="cb-diag-btn" onclick="document.getElementById('cb-diag-panel').classList.toggle('open')">
+  <span class="cb-diag-dot"></span>
+  <span>DIAG</span>
+</div>
+
+<div id="cb-diag-panel">
+  <h4>✅ Efeitos Removidos</h4>
+  <div class="cb-drow"><span>backdrop-filter</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>animation (layout)</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>will-change</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>isolation:isolate</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>glass/blur backgrounds</span><span class="cb-dval ok">OPACOS</span></div>
+  <div class="cb-drow"><span>transitions de botões</span><span class="cb-dval ok">MANTIDAS</span></div>
+  <div style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6">
+    Diagnóstico confirmou: efeitos GPU causavam os flashes.<br>
+    Remoção permanente aplicada.
+  </div>
+  <button onclick="this.closest('#cb-diag-panel').classList.remove('open')">Fechar</button>
+</div>
+
+<script id="cb-wheel-router">
+/* Desktop: rota wheel para o container scrollável sob o cursor.
+   Home screen: grid com overflow:hidden — detecta painel por posição X do cursor. */
+(function(){
+  if (typeof window === 'undefined') return;
+
+  function getScrollParent(el) {
+    while (el && el !== document.documentElement) {
+      var st = window.getComputedStyle(el);
+      var oy = st.overflowY;
+      if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  document.addEventListener('wheel', function(e) {
+    if (window.innerWidth < 768) return;
+
+    // Tela Início: grid com overflow:hidden — getScrollParent falha.
+    // Roteia pelo painel sob o cursor (esquerda=content, direita=right-panel).
+    var home = document.getElementById('screen-home');
+    if (home && home.classList.contains('active')) {
+      var rightPanel = home.querySelector('.desktop-right-panel');
+      var panel = (rightPanel && e.clientX >= rightPanel.getBoundingClientRect().left)
+        ? rightPanel : home.querySelector('.content');
+      if (panel && panel.scrollHeight > panel.clientHeight) {
+        e.preventDefault();
+        panel.scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 20 : 1), behavior: 'auto' });
+      }
+      return; // sempre consome o evento na home
+    }
+
+    // Outras telas: sobe a árvore até o scroll container natural
+    var target = getScrollParent(e.target);
+    if (!target) return;
+
+    var atTop    = target.scrollTop <= 0;
+    var atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 1;
+    if ((e.deltaY < 0 && atTop) || (e.deltaY > 0 && atBottom)) return;
+
+    e.preventDefault();
+    target.scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 20 : 1), behavior: 'auto' });
+  }, { passive: false });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     HEADER INTEGRADO — vitais e ações dentro do topbar
+     ██ TRAVADO — não modificar ██
+     ═══════════════════════════════════════════════════ -->
+<style id="cb-header-integrated">/* LOCKED */
+
+/* ── Desktop: remodela o header para conter tudo ── */
+@media (min-width: 768px) {
+
+  /* Header cresce para acomodar saudação + vitais + botões */
+  #screen-home .header,
+  #screen-home #home-header {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    padding: 20px 36px 16px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    gap: 0 !important;
+  }
+
+  /* Linha 1: saudação + data/paciente/SAMU no canto direito */
+  #screen-home .mobile-topbar-title-row {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  #screen-home .mobile-topbar-copy {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  #screen-home .header-greeting {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    opacity: .85 !important;
+    color: rgba(255,255,255,.9) !important;
+  }
+
+  #screen-home .header-title {
+    display: block !important;
+    font-size: 26px !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    line-height: 1.1 !important;
+    letter-spacing: -.02em !important;
+  }
+
+  #screen-home .mobile-header-subtitle {
+    display: block !important;
+    font-size: 12px !important;
+    color: rgba(255,255,255,.72) !important;
+    font-weight: 600 !important;
+    margin-top: 2px !important;
+  }
+
+  /* Esconde a data em linha separada — reaparece no canto superior direito global */
+  #screen-home .header-date { display: none !important; }
+
+  /* Remove o ::after que duplicava o subtítulo via CSS */
+  #screen-home .header-title::after { display: none !important; content: none !important; }
+
+  /* Data/hora — texto branco com contraste no topbar */
+  #today-date-desktop {
+    position: fixed;
+    top: 14px;
+    right: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #ffffff;
+    z-index: 200;
+    pointer-events: none;
+    text-shadow: 0 1px 4px rgba(0,0,0,.35);
+    letter-spacing: .01em;
+  }
+
+  /* Linha do paciente + SAMU — compacta abaixo do título */
+  #screen-home .header > div[style*="justify-content:space-between"] {
+    margin-top: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Linha 2: vitais — faixa de cards dentro do header */
+  #screen-home .header-vitals-row {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
+    overflow: visible !important;
+  }
+
+  /* Cards dos vitais — versão clara para o fundo verde */
+  #screen-home .header .vital-card-item {
+    flex: 1 1 0 !important;
+    background: rgba(255,255,255,.15) !important;
+    border: 1px solid rgba(255,255,255,.22) !important;
+    border-radius: 12px !important;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+ 
+
+=== STYLE IDS AFTER CLEANUP ===
+cb-effects-cleanup
+cb-header-integrated
+cb-modal-x-btn
+cb-contrast-fix
