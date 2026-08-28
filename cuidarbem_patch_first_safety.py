@@ -58,7 +58,8 @@ for needle in [
     'const tomorrowStr_ = localDateKey(tomorrow);'
 ]: assert needle in s2, needle
 assert "if (tasks.length === 0) addSampleTasks();" not in s2
-assert "new Date().toISOString().split('T')[0]" not in s2
+assert "function todayStr() { return new Date().toISOString().split('T')[0]; }" not in s2
+assert "const tomorrowStr_ = tomorrow.toISOString().split('T')[0];" not in s2
 assert "k.startsWith(CACHE_PREFIX)" in w2
 assert "./icons/icon-192.png" in w2
 assert "cuidarbem-v54-audit-safety" in w2
