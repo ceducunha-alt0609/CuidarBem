@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v55-sync-conflict-guard';
+const CACHE_NAME = 'cuidarbem-v56-alarm-lifecycle-guard';
 const APP_SHELL = [
   './',
   './index.html',
@@ -46,6 +46,8 @@ function clearScheduledAlarms() {
 
 function scheduleAlarms(alarms) {
   clearScheduledAlarms();
+  // Best-effort only: service workers may be suspended/terminated by the OS.
+  // Timers are intentionally limited to the next 24h and must be refreshed by the app.
   const now = Date.now();
   (alarms || []).forEach(alarm => {
     const delay = alarm.fireAt - now;
@@ -66,6 +68,15 @@ function scheduleAlarms(alarms) {
     alarmTimers.push(id);
   });
 }
+
+self.addEventListener('activate', event => {
+  // In-memory timers do not survive a worker restart. Ask any open client to refresh them.
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+      list.forEach(client => client.postMessage({ type: 'REQUEST_ALARM_REFRESH' }));
+    })
+  );
+});
 
 self.addEventListener('message', event => {
   if (!event.data) return;

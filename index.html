@@ -6436,6 +6436,23 @@ function scheduleAlarmsOnSW() {
   window._swRegistration.active.postMessage({ type: 'SCHEDULE_ALARMS', alarms });
 }
 
+// Alarm lifecycle guard: the browser/Android can terminate a service worker and discard its in-memory timers.
+// Whenever the app returns to the foreground, refresh the next 24h schedule.
+(function installAlarmLifecycleRefresh(){
+  function refreshSoon(){
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+      setTimeout(function(){ if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW(); }, 250);
+    }
+  }
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) refreshSoon(); });
+  window.addEventListener('pageshow', refreshSoon);
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', function(event){
+      if (event.data && event.data.type === 'REQUEST_ALARM_REFRESH') refreshSoon();
+    });
+  }
+})();
+
 function requestNotifPermission() {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'default') {
