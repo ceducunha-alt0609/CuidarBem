@@ -1,0 +1,25 @@
+name: Run CuidarBem calendar date patch
+on:
+  push:
+    paths:
+      - 'cuidarbem_patch_calendar_dates.py'
+      - '.github/workflows/cuidarbem-calendar-dates.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python cuidarbem_patch_calendar_dates.py
+      - name: Verify and commit
+        run: |
+          grep -q "localDateKey" index.html
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html
+          git commit -m 'Use local calendar dates across CuidarBem' || exit 0
+          git rm -f cuidarbem_patch_calendar_dates.py .github/workflows/cuidarbem-calendar-dates.yml cuidarbem_audit_utc_dates.py .github/workflows/cuidarbem-utc-dates-audit.yml cuidarbem_utc_dates_audit.txt 2>/dev/null || true
+          git commit -m 'Clean CuidarBem UTC audit files' || true
+          git push
