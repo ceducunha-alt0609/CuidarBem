@@ -20,3 +20,4 @@ jobs:
           git add -A
           git commit -m 'Harden CuidarBem PWA seed and local dates'
           git push
+# retry after narrowing date assertions
