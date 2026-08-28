@@ -1,0 +1,25 @@
+name: Run CuidarBem alarm safety patch
+on:
+  push:
+    paths:
+      - 'cuidarbem_patch_alarm_safety.py'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply patch
+        run: python cuidarbem_patch_alarm_safety.py
+      - name: Verify and commit
+        run: |
+          grep -q "REQUEST_ALARM_REFRESH" sw.js
+          grep -q "installAlarmLifecycleRefresh" index.html
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html sw.js
+          git commit -m 'Harden CuidarBem alarm lifecycle' || exit 0
+          git rm -f cuidarbem_patch_alarm_safety.py .github/workflows/cuidarbem-alarm-safety.yml cuidarbem_audit_alarm_backup.py .github/workflows/cuidarbem-alarm-backup-audit.yml cuidarbem_alarm_backup_audit.txt cuidarbem_mobile_layers_audit.py .github/workflows/cuidarbem-mobile-layers-audit.yml cuidarbem_mobile_layers_audit.txt cuidarbem_cleanup_order_audit.py .github/workflows/cuidarbem-cleanup-order-audit.yml cuidarbem_cleanup_order_audit.txt 2>/dev/null || true
+          git commit -m 'Clean CuidarBem temporary audit files' || true
+          git push
