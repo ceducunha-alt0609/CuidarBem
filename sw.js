@@ -1,19 +1,13 @@
 // CuidarBem PWA Service Worker
-const CACHE_NAME = 'cuidarbem-pwa-v53-init-fix-icons';
+const CACHE_PREFIX = 'cuidarbem-';
+const CACHE_NAME = 'cuidarbem-v54-audit-safety';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icon-48.png',
-  './icon-72.png',
-  './icon-96.png',
-  './icon-128.png',
-  './icon-144.png',
-  './icon-152.png',
-  './icon-180.png',
-  './icon-192.png',
-  './icon-512.png',
-  './favicon.ico'
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/favicon.ico'
 ];
 
 self.addEventListener('install', event => {
@@ -25,7 +19,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+    caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });

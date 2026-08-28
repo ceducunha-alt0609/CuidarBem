@@ -9,7 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CuidarBem">
 <meta name="description" content="CuidarBem v75: app PWA de cuidados domiciliares pós-AVC para familiares e cuidadores">
-<!-- manifest, favicon e icon-192 omitidos — app single-file, arquivos externos causariam 404 -->
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/favicon.ico">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
 <title>CuidarBem v75.22 — Estabilidade e limpeza visual</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -5034,7 +5036,7 @@ function init() {
   renderAll();
   requestNotifPermission();
   setupNotifications();
-  if (tasks.length === 0) addSampleTasks();
+  if (localStorage.getItem('cuidarbem_tasks') === null) addSampleTasks();
   // Re-render a cada 60s para atualizar status de "atrasado" dos remédios
   setInterval(() => {
     renderTodayTasks();
@@ -5179,7 +5181,7 @@ function samuCall() {
 function addSampleTasks() {
   const today = todayStr();
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-  const tomorrowStr_ = tomorrow.toISOString().split('T')[0];
+  const tomorrowStr_ = localDateKey(tomorrow);
   tasks = [
     {id:uid(), demo:true, type:'med',   name:'Losartana 50mg',       dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'Tomar com água em jejum', createdAt: Date.now()},
     {id:uid(), demo:true, type:'med',   name:'AAS 100mg',             dose:'1 comprimido', date:today,       time:'08:00', repeat:'daily',  obs:'', createdAt: Date.now()},
@@ -5194,7 +5196,13 @@ function addSampleTasks() {
 }
 
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-function todayStr() { return new Date().toISOString().split('T')[0]; }
+function localDateKey(d = new Date()) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+function todayStr() { return localDateKey(new Date()); }
 
 function setGreeting() {
   const h = new Date().getHours();
