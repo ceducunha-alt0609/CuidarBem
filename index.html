@@ -6036,7 +6036,7 @@ function buildWeekStrip() {
   let html = '';
   for (let i = 0; i < 7; i++) {
     const d = new Date(sunday); d.setDate(sunday.getDate() + i);
-    const ds = d.toISOString().split('T')[0];
+    const ds = localDateKey(d);
     const isSelected    = ds === (selectedCalDay || todayStr_);
     const isActualToday = ds === todayStr_;
     const hasTasks = tasks.some(t => t.date === ds || t.repeat === 'daily');
@@ -6064,7 +6064,7 @@ function buildWeekStrip() {
   if (todayBtn) {
     const thisSunday = new Date(today);
     thisSunday.setDate(today.getDate() - today.getDay());
-    const sameWeek = sunday.toISOString().split('T')[0] === thisSunday.toISOString().split('T')[0];
+    const sameWeek = localDateKey(sunday) === localDateKey(thisSunday);
     todayBtn.style.display = sameWeek ? 'none' : 'inline-block';
   }
 
@@ -6084,7 +6084,7 @@ function shiftWeek(delta) {
     center.setDate(today.getDate() + calWeekOffset);
     const sunday = new Date(center);
     sunday.setDate(center.getDate() - center.getDay());
-    selectedCalDay = sunday.toISOString().split('T')[0];
+    selectedCalDay = localDateKey(sunday);
   }
   buildWeekStrip();
   renderCalendar();
@@ -6171,7 +6171,7 @@ function renderReports() {
   let weekTotal = 0;
   for (let i=0;i<7;i++) {
     const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.toISOString().split('T')[0];
+    const ds = localDateKey(d);
     const dayTasks = tasks.filter(t => t.date===ds || t.repeat==='daily');
     weekTotal += dayTasks.filter(t => completions[`${t.id}_${ds}`]).length;
   }
@@ -6180,7 +6180,7 @@ function renderReports() {
   let streak = 0;
   for (let i=0;i<30;i++) {
     const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.toISOString().split('T')[0];
+    const ds = localDateKey(d);
     const dayTasks = tasks.filter(t => t.date===ds || t.repeat==='daily');
     if (!dayTasks.length) continue;
     const done = dayTasks.filter(t=>completions[`${t.id}_${ds}`]).length;
@@ -6199,7 +6199,7 @@ function renderReports() {
     let total=0, done=0;
     for (let i=0;i<7;i++) {
       const d = new Date(); d.setDate(d.getDate()-i);
-      const ds = d.toISOString().split('T')[0];
+      const ds = localDateKey(d);
       const dayTasks = tasks.filter(t=>(t.date===ds||t.repeat==='daily'||t.repeat==='weekly')&&t.type===cat.k);
       total += dayTasks.length;
       done += dayTasks.filter(t=>completions[`${t.id}_${ds}`]).length;
@@ -6221,7 +6221,7 @@ function renderReports() {
   let histHtml = '';
   for (let i=0;i<5;i++) {
     const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.toISOString().split('T')[0];
+    const ds = localDateKey(d);
     const label = i===0?'Hoje': i===1?'Ontem': d.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
     const dayTasks = tasks.filter(t=>t.date===ds||t.repeat==='daily');
     if (!dayTasks.length) continue;
@@ -7021,7 +7021,7 @@ function toggleContinuous(cb) {
     const rxExp = document.getElementById('task-rx-expiry');
     if (!rxExp.value) {
       const d = new Date(); d.setMonth(d.getMonth() + 6);
-      rxExp.value = d.toISOString().split('T')[0];
+      rxExp.value = localDateKey(d);
     }
   }
 }
@@ -7033,7 +7033,7 @@ function calcAndFillPickup() {
   const interval = parseInt(document.getElementById('task-pickup-interval')?.value) || 30;
   const d = new Date(); d.setDate(d.getDate() + interval);
   const el = document.getElementById('task-next-pickup');
-  if (el) el.value = d.toISOString().split('T')[0];
+  if (el) el.value = localDateKey(d);
 }
 
 // ── Checklist de segurança: resposta a cada pergunta ─────────────────────
@@ -8651,7 +8651,7 @@ function renderDashboard() {
       const arr = [];
       for (let i=6; i>=0; i--) {
         const d = new Date(); d.setDate(d.getDate()-i);
-        const ds = d.toISOString().split('T')[0];
+        const ds = localDateKey(d);
         const dayTasks = (JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]')).filter(t => {
           if (t.type !== type) return false;
           if (t.date === ds) return true;
@@ -8698,7 +8698,7 @@ function renderDashboard() {
     const days = [];
     for (let i=6; i>=0; i--) {
       const d = new Date(); d.setDate(d.getDate()-i);
-      const ds = d.toISOString().split('T')[0];
+      const ds = localDateKey(d);
       const allTasks = JSON.parse(localStorage.getItem('cuidarbem_tasks') || '[]').filter(t => {
         if (t.date === ds) return true;
         if (t.repeat === 'daily') return true;
@@ -8936,7 +8936,7 @@ function calcStreak() {
   const comp = JSON.parse(localStorage.getItem('cuidarbem_completions') || '{}');
   for (let i = 0; i < 365; i++) {
     const d = new Date(); d.setDate(d.getDate() - i);
-    const ds = d.toISOString().split('T')[0];
+    const ds = localDateKey(d);
     const dayTasks = allTasks.filter(t => t.date === ds || t.repeat === 'daily');
     if (!dayTasks.length) { if (i > 0) break; continue; }
     const allDone = dayTasks.every(t => comp[`${t.id}_${ds}`]);
@@ -13145,7 +13145,7 @@ body.high-contrast .cal-panel-add {
   function renderRehabStats(){
     const rows=read(LS_SESS); const dates=[...new Set(rows.map(r=>r.date))].sort();
     let streak=0; let d=new Date();
-    while(dates.includes(d.toISOString().slice(0,10))){streak++; d.setDate(d.getDate()-1)}
+    while(dates.includes(localDateKey(d))){streak++; d.setDate(d.getDate()-1)}
     const weekStart=new Date(); weekStart.setDate(weekStart.getDate()-6); weekStart.setHours(0,0,0,0);
     const week=rows.filter(r=>new Date(r.date)>=weekStart).length; const ades=Math.min(100,Math.round((week/5)*100));
     if($('rehab-streak'))$('rehab-streak').textContent=streak; if($('rehab-points'))$('rehab-points').textContent=rows.length*10; if($('rehab-week'))$('rehab-week').textContent=ades+'%';
@@ -13238,7 +13238,7 @@ body.dark .cb-functional-value,body.dark-theme .cb-functional-value{color:#99f6e
   const LS_SCALE = 'cb_rehab_scales_v55';
   const MS_DAY = 86400000;
   const safeRead = key => { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) { return []; } };
-  const iso = d => d.toISOString().slice(0,10);
+  const iso = d => localDateKey(d);
   const fmtBR = s => s ? new Date(s+'T00:00:00').toLocaleDateString('pt-BR') : '—';
   const daysUntil = s => {
     if(!s) return null;
