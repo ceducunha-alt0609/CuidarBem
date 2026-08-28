@@ -18675,18 +18675,11 @@ body.dark .bottom-nav {
   document.addEventListener('wheel', function(e) {
     if (window.innerWidth < 768) return;
 
-    // Tela Início: grid com overflow:hidden — getScrollParent falha.
-    // Roteia pelo painel sob o cursor (esquerda=content, direita=right-panel).
+    // Tela Início no desktop: o body é o scroll container atual.
+    // Não interceptar a rodinha aqui; deixa o scroll nativo do navegador agir.
     var home = document.getElementById('screen-home');
     if (home && home.classList.contains('active')) {
-      var rightPanel = home.querySelector('.desktop-right-panel');
-      var panel = (rightPanel && e.clientX >= rightPanel.getBoundingClientRect().left)
-        ? rightPanel : home.querySelector('.content');
-      if (panel && panel.scrollHeight > panel.clientHeight) {
-        e.preventDefault();
-        panel.scrollBy({ top: e.deltaY * (e.deltaMode === 1 ? 20 : 1), behavior: 'auto' });
-      }
-      return; // sempre consome o evento na home
+      return;
     }
 
     // Outras telas: sobe a árvore até o scroll container natural
