@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v56-alarm-lifecycle-guard';
+const CACHE_NAME = 'cuidarbem-v57-restore-integrity';
 const APP_SHELL = [
   './',
   './index.html',
