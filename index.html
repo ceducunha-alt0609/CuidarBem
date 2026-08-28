@@ -6482,15 +6482,15 @@ function notifyCareTask(task, title, body, key, requireInteraction = true) {
   try {
     new Notification(title, {
       body,
-      icon: 'icon-192.png',
-      badge: 'icon-192.png',
+      icon: 'icons/icon-192.png',
+      badge: 'icons/icon-192.png',
       tag: key,
       renotify: true,
       requireInteraction,
       vibrate: [200, 100, 200, 100, 200]
     });
   } catch(e) {
-    new Notification(title, { body, icon: 'icon-192.png' });
+    new Notification(title, { body, icon: 'icons/icon-192.png' });
   }
   if (typeof playAlertSound === 'function') playAlertSound();
 }
