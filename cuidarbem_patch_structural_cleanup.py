@@ -12,3 +12,4 @@ new3="""    try {       _origCheckNotif();     } finally {       window.Notifica
 if old3 not in s: raise SystemExit('notification restore anchor not found')
 s=s.replace(old3,new3,1)
 p.write_text(s,encoding='utf-8')
+# trigger structural cleanup workflow
