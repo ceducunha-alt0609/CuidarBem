@@ -1,0 +1,3901 @@
+CUIDARBEM MOBILE RENDER AUDIT
+premium=40
+diagnost=1
+position: fixed=16
+position:fixed=22
+backdrop-filter=45
+filter:=52
+will-change=11
+transform:=176
+translateZ=5
+animation:=17
+transition:=107
+touchstart=1
+touchmove=0
+pointerdown=0
+pointerup=0
+onclick==322
+addEventListener=39
+
+=== premium ===
+    .desktop-right-panel { padding: 32px 40px 32px 12px; }
+    #screen-reports .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+
+
+/* CuidarBem v26 — refinamento mobile da tela inicial
+   - Topbar fixa
+   - Sem hamburger no topo
+   - Sem nome duplicado no centro da topbar
+   - Sininho mais baixo e alinhado à direita
+*/
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+ 
+ #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+body.dark-theme .week-day.today{
+  background:#134e4a !important;
+  border-color:#2dd4bf !important;
+
+remium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+body.dark-theme .week-day.today{
+  background:#134e4a !important;
+  border-color:#2dd4bf !important;
+}
+body.dark-them
+t;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+body.dark-theme .week-day.today{
+  background:#134e4a !important;
+  border-color:#2dd4bf !important;
+}
+body.dark-theme .week-day.today .week-day-name{
+  color:#99f6e4 !important;
+}
+ent:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+body.dark-theme .week-day.today{
+  background:#134e4a !important;
+  border-color:#2dd4bf !important;
+}
+body.dark-theme .week-day.today .week-day-name{
+  color:#99f6e4 !important;
+}
+body.dark-theme .week-day.today .week-day-num{
+  color:#ffffff !important;
+}
+body.dark-theme .task-time{
+  color:#f3f4f6 !important;
+}
+body.dark-theme .header-date{
+  color:rgba(255,255,255,0.95) !important;
+}
+
+
+/* ===== SINAIS VITAIS PRO — ALERTAS E GRÁFICOS ===== */
+.vital-tabs-pro{displ
+top: 0;
+  z-index: var(--topbar-z);
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  isolation: isolate;
+}
+
+.header-sub{
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600));
+}
+
+.header{
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600));
+}
+
+.header::after{
+  pointer-events: none;
+}
+
+body.dark .header,
+body.dark .header-sub{
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+@media (max-width: 767px){
+  .header-sub{
+    padding-top: calc(env(safe-area-inset-top) + 20px) !important;
+    min-height: calc(72px + env(safe-area-inset-top));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .header{
+    top: 0;
+  }
+
+  /* Home já tem premium-topbar própria fixa; mantém o hero com comportamento estável */
+  #screen-home .header{
+    position: relative !important;
+    top: auto !important;
+    z-index: 1;
+    box-shadow: none;
+  }
+
+  #screen-home .premium-topbar{
+    z-index: calc(var(--topbar-z) + 20) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  #screen-home .header{
+    position: sticky;
+    top: 0;
+    z-index: var(--topbar-z);
+  }
+
+  #screen-home .header{
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  }
+}
+
+
+
+/* ===== v75.2 — Agenda: data atual em vermelho acessível =====
+   A classe .actual-today marca o dia real de hoje. A classe .today continua
+   sendo usada para o dia selecionado, sem confundir seleção com data atual. */
+.week-day.actual-today,
+body.dark-theme .week-day.actual-today{
+  background:linear-gradient(135deg,#b42318,#c0192d) !important;
+  border-color:#7f1d1d !important;
+  box-shadow:0 8px 18px rgba(192,25,45,.28) !important;
+}
+.week-day.actual-today .week-day-name,
+.week-day.actual-today .week-day-num,
+body.dark-theme .week-day.actual-today .week-day-name,
+body.dark-theme .week-day.actual-today .week-day-num{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.28) !important;
+}
+.week-day.actual-today.has
+linear-gradient(135deg, var(--green-600), var(--teal-600));
+}
+
+.header::after{
+  pointer-events: none;
+}
+
+body.dark .header,
+body.dark .header-sub{
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+
+@media (max-width: 767px){
+  .header-sub{
+    padding-top: calc(env(safe-area-inset-top) + 20px) !important;
+    min-height: calc(72px + env(safe-area-inset-top));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .header{
+    top: 0;
+  }
+
+  /* Home já tem premium-topbar própria fixa; mantém o hero com comportamento estável */
+  #screen-home .header{
+    position: relative !important;
+    top: auto !important;
+    z-index: 1;
+    box-shadow: none;
+  }
+
+  #screen-home .premium-topbar{
+    z-index: calc(var(--topbar-z) + 20) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  #screen-home .header{
+    position: sticky;
+    top: 0;
+    z-index: var(--topbar-z);
+  }
+
+  #screen-home .header{
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  }
+}
+
+
+
+/* ===== v75.2 — Agenda: data atual em vermelho acessível =====
+   A classe .actual-today marca o dia real de hoje. A classe .today continua
+   sendo usada para o dia selecionado, sem confundir seleção com data atual. */
+.week-day.actual-today,
+body.dark-theme .week-day.actual-today{
+  background:linear-gradient(135deg,#b42318,#c0192d) !important;
+  border-color:#7f1d1d !important;
+  box-shadow:0 8px 18px rgba(192,25,45,.28) !important;
+}
+.week-day.actual-today .week-day-name,
+.week-day.actual-today .week-day-num,
+body.dark-theme .week-day.actual-today .week-day-name,
+body.dark-theme .week-day.actual-today .week-day-num{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.28) !important;
+}
+.week-day.actual-today.has-tasks::after,
+body.dark-theme .week-day.actual-today.has-tasks::after{
+  background:#ffffff !important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35) !important;
+}
+.week-day.actual-today:focus-visible{
+  outline:3px 
+tura da nav para acomodar a bolha */
+  .bottom-nav { height: calc(var(--nav-h) + 10px); align-items: flex-end; }
+}
+
+/* No desktop/sidebar eles voltam a aparecer */
+@media (min-width: 768px) {
+  .nav-brand, .nav-spacer, .nav-footer { display:flex !important; }
+  .nav-footer { display:block !important; }
+  .nav-spacer { flex:1 !important; }
+  .nav-cam-bubble { display: none; }
+  .nav-btn-cam { justify-content: flex-start; }
+}
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+</style>
+
+
+<style id="cuidarbem-v25-premium-redesign">
+/* ═══════════════════════════════════════════════════════════════
+   CuidarBem v26 — refinamento mobile topbar fixa
+   Mantém a operação v24 e altera apenas camada visual/layout.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --green-50:#eef8f4;
+  --green-100:#d9efe6;
+  --green-200:#bfe4d6;
+  --green-400:#25a27d;
+  --green-600:#006b58;
+  --green-700:#005847;
+  --green-800:#013f36;
+  --teal-50:#eaf8f4;
+  --teal-400:#1ea87e;
+  --teal-600:#08705b;
+  --blue-50:#eaf4fb;
+  --blue-400:#2a91c8;
+  --blue-600:#11628f;
+  --amber-50:#fff4df;
+  --amber-400:#e29322;
+  --amber-600:#9c5b00;
+  --coral-50:#fff0ef;
+  --coral-400:#ef4f48;
+  --coral-600:#b12a27;
+  --purple-50:#f1efff;
+  --purple-400:#7b70df;
+  --purple-600:#5344be;
+  --gray-50:#f8faf8;
+  --gray-100:#edf2ef;
+  --gray-200:#dce5e0;
+  --gray-400:#8a9891;
+  --gray-600:#53625c;
+  --gray-800:#17231f;
+  --text:#0c2721;
+  --text-muted:#52645d;
+  --text-light:#82918a;
+  --bg:#edf6f1;
+  --card-bg:rgba(255,255,255,.94);
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 14px 40px rgba(0,63,54,.10),0 2px 10px rgba(0,0,0,.04);
+}
+html{background:linear-gradient(145deg,#f8fcfa 0%,#e9f6f0 52%,#dcedeb 100%)}
+body{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gradient(circle at 115% 82%, rgba(0,107,88,.12), transparent 36%),
+    linear-gradient(180
+r{
+  min-height:246px;
+  padding:18px 20px 34px!important;
+  background:
+    radial-gradient(circle at 22% 10%,rgba(255,255,255,.20),transparent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px rgba(255,255,255,.18);cursor:pointer;}
+.premium-bell{font-size:18px;position:relative}.premium-bell span{position:absolute;right:8px;top:7px;width:8px;height:8px;border-radius:50%;background:#ff4c4c;border:2px solid #006b58;}
+#screen-home .header-greeting{font-size:14px;opacity:.92;margin-bottom:4px;color:rgba(255,255,255,.88)!important;position:relative;z-index:2;}
+#screen-home .header-title{font-size:30px;line-height:1.05;font-weight:900;color:#fff!important;position:relative;z-index:2;letter-spacing:-.03em;}
+#screen-home .header-title::after{content:'Cuidado que conecta, saúde que acompanha.';display:block;font-size:13px;line-height:1.35;font-weight:600;color:rgba(255,255,255,.76);letter-spacing:0;margin-top:6px;max-width:280px;}
+#screen-home .header-date{font-size:12px;color:rgba(255,255,255,.70)!important;position:relative;z-index:2;margin-top:8px;}
+#patient-pill.header-patient,.header-patient{bac
+parent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px rgba(255,255,255,.18);cursor:pointer;}
+.premium-bell{font-size:18px;position:relative}.premium-bell span{position:absolute;right:8px;top:7px;width:8px;height:8px;border-radius:50%;background:#ff4c4c;border:2px solid #006b58;}
+#screen-home .header-greeting{font-size:14px;opacity:.92;margin-bottom:4px;color:rgba(255,255,255,.88)!important;position:relative;z-index:2;}
+#screen-home .header-title{font-size:30px;line-height:1.05;font-weight:900;color:#fff!important;position:relative;z-index:2;letter-spacing:-.03em;}
+#screen-home .header-title::after{content:'Cuidado que conecta, saúde que acompanha.';display:block;font-size:13px;line-height:1.35;font-weight:600;color:rgba(255,255,255,.76);letter-spacing:0;margin-top:6px;max-width:280px;}
+#screen-home .header-date{font-size:12px;color:rgba(255,255,255,.70)!important;position:relative;z-index:2;margin-top:8px;}
+#patient-pill.header-patient,.header-patient{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.18);}
+.vitals-bar{
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px rgba(255,255,255,.18);cursor:pointer;}
+.premium-bell{font-size:18px;position:relative}.premium-bell span{position:absolute;right:8px;top:7px;width:8px;height:8px;border-radius:50%;background:#ff4c4c;border:2px solid #006b58;}
+#screen-home .header-greeting{font-size:14px;opacity:.92;margin-bottom:4px;color:rgba(255,255,255,.88)!important;position:relative;z-index:2;}
+#screen-home .header-title{font-size:30px;line-height:1.05;font-weight:900;color:#fff!important;position:relative;z-index:2;letter-spacing:-.03em;}
+#screen-home .header-title::after{content:'Cuidado que conecta, saúde que acompanha.';display:block;font-size:13px;line-height:1.35;font-weight:600;color:rgba(255,255,255,.76);letter-spacing:0;margin-top:6px;max-width:280px;}
+#screen-home .header-date{font-size:12px;color:rgba(255,255,255,.70)!important;position:relative;z-index:2;margin-top:8px;}
+#patient-pill.header-patient,.header-patient{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.18);}
+.vitals-bar{gap:8px!important;position:relative;z-index:2;order:8;width:100%;}
+.vital-item{border:1px solid rgba(255,255,255,.16);b
+eader::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px rgba(255,255,255,.18);cursor:pointer;}
+.premium-bell{font-size:18px;position:relative}.premium-bell span{position:absolute;right:8px;top:7px;width:8px;height:8px;border-radius:50%;background:#ff4c4c;border:2px solid #006b58;}
+#screen-home .header-greeting{font-size:14px;opacity:.92;margin-bottom:4px;color:rgba(255,255,255,.88)!important;position:relative;z-index:2;}
+#screen-home .header-title{font-size:30px;line-height:1.05;font-weight:900;color:#fff!important;position:relative;z-index:2;letter-spacing:-.03em;}
+#screen-home .header-title::after{content:'Cuidado que conecta, saúde que acompanha.';display:block;font-size:13px;line-height:1.35;font-weight:600;color:rgba(255,255,255,.76);letter-spacing:0;margin-top:6px;max-width:280px;}
+#screen-home .header-date{font-size:12px;color:rgba(255,255,255,.70)!important;position:relative;z-index:2;margin-top:8px;}
+#patient-pill.header-patient,.header-patient{background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px rgba(255,255,255,.18);}
+.vitals-bar{gap:8px!important;position:relative;z-index:2;order:8;width:100%;}
+.vital-item{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.11)!important;border-radius:18px!important;min-width:0;}
+.vital-value{color:#fff}.vital-label{color:rgba(255,255,255,.68);font-size:10px;font-weight:700;}
+#screen-home .content{margin-top:-26px;padding:0 14px calc(var(--nav-h) + 18px)!important;}
+
+
+=== diagnost ===
+-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.reviewSamu()">🆘 Revisar SAMU</button>
+          <button class="cb75-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.printGuide()">🖨️ Guia para família</button>
+          <button class="cb75-safe-btn secondary" type="button" onclick="CB75SafeOnboarding.resetTutorial()">🔁 Reabrir no início</button>
+        </div>
+        <div class="cb75-safe-guides">
+          <details class="cb75-safe-guide" open>
+            <summary>🤝 Finalidade do app</summary>
+            <div class="cb75-safe-guide-body">O CuidarBem organiza, lembra, registra, alerta e prepara a família para conversar melhor com profissionais de saúde. Ele não diagnostica, não prescreve e não substitui atendimento profissional.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🚨 Emergência e sinais de alerta</summary>
+            <div class="cb75-safe-guide-body">Fraqueza de um lado, boca torta, fala alterada, confusão súbita, alteração visual, perda de equilíbrio, queda importante ou piora neurológica nova exigem ação imediata. O app não deve atrasar a procura por socorro.<div class="cb75-safe-note">Na dúvida, priorize a segurança: acione atendimento de emergência e use o Modo SAMU para informar a equipe.</div></div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🆘 Modo SAMU</summary>
+            <div class="cb75-safe-guide-body">Antes do uso real, confira: nome, idade, alergias, medicações, doenças importantes, contato principal, segundo contato, médico/unidade de referência e observações críticas.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🔐 Privacidade familiar</summary>
+            <div class="cb75-safe-guide-body">Dados de saúde são sensíveis. Cadastre apenas com ciência do paciente ou responsável e compartilhe somente com familiares/cuidadores autorizados.</div>
+          </details>
+          <details class="cb75-safe-guide">
+            <summary>🗓️ Primeira semana de uso</summary>
+            <div class="c
+
+=== backdrop-filter ===
+}
+
+    /* type grid 4 cols on desktop */
+    .type-grid { grid-template-columns: repeat(4, 1fr); }
+
+    /* week in calendar: show 14 days */
+    #screen-calendar .content { max-width: 860px; }
+  }
+
+  @media (min-width: 1100px) {
+    :root { --sidebar-w: 240px; }
+    #screen-home .content { padding: 32px 24px 32px 40px; }
+    #screen-home.active { grid-template-columns: 1fr 420px; }
+    .desktop-right-panel { padding: 32px 40px 32px 12px; }
+    #screen-reports .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+
+
+/* CuidarBem v26 — refinamento mobile da tela inicial
+   - Topbar fixa
+   - Sem hamburger no topo
+   - Sem nome duplicado no centro da topbar
+   - Sininho mais baixo e alinhado à direita
+*/
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!import
+ninho mais baixo e alinhado à direita
+*/
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-
+ax-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+eita" para baixo do ícone flutuante */
+  .nav-btn-cam > svg { display: none; }
+
+  /* Aumenta altura da nav para acomodar a bolha */
+  .bottom-nav { height: calc(var(--nav-h) + 10px); align-items: flex-end; }
+}
+
+/* No desktop/sidebar eles voltam a aparecer */
+@media (min-width: 768px) {
+  .nav-brand, .nav-spacer, .nav-footer { display:flex !important; }
+  .nav-footer { display:block !important; }
+  .nav-spacer { flex:1 !important; }
+  .nav-cam-bubble { display: none; }
+  .nav-btn-cam { justify-content: flex-start; }
+}
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+</style>
+
+
+<style id="cuidarbem-v25-premium-redesign">
+/* ═══════════════════════════════════════════════════════════════
+   CuidarBem v26 — refinamento mobile topbar fixa
+   Mantém a operação v24 e altera apenas camada visual/layout.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --green-50:#eef8f4;
+  --green-100:#d9efe6;
+  --green-200:#bfe4d6;
+  --green-400:#25a27d;
+  --green-600:#006b58;
+  --green-700:#005847;
+  --green-800:#013f36;
+  --teal-50:#eaf8f4;
+  --teal-400:#1ea87e;
+  --teal-600:#08705b;
+  --blue-50:#eaf4fb;
+  --blue-400:#2a91c8;
+  --blue-600:#11628f;
+  --amber-50:#fff4df;
+  --amber-400:#e29322;
+  --amber-600:#9c5b00;
+  --coral-50:#fff0ef;
+  --coral-400:#ef4f48;
+  --coral-600:#b12a27;
+  --purple-50:#f1efff;
+  --purple-400:#7b70df;
+  --purple-600:#5344be;
+  --gray-50:#f8faf8;
+  --gray-100:#edf2ef;
+  --gray-200:#dce5e0;
+  --gray-400:#8a9891;
+  --gray-600:#53625c;
+  --gray-800:#17231f;
+  --text:#0c2721;
+  --text-muted:#52645d;
+  --text-light:#82918a;
+  --bg:#edf6f1;
+  --card-bg:rgba(255,255,255,.94);
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 14px 40px rgba(0,63,54,.10),0 2px 10px rgba(0,0,0,.04);
+}
+html{background:linear-gradient(145deg,#f8fcfa 0%,#e9f6f0 52%,#dcedeb 100%)}
+body{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gra
+y{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gradient(circle at 115% 82%, rgba(0,107,88,.12), transparent 36%),
+    linear-gradient(180deg,#f9fcfa 0%,#edf6f1 44%,#e4f1ec 100%) !important;
+  color:var(--text);
+}
+body::before{
+  content:'';position:fixed;inset:auto -20% -10% -20%;height:32vh;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,107,88,.10),rgba(37,162,125,.06));
+  clip-path:ellipse(60% 42% at 50% 100%);
+  pointer-events:none;
+}
+.card,.stat-card,.setting-row,.health-trend-card,.health-ring-card{
+  background:var(--card-bg)!important;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:blur(16px);
+}
+.card{border-radius:22px!important;padding:18px!important;margin-bottom:14px!important;}
+.card-title{font-size:12px!important;letter-spacing:.08em!important;color:var(--green-700)!important;}
+/* Home hero */
+#screen-home .header{
+  min-height:246px;
+  padding:18px 20px 34px!important;
+  background:
+    radial-gradient(circle at 22% 10%,rgba(255,255,255,.20),transparent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-between;width:100%;position:relative;z-index:2;margin-bottom:18px;}
+.premium-topbar-brand{font-family:'Nunito',sans-serif;font-weight:900;color:#fff;letter-spacing:.02em;font-size:17px;}
+.premium-icon-btn{width:42px;height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;font-size:20px;display:flex;align-items:center;justify-cont
+tton[onclick="openSamuMode()"]{transition:.2s}.emerg-card,.samu-contact-block{background:linear-gradient(135deg,#b91524,#e4373f)!important;box-shadow:0 16px 38px rgba(192,25,45,.24)!important;}
+/* Botões */
+.btn-add,.btn-confirm,.btn-visto{border-radius:20px!important;background:linear-gradient(135deg,var(--green-600),var(--green-800))!important;box-shadow:0 16px 34px rgba(0,107,88,.24)!important;padding:16px!important;}
+.btn-secondary{background:#fff!important;color:var(--green-700)!important;box-shadow:none!important;border:1px solid var(--green-100)!important;}
+/* Modal medicação — mais próximo da tela 2 do mockup */
+.confirm-overlay,.med-info-overlay,.appt-confirm-overlay,.modal-overlay{backdrop-filter:blur(10px)}
+.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{border-radius:30px 30px 0 0!important;background:linear-gradient(180deg,#fff 0%,#f8fcfa 100%)!important;box-shadow:0 -22px 60px rgba(0,63,54,.22)!important;}
+.confirm-photo-big,.confirm-photo-placeholder{width:136px!important;height:136px!important;border-radius:34px!important;box-shadow:0 16px 34px rgba(0,63,54,.16)!important;}
+.confirm-name{font-size:24px!important;letter-spacing:-.03em;color:var(--green-800)!important}.confirm-time-badge{background:var(--green-50)!important;color:var(--green-700)!important;border:1px solid var(--green-100);}.confirm-obs{border-radius:18px!important;}
+.med-info-hero{background:linear-gradient(135deg,#005847,#006b58);border-radius:26px;padding:18px;color:white;box-shadow:0 18px 38px rgba(0,86,72,.20);}.med-info-title,.med-info-subtitle{color:white!important}.med-info-subtitle{opacity:.8}.mi-row{border-radius:16px!important;background:#fff!important;}
+/* Perfil / Família e Ajustes */
+#screen-profile .header-sub,#screen-calendar .header-sub,#screen-reports .header-sub,#screen-ocr .header-sub,#screen-dashboard .header-sub,#screen-appt .header-sub{
+  background:linear-gradient(135deg,#004d42,#006b58)!important;border-radius:0 0 28px 28px;box-shadow:0 12px 32px rgba(0,63,54,.20);
+}
+.header-sub-title{font-size:22px!important;font-weight:900!important}.setting-row{border-radius:18
+shadow:0 12px 32px rgba(0,63,54,.20);
+}
+.header-sub-title{font-size:22px!important;font-weight:900!important}.setting-row{border-radius:18px!important;padding:15px!important}.setting-icon{border-radius:15px!important;background:var(--green-50)!important;color:var(--green-700)!important}.setting-label{font-weight:900!important;color:var(--green-800)!important}.setting-desc{font-weight:600!important}.toggle.on{background:linear-gradient(135deg,var(--green-600),var(--teal-400))!important;}
+/* Bottom nav como mockup */
+.bottom-nav{height:76px!important;background:rgba(255,255,255,.92)!important;border-top:1px solid rgba(0,107,88,.08)!important;box-shadow:0 -12px 34px rgba(0,63,54,.12)!important;backdrop-filter:blur(18px);}
+.nav-btn{font-weight:800!important;color:var(--green-800)!important}.nav-btn.active{color:var(--green-600)!important}.nav-btn svg{stroke-width:2.35}.nav-btn-cam .nav-cam-bubble{background:linear-gradient(135deg,#00806a,#004d42)!important;width:62px!important;height:62px!important;box-shadow:0 14px 34px rgba(0,86,72,.34)!important;border-color:#f1faf5!important;}
+/* Listas de consultas/exames geradas inline: dar polimento por descendência */
+#today-tasks-list>div[style*="background:var(--card-bg)"]{border-radius:22px!important;box-shadow:var(--shadow)!important;border:1px solid rgba(255,255,255,.78);}
+/* Desktop/sidebar premium */
+@media (min-width:768px){
+  :root{--sidebar-w:260px;--nav-h:0px!important}
+  body{background:linear-gradient(135deg,#f8fcfa,#e7f5ef)!important;}
+  .bottom-nav{width:260px!important;height:100svh!important;background:rgba(255,255,255,.90)!important;border-right:1px solid rgba(0,107,88,.08)!important;border-top:0!important;box-shadow:12px 0 40px rgba(0,63,54,.08)!important;padding:18px 14px!important;gap:6px;}
+  .bottom-nav::before{display:none!important}.nav-brand{position:relative!important;height:auto!important;background:transparent!important;padding:6px 6px 22px!important;gap:12px!important;border-bottom:1px solid var(--gray-100);margin-bottom:10px;}.nav-brand-icon{width:48px;height:48px;border-radius:16px;overflow:hidden;box-shadow:0 
+}
+  #screen-home .header-title::after{display:none!important;content:none!important;}
+  .mobile-header-subtitle{
+    display:block!important;margin-top:7px;font-size:12.2px;line-height:1.15;font-weight:800;color:rgba(255,255,255,.78);
+    letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  .mobile-bell-btn{
+    display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
+    width:46px;height:46px;border-radius:17px;border:1px solid rgba(255,255,255,.34);
+    background:rgba(255,255,255,.16);color:#fff;font-size:20px;box-shadow:inset 0 1px rgba(255,255,255,.20),0 10px 22px rgba(0,0,0,.14);
+    margin-top:18px;backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-bell-btn span{position:absolute;right:9px;top:8px;width:8px;height:8px;background:#ff4d5f;border:2px solid #fff;border-radius:50%;}
+  #screen-home .vitals-bar{display:none!important;}
+  #screen-home .header-date{
+    position:relative!important;z-index:3!important;display:inline-flex!important;align-items:center;gap:6px;
+    margin-top:12px!important;padding:6px 10px!important;border-radius:999px!important;
+    background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.18)!important;
+    color:rgba(255,255,255,.84)!important;font-size:12px!important;font-weight:800!important;
+  }
+  #screen-home .header-date::before{content:'📅';font-size:12px;}
+  #screen-home .header > div[style*="justify-content:space-between"]{
+    position:relative;z-index:3;margin-top:10px!important;gap:10px!important;
+  }
+  #screen-home .header-patient{
+    min-width:0;max-width:calc(100% - 105px);background:rgba(255,255,255,.16)!important;
+    border:1px solid rgba(255,255,255,.24)!important;border-radius:999px!important;
+    padding:7px 12px!important;box-shadow:inset 0 1px rgba(255,255,255,.18)!important;font-size:12px!important;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #patient-name-pill{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #screen-home .header button[onclick="openSamuMode()"]{
+    flex-shrin
+us:999px!important;padding:8px 13px!important;background:rgba(232,41,63,.92)!important;
+    border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 10px 20px rgba(160,20,38,.22)!important;
+  }
+  .mobile-header-actions{
+    position:relative;z-index:3;display:grid!important;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;
+  }
+  .mobile-header-action{
+    min-height:40px;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.14);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif;font-size:11.2px;font-weight:900;
+    box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.10);backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-header-action.danger{background:rgba(232,41,63,.78);}
+  .voice-kiosk-actions{display:none!important;}
+  #streak-badge,#patient-mode-header-badge{position:relative;z-index:3;}
+}
+@media (min-width:768px){
+  .mobile-topbar-title-row{display:block;}
+}
+</style>
+
+
+
+<style id="cuidarbem-v30-alerts-center">
+/* v31 — Central de Alertas centralizada; Ler resumo fica só para voz */
+.alerts-center-overlay{
+  position:fixed;inset:0;background:rgba(0,31,26,.54);z-index:9800;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  padding:calc(env(safe-area-inset-top) + 16px) 14px calc(env(safe-area-inset-bottom) + 16px);
+  transition:opacity .22s ease;backdrop-filter:blur(6px);
+}
+.alerts-center-overlay.open{opacity:1;pointer-events:auto;}
+.alerts-center-sheet{
+  width:min(100%,460px);background:#fff;border-radius:28px;
+  padding:16px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 22px 60px rgba(0,39,33,.30);transform:translateY(18px) scale(.96);opacity:.98;
+  transition:transform .24s cubic-bezier(.32,.72,0,1), opacity .20s ease;max-height:min(76dvh,620px);overflow-y:auto;
+}
+.alerts-center-overlay.open .alerts-center-sheet{transform:translateY(0) scale(1);opacity:1;}
+.alerts-center-handle{width:42px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 14px;}
+.alerts-center-head{display
+nter;
+  }
+  .mobile-header-action.danger{background:rgba(232,41,63,.78);}
+  .voice-kiosk-actions{display:none!important;}
+  #streak-badge,#patient-mode-header-badge{position:relative;z-index:3;}
+}
+@media (min-width:768px){
+  .mobile-topbar-title-row{display:block;}
+}
+</style>
+
+
+
+<style id="cuidarbem-v30-alerts-center">
+/* v31 — Central de Alertas centralizada; Ler resumo fica só para voz */
+.alerts-center-overlay{
+  position:fixed;inset:0;background:rgba(0,31,26,.54);z-index:9800;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  padding:calc(env(safe-area-inset-top) + 16px) 14px calc(env(safe-area-inset-bottom) + 16px);
+  transition:opacity .22s ease;backdrop-filter:blur(6px);
+}
+.alerts-center-overlay.open{opacity:1;pointer-events:auto;}
+.alerts-center-sheet{
+  width:min(100%,460px);background:#fff;border-radius:28px;
+  padding:16px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 22px 60px rgba(0,39,33,.30);transform:translateY(18px) scale(.96);opacity:.98;
+  transition:transform .24s cubic-bezier(.32,.72,0,1), opacity .20s ease;max-height:min(76dvh,620px);overflow-y:auto;
+}
+.alerts-center-overlay.open .alerts-center-sheet{transform:translateY(0) scale(1);opacity:1;}
+.alerts-center-handle{width:42px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 14px;}
+.alerts-center-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.alerts-center-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:950;color:var(--green-800);line-height:1.1;}
+.alerts-center-sub{font-size:12.5px;font-weight:700;color:var(--text-light);margin-top:3px;}
+.alerts-center-close{width:38px;height:38px;border-radius:14px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:18px;cursor:pointer;}
+.alerts-center-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px;}
+.alerts-center-stat{border-radius:16px;padding:10px 8px;text-align:center;border:1px solid var(--gray-100);background:var(--gray-50);}
+.alerts-center-stat strong{display:bloc
+(--coral-50);color:var(--coral-600);
+  border-radius:9px;width:28px;height:28px;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(216,90,48,.10);
+}
+.task-delete-btn:active{transform:scale(.94);background:#ffe1d8;}
+.appt-delete-btn{margin-top:8px;}
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;padding:14px 16p
+le .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!important;
+    line-height:1.25!important;
+    opacity:.82!important;
+  }
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content{
+    padding-top:124px!important;
+  }
+  #screen-calendar,
+  #screen-reports,
+  #screen-profile,
+  #screen-ocr,
+  #screen-dashboard,
+  #screen-appt{
+    scroll-padding-top:124px!important;
+  }
+}
+</style>
+
+
+<style id="cuidarbem-v43-saude-cards-ajuste-fino">
+/* v43 — ajuste fino: sobe um pouco os 3 cards iniciais da guia Saúde */
+@media (max-width:767px){
+  #s
+
+=== will-change ===
+t estável, não muda com barra do browser */
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);
+    width: 100%; max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: stretch;
+    height: var(--nav-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* will-change omitido: criaria containing block para position:fixed filhos no desktop */
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 600; padding: 8px 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--green-600); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-dot {
+    position: absolute; top: 6px; right: calc(50% - 14px);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-400); border: 2px solid white;
+    display: none;
+  }
+  .nav-dot.show { display: block; }
+
+  /* SCREENS */
+  .screen {
+    display: none; /* fora do render tree = sem flash de scroll */
+    padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100svh;
+  }
+  .screen.active {
+    display: block;
+    pointer-events: auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green-600);
+    color: white;
+    padding: 48px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -30px; left: -20px; right: -20px;
+    height: 60px;
+    background: var(--bg);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header-sub {
+    background: var(--green-600);
+    color: wh
+ = task.prep || '';
+    }
+    task.updatedAt = Date.now();
+    saveTasks();
+    closeGenericTaskEditor();
+    renderAll();
+    buildWeekStrip();
+    if (typeof scheduleAlarmsOnSW === 'function') scheduleAlarmsOnSW();
+    if (typeof window.cbSupabaseQueuePush === 'function') window.cbSupabaseQueuePush('edit-task');
+    showToast('✅ Rotina atualizada.');
+  };
+})();
+</script>
+
+
+
+<!-- v48 — correção: editor de medicamento estável, sem tremor/pisca no mobile -->
+<style id="cuidarbem-v48-edit-med-stable">
+  .edit-med-overlay{backdrop-filter:blur(8px);overscroll-behavior:contain;}
+  .edit-med-overlay.open{animation:none!important;}
+  .edit-med-card{transform:none!important;animation:none!important;will-change:auto!important;}
+  body.cb-edit-med-open{overflow:hidden!important;touch-action:none;}
+  body.cb-edit-med-open .med-info-overlay{opacity:0!important;pointer-events:none!important;}
+</style>
+<script id="cuidarbem-v48-edit-med-stable-js">
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function getCurrentMedTask(){
+    const list = (typeof tasks !== 'undefined' ? tasks : []);
+    return list.find(t => t.id === window.currentMedInfoTaskId || t.id === currentMedInfoTaskId);
+  }
+  window.editCurrentMedFromInfo = function(){
+    const task = getCurrentMedTask();
+    if (!task) { showToast('Não encontrei este medicamento para editar.'); return; }
+
+    // Fecha visualmente a janela de detalhes antes de abrir o editor.
+    // Isso evita duas camadas/modais animando ao mesmo tempo no mobile.
+    const info = byId('med-info-overlay');
+    if (info) info.classList.remove('open');
+
+    byId('edit-med-name').value = task.name || '';
+    byId('edit-med-dose').value = task.dose || '';
+    byId('edit-med-time').value = task.time || '';
+    byId('edit-med-date').value = task.date || todayStr();
+    byId('edit-med-repeat').value = task.repeat || 'daily';
+    byId('edit-med-obs').value = task.obs || '';
+    byId('edit-med-rx').value = task.prescriptionExpiry || '';
+    byId('edit-med-pickup').value = task.nextPickup || '';
+
+    document.body.classList.add('cb-edit-med-op
+e-bell-btn,
+.mobile-header-action,
+.vital-item,
+#screen-home .header > div[style*="justify-content:space-between"] > *,
+.nav-btn,
+.nav-brand,
+.nav-brand-icon{
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Topbars: premium estável, sem contain/translateZ que cortava trechos em relatórios */
+.header,
+.header-sub,
+#screen-home .header,
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  isolation: auto !important;
+  will-change: auto !important;
+  background: linear-gradient(135deg,#005647 0%,#006b58 58%,#0b8068 100%) !important;
+  box-shadow: 0 10px 26px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.13) !important;
+}
+
+/* HOME mobile permanece fixa; desktop fica sticky normal */
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    transform: translateX(-50%) !important;
+    -webkit-transform: translateX(-50%) !important;
+    z-index: var(--cb-chrome-z) !important;
+    /* Removido backface-visibility: avoids GPU flicker on iOS/Android */
+  }
+  #screen-home .content{
+    padding-top: 258px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 0 -10px 28px rgba(0,63,54,.12) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: var(--cb-chrome-z) !important;
+    min-height: 184px !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 12px 0 34px rgba(0,63,54,.08) !important;
+  }
+
+  .s
+.header-sub::after,
+.screen:not(#screen-home) .header::before,
+.screen:not(#screen-home) .header::after{
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Relatórios: impedir sumiço/corte de cards e gráficos */
+#screen-reports,
+#screen-reports.active,
+#screen-reports .content,
+#screen-reports .stats-grid,
+#screen-reports .card,
+#screen-reports .stat-card,
+#screen-reports .cb-analytics-card,
+#screen-reports .cb-chart-wrap,
+#screen-reports .report-card,
+#screen-reports .analytics-card{
+  overflow: visible !important;
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+}
+
+#screen-reports canvas,
+#screen-reports svg{
+  display: block !important;
+  max-width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#screen-reports .content{
+  padding-top: 20px !important;
+  padding-bottom: calc(var(--nav-h) + 28px) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Sidebar/menu: sempre acima do conteúdo, mas abaixo de modais */
+.bottom-nav,
+.bottom-nav *{
+  pointer-events: auto !important;
+}
+
+/* Removido backface-visibility de elementos não animados — causava piscar no iOS/Android */
+/* .screen, .content, .card, .task-item, .appt-card, .setting-row: sem backface-visibility */
+
+/* Modais, alertas e SAMU continuam no topo */
+.modal-overlay,
+.confirm-overlay,
+.appt-confirm-overlay,
+.med-info-overlay,
+.photo-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.samu-overlay{
+  z-index: var(--cb-modal-z) !important;
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  .screen:not(#screen-home) .header{
+    min-height: var(--cb-safe-topbar-desktop) !important;
+    height: var(--cb-safe-topbar-desktop) !important;
+    padding: 0 36px !important;
+    display: fl
+rio
+          + scrollTo síncrono + stacking context no header fixo
+========================================================= */
+
+/* Guia Saúde: reduz espaço excessivo entre topbar e primeiro card */
+@media (max-width: 767px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 12px !important;
+  }
+}
+
+/* Impede flash branco de telas ocultas no Safari/Chrome mobile */
+.screen:not(.active) {
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  /* NÃO usa display:none para evitar layout thrash ao trocar guia */
+}
+
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */
+.bottom-nav {
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+}
+
+/* Transição suave e curta ao trocar de guia — sem flash */
+.screen.active {
+  animation: cbScreenIn 0.14s ease both !important;
+}
+@keyframes cbScreenIn {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* Evita que o header fixo da Início crie stacking context extra */
+#screen-home .header {
+  isolation: auto !important;
+}
+
+
+body.dark,
+body.dark-theme{
+  background: var(--bg) !important;
+}
+body.dark .bottom-nav,
+body.dark-theme .bottom-nav{
+  background: rgba(26,32,25,.98) !important;
+}
+</style>
+
+<script id="cuidarbem-v70-stability-script">
+(function(){
+  'use strict';
+  const rerender = () => {
+    try{
+      if (typeof renderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(renderReports, 80);
+      }
+      if (typeof rerenderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(rerenderReports, 120);
+      }
+    }catch(e){ console.warn('[CuidarBem v70] estabilidade visual:', e); }
+  };
+  window.addEventListener('resize', rerender, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(rerender, 220), { passive:true });
+============================================== */
+
+/* Guia Saúde: reduz espaço excessivo entre topbar e primeiro card */
+@media (max-width: 767px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 12px !important;
+  }
+}
+
+/* Impede flash branco de telas ocultas no Safari/Chrome mobile */
+.screen:not(.active) {
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  /* NÃO usa display:none para evitar layout thrash ao trocar guia */
+}
+
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */
+.bottom-nav {
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+}
+
+/* Transição suave e curta ao trocar de guia — sem flash */
+.screen.active {
+  animation: cbScreenIn 0.14s ease both !important;
+}
+@keyframes cbScreenIn {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* Evita que o header fixo da Início crie stacking context extra */
+#screen-home .header {
+  isolation: auto !important;
+}
+
+
+body.dark,
+body.dark-theme{
+  background: var(--bg) !important;
+}
+body.dark .bottom-nav,
+body.dark-theme .bottom-nav{
+  background: rgba(26,32,25,.98) !important;
+}
+</style>
+
+<script id="cuidarbem-v70-stability-script">
+(function(){
+  'use strict';
+  const rerender = () => {
+    try{
+      if (typeof renderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(renderReports, 80);
+      }
+      if (typeof rerenderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(rerenderReports, 120);
+      }
+    }catch(e){ console.warn('[CuidarBem v70] estabilidade visual:', e); }
+  };
+  window.addEventListener('resize', rerender, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(rerender, 220), { passive:true });
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) s
+ de confirmação
+   - substitui o confirm() nativo por diálogo visual do próprio app
+========================================================= */
+#confirm-modal.confirm-overlay{
+  background:rgba(4,18,15,.72)!important;
+  backdrop-filter:blur(10px)!important;
+  -webkit-backdrop-filter:blur(10px)!important;
+  transition:opacity .18s ease!important;
+  contain:layout paint style;
+  overscroll-behavior:contain;
+}
+#confirm-modal .confirm-sheet{
+  background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(246,251,249,.98) 100%)!important;
+  overflow:hidden;
+  isolation:isolate;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform:translate3d(0,100%,0)!important;
+  will-change:transform, opacity;
+  contain:paint;
+}
+#confirm-modal.open .confirm-sheet{
+  transform:translate3d(0,0,0)!important;
+}
+#confirm-modal *,
+.cb75-risk-overlay *,
+.med-check-btn,
+.btn-confirm,
+.btn-confirm-cancel{
+  -webkit-tap-highlight-color:transparent!important;
+}
+#confirm-modal .med-checklist{
+  background:rgba(236,247,243,.78)!important;
+  border-color:rgba(26,107,92,.20)!important;
+}
+#confirm-modal .med-check-item{
+  border-bottom-color:rgba(26,107,92,.14)!important;
+}
+#confirm-modal .med-check-btn{
+  background:rgba(255,255,255,.82)!important;
+  color:var(--text)!important;
+  border-color:rgba(26,107,92,.18)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.62), 0 3px 10px rgba(0,60,50,.08)!important;
+  transition:transform .12s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease!important;
+}
+#confirm-modal .med-check-btn:focus-visible{
+  outline:3px solid rgba(29,158,117,.35)!important;
+  outline-offset:2px;
+}
+#confirm-modal .med-check-btn.yes{
+  background:#dff6ef!important;
+  border-color:#15906f!important;
+  box-shadow:0 0 0 3px rgba(29,158,117,.16)!important;
+}
+#confirm-modal .med-check-btn.no{
+  background:#fde9e5!important;
+  border-color:#d85a30!important;
+  box-shadow:0 0 0 3px rgba(216,90,48,.14)!important;
+}
+#confirm-modal .btn-confirm,
+#confirm-modal .btn-confirm-cancel{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  -
+teY.
+ */
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior aparecendo brevemente ao trocar guias.
+ */
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico
+     Remove backdrop-filter, animações de layout e will-change
+     que causavam flashes e falhas no mobile
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-ove
+════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !import
+ce nos containers filhos; body hidden mata o scrollbar nativo. */
+  html, body {
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+</style>
+
+<!-- Botão de diagnóstico (informacional — efeitos agora são permanentemente removidos) -->
+<div id="cb-diag-btn" onclick="document.getElementById('cb-diag-panel').classList.toggle('open')">
+  <span class="cb-diag-dot"></span>
+  <span>DIAG</span>
+</div>
+
+<div id="cb-diag-panel">
+  <h4>✅ Efeitos Removidos</h4>
+  <div class="cb-drow"><span>backdrop-filter</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>animation (layout)</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>will-change</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>isolation:isolate</span><span class="cb-dval ok">REMOVIDO</span></div>
+  <div class="cb-drow"><span>glass/blur backgrounds</span><span class="cb-dval ok">OPACOS</span></div>
+  <div class="cb-drow"><span>transitions de botões</span><span class="cb-dval ok">MANTIDAS</span></div>
+  <div style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6">
+    Diagnóstico confirmou: efeitos GPU causavam os flashes.<br>
+    Remoção permanente aplicada.
+  </div>
+  <button onclick="this.closest('#cb-diag-panel').classList.remove('open')">Fechar</button>
+</div>
+
+<script id="cb-wheel-router">
+/* Desktop: rota wheel para o container scrollável sob o cursor.
+   Home screen: grid com overflow:hidden — detecta painel por posição X do cursor. */
+(function(){
+  if (typeof window === 'undefined') return;
+
+  function getScrollParent(el) {
+    while (el && el !== document.documentElement) {
+      var st = window.getComputedStyle(el);
+      var oy = st.overflowY;
+      if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  document.addEventListener('wheel', function(e) {
+    if (window.innerWidth < 768) return;
+
+    // Tela Início: grid com overflow:hidden — getScrollParent falha.
+    // Roteia pelo painel 
+
+=== translateZ ===
+    --nav-h: 72px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html {
+    overscroll-behavior: none;
+    background: var(--bg);
+  }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100svh; /* svh = viewport estável, não muda com barra do browser */
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);
+    width: 100%; max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: stretch;
+    height: var(--nav-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* will-change omitido: criaria containing block para position:fixed filhos no desktop */
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 600; padding: 8px 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--green-600); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-dot {
+    position: absolute; top: 6px; right: calc(50% - 14px);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-400); border: 2px solid white;
+    display: none;
+  }
+  .nav-dot.show { display: block; }
+
+  /* SCREENS */
+  .screen {
+    display: none; /* fora do render tree = sem flash de scroll */
+    padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100svh;
+  }
+  .screen.active {
+    display: block;
+    pointer-events: auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green-600);
+    color: white;
+  
+=======================================
+   CuidarBem v64 — TOPBAR TRAVADA
+   Objetivo: manter a topbar fixa/visível durante a rolagem,
+   sem faixa branca e sem cobrir cards/gráficos.
+========================================================= */
+:root{
+  --cb-topbar-h-mobile: 88px;
+  --cb-topbar-h-desktop: 72px;
+  --cb-topbar-z-locked: 520;
+}
+
+/* Regra global das guias internas */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-topbar-z-locked) !important;
+  isolation: isolate !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;
+  box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;
+  overflow: hidden !important;
+  contain: paint !important;
+}
+
+/* Relatórios: trava reforçada e altura estável */
+#screen-reports .header-sub{
+  min-height: var(--cb-topbar-h-mobile) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: calc(env(safe-area-inset-top) + 18px) 18px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,.18) !important;
+}
+
+/* Mata qualquer pseudo-camada que possa virar sombra/faixa branca */
+#screen-reports .header-sub::before,
+#screen-reports .header-sub::after,
+#screen-calendar .header-sub::before,
+#screen-calendar .header-sub::after,
+#screen-profile .header-sub::before,
+#screen-profile .header-sub::after,
+#screen-ocr .header-sub::before,
+#screen-ocr .header-sub::after,
+#screen-dashboard .header-sub::before,
+#screen-dashboard .header-sub::after,
+#screen-appt .header-sub::before,
+#screen-appt .header-sub::after{
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+/* Conteúdo dos Relatórios fica abaixo da topbar, sem sobreposição */
+#screen-reports .content{
+  pa
+arBem v64 — TOPBAR TRAVADA
+   Objetivo: manter a topbar fixa/visível durante a rolagem,
+   sem faixa branca e sem cobrir cards/gráficos.
+========================================================= */
+:root{
+  --cb-topbar-h-mobile: 88px;
+  --cb-topbar-h-desktop: 72px;
+  --cb-topbar-z-locked: 520;
+}
+
+/* Regra global das guias internas */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-topbar-z-locked) !important;
+  isolation: isolate !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;
+  box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;
+  overflow: hidden !important;
+  contain: paint !important;
+}
+
+/* Relatórios: trava reforçada e altura estável */
+#screen-reports .header-sub{
+  min-height: var(--cb-topbar-h-mobile) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: calc(env(safe-area-inset-top) + 18px) 18px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,.18) !important;
+}
+
+/* Mata qualquer pseudo-camada que possa virar sombra/faixa branca */
+#screen-reports .header-sub::before,
+#screen-reports .header-sub::after,
+#screen-calendar .header-sub::before,
+#screen-calendar .header-sub::after,
+#screen-profile .header-sub::before,
+#screen-profile .header-sub::after,
+#screen-ocr .header-sub::before,
+#screen-ocr .header-sub::after,
+#screen-dashboard .header-sub::before,
+#screen-dashboard .header-sub::after,
+#screen-appt .header-sub::before,
+#screen-appt .header-sub::after{
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+/* Conteúdo dos Relatórios fica abaixo da topbar, sem sobreposição */
+#screen-reports .content{
+  padding-top: 18px !important;
+  scroll-margin-top
+ar-z: 760;
+  --cb-modal-z: 9800;
+  --cb-safe-topbar-mobile: 92px;
+  --cb-safe-topbar-desktop: 78px;
+}
+
+html,
+body{
+  overflow-x: hidden !important;
+  background: var(--bg) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Evita “flash branco” em PWA instalado causado por repaint de blur/fixed/sticky */
+.header,
+.header-sub,
+.bottom-nav,
+.mobile-bell-btn,
+.mobile-header-action,
+.vital-item,
+#screen-home .header > div[style*="justify-content:space-between"] > *,
+.nav-btn,
+.nav-brand,
+.nav-brand-icon{
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Topbars: premium estável, sem contain/translateZ que cortava trechos em relatórios */
+.header,
+.header-sub,
+#screen-home .header,
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  isolation: auto !important;
+  will-change: auto !important;
+  background: linear-gradient(135deg,#005647 0%,#006b58 58%,#0b8068 100%) !important;
+  box-shadow: 0 10px 26px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.13) !important;
+}
+
+/* HOME mobile permanece fixa; desktop fica sticky normal */
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    transform: translateX(-50%) !important;
+    -webkit-transform: translateX(-50%) !important;
+    z-index: var(--cb-chrome-z) !important;
+    /* Removido backface-visibility: avoids GPU flicker on iOS/Android */
+  }
+  #screen-home .content{
+    padding-top: 258px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 0 -10px 28px rgba(0,63,54,.12) !important;
+  }
+}
+
+@media (m
+ 1px rgba(255,255,255,.62), 0 3px 10px rgba(0,60,50,.08)!important;
+  transition:transform .12s ease, background-color .12s ease, border-color .12s ease, box-shadow .12s ease!important;
+}
+#confirm-modal .med-check-btn:focus-visible{
+  outline:3px solid rgba(29,158,117,.35)!important;
+  outline-offset:2px;
+}
+#confirm-modal .med-check-btn.yes{
+  background:#dff6ef!important;
+  border-color:#15906f!important;
+  box-shadow:0 0 0 3px rgba(29,158,117,.16)!important;
+}
+#confirm-modal .med-check-btn.no{
+  background:#fde9e5!important;
+  border-color:#d85a30!important;
+  box-shadow:0 0 0 3px rgba(216,90,48,.14)!important;
+}
+#confirm-modal .btn-confirm,
+#confirm-modal .btn-confirm-cancel{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+body.dark #confirm-modal .confirm-sheet,
+body.dark-theme #confirm-modal .confirm-sheet{
+  background:linear-gradient(180deg,#1d271f 0%, #141d17 100%)!important;
+  border-color:rgba(143,207,188,.18)!important;
+}
+body.dark #confirm-modal .med-checklist,
+body.dark-theme #confirm-modal .med-checklist{
+  background:rgba(11,30,24,.86)!important;
+  border-color:rgba(143,207,188,.22)!important;
+}
+body.dark #confirm-modal .med-check-item,
+body.dark-theme #confirm-modal .med-check-item{
+  border-bottom-color:rgba(143,207,188,.14)!important;
+}
+body.dark #confirm-modal .med-check-btn,
+body.dark-theme #confirm-modal .med-check-btn{
+  background:#223026!important;
+  color:#f5fff9!important;
+  border-color:rgba(195,230,218,.22)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.05), 0 3px 12px rgba(0,0,0,.24)!important;
+}
+body.dark #confirm-modal .med-check-btn.yes,
+body.dark-theme #confirm-modal .med-check-btn.yes{
+  background:#123f32!important;
+  border-color:#4ad3aa!important;
+}
+body.dark #confirm-modal .med-check-btn.no,
+body.dark-theme #confirm-modal .med-check-btn.no{
+  background:#421b16!important;
+  border-color:#f08a67!important;
+}
+.cb75-risk-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10050;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(4,18,15,.74);
+
+=== position: fixed ===
+
+    --radius-sm: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --nav-h: 72px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html {
+    overscroll-behavior: none;
+    background: var(--bg);
+  }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100svh; /* svh = viewport estável, não muda com barra do browser */
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);
+    width: 100%; max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: stretch;
+    height: var(--nav-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* will-change omitido: criaria containing block para position:fixed filhos no desktop */
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 600; padding: 8px 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--green-600); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-dot {
+    position: absolute; top: 6px; right: calc(50% - 14px);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-400); border: 2px solid white;
+    display: none;
+  }
+  .nav-dot.show { display: block; }
+
+  /* SCREENS */
+  .screen {
+    display: none; /* fora do render tree = sem flash de scroll */
+    padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100svh;
+  }
+  .screen.active {
+    display: block;
+    pointer-events: auto;
+  }
+
+  /* HEADER */
+  .h
+*/
+  .btn-add {
+    width: 100%;
+    background: var(--green-600);
+    color: white;
+    border: none; border-radius: var(--radius-sm);
+    padding: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 8px;
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 12px;
+  }
+  .btn-add:active { transform: scale(0.98); background: var(--green-800); }
+  .btn-secondary {
+    background: var(--gray-50); color: var(--text-muted);
+    border: 1.5px solid var(--gray-200);
+  }
+  .btn-secondary:active { background: var(--gray-100); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 200; display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 40px;
+    width: 100%; max-width: 480px; margin: 0 auto;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(.32,.72,0,1);
+    max-height: 90dvh; overflow-y: auto;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-handle {
+    width: 40px; height: 4px; background: var(--gray-200);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .modal-title { font-size: 18px; font-weight: 800; margin-bottom: 20px; color: var(--green-800); }
+
+  /* FORM */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block; font-size: 12px; font-weight: 700;
+    color: var(--text-muted); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .form-input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 15px; color: var(--text);
+    background: white; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--green-400); }
+  .form-select { appea
+color: var(--green-600); }
+
+  /* ── Scrollable ── */
+  .scroll-x { overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .scroll-x::-webkit-scrollbar { display: none; }
+
+  /* Desktop right panel hidden on mobile */
+  .desktop-right-panel { display: none; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 17px; font-weight: 800; color: var(--text); }
+  .section-action {
+    font-size: 13px; font-weight: 700; color: var(--green-600);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gray-800); color: white;
+    padding: 12px 20px; border-radius: 20px;
+    font-size: 14px; font-weight: 600;
+    opacity: 0; transition: all 0.3s;
+    z-index: 300; white-space: nowrap;
+    max-width: calc(100% - 40px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* SETTINGS PAGE */
+
+  /* ── EMERGENCY PROFILE CARD ───────────────────────────────────────────── */
+  .emerg-card {
+    background: linear-gradient(135deg, #7b1f1f, #a32d2d);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    margin-bottom: 12px;
+    color: white;
+    box-shadow: 0 4px 20px rgba(163,45,45,0.3);
+  }
+  .emerg-card-title {
+    font-size: 13px; font-weight: 800; opacity: 0.85;
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .emerg-contact-row {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .emerg-contact-info { flex: 1; min-width: 0; }
+  .emerg-contact-name { font-size: 17px; font-weight: 800; line-height: 1.2; }
+  .emerg-contact-rel  { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .emerg-contact-phone { font-size: 14px; font-weight: 700; margin-top: 4px; opacity: 0.9; }
+  .btn-call {
+    background: rgba(255,255,255,0.2);
+    border: 2px sol
+btn:active { background: var(--blue-100); }
+  .result-add-label { font-size: 10px; font-weight: 800; color: var(--blue-600); }
+
+  /* Result status badge on task/exam cards */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px; border-radius: 7px;
+    font-size: 11px; font-weight: 700;
+    margin-top: 3px; margin-right: 4px; cursor: pointer;
+  }
+  .result-badge.pending  { background: var(--amber-50); color: var(--amber-600); }
+  .result-badge.has      { background: var(--blue-50);  color: var(--blue-600); }
+  .result-badge.overdue  { background: var(--coral-50); color: var(--coral-600); }
+
+  /* Result viewer modal */
+  .result-viewer-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    z-index: 700; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    padding: 20px;
+  }
+  .result-viewer-overlay.open { opacity: 1; pointer-events: all; }
+  .result-viewer-img {
+    max-width: 100%; max-height: 72dvh; border-radius: 12px;
+    object-fit: contain; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .result-viewer-bar {
+    display: flex; align-items: center; gap: 16px;
+    margin-top: 16px; width: 100%; justify-content: center;
+  }
+  .result-viewer-btn {
+    background: rgba(255,255,255,0.15); border: none; border-radius: 10px;
+    color: white; font-size: 13px; font-weight: 700; padding: 10px 18px;
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+  }
+  .result-viewer-btn:active { background: rgba(255,255,255,0.3); }
+  .result-viewer-counter {
+    color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 700;
+    min-width: 60px; text-align: center;
+  }
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--card-bg); border-radius: var(--radius-sm);
+    margin-bottom: 8px; box-shadow: var(--shadow);
+    cursor: pointer;
+  }
+  .setting-row-left { display: flex; align-items: center; gap: 12px; }
+  .setting-icon {
+    width: 38px; height:
+olor: var(--coral-400); }
+
+  /* when a ❌ is selected, dim the confirm button */
+  .btn-confirm.blocked {
+    background: var(--gray-200); color: var(--gray-400); cursor: not-allowed;
+  }
+  .btn-confirm.blocked:active { transform: none; background: var(--gray-200); }
+
+  .med-checklist-alert {
+    display: none;
+    background: var(--coral-50); border-left: 4px solid var(--coral-400);
+    border-radius: 0 10px 10px 0; padding: 10px 12px;
+    font-size: 13px; color: var(--coral-600); font-weight: 700;
+    line-height: 1.5; margin-top: 10px;
+  }
+  .med-checklist-alert.show { display: block; }
+
+  /* ── MED INFO BOTTOM SHEET ─────────────────────────────────────────── */
+  .med-info-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+    z-index: 450; display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .med-info-overlay.open { opacity: 1; pointer-events: all; }
+  .med-info-inner {
+    background: var(--white); border-radius: 28px 28px 0 0;
+    padding: 24px 20px 48px; width: 100%; max-width: 480px; margin: 0 auto;
+    transform: translateY(100%); transition: transform 0.35s cubic-bezier(.32,.72,0,1);
+    max-height: 92dvh; overflow-y: auto;
+  }
+  .med-info-overlay.open .med-info-inner { transform: translateY(0); }
+
+  .med-info-hero {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+  }
+  .med-info-img {
+    width: 72px; height: 72px; border-radius: 16px; object-fit: cover;
+    border: 2px solid var(--green-100); flex-shrink: 0;
+  }
+  .med-info-ph {
+    width: 72px; height: 72px; border-radius: 16px;
+    background: var(--green-50); border: 2px dashed var(--green-200);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; flex-shrink: 0;
+  }
+  .med-info-title { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1.2; }
+  .med-info-subtitle { font-size: 13px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+
+  .mi-section { margin-bottom: 16px; }
+  .mi-section-title {
+    font-size: 11px; font-weight: 800; color: var(--text-ligh
+to-modal-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);
+    z-index:600;display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity 0.2s;
+    padding:20px;
+  }
+  .photo-modal-overlay.open { opacity:1;pointer-events:all; }
+  .photo-modal {
+    background:var(--white);border-radius:24px;padding:24px;
+    width:100%;max-width:380px;
+    transform:scale(0.92);transition:transform 0.2s;
+  }
+  .photo-modal-overlay.open .photo-modal { transform:scale(1); }
+
+  /* ══════════════════════════════════════════════════════
+     MODO SAMU — tela de emergência
+  ══════════════════════════════════════════════════════ */
+  .samu-overlay {
+    position: fixed;
+    top: 0; bottom: 0; right: 0; left: 0;
+    z-index: 9000;
+    background: #fff;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    overflow-y: auto;
+    max-width: 480px;
+  }
+  .samu-overlay.open { opacity: 1; pointer-events: all; }
+  @media (min-width: 768px) {
+    .samu-overlay { left: 260px; max-width: none; }
+  }
+  @media (min-width: 1200px) {
+    .samu-overlay { left: 272px; }
+  }
+
+  .samu-header {
+    background: #c0192d;
+    padding: 20px 20px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 1;
+    box-shadow: 0 2px 12px rgba(192,25,45,0.4);
+  }
+  .samu-header-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px; font-weight: 900;
+    color: white; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .samu-close-btn {
+    background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 10px; color: white; font-size: 13px; font-weight: 800;
+    padding: 8px 14px; cursor: pointer; font-family: 'Nunito', sans-serif;
+    transition: background 0.15s;
+  }
+  .samu-close-btn:active { background: rgba(255,255,255,0.4); }
+
+  .samu-body { padding: 16px; flex: 1; }
+
+  /* Patient identity block */
+  .samu-patient-block {
+    background: #f8f8f8;
+    border-radius: 14px; padding:
+stress .alert-card { display: none; }
+  body.low-stress .section-header { margin-bottom: 6px; }
+  body.low-stress .task-item { padding: 14px 0; }
+  body.low-stress .stats-grid { display: none; }
+  body.low-stress .next-alarm { background: var(--green-600); }
+  body.low-stress .week-strip { gap: 4px; }
+  body.low-stress .chip-filter { display: none; }
+  body.low-stress .week-day { background: var(--gray-50); }
+  body.low-stress .task-name { font-size: 16px; line-height: 1.5; }
+  body.low-stress .nav-btn { font-size: 10px; }
+  body.low-stress .section-title { font-size: 16px; }
+  body.low-stress .progress-ring-wrap { gap: 12px; }
+
+  /* ═══ ACCESSIBILITY CONTROLS PANEL ═══ */
+  .a11y-fab {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); right: 16px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green-600); color: white;
+    border: none; cursor: pointer; z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .a11y-fab:active { transform: scale(0.92); }
+  .a11y-panel {
+    position: fixed; bottom: calc(var(--nav-h) + 72px); right: 16px;
+    background: var(--card-bg); border-radius: 20px;
+    padding: 16px; z-index: 150;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 240px;
+    transform: scale(0.85) translateY(20px); transform-origin: bottom right;
+    opacity: 0; pointer-events: none;
+    transition: all 0.2s cubic-bezier(.32,.72,0,1);
+  }
+  .a11y-panel.open { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
+  .a11y-panel-title { font-size: 12px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .a11y-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .a11y-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .a11y-label small { display: block; font-size: 11px; color: var(--text-light); font-weight: 500; }
+  .font-seg {
+    display: fl
+ line-height: 1.5; }
+  body.low-stress .nav-btn { font-size: 10px; }
+  body.low-stress .section-title { font-size: 16px; }
+  body.low-stress .progress-ring-wrap { gap: 12px; }
+
+  /* ═══ ACCESSIBILITY CONTROLS PANEL ═══ */
+  .a11y-fab {
+    position: fixed; bottom: calc(var(--nav-h) + 16px); right: 16px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--green-600); color: white;
+    border: none; cursor: pointer; z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transition: transform 0.2s, background 0.2s;
+  }
+  .a11y-fab:active { transform: scale(0.92); }
+  .a11y-panel {
+    position: fixed; bottom: calc(var(--nav-h) + 72px); right: 16px;
+    background: var(--card-bg); border-radius: 20px;
+    padding: 16px; z-index: 150;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 240px;
+    transform: scale(0.85) translateY(20px); transform-origin: bottom right;
+    opacity: 0; pointer-events: none;
+    transition: all 0.2s cubic-bezier(.32,.72,0,1);
+  }
+  .a11y-panel.open { opacity: 1; pointer-events: all; transform: scale(1) translateY(0); }
+  .a11y-panel-title { font-size: 12px; font-weight: 800; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+  .a11y-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+  .a11y-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .a11y-label small { display: block; font-size: 11px; color: var(--text-light); font-weight: 500; }
+  .font-seg {
+    display: flex; border-radius: 10px; overflow: hidden;
+    border: 1.5px solid var(--gray-200); background: var(--gray-50);
+  }
+  .font-seg button {
+    flex: 1; padding: 6px 10px; border: none; background: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    color: var(--text-muted); font-size: 12px; transition: all 0.15s;
+  }
+  .font-seg button.active { background: var(--green-600); color: white; }
+
+  /* ═══ DASHBOARD APPLE HEALTH STYL
+2,.72,0,1); }
+  .health-trend-right { text-align: right; flex-shrink: 0; }
+  .health-trend-pct { font-size: 22px; font-weight: 900; }
+  .health-trend-change {
+    font-size: 11px; font-weight: 700; padding: 2px 6px;
+    border-radius: 6px; margin-top: 2px; display: inline-block;
+  }
+  .health-trend-change.up { background: var(--teal-50); color: var(--teal-600); }
+  .health-trend-change.down { background: var(--coral-50); color: var(--coral-600); }
+  .health-trend-change.neutral { background: var(--gray-100); color: var(--text-light); }
+
+  .mini-chart { height: 36px; display: flex; align-items: flex-end; gap: 4px; margin-top: 10px; }
+  /* ═══ PWA INSTALL BANNER ═══ */
+  .install-banner {
+    position: fixed; bottom: calc(var(--nav-h) + 12px); left: 12px; right: 12px;
+    background: var(--green-800); color: white;
+    border-radius: 18px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    z-index: 400; box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+    transform: translateY(120%); opacity: 0;
+    transition: all 0.4s cubic-bezier(.32,.72,0,1);
+    max-width: 448px; margin: 0 auto;
+  }
+  .install-banner.show { transform: translateY(0); opacity: 1; }
+  .install-banner-icon { font-size: 28px; flex-shrink: 0; }
+  .install-banner-text { flex: 1; min-width: 0; }
+  .install-banner-title { font-size: 14px; font-weight: 800; }
+  .install-banner-sub { font-size: 12px; opacity: 0.75; margin-top: 1px; }
+  .install-banner-btn {
+    background: white; color: var(--green-800);
+    border: none; border-radius: 10px; padding: 8px 14px;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800;
+    cursor: pointer; flex-shrink: 0; white-space: nowrap;
+  }
+  .install-banner-close {
+    background: none; border: none; color: white; opacity: 0.6;
+    font-size: 18px; cursor: pointer; flex-shrink: 0; padding: 0 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     DESKTOP LAYOUT  (≥ 768px)
+     ═══════════════════════════════════════════════════ */
+  @media (min-width: 768px) {
+
+    /* ── Root tweaks ── */
+    :root { --sidebar-w: 220px; --nav-h: 0px; 
+ll-banner-close {
+    background: none; border: none; color: white; opacity: 0.6;
+    font-size: 18px; cursor: pointer; flex-shrink: 0; padding: 0 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     DESKTOP LAYOUT  (≥ 768px)
+     ═══════════════════════════════════════════════════ */
+  @media (min-width: 768px) {
+
+    /* ── Root tweaks ── */
+    :root { --sidebar-w: 220px; --nav-h: 0px; }
+
+    body {
+      max-width: 100%;
+      min-height: 100svh;
+      overflow-x: hidden;
+    }
+
+    /* Screens pushed right of sidebar */
+    .screen {
+      margin-left: var(--sidebar-w);
+      min-height: 100svh;
+    }
+
+    /* ── Sidebar replaces bottom nav ── */
+    .bottom-nav {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      height: 100svh;
+      flex-direction: column;
+      align-items: stretch;
+      border-top: none;
+      border-right: 1px solid var(--gray-100);
+      transform: none;
+      padding: 0;
+      z-index: 100;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    /* Sidebar brand header */
+    .bottom-nav::before {
+      content: '';
+      display: block;
+      background: var(--green-600);
+      height: 72px;
+      flex-shrink: 0;
+    }
+
+    .nav-brand {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 72px;
+      background: var(--green-600);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 10px;
+      pointer-events: none;
+    }
+    .nav-brand-icon { font-size: 22px; }
+    .nav-brand-text {
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 800; color: white;
+      line-height: 1.1;
+    }
+    .nav-brand-sub { font-size: 10px; opacity: 0.7; font-weight: 500; }
+
+    .nav-btn {
+      flex: none;
+      flex-direction: row;
+      justify-content: flex-start;
+      padding: 13px 20px;
+      gap: 12px;
+      font-size: 13px;
+      border-radius: 0;
+      text-align: left;
+      position: relative;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .nav-btn:not(.active):hover { background: var
+ada em todo o app -->
+<style id="cuidarbem-v65-topbar-global">
+/* =========================================================
+   CuidarBem v65 — TOPBAR GLOBAL
+   Objetivo: travar a topbar em todo o app.
+   - Home mantém o header premium fixo
+   - Todas as demais telas passam a ter topbar fixa/estável
+   - Sem faixas brancas e sem sobreposição indevida
+========================================================= */
+:root{
+  --cb-topbar-global-h-mobile: 88px;
+  --cb-topbar-global-h-desktop: 72px;
+  --cb-topbar-global-z: 560;
+}
+
+html, body{
+  scroll-padding-top: var(--cb-topbar-global-h-mobile);
+}
+
+/* HOME: mantém o cabeçalho premium travado */
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    z-index: calc(var(--cb-topbar-global-z) + 8) !important;
+  }
+}
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: calc(var(--cb-topbar-global-z) + 8) !important;
+  }
+}
+
+/* TELAS INTERNAS */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub,
+.screen:not(#screen-home) .header{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-topbar-global-z) !important;
+  isolation: isolate !important;
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;
+  box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  overflow: hidden !important;
+}
+
+/* Mata pseudo-camadas e faixas decorativas nas topbars internas */
+#screen-calendar .header-sub::before,
+#screen-calendar .header-sub::after,
+#screen-reports .header-sub::before,
+#screen-reports .header-sub::after,
+#screen-profile .header-sub::before,
+#screen-profile .header-sub::after,
+#screen-ocr .header-sub::before,
+#screen-ocr .header-sub::after,
+#screen-dashboard .header-sub::before,
+#s
+os */
+.header,
+.header-sub,
+#screen-home .header,
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub{
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  isolation: auto !important;
+  will-change: auto !important;
+  background: linear-gradient(135deg,#005647 0%,#006b58 58%,#0b8068 100%) !important;
+  box-shadow: 0 10px 26px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.13) !important;
+}
+
+/* HOME mobile permanece fixa; desktop fica sticky normal */
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    transform: translateX(-50%) !important;
+    -webkit-transform: translateX(-50%) !important;
+    z-index: var(--cb-chrome-z) !important;
+    /* Removido backface-visibility: avoids GPU flicker on iOS/Android */
+  }
+  #screen-home .content{
+    padding-top: 258px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 0 -10px 28px rgba(0,63,54,.12) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: var(--cb-chrome-z) !important;
+    min-height: 184px !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 12px 0 34px rgba(0,63,54,.08) !important;
+  }
+
+  .screen{
+    overflow: visible !important;
+  }
+}
+
+/* Guias internas: topbar fica sticky, mas sem corte de conteúdo */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub,
+.screen:not(#screen-home) .header{
+  position: sticky !important;
+  to
+
+=== position:fixed ===
+-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);
+    width: 100%; max-width: 480px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: stretch;
+    height: var(--nav-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    /* will-change omitido: criaria containing block para position:fixed filhos no desktop */
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; background: none; border: none; cursor: pointer;
+    color: var(--text-light); font-family: 'Nunito', sans-serif;
+    font-size: 11px; font-weight: 600; padding: 8px 4px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--green-600); }
+  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-dot {
+    position: absolute; top: 6px; right: calc(50% - 14px);
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-400); border: 2px solid white;
+    display: none;
+  }
+  .nav-dot.show { display: block; }
+
+  /* SCREENS */
+  .screen {
+    display: none; /* fora do render tree = sem flash de scroll */
+    padding: 0 0 calc(var(--nav-h) + 16px) 0;
+    min-height: 100svh;
+  }
+  .screen.active {
+    display: block;
+    pointer-events: auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--green-600);
+    color: white;
+    padding: 48px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute; bottom: -30px; left: -20px; right: -20px;
+    height: 60px;
+    background: var(--bg);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .header-sub {
+    background: var(--green-600);
+    color: white;
+    padding: 48px 20px 20px;
+  }
+  .header-title 
+ex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
+    border: 2px solid var(--gray-100);
+    background: var(--gray-50);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; position: relative;
+  }
+  .med-photo-wrap img { width:100%;height:100%;object-fit:cover; }
+  .med-photo-placeholder { font-size:22px; }
+  .med-photo-wrap .photo-add-badge {
+    position:absolute; bottom:-2px; right:-2px;
+    background: var(--green-600); color:white;
+    width:18px;height:18px;border-radius:50%;
+    font-size:12px;display:flex;align-items:center;justify-content:center;
+    font-weight:800; border:2px solid white;
+  }
+
+  /* CONFIRM MODAL */
+  .confirm-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.7);
+    z-index:500;display:flex;align-items:flex-end;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;
+  }
+  .confirm-overlay.open { opacity:1;pointer-events:all; }
+  .confirm-sheet {
+    background:var(--white);border-radius:28px 28px 0 0;
+    padding:28px 24px 48px;width:100%;max-width:480px;margin:0 auto;
+    transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);
+  }
+  .confirm-overlay.open .confirm-sheet { transform:translateY(0); }
+  .confirm-handle { width:40px;height:4px;background:var(--gray-200);border-radius:2px;margin:0 auto 24px; }
+
+  .confirm-photo-big {
+    width:120px;height:120px;border-radius:20px;object-fit:cover;
+    margin:0 auto 16px;display:block;
+    border:3px solid var(--green-100);
+    box-shadow:0 4px 20px rgba(0,0,0,0.12);
+  }
+  .confirm-photo-placeholder {
+    width:120px;height:120px;border-radius:20px;
+    background:var(--green-50);border:3px dashed var(--green-200);
+    margin:0 auto 16px;display:flex;align-items:center;
+    justify-content:center;font-size:52px;
+  }
+  .confirm-name { font-size:22px;font-weight:800;text-align:center;color:var(--text);margin-bottom:4px; }
+  .confirm-dose { font-size:15px;text-align:center;color:var(--text-muted);margin-bottom:6px; }
+  .confirm-time { text-align:center;margin-bottom:16px; }
+  .confirm-time-badge {
+    display:inline-flex;align-
+x; font-weight: 700;
+    margin-top: 3px; margin-right: 4px; cursor: pointer;
+  }
+  .med-alert-pill.warn  { background: var(--amber-50); color: var(--amber-600); }
+  .med-alert-pill.alert { background: var(--coral-50); color: var(--coral-600); }
+
+  /* Info button on task item */
+  .med-info-btn {
+    background: var(--blue-50); border: none; border-radius: 6px;
+    width: 22px; height: 22px; font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue-600); font-weight: 900; flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .med-info-btn:active { background: var(--blue-100); }
+
+  /* PHOTO MODAL */
+  .photo-modal-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);
+    z-index:600;display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity 0.2s;
+    padding:20px;
+  }
+  .photo-modal-overlay.open { opacity:1;pointer-events:all; }
+  .photo-modal {
+    background:var(--white);border-radius:24px;padding:24px;
+    width:100%;max-width:380px;
+    transform:scale(0.92);transition:transform 0.2s;
+  }
+  .photo-modal-overlay.open .photo-modal { transform:scale(1); }
+
+  /* ══════════════════════════════════════════════════════
+     MODO SAMU — tela de emergência
+  ══════════════════════════════════════════════════════ */
+  .samu-overlay {
+    position: fixed;
+    top: 0; bottom: 0; right: 0; left: 0;
+    z-index: 9000;
+    background: #fff;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+    overflow-y: auto;
+    max-width: 480px;
+  }
+  .samu-overlay.open { opacity: 1; pointer-events: all; }
+  @media (min-width: 768px) {
+    .samu-overlay { left: 260px; max-width: none; }
+  }
+  @media (min-width: 1200px) {
+    .samu-overlay { left: 272px; }
+  }
+
+  .samu-header {
+    background: #c0192d;
+    padding: 20px 20px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 1;
+    box-shadow: 0 2px 12px rgba(192,25,45,0.4);
+  }
+  .samu-header-title {
+   
+.nav-btn:hover {
+      color: var(--green-600);
+      background: var(--green-50);
+      border-radius: 10px;
+      transition: all 0.15s;
+    }
+    .cat-pill:hover { opacity: 0.8; transform: scale(0.97); }
+    .week-day:hover { border-color: var(--green-200); background: var(--green-50); }
+    .vital-tab:hover { background: var(--teal-50); color: var(--teal-600); }
+    .result-thumb:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+    .btn-call:hover { background: rgba(255,255,255,0.35); }
+    .appt-view-btn:hover { text-decoration: underline; }
+    .med-check-btn:hover { transform: scale(1.1); }
+  }
+
+
+  /* APPOINTMENT CONFIRM SHEET */
+  .appt-confirm-overlay {
+    position:fixed;inset:0;background:rgba(0,0,0,0.72);
+    z-index:510;display:flex;align-items:flex-end;
+    opacity:0;pointer-events:none;transition:opacity 0.25s;
+  }
+  .appt-confirm-overlay.open { opacity:1;pointer-events:all; }
+  .appt-confirm-sheet {
+    background:var(--white);border-radius:28px 28px 0 0;
+    padding:28px 22px 48px;width:100%;max-width:480px;margin:0 auto;
+    transform:translateY(100%);transition:transform 0.35s cubic-bezier(.32,.72,0,1);
+    max-height:92dvh;overflow-y:auto;
+  }
+  .appt-confirm-overlay.open .appt-confirm-sheet { transform:translateY(0); }
+
+  .appt-icon-ring {
+    width:72px;height:72px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:34px;margin:0 auto 14px;
+  }
+  .appt-confirm-title { font-size:20px;font-weight:800;text-align:center;color:var(--text);margin-bottom:4px; }
+  .appt-confirm-sub { font-size:14px;text-align:center;color:var(--text-muted);margin-bottom:18px; }
+
+  .appt-info-grid {
+    background:var(--gray-50);border-radius:14px;padding:14px 16px;
+    margin-bottom:16px;
+  }
+  .appt-info-row {
+    display:flex;align-items:flex-start;gap:10px;
+    padding:8px 0;border-bottom:1px solid var(--gray-100);
+  }
+  .appt-info-row:last-child { border-bottom:none;padding-bottom:0; }
+  .appt-info-icon { font-size:16px;flex-shrink:0;margin-top:1px; }
+  .appt-info-label { font-size:11px;font-weight:700;color:var
+anel { padding: 32px 40px 32px 12px; }
+    #screen-reports .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+
+
+/* CuidarBem v26 — refinamento mobile da tela inicial
+   - Topbar fixa
+   - Sem hamburger no topo
+   - Sem nome duplicado no centro da topbar
+   - Sininho mais baixo e alinhado à direita
+*/
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+
+f2ef;
+  --gray-200:#dce5e0;
+  --gray-400:#8a9891;
+  --gray-600:#53625c;
+  --gray-800:#17231f;
+  --text:#0c2721;
+  --text-muted:#52645d;
+  --text-light:#82918a;
+  --bg:#edf6f1;
+  --card-bg:rgba(255,255,255,.94);
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 14px 40px rgba(0,63,54,.10),0 2px 10px rgba(0,0,0,.04);
+}
+html{background:linear-gradient(145deg,#f8fcfa 0%,#e9f6f0 52%,#dcedeb 100%)}
+body{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gradient(circle at 115% 82%, rgba(0,107,88,.12), transparent 36%),
+    linear-gradient(180deg,#f9fcfa 0%,#edf6f1 44%,#e4f1ec 100%) !important;
+  color:var(--text);
+}
+body::before{
+  content:'';position:fixed;inset:auto -20% -10% -20%;height:32vh;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,107,88,.10),rgba(37,162,125,.06));
+  clip-path:ellipse(60% 42% at 50% 100%);
+  pointer-events:none;
+}
+.card,.stat-card,.setting-row,.health-trend-card,.health-ring-card{
+  background:var(--card-bg)!important;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:blur(16px);
+}
+.card{border-radius:22px!important;padding:18px!important;margin-bottom:14px!important;}
+.card-title{font-size:12px!important;letter-spacing:.08em!important;color:var(--green-700)!important;}
+/* Home hero */
+#screen-home .header{
+  min-height:246px;
+  padding:18px 20px 34px!important;
+  background:
+    radial-gradient(circle at 22% 10%,rgba(255,255,255,.20),transparent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-con
+mportant}.cat-pills{scrollbar-width:none}.cat-pills::-webkit-scrollbar{display:none}.toast{border-radius:18px!important}.a11y-fab{right:14px!important;bottom:96px!important}.install-banner{bottom:94px!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{max-width:480px!important;}
+}
+@keyframes cbFadeIn{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
+
+<style id="cuidarbem-v27-mobile-header-fix">
+/* v27 — correção: mantém Bom dia/Boa tarde + CuidarBem visíveis abaixo da topbar fixa */
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:96px!important;
+    min-height:252px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:78px!important;
+    padding:calc(env(safe-area-inset-top) + 18px) 18px 8px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98) 0%,rgba(0,107,88,.88) 68%,rgba(0,107,88,0) 100%)!important;
+    pointer-events:none!important;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{pointer-events:auto!important;}
+  #screen-home .premium-topbar-brand,
+  #screen-home .premium-menu{display:none!important;}
+  #screen-home .premium-bell{
+    margin-top:0!important;
+    transform:translateY(8px);
+    width:42px!important;
+    height:42px!important;
+  }
+  #screen-home .header-greeting{
+    display:block!important;
+    visibility:visible!important;
+    opacity:.92!important;
+    margin-top:0!important;
+    margin-bottom:4px!important;
+    color:rgba(255,255,255,.88)!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+  #screen-home .header-title{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    margin-top:2px!important;
+    color:#fff!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+}
+</style>
+
+
+
+<s
+in-top:0!important;
+    margin-bottom:4px!important;
+    color:rgba(255,255,255,.88)!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+  #screen-home .header-title{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    margin-top:2px!important;
+    color:#fff!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v29-mobile-subtitle-one-line">
+/* v29/v30 — slogan em linha única + sininho como central de alertas */
+.mobile-header-subtitle,
+.mobile-header-actions,
+.mobile-bell-btn{display:none;}
+@media (max-width:767px){
+  body{padding-top:0!important;}
+  #screen-home .header{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    min-height:238px!important;
+    height:auto!important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px!important;
+    border-radius:0 0 28px 28px!important;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg,#004d42 0%,#006b58 58%,#0b8068 100%)!important;
+    box-shadow:0 18px 38px rgba(0,64,54,.28)!important;
+    z-index:9997!important;
+    overflow:hidden!important;
+  }
+  #screen-home .header::before{
+    content:'';position:absolute;right:-60px;top:-60px;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none;
+  }
+  #screen-home .header::after{
+    content:'';position:absolute;left:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.06);pointer-events:none;display:block!important;
+  }
+  #screen-home .premium-topbar{display:none!important;}
+  #screen-home .content{padding-top:258px!important;}
+  .mobile-topbar-title-row{
+    position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  }
+  .mobile-topbar-copy{min-width:0;flex:1;}
+  #screen-home .header-greeting{
+    display:block!important;font-size:14
+:rgba(255,255,255,.14);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif;font-size:11.2px;font-weight:900;
+    box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.10);backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-header-action.danger{background:rgba(232,41,63,.78);}
+  .voice-kiosk-actions{display:none!important;}
+  #streak-badge,#patient-mode-header-badge{position:relative;z-index:3;}
+}
+@media (min-width:768px){
+  .mobile-topbar-title-row{display:block;}
+}
+</style>
+
+
+
+<style id="cuidarbem-v30-alerts-center">
+/* v31 — Central de Alertas centralizada; Ler resumo fica só para voz */
+.alerts-center-overlay{
+  position:fixed;inset:0;background:rgba(0,31,26,.54);z-index:9800;
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;
+  padding:calc(env(safe-area-inset-top) + 16px) 14px calc(env(safe-area-inset-bottom) + 16px);
+  transition:opacity .22s ease;backdrop-filter:blur(6px);
+}
+.alerts-center-overlay.open{opacity:1;pointer-events:auto;}
+.alerts-center-sheet{
+  width:min(100%,460px);background:#fff;border-radius:28px;
+  padding:16px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 22px 60px rgba(0,39,33,.30);transform:translateY(18px) scale(.96);opacity:.98;
+  transition:transform .24s cubic-bezier(.32,.72,0,1), opacity .20s ease;max-height:min(76dvh,620px);overflow-y:auto;
+}
+.alerts-center-overlay.open .alerts-center-sheet{transform:translateY(0) scale(1);opacity:1;}
+.alerts-center-handle{width:42px;height:4px;background:var(--gray-200);border-radius:99px;margin:0 auto 14px;}
+.alerts-center-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.alerts-center-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:950;color:var(--green-800);line-height:1.1;}
+.alerts-center-sub{font-size:12.5px;font-weight:700;color:var(--text-light);margin-top:3px;}
+.alerts-center-close{width:38px;height:38px;border-radius:14px;border:1px solid var(--gray-100);background:var(--gray-50);font-size:18px;cursor:poin
+d8;}
+
+.task-delete-btn{
+  border:none;background:var(--coral-50);color:var(--coral-600);
+  border-radius:9px;width:28px;height:28px;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(216,90,48,.10);
+}
+.task-delete-btn:active{transform:scale(.94);background:#ffe1d8;}
+.appt-delete-btn{margin-top:8px;}
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-
+rd .health-dashboard{
+    padding-top: 14px !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 16px !important;
+  }
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- SCREEN: HOME -->
+
+
+<style id="cuidarbem-v40-fixed-topbars-all-screens">
+/* v40 — topbar fixa em todas as guias mobile */
+@media (max-width:767px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!imp
+uerySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+
+      const target = this.getAttribute('data-screen');
+      if(!target) return;
+
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      const el = document.getElementById(target);
+      if(el) el.classList.add('active');
+    });
+  });
+});
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     ONBOARDING OVERLAY
+════════════════════════════════════════════════════════════ -->
+<div id="onboarding-overlay" style="display:none;position:fixed;inset:0;background:var(--green-800);z-index:2000;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px">
+  <div id="onboarding-slides" style="width:100%;max-width:400px;text-align:center">
+
+    <div class="ob-slide" id="ob-0">
+      <div style="font-size:72px;margin-bottom:20px">💚</div>
+      <h2 style="color:white;font-size:26px;font-weight:800;margin-bottom:12px">Bem-vindo ao CuidarBem!</h2>
+      <p style="color:rgba(255,255,255,0.8);font-size:15px;line-height:1.7">O app de saúde feito para acompanhar remédios, fisioterapia e consultas de quem você ama.</p>
+    </div>
+
+    <div class="ob-slide" id="ob-1" style="display:none">
+      <div style="font-size:72px;margin-bottom:20px">📋</div>
+      <h2 style="color:white;font-size:24px;font-weight:800;margin-bottom:12px">Organize os cuidados</h2>
+      <div style="text-align:left;background:rgba(255,255,255,0.1);border-radius:16px;padding:16px 20px;margin-bottom:8px">
+        <div style="color:white;font-size:14px;line-height:2">
+          💊 <strong>Remédios</strong> com horários e doses<br>
+          🦾 <strong>Fisioterapia</strong> e exercícios diários<br>
+          🩺 <strong>Consultas</strong> com alertas automáticos<br>
+          📊 <strong>Dashboard</strong> de adesão aos cuidados
+        </div>
+      </div>
+    </div>
+
+    <div class="ob-slide" id="ob-2" style="display:none">
+      <div style="font-
+
+=== touchstart ===
+ge() {
+  const streak = calcStreak();
+  const badge = document.getElementById('streak-badge');
+  const count = document.getElementById('streak-count');
+  if (badge && count) {
+    count.textContent = streak;
+    badge.style.display = streak >= 2 ? 'block' : 'none';
+  }
+}
+
+// ── 2. HAPTIC FEEDBACK ────────────────────────────────────────────────────────
+function haptic(pattern = [30]) {
+  if ('vibrate' in navigator) navigator.vibrate(pattern);
+}
+
+// ── 3. SWIPE BETWEEN SCREENS ─────────────────────────────────────────────────
+(function setupSwipe() {
+  const screens = ['home','calendar','dashboard','ocr','reports','appt','profile'];
+  let startX = 0, startY = 0;
+
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return; // not horizontal enough
+    if (document.getElementById('kiosk-overlay').style.display === 'flex') return;
+
+    const active = document.querySelector('.screen.active');
+    if (!active) return;
+    const activeId = active.id.replace('screen-', '');
+    const idx = screens.indexOf(activeId);
+    if (idx === -1) return;
+
+    let next = -1;
+    if (dx < -60 && idx < screens.length - 1) next = idx + 1;
+    if (dx > 60 && idx > 0) next = idx - 1;
+    if (next === -1) return;
+
+    const nextName = screens[next];
+    const btn = document.getElementById(`nav-${nextName}`);
+    if (btn) { haptic([15]); goScreen(nextName, btn); }
+  }, { passive: true });
+})();
+
+
+
+
+
+// ── v58. INTELIGÊNCIA ATIVA CONTEXTUAL ─────────────────────────────────────
+function cbNormText(s){
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function cbDaysBetween(dateStr, refStr){
+  if (!dateStr) return 9999;
+  const a = new Date(dateStr + 'T00:00:00');
+  const b = new Date((refStr || todayStr()) + 'T00:00:00');
+  return Math.round((b - a) / 864000
+
+=== touchmove ===
