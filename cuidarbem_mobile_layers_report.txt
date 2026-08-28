@@ -1,0 +1,3591 @@
+CUIDARBEM MOBILE LAYERS AUDIT
+premium-topbar=12
+premium-icon-btn=4
+premium-bell=5
+backdrop-filter=45
+will-change=11
+translateZ(0)=4
+position:fixed=22
+position: fixed=16
+diagnostico=0
+diagnóstico=13
+diagnostic=1
+premium=40
+
+=== RULES backdrop-filter ===
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+#screen-home .premium-topbar{     position:fixed!important;     top:0!important;     left:50%!important;     transform:translateX(-50%)!important;     width:100%!important;     max-width:480px!important;     height:72px!important;     margin:0!important;     padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;     display:flex!important;     justify-content:flex-end!important;     align-items:center!important;     background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;     backdrop-filter:blur(14px)!important;     -webkit-backdrop-filter:blur(14px)!important;     z-index:180!important;     pointer-events:none;   }
+#screen-home .premium-topbar{     position:fixed!important;     top:0!important;     left:50%!important;     transform:translateX(-50%)!important;     width:100%!important;     max-width:480px!important;     height:72px!important;     margin:0!important;     padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;     display:flex!important;     justify-content:flex-end!important;     align-items:center!important;     background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;     backdrop-filter:blur(14px)!important;     -webkit-backdrop-filter:blur(14px)!important;     z-index:180!important;     pointer-events:none;   }
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.card,.stat-card,.setting-row,.health-trend-card,.health-ring-card{   background:var(--card-bg)!important;   border:1px solid rgba(255,255,255,.75);   box-shadow:var(--shadow)!important;   backdrop-filter:blur(16px); }
+/* Modal medicação — mais próximo da tela 2 do mockup */ .confirm-overlay,.med-info-overlay,.appt-confirm-overlay,.modal-overlay{backdrop-filter:blur(10px)}
+/* Bottom nav como mockup */ .bottom-nav{height:76px!important;background:rgba(255,255,255,.92)!important;border-top:1px solid rgba(0,107,88,.08)!important;box-shadow:0 -12px 34px rgba(0,63,54,.12)!important;backdrop-filter:blur(18px);}
+.mobile-bell-btn{     display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;     width:46px;height:46px;border-radius:17px;border:1px solid rgba(255,255,255,.34);     background:rgba(255,255,255,.16);color:#fff;font-size:20px;box-shadow:inset 0 1px rgba(255,255,255,.20),0 10px 22px rgba(0,0,0,.14);     margin-top:18px;backdrop-filter:blur(8px);cursor:pointer;   }
+.mobile-header-action{     min-height:40px;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.14);color:#fff;     display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif;font-size:11.2px;font-weight:900;     box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.10);backdrop-filter:blur(8px);cursor:pointer;   }
+</style>    <style id="cuidarbem-v30-alerts-center"> /* v31 — Central de Alertas centralizada; Ler resumo fica só para voz */ .alerts-center-overlay{   position:fixed;inset:0;background:rgba(0,31,26,.54);z-index:9800;   display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;   padding:calc(env(safe-area-inset-top) + 16px) 14px calc(env(safe-area-inset-bottom) + 16px);   transition:opacity .22s ease;backdrop-filter:blur(6px); }
+</style>   <style id="cuidarbem-v39-delete-modal-style"> /* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */ .cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+#screen-calendar .header-sub,   #screen-reports .header-sub,   #screen-profile .header-sub,   #screen-ocr .header-sub,   #screen-dashboard .header-sub,   #screen-appt .header-sub{     position:fixed!important;     top:0!important;     left:50%!important;     transform:translateX(-50%)!important;     width:100%!important;     max-width:480px!important;     z-index:95!important;     min-height:98px!important;     height:auto!important;     padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;     display:flex!important;     flex-direction:column!important;     align-items:flex-start!important;     justify-content:center!important;     gap:3px!important;     border-radius:0 0 26px 26px!important;     box-shadow:0 14px 34px rgba(0,63,54,.22)!important;     backdrop-filter:blur(18px)!important;   }
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.edit-task-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9810;display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .2s ease;}
+)(); </script>    <!-- v48 — correção: editor de medicamento estável, sem tremor/pisca no mobile --> <style id="cuidarbem-v48-edit-med-stable">   .edit-med-overlay{backdrop-filter:blur(8px);overscroll-behavior:contain;}
+#screen-calendar .header-sub,   #screen-reports .header-sub,   #screen-profile .header-sub,   #screen-ocr .header-sub,   #screen-dashboard .header-sub,   #screen-appt .header-sub{     background:       radial-gradient(circle at 20% 0%, rgba(255,255,255,.15), transparent 24%),       linear-gradient(135deg,#0d5c4f 0%, #167563 44%, #1aa081 100%)!important;     box-shadow:0 12px 32px rgba(4,53,45,.22)!important;     backdrop-filter:blur(14px);     -webkit-backdrop-filter:blur(14px);   }
+#screen-calendar .header-sub,   #screen-reports .header-sub,   #screen-profile .header-sub,   #screen-ocr .header-sub,   #screen-dashboard .header-sub,   #screen-appt .header-sub{     background:       radial-gradient(circle at 20% 0%, rgba(255,255,255,.15), transparent 24%),       linear-gradient(135deg,#0d5c4f 0%, #167563 44%, #1aa081 100%)!important;     box-shadow:0 12px 32px rgba(4,53,45,.22)!important;     backdrop-filter:blur(14px);     -webkit-backdrop-filter:blur(14px);   }
+row,.appt-card,.health-trend-card,.health-ring-card,.vital-card,.hist-card,.emerg-card,   #today-tasks-card,#next-alarm-card,#caregiver-summary-card,.result-section,.appt-info-grid{     background:linear-gradient(180deg,var(--cb-glass-strong) 0%, rgba(255,255,255,.60) 100%)!important;     border:1px solid var(--cb-glass-border)!important;     box-shadow:var(--cb-shadow-soft)!important;     backdrop-filter:blur(18px);     -webkit-backdrop-filter:blur(18px);   }
+row,.appt-card,.health-trend-card,.health-ring-card,.vital-card,.hist-card,.emerg-card,   #today-tasks-card,#next-alarm-card,#caregiver-summary-card,.result-section,.appt-info-grid{     background:linear-gradient(180deg,var(--cb-glass-strong) 0%, rgba(255,255,255,.60) 100%)!important;     border:1px solid var(--cb-glass-border)!important;     box-shadow:var(--cb-shadow-soft)!important;     backdrop-filter:blur(18px);     -webkit-backdrop-filter:blur(18px);   }
+.bottom-nav{     background:rgba(255,255,255,.70)!important;     border-top:1px solid rgba(255,255,255,.60)!important;     box-shadow:0 -12px 36px rgba(6,62,52,.14)!important;     backdrop-filter:blur(24px);     -webkit-backdrop-filter:blur(24px);   }
+.bottom-nav{     background:rgba(255,255,255,.70)!important;     border-top:1px solid rgba(255,255,255,.60)!important;     box-shadow:0 -12px 36px rgba(6,62,52,.14)!important;     backdrop-filter:blur(24px);     -webkit-backdrop-filter:blur(24px);   }
+.med-info-inner,.confirm-sheet,.appt-confirm-sheet,.modal,.confirm-sheet,.edit-med-card,.edit-task-card{     background:linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,251,249,.92) 100%)!important;     border:1px solid rgba(255,255,255,.72)!important;     box-shadow:0 28px 90px rgba(0,40,34,.24)!important;     backdrop-filter:blur(20px);     -webkit-backdrop-filter:blur(20px);   }
+.med-info-inner,.confirm-sheet,.appt-confirm-sheet,.modal,.confirm-sheet,.edit-med-card,.edit-task-card{     background:linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,251,249,.92) 100%)!important;     border:1px solid rgba(255,255,255,.72)!important;     box-shadow:0 28px 90px rgba(0,40,34,.24)!important;     backdrop-filter:blur(20px);     -webkit-backdrop-filter:blur(20px);   }
+.med-info-overlay,.modal-overlay,.confirm-overlay,.appt-confirm-overlay,.photo-modal-overlay{     backdrop-filter:blur(10px);     -webkit-backdrop-filter:blur(10px);   }
+.med-info-overlay,.modal-overlay,.confirm-overlay,.appt-confirm-overlay,.photo-modal-overlay{     backdrop-filter:blur(10px);     -webkit-backdrop-filter:blur(10px);   }
+.mobile-bell-btn,   .premium-icon-btn{     background:rgba(255,255,255,.16)!important;     border:1px solid rgba(255,255,255,.22)!important;     box-shadow:inset 0 1px rgba(255,255,255,.18), 0 10px 22px rgba(8,59,49,.16)!important;     backdrop-filter:blur(10px);     -webkit-backdrop-filter:blur(10px);   }
+.mobile-bell-btn,   .premium-icon-btn{     background:rgba(255,255,255,.16)!important;     border:1px solid rgba(255,255,255,.22)!important;     box-shadow:inset 0 1px rgba(255,255,255,.18), 0 10px 22px rgba(8,59,49,.16)!important;     backdrop-filter:blur(10px);     -webkit-backdrop-filter:blur(10px);   }
+/* Agenda / calendário */   #screen-calendar .week-strip,   #screen-calendar .cat-pills,   #screen-calendar .chip-filter{     background:rgba(255,255,255,.55);     border:1px solid rgba(255,255,255,.58);     border-radius:22px;     padding:8px!important;     box-shadow:0 12px 32px rgba(6,62,52,.08);     backdrop-filter:blur(18px);     -webkit-backdrop-filter:blur(18px);   }
+/* Agenda / calendário */   #screen-calendar .week-strip,   #screen-calendar .cat-pills,   #screen-calendar .chip-filter{     background:rgba(255,255,255,.55);     border:1px solid rgba(255,255,255,.58);     border-radius:22px;     padding:8px!important;     box-shadow:0 12px 32px rgba(6,62,52,.08);     backdrop-filter:blur(18px);     -webkit-backdrop-filter:blur(18px);   }
+/* ── PAINEL DIREITO ── */   .desktop-right-panel {     display: block !important;     padding: 28px 32px 28px 16px !important;     border-left: 1px solid rgba(0,107,88,.08) !important;     background: rgba(255,255,255,.40) !important;     backdrop-filter: blur(12px) !important;     overflow-y: auto !important;   }
+#screen-home .header-patient{     color: white !important;     background: rgba(255,255,255,.16) !important;     border: 1px solid rgba(255,255,255,.32) !important;     box-shadow: inset 0 1px rgba(255,255,255,.22), 0 10px 22px rgba(0,0,0,.10) !important;     backdrop-filter: blur(8px) !important;   }
+#screen-home .vital-item{     display: flex !important;     align-items: center !important;     justify-content: flex-start !important;     min-width: 0 !important;     min-height: 58px !important;     flex: 1 1 0 !important;     padding: 10px 12px !important;     border-radius: 16px !important;     background: rgba(255,255,255,.14) !important;     border: 1px solid rgba(255,255,255,.22) !important;     box-shadow: inset 0 1px rgba(255,255,255,.16), 0 10px 22px rgba(0,0,0,.08) !important;     backdrop-filter: blur(10px) !important;     color: white !important;   }
+ub, .bottom-nav, .mobile-bell-btn, .mobile-header-action, .vital-item, #screen-home .header > div[style*="justify-content:space-between"] > *, .nav-btn, .nav-brand, .nav-brand-icon{   -webkit-backdrop-filter: none !important;   backdrop-filter: none !important;   filter: none !important; }
+ub, .bottom-nav, .mobile-bell-btn, .mobile-header-action, .vital-item, #screen-home .header > div[style*="justify-content:space-between"] > *, .nav-btn, .nav-brand, .nav-brand-icon{   -webkit-backdrop-filter: none !important;   backdrop-filter: none !important;   filter: none !important; }
+.cb75-one-hand-bar{display:none;position:fixed;left:50%;bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:680;width:min(440px,calc(100% - 24px));padding:10px;border-radius:22px;background:rgba(255,255,255,.86);border:1px solid rgba(15,110,86,.18);box-shadow:0 18px 48px rgba(0,0,0,.18);backdrop-filter:blur(18px);gap:8px;}
+.cb75-onboarding-overlay{     position:fixed;inset:0;z-index:9800;background:rgba(6,24,20,.68);backdrop-filter:blur(12px);     display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s ease;     padding:calc(env(safe-area-inset-top) + 14px) 12px calc(env(safe-area-inset-bottom) + 14px);     min-height:100dvh;   }
+sheet de confirmação    - substitui o confirm() nativo por diálogo visual do próprio app ========================================================= */ #confirm-modal.confirm-overlay{   background:rgba(4,18,15,.72)!important;   backdrop-filter:blur(10px)!important;   -webkit-backdrop-filter:blur(10px)!important;   transition:opacity .18s ease!important;   contain:layout paint style;   overscroll-behavior:contain; }
+sheet de confirmação    - substitui o confirm() nativo por diálogo visual do próprio app ========================================================= */ #confirm-modal.confirm-overlay{   background:rgba(4,18,15,.72)!important;   backdrop-filter:blur(10px)!important;   -webkit-backdrop-filter:blur(10px)!important;   transition:opacity .18s ease!important;   contain:layout paint style;   overscroll-behavior:contain; }
+.cb75-risk-overlay{   position:fixed;   inset:0;   z-index:10050;   display:flex;   align-items:center;   justify-content:center;   padding:18px;   background:rgba(4,18,15,.74);   backdrop-filter:blur(12px);   -webkit-backdrop-filter:blur(12px);   opacity:0;   pointer-events:none;   transition:opacity .18s ease; }
+.cb75-risk-overlay{   position:fixed;   inset:0;   z-index:10050;   display:flex;   align-items:center;   justify-content:center;   padding:18px;   background:rgba(4,18,15,.74);   backdrop-filter:blur(12px);   -webkit-backdrop-filter:blur(12px);   opacity:0;   pointer-events:none;   transition:opacity .18s ease; }
+</style>  <!-- ═══════════════════════════════════════════════════════════════      LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico      Remove backdrop-filter, animações de layout e will-change      que causavam flashes e falhas no mobile      ═══════════════════════════════════════════════════════════════ --> <style id="cb-effects-cleanup">  /* ── 1. backdrop-filter removido globalmente ─────────────────────    40 ocorrências espalhadas causavam repaint de GPU em todo scroll.    Overlays de modal mantêm um overlay escuro simples via background.  */ * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+</style>  <!-- ═══════════════════════════════════════════════════════════════      LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico      Remove backdrop-filter, animações de layout e will-change      que causavam flashes e falhas no mobile      ═══════════════════════════════════════════════════════════════ --> <style id="cb-effects-cleanup">  /* ── 1. backdrop-filter removido globalmente ─────────────────────    40 ocorrências espalhadas causavam repaint de GPU em todo scroll.    Overlays de modal mantêm um overlay escuro simples via background.  */ * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+globalmente ─────────────────────    40 ocorrências espalhadas causavam repaint de GPU em todo scroll.    Overlays de modal mantêm um overlay escuro simples via background.  */ * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+globalmente ─────────────────────    40 ocorrências espalhadas causavam repaint de GPU em todo scroll.    Overlays de modal mantêm um overlay escuro simples via background.  */ * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+</style>  <!-- Botão de diagnóstico (informacional — efeitos agora são permanentemente removidos) --> <div id="cb-diag-btn" onclick="document.getElementById('cb-diag-panel').classList.toggle('open')">   <span class="cb-diag-dot"></span>   <span>DIAG</span> </div>  <div id="cb-diag-panel">   <h4>✅ Efeitos Removidos</h4>   <div class="cb-drow"><span>backdrop-filter</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>animation (layout)</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>will-change</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>isolation:isolate</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>glass/blur backgrounds</span><span class="cb-dval ok">OPACOS</span></div>   <div class="cb-drow"><span>transitions de botões</span><span class="cb-dval ok">MANTIDAS</span></div>   <div style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6">   
+
+=== RULES will-change ===
+/* NAV */   .bottom-nav {     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);     width: 100%; max-width: 480px;     background: var(--white);     border-top: 1px solid var(--gray-100);     display: flex; align-items: stretch;     height: var(--nav-h);     z-index: 100;     padding-bottom: env(safe-area-inset-bottom);     backface-visibility: hidden;     -webkit-backface-visibility: hidden;     /* will-change omitido: criaria containing block para position:fixed filhos no desktop */   }
+.edit-med-card{transform:none!important;animation:none!important;will-change:auto!important;}
+me .header, #screen-calendar .header-sub, #screen-reports .header-sub, #screen-profile .header-sub, #screen-ocr .header-sub, #screen-dashboard .header-sub, #screen-appt .header-sub{   contain: none !important;   transform: none !important;   -webkit-transform: none !important;   isolation: auto !important;   will-change: auto !important;   background: linear-gradient(135deg,#005647 0%,#006b58 58%,#0b8068 100%) !important;   box-shadow: 0 10px 26px rgba(0,63,54,.16) !important;   border-bottom: 1px solid rgba(255,255,255,.13) !important; }
+#screen-reports .card, #screen-reports .stat-card, #screen-reports .cb-analytics-card, #screen-reports .cb-chart-wrap, #screen-reports .report-card, #screen-reports .analytics-card{   overflow: visible !important;   contain: none !important;   transform: none !important;   -webkit-transform: none !important;   will-change: auto !important; }
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */ .bottom-nav {   will-change: auto !important;   backface-visibility: visible !important;   -webkit-backface-visibility: visible !important; }
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */ .bottom-nav {   will-change: auto !important;   backface-visibility: visible !important;   -webkit-backface-visibility: visible !important; }
+#confirm-modal .confirm-sheet{   background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(246,251,249,.98) 100%)!important;   overflow:hidden;   isolation:isolate;   backface-visibility:hidden;   -webkit-backface-visibility:hidden;   transform:translate3d(0,100%,0)!important;   will-change:transform, opacity;   contain:paint; }
+</style>  <!-- ═══════════════════════════════════════════════════════════════      LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico      Remove backdrop-filter, animações de layout e will-change      que causavam flashes e falhas no mobile      ═══════════════════════════════════════════════════════════════ --> <style id="cb-effects-cleanup">  /* ── 1. backdrop-filter removido globalmente ─────────────────────    40 ocorrências espalhadas causavam repaint de GPU em todo scroll.    Overlays de modal mantêm um overlay escuro simples via background.  */ * { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */ * { will-change: auto !important; }
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */ * { will-change: auto !important; }
+</style>  <!-- Botão de diagnóstico (informacional — efeitos agora são permanentemente removidos) --> <div id="cb-diag-btn" onclick="document.getElementById('cb-diag-panel').classList.toggle('open')">   <span class="cb-diag-dot"></span>   <span>DIAG</span> </div>  <div id="cb-diag-panel">   <h4>✅ Efeitos Removidos</h4>   <div class="cb-drow"><span>backdrop-filter</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>animation (layout)</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>will-change</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>isolation:isolate</span><span class="cb-dval ok">REMOVIDO</span></div>   <div class="cb-drow"><span>glass/blur backgrounds</span><span class="cb-dval ok">OPACOS</span></div>   <div class="cb-drow"><span>transitions de botões</span><span class="cb-dval ok">MANTIDAS</span></div>   <div style="margin-top:12px;font-size:11px;color:#94a3b8;line-height:1.6">   
+
+=== RULES translateZ(0) ===
+/* NAV */   .bottom-nav {     position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateZ(0);     width: 100%; max-width: 480px;     background: var(--white);     border-top: 1px solid var(--gray-100);     display: flex; align-items: stretch;     height: var(--nav-h);     z-index: 100;     padding-bottom: env(safe-area-inset-bottom);     backface-visibility: hidden;     -webkit-backface-visibility: hidden;     /* will-change omitido: criaria containing block para position:fixed filhos no desktop */   }
+internas */ #screen-calendar .header-sub, #screen-reports .header-sub, #screen-profile .header-sub, #screen-ocr .header-sub, #screen-dashboard .header-sub, #screen-appt .header-sub{   position: sticky !important;   top: 0 !important;   z-index: var(--cb-topbar-z-locked) !important;   isolation: isolate !important;   transform: translateZ(0) !important;   -webkit-transform: translateZ(0) !important;   background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;   box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;   overflow: hidden !important;   contain: paint !important; }
+internas */ #screen-calendar .header-sub, #screen-reports .header-sub, #screen-profile .header-sub, #screen-ocr .header-sub, #screen-dashboard .header-sub, #screen-appt .header-sub{   position: sticky !important;   top: 0 !important;   z-index: var(--cb-topbar-z-locked) !important;   isolation: isolate !important;   transform: translateZ(0) !important;   -webkit-transform: translateZ(0) !important;   background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;   box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;   overflow: hidden !important;   contain: paint !important; }
+#confirm-modal .btn-confirm, #confirm-modal .btn-confirm-cancel{   transform:translateZ(0);   backface-visibility:hidden;   -webkit-backface-visibility:hidden; }
+
+=== PREMIUM IDENTIFIERS ===
+class="premium-topbar"
+id="cuidarbem-v25-premium-redesign"
+id="cuidarbem-v51-premium-mobile-visual"
+id="cuidarbem-v52-premium-guides-mobile"
+id="cuidarbem-v54-desktop-premium"
+id="diagnosis-input"
+id="samu-diagnosis"
+
+=== MOBILE HOT CHUNKS ===
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:84px!important;
+    min-height:232px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:72px!important;
+    margin:0!important;
+    padding:calc(env(safe-area-inset-top) + 14px) 18px 8px!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98),rgba(0,107,88,.90) 72%,rgba(0,107,88,0))!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+    z-index:180!important;
+    pointer-events:none;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{
+    pointer-events:auto;
+  }
+  #screen-home .premium-bell{
+    margin-top:12px!important;
+    width:42px!important;
+    height:42px!important;
+    border-radius:16px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:0 10px 24px rgba(0,47,40,.18), inset 0 1px rgba(255,255,255,.22)!important;
+  }
+  #screen-home .premium-bell span{
+    right:7px!important;
+    top:7px!important;
+  }
+  #screen-home .header-greeting{
+    margin-top:0!important;
+  }
+  #screen-home .header-title{
+    margin-top:2px!important;
+  }
+}
+
+
+/* ===== CONTRASTE REFORÇADO — DATAS DA AGENDA ===== */
+.week-day-name{
+  color:#4b5563 !important;
+  font-weight:800 !important;
+}
+.week-day-num{
+  color:#111827 !important;
+  font-weight:900 !important;
+}
+.week-day.today .week-day-name{
+  color:#0f6e56 !important;
+}
+.week-day.today .week-day-num{
+  color:#064e3b !important;
+}
+
+.task-time{
+  color:#1f2937 !important;
+  font-weight:800 !important;
+}
+
+.header-date{
+  color:rgba(255,255,255,0.92) !important;
+  font-weight:700 !important;
+}
+
+/* Tema escuro */
+body.dark-theme .week-day{
+  background:#1f2937 !important;
+  border-color:#374151 !important;
+}
+body.dark-theme .week-day-name{
+  color:#d1d5db !important;
+}
+body.dark-theme .week-day-num{
+  color:#f9fafb !important;
+}
+body.dark-theme .week-day.today{
+  background:#134e4a !important;
+  border-color:#2dd4bf !important;
+}
+body.dark-theme .week-day.today .week-day-name{
+  color:#99f6e4 !important;
+}
+body.dark-theme .week-day.today .week-day-num{
+  color:#ffffff !important;
+}
+body.dark-theme .task-time{
+  color:#f3f4f6 !important;
+}
+body.dark-theme .header-date{
+  color:rgba(255,255,255,0.95) !important;
+}
+
+
+/* ===== SINAIS VITAIS PRO — ALERTAS E GRÁFICOS ===== */
+.vital-tabs-pro{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.vital-tabs-pro::-webkit-scrollbar{display:none}
+.vital-tab{flex:0 0 auto;border:1.5px solid var(--gray-200);background:var(--white);color:var(--text-muted);border-radius:999px;padding:8px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+.vital-tab.active{background:var(--green-600);border-color:var(--green-600);color:#fff;box-shadow:0 4px 14px rgba(26,107,92,.18)}
+.vital-smart-alert{border-radius:14px;padding:11px 13px;margin-bottom:8px;font-size:12px;font-weight:800;line-height:1.45;border-left:4px solid}
+.vital-smart-alert.danger{background:var(--red-50);color:var(--red-600);border-left-color:var(--red-600)}
+.vital-smart-alert.warn{background:var(--amber-50);color:var(--amber-600);border-left-color:var(--amber-400)}
+.vital-smart-alert.ok{background:var(--teal-50);color:var(--teal-600);border-left-color:var(--teal-400)}
+body.dark-theme .vital-tab{background:#1f2937!important;border-color:#374151!important;color:#e5e7eb!important}
+body.dark-theme .vital-tab.active{background:#0f6e56!important;border-color:#2dd4bf!important;color:#fff!important}
+body.dark-theme .vital-smart-alert.danger{background:#3f1111!important;color:#fecaca!important}
+body.dark-theme .vital-smart-alert.warn{background:#3f2a0a!important;color:#fde68a!important}
+body.dark-theme .vital-smart-alert.ok{background:#0f2f2a!important;color:#99f6e4!important}
+
+
+
+/* v56 — Detecção de complicações pós-AVC */
+.complication-card{border:1px solid rgba(192,25,45,.12);background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,248,249,.96));overflow:hidden}
+.fast-sticky{position:sticky;top:8px;z-index:40;background:linear-gradient(135deg,#c0192d,#8f1624);color:white;border-radius:18px;padding:14px;box-shadow:0 14px 36px rgba(192,25,45,.22);margin-bottom:12px;border:1px solid rgba(255,255,255,.22)}
+.fast-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.fast-title{font-size:15px;font-weight:900;letter-spacing:.02em}.fast-chip{font-size:10px;font-weight:900;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);border-radius:999px;padding:4px 8px;white-space:nowrap}.fast-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.fast-item{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.20);bor
+@media (max-width: 767px){
+  .header-sub{
+    padding-top: calc(env(safe-area-inset-top) + 20px) !important;
+    min-height: calc(72px + env(safe-area-inset-top));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .header{
+    top: 0;
+  }
+
+  /* Home já tem premium-topbar própria fixa; mantém o hero com comportamento estável */
+  #screen-home .header{
+    position: relative !important;
+    top: auto !important;
+    z-index: 1;
+    box-shadow: none;
+  }
+
+  #screen-home .premium-topbar{
+    z-index: calc(var(--topbar-z) + 20) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  #screen-home .header{
+    position: sticky;
+    top: 0;
+    z-index: var(--topbar-z);
+  }
+
+  #screen-home .header{
+    box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  }
+}
+
+
+
+/* ===== v75.2 — Agenda: data atual em vermelho acessível =====
+   A classe .actual-today marca o dia real de hoje. A classe .today continua
+   sendo usada para o dia selecionado, sem confundir seleção com data atual. */
+.week-day.actual-today,
+body.dark-theme .week-day.actual-today{
+  background:linear-gradient(135deg,#b42318,#c0192d) !important;
+  border-color:#7f1d1d !important;
+  box-shadow:0 8px 18px rgba(192,25,45,.28) !important;
+}
+.week-day.actual-today .week-day-name,
+.week-day.actual-today .week-day-num,
+body.dark-theme .week-day.actual-today .week-day-name,
+body.dark-theme .week-day.actual-today .week-day-num{
+  color:#ffffff !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.28) !important;
+}
+.week-day.actual-today.has-tasks::after,
+body.dark-theme .week-day.actual-today.has-tasks::after{
+  background:#ffffff !important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35) !important;
+}
+.week-day.actual-today:focus-visible{
+  outline:3px solid rgba(255,255,255,.95) !important;
+  outline-offset:2px !important;
+}
+
+</style>
+
+<style>
+/* ── Correção barra de navegação mobile ── */
+.bottom-nav{z-index:9999!important;pointer-events:auto;}
+.screen,.content{position:relative;z-index:1;}
+.modal-overlay,.confirm-overlay,.appt-confirm-overlay{pointer-events:none;}
+.modal-overlay.open,.confirm-overlay.open,.appt-confirm-overlay.open{pointer-events:all;}
+
+/* Esconde elementos que são só do sidebar desktop */
+.nav-brand, .nav-spacer, .nav-footer { display:none !important; }
+
+/* 7 botões cabem sem texto cortado */
+@media (max-width: 767px) {
+  .nav-btn {
+    min-width: 0;
+    padding: 6px 2px 8px;
+    font-size: 9.5px;
+    gap: 2px;
+    flex: 1;
+    overflow: hidden;
+  }
+  .nav-btn svg { width: 20px; height: 20px; }
+
+  /* ── Botão câmera flutuante central ── */
+  .nav-btn-cam {
+    flex: 1.3;
+    justify-content: flex-end;
+    padding-bottom: 6px;
+    color: var(--text-light);
+    position: relative;
+    overflow: visible;
+  }
+  .nav-btn-cam.active { color: var(--green-600); }
+
+  .nav-cam-bubble {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-400), var(--green-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(26, 107, 92, 0.45);
+    border: 3px solid var(--bg);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-btn-cam:active .nav-cam-bubble {
+    transform: translateX(-50%) scale(0.93);
+    box-shadow: 0 2px 8px rgba(26, 107, 92, 0.35);
+  }
+  .nav-btn-cam.active .nav-cam-bubble {
+    background: linear-gradient(135deg, var(--green-600), var(--green-800));
+    box-shadow: 0 6px 22px rgba(13, 61, 53, 0.5);
+  }
+
+  /* Empurra o label "Receita" para baixo do ícone flutuante */
+  .nav-btn-cam > svg { display: none; }
+
+  /* Aumenta altura da nav para acomodar a bolha */
+  .bottom-nav { height: calc(var(--nav-h) + 10px); align-items: flex-end; }
+}
+
+/* No desktop/sidebar eles voltam a aparecer */
+@media (min-width: 768px) {
+  .nav-brand, .nav-spacer, .nav-footer { display:flex !important; }
+  .nav-footer { display:block !important; }
+  .nav-spacer { flex:1 !important; }
+  .nav-cam-bubble { display: none; }
+  .nav-btn-cam { justify-content: flex-start; }
+}
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+</style>
+
+
+<style id="cuidarbem-v25-premium-redesign">
+/* ═══════════════════════════════════════════════════════════════
+   CuidarBem v26 — refinamento mobile topbar fixa
+   Mantém a operação v24 e altera apenas camada visual/layout.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --green-50:#eef8f4;
+  --green-100:#d9efe6;
+  --green-200:#bfe4d6;
+  --green-400:#25a27d;
+  --green-600:#006b58;
+  --green-700:#005847;
+  --green-800:#013f36;
+  --teal-50:#eaf8f4;
+@media (max-width: 767px) {
+  .nav-btn {
+    min-width: 0;
+    padding: 6px 2px 8px;
+    font-size: 9.5px;
+    gap: 2px;
+    flex: 1;
+    overflow: hidden;
+  }
+  .nav-btn svg { width: 20px; height: 20px; }
+
+  /* ── Botão câmera flutuante central ── */
+  .nav-btn-cam {
+    flex: 1.3;
+    justify-content: flex-end;
+    padding-bottom: 6px;
+    color: var(--text-light);
+    position: relative;
+    overflow: visible;
+  }
+  .nav-btn-cam.active { color: var(--green-600); }
+
+  .nav-cam-bubble {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--teal-400), var(--green-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(26, 107, 92, 0.45);
+    border: 3px solid var(--bg);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-btn-cam:active .nav-cam-bubble {
+    transform: translateX(-50%) scale(0.93);
+    box-shadow: 0 2px 8px rgba(26, 107, 92, 0.35);
+  }
+  .nav-btn-cam.active .nav-cam-bubble {
+    background: linear-gradient(135deg, var(--green-600), var(--green-800));
+    box-shadow: 0 6px 22px rgba(13, 61, 53, 0.5);
+  }
+
+  /* Empurra o label "Receita" para baixo do ícone flutuante */
+  .nav-btn-cam > svg { display: none; }
+
+  /* Aumenta altura da nav para acomodar a bolha */
+  .bottom-nav { height: calc(var(--nav-h) + 10px); align-items: flex-end; }
+}
+
+/* No desktop/sidebar eles voltam a aparecer */
+@media (min-width: 768px) {
+  .nav-brand, .nav-spacer, .nav-footer { display:flex !important; }
+  .nav-footer { display:block !important; }
+  .nav-spacer { flex:1 !important; }
+  .nav-cam-bubble { display: none; }
+  .nav-btn-cam { justify-content: flex-start; }
+}
+
+.vitals-bar{display:flex;gap:10px;margin-top:16px}
+.vital-item{flex:1;display:flex;align-items:center;gap:8px;padding:10px;border-radius:14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(10px)}
+.vital-value{font-weight:800}
+
+</style>
+
+
+<style id="cuidarbem-v25-premium-redesign">
+/* ═══════════════════════════════════════════════════════════════
+   CuidarBem v26 — refinamento mobile topbar fixa
+   Mantém a operação v24 e altera apenas camada visual/layout.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --green-50:#eef8f4;
+  --green-100:#d9efe6;
+  --green-200:#bfe4d6;
+  --green-400:#25a27d;
+  --green-600:#006b58;
+  --green-700:#005847;
+  --green-800:#013f36;
+  --teal-50:#eaf8f4;
+  --teal-400:#1ea87e;
+  --teal-600:#08705b;
+  --blue-50:#eaf4fb;
+  --blue-400:#2a91c8;
+  --blue-600:#11628f;
+  --amber-50:#fff4df;
+  --amber-400:#e29322;
+  --amber-600:#9c5b00;
+  --coral-50:#fff0ef;
+  --coral-400:#ef4f48;
+  --coral-600:#b12a27;
+  --purple-50:#f1efff;
+  --purple-400:#7b70df;
+  --purple-600:#5344be;
+  --gray-50:#f8faf8;
+  --gray-100:#edf2ef;
+  --gray-200:#dce5e0;
+  --gray-400:#8a9891;
+  --gray-600:#53625c;
+  --gray-800:#17231f;
+  --text:#0c2721;
+  --text-muted:#52645d;
+  --text-light:#82918a;
+  --bg:#edf6f1;
+  --card-bg:rgba(255,255,255,.94);
+  --radius:22px;
+  --radius-sm:15px;
+  --shadow:0 14px 40px rgba(0,63,54,.10),0 2px 10px rgba(0,0,0,.04);
+}
+html{background:linear-gradient(145deg,#f8fcfa 0%,#e9f6f0 52%,#dcedeb 100%)}
+body{
+  background:
+    radial-gradient(circle at -20% 15%, rgba(37,162,125,.17), transparent 36%),
+    radial-gradient(circle at 115% 82%, rgba(0,107,88,.12), transparent 36%),
+    linear-gradient(180deg,#f9fcfa 0%,#edf6f1 44%,#e4f1ec 100%) !important;
+  color:var(--text);
+}
+body::before{
+  content:'';position:fixed;inset:auto -20% -10% -20%;height:32vh;z-index:-1;
+  background:linear-gradient(135deg,rgba(0,107,88,.10),rgba(37,162,125,.06));
+  clip-path:ellipse(60% 42% at 50% 100%);
+  pointer-events:none;
+}
+.card,.stat-card,.setting-row,.health-trend-card,.health-ring-card{
+  background:var(--card-bg)!important;
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:blur(16px);
+}
+.card{border-radius:22px!important;padding:18px!important;margin-bottom:14px!important;}
+.card-title{font-size:12px!important;letter-spacing:.08em!important;color:var(--green-700)!important;}
+/* Home hero */
+#screen-home .header{
+  min-height:246px;
+  padding:18px 20px 34px!important;
+  background:
+    radial-gradient(circle at 22% 10%,rgba(255,255,255,.20),transparent 34%),
+    linear-gradient(145deg,#004d42 0%,#006b58 54%,#025145 100%)!important;
+  border-radius:0 0 34px 34px;
+  box-shadow:0 18px 45px rgba(0,63,54,.28);
+  overflow:hidden;
+}
+#screen-home .header::before{
+  content:'';position:absolute;right:-65px;bottom:-80px;width:230px;height:230px;border-radius:50%;
+  border:34px solid rgba(255,255,255,.07);pointer-events:none;
+}
+#screen-home .header::after{display:block!important;content:'';position:absolute;left:-50px;bottom:-42px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.05)}
+.premium-topbar{display:flex;align-items:center;justify-content:space-betwee
+@media (max-width:767px){
+  .screen{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}.bottom-nav{padding-bottom:env(safe-area-inset-bottom)!important}.nav-btn{font-size:9.2px!important}.header-title{display:block}.vitals-bar{display:none!important}.cat-pills{scrollbar-width:none}.cat-pills::-webkit-scrollbar{display:none}.toast{border-radius:18px!important}.a11y-fab{right:14px!important;bottom:96px!important}.install-banner{bottom:94px!important}.confirm-sheet,.med-info-inner,.appt-confirm-sheet,.modal{max-width:480px!important;}
+}
+@keyframes cbFadeIn{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
+
+<style id="cuidarbem-v27-mobile-header-fix">
+/* v27 — correção: mantém Bom dia/Boa tarde + CuidarBem visíveis abaixo da topbar fixa */
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:96px!important;
+    min-height:252px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:78px!important;
+    padding:calc(env(safe-area-inset-top) + 18px) 18px 8px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98) 0%,rgba(0,107,88,.88) 68%,rgba(0,107,88,0) 100%)!important;
+    pointer-events:none!important;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{pointer-events:auto!important;}
+  #screen-home .premium-topbar-brand,
+  #screen-home .premium-menu{display:none!important;}
+  #screen-home .premium-bell{
+    margin-top:0!important;
+    transform:translateY(8px);
+    width:42px!important;
+    height:42px!important;
+  }
+  #screen-home .header-greeting{
+    display:block!important;
+    visibility:visible!important;
+    opacity:.92!important;
+    margin-top:0!important;
+    margin-bottom:4px!important;
+    color:rgba(255,255,255,.88)!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+  #screen-home .header-title{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    margin-top:2px!important;
+    color:#fff!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v29-mobile-subtitle-one-line">
+/* v29/v30 — slogan em linha única + sininho como central de alertas */
+.mobile-header-subtitle,
+.mobile-header-actions,
+.mobile-bell-btn{display:none;}
+@media (max-width:767px){
+  body{padding-top:0!important;}
+  #screen-home .header{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    min-height:238px!important;
+    height:auto!important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px!important;
+    border-radius:0 0 28px 28px!important;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg,#004d42 0%,#006b58 58%,#0b8068 100%)!important;
+    box-shadow:0 18px 38px rgba(0,64,54,.28)!important;
+    z-index:9997!important;
+    overflow:hidden!important;
+  }
+  #screen-home .header::before{
+    content:'';position:absolute;right:-60px;top:-60px;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none;
+  }
+  #screen-home .header::after{
+    content:'';position:absolute;left:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.06);pointer-events:none;display:block!important;
+  }
+  #screen-home .premium-topbar{display:none!important;}
+  #screen-home .content{padding-top:258px!important;}
+  .mobile-topbar-title-row{
+    position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  }
+  .mobile-topbar-copy{min-width:0;flex:1;}
+  #screen-home .header-greeting{
+    display:block!important;font-size:14px!important;line-height:1.1!important;font-weight:800!important;
+    color:rgba(255,255,255,.86)!important;margin:0 0 5px!important;letter-spacing:.01em!important;
+  }
+  #screen-home .header-title{
+    display:block!important;font-size:31px!important;line-height:.98!important;font-weight:950!important;
+    letter-spacing:-.045em!important;color:#fff!important;margin:0!important;text-shadow:0 2px 12px rgba(0,0,0,.10);
+  }
+  #screen-home .header-title::after{display:none!important;content:none!important;}
+  .mobile-header-subtitle{
+    display:block!important;margin-top:7px;font-size:12.2px;line-height:1.15;font-weight:800;color:rgba(255,255,255,.78);
+    letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  .mobile-bell-btn{
+    display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
+    width:46px;height:46px;border-radius:17px
+@media (max-width:767px){
+  #screen-home .header{
+    padding-top:96px!important;
+    min-height:252px!important;
+  }
+  #screen-home .premium-topbar{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    height:78px!important;
+    padding:calc(env(safe-area-inset-top) + 18px) 18px 8px!important;
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:flex-end!important;
+    z-index:9998!important;
+    background:linear-gradient(180deg,rgba(0,77,66,.98) 0%,rgba(0,107,88,.88) 68%,rgba(0,107,88,0) 100%)!important;
+    pointer-events:none!important;
+  }
+  #screen-home .premium-topbar .premium-icon-btn{pointer-events:auto!important;}
+  #screen-home .premium-topbar-brand,
+  #screen-home .premium-menu{display:none!important;}
+  #screen-home .premium-bell{
+    margin-top:0!important;
+    transform:translateY(8px);
+    width:42px!important;
+    height:42px!important;
+  }
+  #screen-home .header-greeting{
+    display:block!important;
+    visibility:visible!important;
+    opacity:.92!important;
+    margin-top:0!important;
+    margin-bottom:4px!important;
+    color:rgba(255,255,255,.88)!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+  #screen-home .header-title{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    margin-top:2px!important;
+    color:#fff!important;
+    position:relative!important;
+    z-index:3!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v29-mobile-subtitle-one-line">
+/* v29/v30 — slogan em linha única + sininho como central de alertas */
+.mobile-header-subtitle,
+.mobile-header-actions,
+.mobile-bell-btn{display:none;}
+@media (max-width:767px){
+  body{padding-top:0!important;}
+  #screen-home .header{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    min-height:238px!important;
+    height:auto!important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px!important;
+    border-radius:0 0 28px 28px!important;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg,#004d42 0%,#006b58 58%,#0b8068 100%)!important;
+    box-shadow:0 18px 38px rgba(0,64,54,.28)!important;
+    z-index:9997!important;
+    overflow:hidden!important;
+  }
+  #screen-home .header::before{
+    content:'';position:absolute;right:-60px;top:-60px;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none;
+  }
+  #screen-home .header::after{
+    content:'';position:absolute;left:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.06);pointer-events:none;display:block!important;
+  }
+  #screen-home .premium-topbar{display:none!important;}
+  #screen-home .content{padding-top:258px!important;}
+  .mobile-topbar-title-row{
+    position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  }
+  .mobile-topbar-copy{min-width:0;flex:1;}
+  #screen-home .header-greeting{
+    display:block!important;font-size:14px!important;line-height:1.1!important;font-weight:800!important;
+    color:rgba(255,255,255,.86)!important;margin:0 0 5px!important;letter-spacing:.01em!important;
+  }
+  #screen-home .header-title{
+    display:block!important;font-size:31px!important;line-height:.98!important;font-weight:950!important;
+    letter-spacing:-.045em!important;color:#fff!important;margin:0!important;text-shadow:0 2px 12px rgba(0,0,0,.10);
+  }
+  #screen-home .header-title::after{display:none!important;content:none!important;}
+  .mobile-header-subtitle{
+    display:block!important;margin-top:7px;font-size:12.2px;line-height:1.15;font-weight:800;color:rgba(255,255,255,.78);
+    letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  .mobile-bell-btn{
+    display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
+    width:46px;height:46px;border-radius:17px;border:1px solid rgba(255,255,255,.34);
+    background:rgba(255,255,255,.16);color:#fff;font-size:20px;box-shadow:inset 0 1px rgba(255,255,255,.20),0 10px 22px rgba(0,0,0,.14);
+    margin-top:18px;backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-bell-btn span{position:absolute;right:9px;top:8px;width:8px;height:8px;background:#ff4d5f;border:2px solid #fff;border-radius:50%;}
+  #screen-home .vitals-bar{display:none!important;}
+  #screen-home .header-date{
+    position:relative!important;z-index:3!important;display:inline-flex!important;align-items:center;gap:6px;
+    margin-top:12px!important;padding:6px 10px!important;border-radius:999px!important;
+    background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.18)!important;
+    color:rgba(255,255,255,.84)!importan
+@media (max-width:767px){
+  body{padding-top:0!important;}
+  #screen-home .header{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    min-height:238px!important;
+    height:auto!important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px!important;
+    border-radius:0 0 28px 28px!important;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(255,255,255,.18), transparent 30%),
+      linear-gradient(135deg,#004d42 0%,#006b58 58%,#0b8068 100%)!important;
+    box-shadow:0 18px 38px rgba(0,64,54,.28)!important;
+    z-index:9997!important;
+    overflow:hidden!important;
+  }
+  #screen-home .header::before{
+    content:'';position:absolute;right:-60px;top:-60px;width:170px;height:170px;border-radius:50%;
+    background:rgba(255,255,255,.08);pointer-events:none;
+  }
+  #screen-home .header::after{
+    content:'';position:absolute;left:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;
+    background:rgba(255,255,255,.06);pointer-events:none;display:block!important;
+  }
+  #screen-home .premium-topbar{display:none!important;}
+  #screen-home .content{padding-top:258px!important;}
+  .mobile-topbar-title-row{
+    position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  }
+  .mobile-topbar-copy{min-width:0;flex:1;}
+  #screen-home .header-greeting{
+    display:block!important;font-size:14px!important;line-height:1.1!important;font-weight:800!important;
+    color:rgba(255,255,255,.86)!important;margin:0 0 5px!important;letter-spacing:.01em!important;
+  }
+  #screen-home .header-title{
+    display:block!important;font-size:31px!important;line-height:.98!important;font-weight:950!important;
+    letter-spacing:-.045em!important;color:#fff!important;margin:0!important;text-shadow:0 2px 12px rgba(0,0,0,.10);
+  }
+  #screen-home .header-title::after{display:none!important;content:none!important;}
+  .mobile-header-subtitle{
+    display:block!important;margin-top:7px;font-size:12.2px;line-height:1.15;font-weight:800;color:rgba(255,255,255,.78);
+    letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+  .mobile-bell-btn{
+    display:flex!important;align-items:center;justify-content:center;position:relative;z-index:4;
+    width:46px;height:46px;border-radius:17px;border:1px solid rgba(255,255,255,.34);
+    background:rgba(255,255,255,.16);color:#fff;font-size:20px;box-shadow:inset 0 1px rgba(255,255,255,.20),0 10px 22px rgba(0,0,0,.14);
+    margin-top:18px;backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-bell-btn span{position:absolute;right:9px;top:8px;width:8px;height:8px;background:#ff4d5f;border:2px solid #fff;border-radius:50%;}
+  #screen-home .vitals-bar{display:none!important;}
+  #screen-home .header-date{
+    position:relative!important;z-index:3!important;display:inline-flex!important;align-items:center;gap:6px;
+    margin-top:12px!important;padding:6px 10px!important;border-radius:999px!important;
+    background:rgba(255,255,255,.13)!important;border:1px solid rgba(255,255,255,.18)!important;
+    color:rgba(255,255,255,.84)!important;font-size:12px!important;font-weight:800!important;
+  }
+  #screen-home .header-date::before{content:'📅';font-size:12px;}
+  #screen-home .header > div[style*="justify-content:space-between"]{
+    position:relative;z-index:3;margin-top:10px!important;gap:10px!important;
+  }
+  #screen-home .header-patient{
+    min-width:0;max-width:calc(100% - 105px);background:rgba(255,255,255,.16)!important;
+    border:1px solid rgba(255,255,255,.24)!important;border-radius:999px!important;
+    padding:7px 12px!important;box-shadow:inset 0 1px rgba(255,255,255,.18)!important;font-size:12px!important;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #patient-name-pill{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #screen-home .header button[onclick="openSamuMode()"]{
+    flex-shrink:0!important;border-radius:999px!important;padding:8px 13px!important;background:rgba(232,41,63,.92)!important;
+    border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 10px 20px rgba(160,20,38,.22)!important;
+  }
+  .mobile-header-actions{
+    position:relative;z-index:3;display:grid!important;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;
+  }
+  .mobile-header-action{
+    min-height:40px;border:1px solid rgba(255,255,255,.24);border-radius:15px;background:rgba(255,255,255,.14);color:#fff;
+    display:flex;align-items:center;justify-content:center;gap:5px;font-family:'Nunito',sans-serif;font-size:11.2px;font-weight:900;
+    box-shadow:inset 0 1px rgba(255,255,255,.16),0 8px 18px rgba(0,0,0,.10);backdrop-filter:blur(8px);cursor:pointer;
+  }
+  .mobile-header-action.danger{background:rgba(232,41,63,.78);}
+  .voice-kiosk-actions{display:none!important;}
+  #streak-badge,#patient-mode-header-badge{position:relative;z-index:3;}
+}
+@m
+@media (max-width:767px){.alerts-center-head{position:sticky;top:-16px;background:#fff;padding-top:2px;z-index:2}.alerts-center-list{padding-bottom:4px}.alerts-center-summary{grid-template-columns:repeat(3,minmax(0,1fr));}}
+</style>
+
+
+<style id="cuidarbem-v36-home-first-panel-offset">
+/* v36 — ajuste intermediário: sobe apenas um tanto em relação à v34 */
+@media (max-width:767px){
+  #screen-home .content{
+    padding-top:296px!important;
+  }
+  #alerts-container{
+    margin-top:6px!important;
+  }
+  #next-alarm-card{
+    margin-top:4px!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v37-med-info-centered">
+/* v37 — centraliza a janela de detalhes do medicamento e adiciona ação de exclusão */
+.med-info-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+}
+.med-info-inner{
+  width:100%!important;
+  max-width:440px!important;
+  max-height:86dvh!important;
+  overflow-y:auto!important;
+  margin:0!important;
+  border-radius:28px!important;
+  padding:22px 18px 24px!important;
+  transform:translateY(14px) scale(.96)!important;
+  box-shadow:0 22px 70px rgba(0,63,54,.28)!important;
+}
+.med-info-overlay.open .med-info-inner{
+  transform:translateY(0) scale(1)!important;
+}
+.med-info-danger-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:var(--coral-50);
+  color:var(--coral-600);
+  font-family:'Nunito',sans-serif;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+  margin-bottom:8px;
+  border:1.5px solid rgba(216,90,48,.18);
+}
+.med-info-danger-btn:active{transform:scale(.98);background:#ffe1d8;}
+
+.task-delete-btn{
+  border:none;background:var(--coral-50);color:var(--coral-600);
+  border-radius:9px;width:28px;height:28px;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(216,90,48,.10);
+}
+.task-delete-btn:active{transform:scale(.94);background:#ffe1d8;}
+.appt-delete-btn{margin-top:8px;}
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;padding:14px 16px;cursor:pointer;box-shadow:0 12px 28px rgba(192,25,45,.22);}
+.cb-delete-cancel{width:100%;border:1.5px solid var(--gray-200);border-radius:14px;background:var(--gray-50);color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:13px 16px;cursor:pointer;}
+.cb-delete-confirm:active,.cb-delete-cancel:active{transform:scale(.98);}
+</style>
+
+
+
+<style id="cuidarbem-v41-add-modal-fix">
+/* v41 — corrige a janela Nova tarefa da Agenda para não ficar escondida no mobile */
+@media (max-width:767px){
+  #add-modal{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px 12px calc(var(--nav-h) + 22px + env(safe-area-inset-bottom))!important;
+  }
+  #add-modal .modal{
+    width:min(100%, 456px)!important;
+    max-height:calc(100dvh - var(--nav-h) - 92px - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;
+    border-radius:26px!important;
+    padding:22px 18px calc(30px + env(safe-area-inset-bottom))!important;
+    margin:0 auto!important;
+    transform:translateY(10px) scale(.98)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #add-modal.open .modal{
+    transform:translateY(0) scale(1)!important;
+  }
+  #add-modal .mod
+@media (max-width:767px){
+  #screen-home .content{
+    padding-top:296px!important;
+  }
+  #alerts-container{
+    margin-top:6px!important;
+  }
+  #next-alarm-card{
+    margin-top:4px!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v37-med-info-centered">
+/* v37 — centraliza a janela de detalhes do medicamento e adiciona ação de exclusão */
+.med-info-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+}
+.med-info-inner{
+  width:100%!important;
+  max-width:440px!important;
+  max-height:86dvh!important;
+  overflow-y:auto!important;
+  margin:0!important;
+  border-radius:28px!important;
+  padding:22px 18px 24px!important;
+  transform:translateY(14px) scale(.96)!important;
+  box-shadow:0 22px 70px rgba(0,63,54,.28)!important;
+}
+.med-info-overlay.open .med-info-inner{
+  transform:translateY(0) scale(1)!important;
+}
+.med-info-danger-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:var(--coral-50);
+  color:var(--coral-600);
+  font-family:'Nunito',sans-serif;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:10px;
+  margin-bottom:8px;
+  border:1.5px solid rgba(216,90,48,.18);
+}
+.med-info-danger-btn:active{transform:scale(.98);background:#ffe1d8;}
+
+.task-delete-btn{
+  border:none;background:var(--coral-50);color:var(--coral-600);
+  border-radius:9px;width:28px;height:28px;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(216,90,48,.10);
+}
+.task-delete-btn:active{transform:scale(.94);background:#ffe1d8;}
+.appt-delete-btn{margin-top:8px;}
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;padding:14px 16px;cursor:pointer;box-shadow:0 12px 28px rgba(192,25,45,.22);}
+.cb-delete-cancel{width:100%;border:1.5px solid var(--gray-200);border-radius:14px;background:var(--gray-50);color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:13px 16px;cursor:pointer;}
+.cb-delete-confirm:active,.cb-delete-cancel:active{transform:scale(.98);}
+</style>
+
+
+
+<style id="cuidarbem-v41-add-modal-fix">
+/* v41 — corrige a janela Nova tarefa da Agenda para não ficar escondida no mobile */
+@media (max-width:767px){
+  #add-modal{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px 12px calc(var(--nav-h) + 22px + env(safe-area-inset-bottom))!important;
+  }
+  #add-modal .modal{
+    width:min(100%, 456px)!important;
+    max-height:calc(100dvh - var(--nav-h) - 92px - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;
+    border-radius:26px!important;
+    padding:22px 18px calc(30px + env(safe-area-inset-bottom))!important;
+    margin:0 auto!important;
+    transform:translateY(10px) scale(.98)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #add-modal.open .modal{
+    transform:translateY(0) scale(1)!important;
+  }
+  #add-modal .modal-title{
+    position:sticky;
+    top:-22px;
+    z-index:2;
+    background:linear-gradient(180deg,#fff 0%,#f8fcfa 100%);
+    padding:4px 0 12px;
+    margin-bottom:12px!important;
+  }
+  #add-modal .btn-add:last-child{
+    margin-bottom:6px!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v55-rehab-style">
+/* v55 — Reabilitação motora e funcional */
+.rehab
+@media (max-width:767px){
+  .med-info-overlay{padding:14px!important;}
+  .med-info-inner{max-height:84dvh!important;max-width:calc(100vw - 28px)!important;}
+}
+</style>
+
+
+<style id="cuidarbem-v39-delete-modal-style">
+/* v39 — confirmação personalizada de exclusão sem alerta nativo do navegador */
+.cb-delete-overlay{position:fixed;inset:0;background:rgba(8,28,24,.58);backdrop-filter:blur(10px);z-index:9900;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;pointer-events:none;transition:opacity .22s ease;}
+.cb-delete-overlay.open{opacity:1;pointer-events:all;}
+.cb-delete-dialog{width:100%;max-width:380px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border-radius:28px;padding:22px;box-shadow:0 24px 80px rgba(0,40,34,.28);transform:translateY(14px) scale(.96);transition:transform .24s cubic-bezier(.32,.72,0,1);border:1px solid rgba(255,255,255,.65);}
+.cb-delete-overlay.open .cb-delete-dialog{transform:translateY(0) scale(1);}
+.cb-delete-icon{width:56px;height:56px;border-radius:20px;background:#fff0f2;color:#c0192d;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:inset 0 0 0 1px rgba(192,25,45,.10);}
+.cb-delete-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:var(--green-800);text-align:center;line-height:1.2;margin-bottom:8px;letter-spacing:-.02em;}
+.cb-delete-message{font-size:13px;color:var(--text-muted);text-align:center;line-height:1.55;margin-bottom:18px;font-weight:600;}
+.cb-delete-actions{display:grid;grid-template-columns:1fr;gap:9px;}
+.cb-delete-confirm{width:100%;border:none;border-radius:16px;background:linear-gradient(135deg,#c0192d,#e8293f);color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;padding:14px 16px;cursor:pointer;box-shadow:0 12px 28px rgba(192,25,45,.22);}
+.cb-delete-cancel{width:100%;border:1.5px solid var(--gray-200);border-radius:14px;background:var(--gray-50);color:var(--text-muted);font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:13px 16px;cursor:pointer;}
+.cb-delete-confirm:active,.cb-delete-cancel:active{transform:scale(.98);}
+</style>
+
+
+
+<style id="cuidarbem-v41-add-modal-fix">
+/* v41 — corrige a janela Nova tarefa da Agenda para não ficar escondida no mobile */
+@media (max-width:767px){
+  #add-modal{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:18px 12px calc(var(--nav-h) + 22px + env(safe-area-inset-bottom))!important;
+  }
+  #add-modal .modal{
+    width:min(100%, 456px)!important;
+    max-height:calc(100dvh - var(--nav-h) - 92px - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;
+    border-radius:26px!important;
+    padding:22px 18px calc(30px + env(safe-area-inset-bottom))!important;
+    margin:0 auto!important;
+    transform:translateY(10px) scale(.98)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #add-modal.open .modal{
+    transform:translateY(0) scale(1)!important;
+  }
+  #add-modal .modal-title{
+    position:sticky;
+    top:-22px;
+    z-index:2;
+    background:linear-gradient(180deg,#fff 0%,#f8fcfa 100%);
+    padding:4px 0 12px;
+    margin-bottom:12px!important;
+  }
+  #add-modal .btn-add:last-child{
+    margin-bottom:6px!important;
+  }
+}
+</style>
+
+
+
+<style id="cuidarbem-v55-rehab-style">
+/* v55 — Reabilitação motora e funcional */
+.rehab-card{overflow:hidden;border:1px solid rgba(15,110,86,.10);background:linear-gradient(180deg,var(--card-bg),rgba(225,245,238,.34));}
+.rehab-hero{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.rehab-icon{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#0f6e56,#1d9e75);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 12px 26px rgba(15,110,86,.22);flex-shrink:0}
+.rehab-title{font-family:'Nunito',sans-serif;font-size:18px;font-weight:900;color:var(--green-800);letter-spacing:-.02em;line-height:1.2}
+.rehab-sub{font-size:12.5px;color:var(--text-muted);font-weight:650;line-height:1.45;margin-top:3px}
+.rehab-tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;scrollbar-width:none}.rehab-tabs::-webkit-scrollbar{display:none}
+.rehab-tab{flex:0 0 auto;border:1.5px solid var(--gray-200);background:var(--white);color:var(--text-muted);border-radius:999px;padding:8px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer;transition:all .16s}
+.rehab-tab.active{background:linear-gradient(135deg,var(--green-600),var(--teal-600));color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(15,110,86,.20)}
+.rehab-phase-box{border-radius:16px;background:rgba(255,255,255,.74);border:1px solid var(--gray-100);padding:13px;margin-bottom:12px}
+.rehab-phase-name{font-size:14px;font-weight:900;color:var(--green-800);margin-bottom:5px}.rehab-phase-desc{font-size:12.5px;color:var(--text-muted);font-weight:650;line-height:1.55}.rehab-phase-list{margin-top:9px;display:grid;gap:6px}.rehab-phase-i
+@media (max-width: 767px){
+  #screen-home .header{
+    overflow: hidden !important;
+  }
+  #screen-home .header::before,
+  #screen-home .header::after{
+    z-index: 0 !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+  }
+  #screen-home .header > *{
+    position: relative;
+    z-index: 3;
+  }
+  #screen-home .content{
+    position: relative !important;
+    z-index: 1 !important;
+    background: transparent !important;
+  }
+}
+
+/* Desktop/sidebar: topbar das guias sem “rebarba” branca lateral */
+@media (min-width: 768px){
+  .header-sub,
+  .screen:not(#screen-home) .header{
+    border-radius: 0 0 24px 24px !important;
+    margin-bottom: 0 !important;
+  }
+  .screen:not(#screen-home) .content{
+    padding-top: 22px !important;
+  }
+}
+</style>
+
+
+
+<!-- v75.4 — Saúde: aproxima primeiro card da topbar -->
+<style id="cuidarbem-v75-4-saude-gap-topbar">
+/*
+  Ajuste solicitado: reduzir o espaço entre a topbar da guia Saúde
+  e o primeiro card Cuidado diário v75.
+  A guia Saúde usa .health-dashboard, não .content. Por isso o antigo
+  padding-top de segurança ficou excessivo em alguns celulares.
+*/
+@media (max-width: 767px){
+  #screen-dashboard .header-sub{
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+
+  #screen-dashboard #cb75-patient-checkin{
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 390px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 14px !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 16px !important;
+  }
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- SCREEN: HOME -->
+
+
+<style id="cuidarbem-v40-fixed-topbars-all-screens">
+/* v40 — topbar fixa em todas as guias mobile */
+@media (max-width:767px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!important;
+    line-height:1.25!important;
+    opacity:.82!important;
+  }
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content{
+    padding-top:124px!important;
+  }
+  #screen-calendar,
+  #screen-reports,
+  #screen-profile,
+  #screen-ocr,
+  #screen-dashboard,
+  #screen-appt{
+    scroll-padding-top:124px!important;
+  }
+}
+</style>
+
+
+<style id="cuidarbem-v43-saude-cards-ajuste-fino">
+/* v43 — ajuste fino: sobe um pouco os 3 cards iniciais da guia Saúde */
+@media (max-width:767px){
+  #screen-dashboard .health-dashboard{
+    padding-top:126px!important;
+  }
+}
+</style>
+
+<div id="screen-home" class="screen active">
+  <div class="header" id="home-header">
+    <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
+    <div class="mobile-topbar-title-row">
+      <div class="mobile-topbar-copy">
+        <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+        <div class="header-title">Cuidar 
+@media (max-width: 767px){
+  #screen-dashboard .header-sub{
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+
+  #screen-dashboard #cb75-patient-checkin{
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 390px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 14px !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-dashboard .health-dashboard{
+    padding-top: 16px !important;
+  }
+  #screen-dashboard .health-dashboard > #cb75-care-label,
+  #screen-dashboard .health-dashboard > .health-section-label:first-child{
+    margin-top: 0 !important;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<!-- SCREEN: HOME -->
+
+
+<style id="cuidarbem-v40-fixed-topbars-all-screens">
+/* v40 — topbar fixa em todas as guias mobile */
+@media (max-width:767px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!important;
+    line-height:1.25!important;
+    opacity:.82!important;
+  }
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content{
+    padding-top:124px!important;
+  }
+  #screen-calendar,
+  #screen-reports,
+  #screen-profile,
+  #screen-ocr,
+  #screen-dashboard,
+  #screen-appt{
+    scroll-padding-top:124px!important;
+  }
+}
+</style>
+
+
+<style id="cuidarbem-v43-saude-cards-ajuste-fino">
+/* v43 — ajuste fino: sobe um pouco os 3 cards iniciais da guia Saúde */
+@media (max-width:767px){
+  #screen-dashboard .health-dashboard{
+    padding-top:126px!important;
+  }
+}
+</style>
+
+<div id="screen-home" class="screen active">
+  <div class="header" id="home-header">
+    <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
+    <div class="mobile-topbar-title-row">
+      <div class="mobile-topbar-copy">
+        <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+        <div class="header-title">Cuidar Bem</div>
+        <div class="mobile-header-subtitle">Cuidado que conecta, saúde que acompanha.</div>
+      </div>
+      <button class="mobile-bell-btn" onclick="openAlertsCenter()" aria-label="Central de alertas">🔔<span id="mobile-alert-dot"></span></button>
+    </div>
+
+    <div class="header-date" id="today-date"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+      <div class="header-patient" id="patient-pill">
+        <span>💚</span> <span id="patient-name-pill">Nome da paciente</span>
+      </div>
+      <button onclick="openSamuMode()" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.45);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;color:white;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:5px" title="Abrir ficha de emergência">
+        🆘 SAMU
+      </button>
+    </div>
+    <div class="mobile-header-actions" aria-label="Ações rápidas da tela inicial">
+      <button class="mobile-header-action" onclick="speakSummary()" title="Ler resumo">🔊 <span>Ler resumo</span></but
+@media (max-width:767px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    width:100%!important;
+    max-width:480px!important;
+    z-index:95!important;
+    min-height:98px!important;
+    height:auto!important;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 16px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:center!important;
+    gap:3px!important;
+    border-radius:0 0 26px 26px!important;
+    box-shadow:0 14px 34px rgba(0,63,54,.22)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+  #screen-calendar .header-sub .header-sub-title,
+  #screen-reports .header-sub .header-sub-title,
+  #screen-profile .header-sub .header-sub-title,
+  #screen-ocr .header-sub .header-sub-title,
+  #screen-dashboard .header-sub .header-sub-title,
+  #screen-appt .header-sub .header-sub-title{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.12!important;
+    letter-spacing:-.02em!important;
+  }
+  #screen-calendar .header-sub .header-date,
+  #screen-reports .header-sub .header-date,
+  #screen-profile .header-sub .header-date,
+  #screen-ocr .header-sub .header-date,
+  #screen-dashboard .header-sub .header-date,
+  #screen-appt .header-sub .header-date{
+    margin:2px 0 0!important;
+    padding:0!important;
+    border:0!important;
+    font-size:12.5px!important;
+    line-height:1.25!important;
+    opacity:.82!important;
+  }
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content{
+    padding-top:124px!important;
+  }
+  #screen-calendar,
+  #screen-reports,
+  #screen-profile,
+  #screen-ocr,
+  #screen-dashboard,
+  #screen-appt{
+    scroll-padding-top:124px!important;
+  }
+}
+</style>
+
+
+<style id="cuidarbem-v43-saude-cards-ajuste-fino">
+/* v43 — ajuste fino: sobe um pouco os 3 cards iniciais da guia Saúde */
+@media (max-width:767px){
+  #screen-dashboard .health-dashboard{
+    padding-top:126px!important;
+  }
+}
+</style>
+
+<div id="screen-home" class="screen active">
+  <div class="header" id="home-header">
+    <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
+    <div class="mobile-topbar-title-row">
+      <div class="mobile-topbar-copy">
+        <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+        <div class="header-title">Cuidar Bem</div>
+        <div class="mobile-header-subtitle">Cuidado que conecta, saúde que acompanha.</div>
+      </div>
+      <button class="mobile-bell-btn" onclick="openAlertsCenter()" aria-label="Central de alertas">🔔<span id="mobile-alert-dot"></span></button>
+    </div>
+
+    <div class="header-date" id="today-date"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+      <div class="header-patient" id="patient-pill">
+        <span>💚</span> <span id="patient-name-pill">Nome da paciente</span>
+      </div>
+      <button onclick="openSamuMode()" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.45);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;color:white;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:5px" title="Abrir ficha de emergência">
+        🆘 SAMU
+      </button>
+    </div>
+    <div class="mobile-header-actions" aria-label="Ações rápidas da tela inicial">
+      <button class="mobile-header-action" onclick="speakSummary()" title="Ler resumo">🔊 <span>Ler resumo</span></button>
+      <button class="mobile-header-action danger" onclick="pararAudio()" title="Parar resumo">⛔ <span>Parar resumo</span></button>
+      <button class="mobile-header-action" onclick="toggleKiosk()" title="Modo simples" id="mobile-kiosk-btn">🔒 <span>Modo simples</span></button>
+    </div>
+    <!-- Streak badge -->
+    <div id="streak-badge" style="display:none;margin-top:10px">
+      <span id="streak-text" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700">
+        🔥 <span id="streak-count">0</span> dias seguidos!
+      </span>
+    </div>
+    <!-- Badge modo paciente -->
+    <div id="patient-mode-header-badge" style="display:none;margin-top:8px">
+      <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.5);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700">
+        👤 Modo Paciente
+      </span>
+    </div>
+
+    <!-- VITALS dentro do header — desktop apenas (mobile: no content) -->
+    <div class="vitals-bar vitals-cards-grid header-vitals-row" id="vitals-bar-main">
+      <div class
+@media (max-width:767px){
+  #screen-dashboard .health-dashboard{
+    padding-top:126px!important;
+  }
+}
+</style>
+
+<div id="screen-home" class="screen active">
+  <div class="header" id="home-header">
+    <div class="premium-topbar" aria-label="Barra superior fixa" style="display:none"></div>
+    <div class="mobile-topbar-title-row">
+      <div class="mobile-topbar-copy">
+        <div class="header-greeting" id="greeting">Bom dia ☀️</div>
+        <div class="header-title">Cuidar Bem</div>
+        <div class="mobile-header-subtitle">Cuidado que conecta, saúde que acompanha.</div>
+      </div>
+      <button class="mobile-bell-btn" onclick="openAlertsCenter()" aria-label="Central de alertas">🔔<span id="mobile-alert-dot"></span></button>
+    </div>
+
+    <div class="header-date" id="today-date"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+      <div class="header-patient" id="patient-pill">
+        <span>💚</span> <span id="patient-name-pill">Nome da paciente</span>
+      </div>
+      <button onclick="openSamuMode()" style="background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.45);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;color:white;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:5px" title="Abrir ficha de emergência">
+        🆘 SAMU
+      </button>
+    </div>
+    <div class="mobile-header-actions" aria-label="Ações rápidas da tela inicial">
+      <button class="mobile-header-action" onclick="speakSummary()" title="Ler resumo">🔊 <span>Ler resumo</span></button>
+      <button class="mobile-header-action danger" onclick="pararAudio()" title="Parar resumo">⛔ <span>Parar resumo</span></button>
+      <button class="mobile-header-action" onclick="toggleKiosk()" title="Modo simples" id="mobile-kiosk-btn">🔒 <span>Modo simples</span></button>
+    </div>
+    <!-- Streak badge -->
+    <div id="streak-badge" style="display:none;margin-top:10px">
+      <span id="streak-text" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700">
+        🔥 <span id="streak-count">0</span> dias seguidos!
+      </span>
+    </div>
+    <!-- Badge modo paciente -->
+    <div id="patient-mode-header-badge" style="display:none;margin-top:8px">
+      <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.25);border:1.5px solid rgba(255,255,255,0.5);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700">
+        👤 Modo Paciente
+      </span>
+    </div>
+
+    <!-- VITALS dentro do header — desktop apenas (mobile: no content) -->
+    <div class="vitals-bar vitals-cards-grid header-vitals-row" id="vitals-bar-main">
+      <div class="vital-item vital-card-item" id="vital-bp" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('bp',document.getElementById('tab-bp')),200)">
+        <div class="vci-icon" style="background:rgba(255,255,255,.18);color:#fff">🩸</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--/--</div>
+          <div class="vital-label vci-label">Pressão</div>
+          <div class="vci-unit">mmHg</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-hr" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('bp',document.getElementById('tab-bp')),200)">
+        <div class="vci-icon" style="background:rgba(255,255,255,.18);color:#fff">❤️</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--</div>
+          <div class="vital-label vci-label">Batimentos</div>
+          <div class="vci-unit">BPM</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-gluc" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('gluc',document.getElementById('tab-gluc')),200)">
+        <div class="vci-icon" style="background:rgba(255,255,255,.18);color:#fff">🍬</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--</div>
+          <div class="vital-label vci-label">Glicemia</div>
+          <div class="vci-unit">mg/dL</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-o2" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('spo2',document.getElementById('tab-spo2')),200)">
+        <div class="vci-icon" style="background:rgba(255,255,255,.18);color:#fff">🫁</div>
+        <div class="vci-body">
+          <div class="vital-value vci-value">--%</div>
+          <div class="vital-label vci-label">Saturação</div>
+          <div class="vci-unit">SpO₂</div>
+        </div>
+      </div>
+      <div class="vital-item vital-card-item" id="vital-temp" onclick="goScreen('dashboard');setTimeout(()=>switchVitalTab&&switchVitalTab('temp',document.getElementById('tab-temp')),200)">
+        <div class="vci-icon" style="b
+@media (max-width:767px){
+  :root{
+    --cb-glass-bg: rgba(255,255,255,.68);
+    --cb-glass-strong: rgba(255,255,255,.78);
+    --cb-glass-border: rgba(255,255,255,.52);
+    --cb-shadow-soft: 0 14px 40px rgba(9,64,54,.10);
+    --cb-shadow-strong: 0 18px 48px rgba(9,64,54,.16);
+  }
+  body{
+    background:
+      radial-gradient(circle at top left, rgba(61,168,138,.16), transparent 34%),
+      radial-gradient(circle at top right, rgba(29,158,117,.12), transparent 26%),
+      linear-gradient(180deg,#eef8f4 0%,#f7fbf9 36%,#f2f6f4 100%)!important;
+  }
+  #screen-home .header,
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255,255,255,.15), transparent 24%),
+      linear-gradient(135deg,#0d5c4f 0%, #167563 44%, #1aa081 100%)!important;
+    box-shadow:0 12px 32px rgba(4,53,45,.22)!important;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  #screen-home .header::before,
+  #screen-home .header::after{opacity:.9!important}
+  .card,.stat-card,.setting-row,.appt-card,.health-trend-card,.health-ring-card,.vital-card,.hist-card,.emerg-card,
+  #today-tasks-card,#next-alarm-card,#caregiver-summary-card,.result-section,.appt-info-grid{
+    background:linear-gradient(180deg,var(--cb-glass-strong) 0%, rgba(255,255,255,.60) 100%)!important;
+    border:1px solid var(--cb-glass-border)!important;
+    box-shadow:var(--cb-shadow-soft)!important;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+  .card,.stat-card,.setting-row,.appt-card,.health-trend-card,.health-ring-card,.vital-card{
+    border-radius:24px!important;
+  }
+  .task-item,.hist-item,.appt-check-item,.mi-row,.setting-row,.week-day,.type-opt,.chip,.cat-pill,
+  .alert-card,.med-checklist,.med-info-inner .mi-row{
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+  }
+  .task-item{
+    background:linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(246,252,249,.72) 100%);
+    border:1px solid rgba(18,123,101,.08)!important;
+    border-radius:18px;
+    padding:14px 12px!important;
+    margin-bottom:8px;
+    box-shadow:0 8px 24px rgba(9,64,54,.06);
+  }
+  .task-item:last-child{margin-bottom:0}
+  .task-item-med-pending{
+    background:linear-gradient(180deg, rgba(255,246,247,.96) 0%, rgba(255,239,242,.86) 100%)!important;
+    border:1px solid rgba(255,172,182,.35)!important;
+  }
+  .task-item-med-late{
+    background:linear-gradient(180deg, rgba(255,235,239,.98) 0%, rgba(255,221,227,.90) 100%)!important;
+    box-shadow:0 12px 28px rgba(200,25,45,.14)!important;
+  }
+  .bottom-nav{
+    background:rgba(255,255,255,.70)!important;
+    border-top:1px solid rgba(255,255,255,.60)!important;
+    box-shadow:0 -12px 36px rgba(6,62,52,.14)!important;
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+  }
+  .nav-btn{
+    border-radius:18px!important;
+    transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+  }
+  .nav-btn.active{
+    background:linear-gradient(135deg,#0f6e56 0%, #19a07d 100%)!important;
+    color:#fff!important;
+    box-shadow:0 12px 30px rgba(15,110,86,.28)!important;
+  }
+  .btn-add,.btn-confirm,.btn-visto,.btn-quick-take,.samu-call-btn,.mobile-header-action,
+  #screen-home .header button[onclick="openSamuMode()"]{
+    background:linear-gradient(135deg,#0f6e56 0%, #1aa081 100%)!important;
+    box-shadow:0 14px 28px rgba(15,110,86,.24)!important;
+    border:1px solid rgba(255,255,255,.18)!important;
+  }
+  .mobile-header-action.danger,
+  .btn-quick-take,
+  #screen-home .header button[onclick="openSamuMode()"]{
+    background:linear-gradient(135deg,#c0192d 0%, #e24b4a 100%)!important;
+  }
+  .btn-secondary,.result-viewer-btn,.appt-view-btn,.result-add-btn,.type-opt{
+    background:linear-gradient(180deg, rgba(255,255,255,.85) 0%, rgba(245,251,248,.78) 100%)!important;
+    border:1px solid rgba(18,123,101,.12)!important;
+    box-shadow:0 10px 24px rgba(9,64,54,.08)!important;
+  }
+  .progress-ring-wrap,
+  .next-alarm,
+  .emerg-card,
+  .samu-contact-block{
+    box-shadow:var(--cb-shadow-strong)!important;
+  }
+  .next-alarm{
+    background:linear-gradient(135deg,#0d6a58 0%, #139171 52%, #1ab08a 100%)!important;
+  }
+  .progress-ring-wrap{
+    background:linear-gradient(180deg, rgba(255,255,255,.50) 0%, rgba(255,255,255,.18) 100%);
+    border-radius:22px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.46);
+  }
+  .med-info-inner,.confirm-sheet,.appt-confirm-sheet,.modal,.confirm-sheet,.edit-med-card,.edit-task-card{
+    background:linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(247,251,249,.92) 100%)!important;
+    border:1px solid rgba(255,255,255,.72)!important;
+    box-shadow:0 28px 90px rgba(0,40,34,.24)!important;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+  }
+  .med-inf
+@media (max-width:767px){
+  /* camada geral mais refinada para todas as guias */
+  .screen .content{
+    position:relative;
+  }
+  .screen .content::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 8% 18%, rgba(29,158,117,.08), transparent 22%),
+      radial-gradient(circle at 92% 26%, rgba(55,138,221,.06), transparent 20%);
+    z-index:-1;
+  }
+
+  /* títulos/headers das guias secundárias */
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub{
+    border-bottom:1px solid rgba(255,255,255,.18)!important;
+  }
+  .header-sub-title{
+    letter-spacing:-.02em!important;
+    text-shadow:0 1px 0 rgba(0,0,0,.04);
+  }
+  .header-date{
+    font-weight:700!important;
+    letter-spacing:.01em;
+  }
+
+  /* Agenda / calendário */
+  #screen-calendar .week-strip,
+  #screen-calendar .cat-pills,
+  #screen-calendar .chip-filter{
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.58);
+    border-radius:22px;
+    padding:8px!important;
+    box-shadow:0 12px 32px rgba(6,62,52,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+  #screen-calendar .week-day{
+    background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(246,252,249,.66))!important;
+    border:1px solid rgba(18,123,101,.10)!important;
+    box-shadow:0 8px 18px rgba(9,64,54,.05);
+  }
+  #screen-calendar .week-day.today{
+    background:linear-gradient(135deg,#e4f7ef,#ffffff)!important;
+    border-color:rgba(29,158,117,.42)!important;
+  }
+
+  /* Saúde */
+  #screen-dashboard .stat-card,
+  #screen-dashboard .health-ring-card,
+  #screen-dashboard .health-trend-card,
+  #screen-dashboard .vital-card{
+    overflow:hidden;
+    position:relative;
+  }
+  #screen-dashboard .stat-card::after,
+  #screen-dashboard .health-ring-card::after,
+  #screen-dashboard .health-trend-card::after{
+    content:'';
+    position:absolute;
+    right:-34px;
+    top:-34px;
+    width:86px;
+    height:86px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(29,158,117,.16),transparent 68%);
+    pointer-events:none;
+  }
+  #screen-dashboard .stat-number{
+    background:linear-gradient(135deg,#0f6e56,#1aa081);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent!important;
+  }
+
+  /* Perfil / configurações */
+  #screen-profile .setting-row{
+    min-height:72px;
+    align-items:center!important;
+  }
+  #screen-profile .setting-icon{
+    box-shadow:inset 0 1px rgba(255,255,255,.5), 0 10px 24px rgba(15,110,86,.12)!important;
+  }
+  #screen-profile .setting-label{
+    letter-spacing:-.01em;
+  }
+
+  /* Receita / OCR */
+  #screen-ocr .card,
+  #screen-ocr .scan-type-opt,
+  #screen-ocr .result-section{
+    position:relative;
+    overflow:hidden;
+  }
+  #screen-ocr .scan-type-opt.sel-med,
+  #screen-ocr .scan-type-opt.sel-exam{
+    box-shadow:0 12px 28px rgba(15,110,86,.16)!important;
+  }
+
+  /* Consultas / exames */
+  #screen-appt .appt-card,
+  #screen-appt .appt-task-detail{
+    border:1px solid rgba(255,255,255,.58)!important;
+    box-shadow:0 12px 32px rgba(6,62,52,.08)!important;
+  }
+  #screen-appt .appt-card{
+    border-radius:24px!important;
+    background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(250,252,252,.62))!important;
+  }
+
+  /* Relatórios */
+  #screen-reports .card,
+  #screen-reports .stat-card{
+    position:relative;
+    overflow:hidden;
+  }
+  #screen-reports .card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(29,158,117,.08),transparent 42%);
+    pointer-events:none;
+  }
+
+  /* Botões e campos */
+  input,select,textarea,.form-input{
+    border-radius:16px!important;
+    background:rgba(255,255,255,.82)!important;
+    border:1px solid rgba(18,123,101,.16)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.55), 0 8px 18px rgba(9,64,54,.05)!important;
+  }
+  input:focus,select:focus,textarea:focus,.form-input:focus{
+    border-color:rgba(29,158,117,.55)!important;
+    box-shadow:0 0 0 4px rgba(29,158,117,.12), inset 0 1px rgba(255,255,255,.60)!important;
+  }
+
+  /* pequenos acabamentos nos chips */
+  .badge-med,.badge-cons,.badge-exam,.badge-fisio,.badge-exer,
+  .task-badge,.result-badge,.alert-pill,.rx-pill,.med-alert-pill{
+    border:1px solid rgba(255,255,255,.45);
+    box-shadow:0 6px 14px rgba(8,59,49,.06);
+  }
+
+  /* modais ainda mais premium no mobile */
+  .modal,.confirm-sheet,.appt-confirm-sheet,.med-info-inner,.edit-med-card,.edit-task-card,.photo-modal{
+    border-radius:28px!important;
+  }
+  .modal-title,.confirm-name,.appt-confirm-title,.med-info-title{
+    letter-spacing:-.02em;
+  }
+}
+</style>
+
+
+
+<!-- v54 — redesign visual desktop premium -->
+<style id="cuidarbem-v54-desktop-premium">
+@media (min-width: 768px) {
+
+  /* ── FUNDO GERAL ── */
+  body {
+    background:
+      radial-gradient(ellipse at 0% 0%, rgba(29,158,117,.07) 0%, t
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    z-index: calc(var(--cb-topbar-global-z) + 8) !important;
+  }
+}
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: calc(var(--cb-topbar-global-z) + 8) !important;
+  }
+}
+
+/* TELAS INTERNAS */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub,
+.screen:not(#screen-home) .header{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-topbar-global-z) !important;
+  isolation: isolate !important;
+  background: linear-gradient(135deg, var(--green-600), var(--teal-600)) !important;
+  box-shadow: 0 10px 24px rgba(0,63,54,.16) !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  overflow: hidden !important;
+}
+
+/* Mata pseudo-camadas e faixas decorativas nas topbars internas */
+#screen-calendar .header-sub::before,
+#screen-calendar .header-sub::after,
+#screen-reports .header-sub::before,
+#screen-reports .header-sub::after,
+#screen-profile .header-sub::before,
+#screen-profile .header-sub::after,
+#screen-ocr .header-sub::before,
+#screen-ocr .header-sub::after,
+#screen-dashboard .header-sub::before,
+#screen-dashboard .header-sub::after,
+#screen-appt .header-sub::before,
+#screen-appt .header-sub::after,
+.screen:not(#screen-home) .header::before,
+.screen:not(#screen-home) .header::after{
+  content: none !important;
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+
+/* Conteúdo abaixo das topbars */
+#screen-calendar .content,
+#screen-reports .content,
+#screen-profile .content,
+#screen-ocr .content,
+#screen-dashboard .content,
+#screen-appt .content,
+.screen:not(#screen-home) .content{
+  position: relative !important;
+  z-index: 1 !important;
+  padding-top: 18px !important;
+  scroll-margin-top: calc(var(--cb-topbar-global-h-mobile) + 12px) !important;
+}
+
+/* Cards, gráficos e listas nunca passam por cima do cabeçalho */
+.screen:not(#screen-home) .card,
+.screen:not(#screen-home) .stat-card,
+.screen:not(#screen-home) canvas,
+.screen:not(#screen-home) .stats-grid,
+.screen:not(#screen-home) .appt-card,
+.screen:not(#screen-home) .setting-row,
+.screen:not(#screen-home) .task-item{
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+@media (min-width: 768px){
+  html, body{
+    scroll-padding-top: var(--cb-topbar-global-h-desktop);
+  }
+
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  .screen:not(#screen-home) .header{
+    min-height: var(--cb-topbar-global-h-desktop) !important;
+    height: var(--cb-topbar-global-h-desktop) !important;
+    padding: 0 36px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+  }
+
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content,
+  .screen:not(#screen-home) .content{
+    padding-top: 24px !important;
+    scroll-margin-top: calc(var(--cb-topbar-global-h-desktop) + 12px) !important;
+  }
+}
+
+/* Tema escuro */
+body.dark #screen-calendar .header-sub,
+body.dark #screen-reports .header-sub,
+body.dark #screen-profile .header-sub,
+body.dark #screen-ocr .header-sub,
+body.dark #screen-dashboard .header-sub,
+body.dark #screen-appt .header-sub,
+body.dark-theme #screen-calendar .header-sub,
+body.dark-theme #screen-reports .header-sub,
+body.dark-theme #screen-profile .header-sub,
+body.dark-theme #screen-ocr .header-sub,
+body.dark-theme #screen-dashboard .header-sub,
+body.dark-theme #screen-appt .header-sub{
+  box-shadow: 0 10px 28px rgba(0,0,0,.34) !important;
+}
+</style>
+
+
+
+<!-- v66 — ajuste desktop: nome/SAMU padronizados e data/hora no canto superior direito -->
+<style id="cuidarbem-v66-desktop-home-topbar-ajuste">
+/* =========================================================
+   CuidarBem v66 — Desktop Home Topbar
+   - Reposiciona data/hora para cima e à direita
+   - Move Maria/SAMU para baixo
+   - Padroniza tamanho dos dois campos
+========================================================= */
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    min-height: 124px !important;
+    height: 124px !important;
+    padding: 24px 38px 22px !important;
+    overflow: hidden !important;
+  }
+
+  /* Data/hora no canto superior direito da topbar */
+  #screen-home #today-date,
+  #screen-home .header-date{
+    position: absolute !important;
+    top: 24px !important;
+    right: 38px 
+@media (max-width: 767px){
+  #screen-home .header{
+    position: fixed !important;
+    top: 0 !important;
+    left: 50% !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    transform: translateX(-50%) !important;
+    -webkit-transform: translateX(-50%) !important;
+    z-index: var(--cb-chrome-z) !important;
+    /* Removido backface-visibility: avoids GPU flicker on iOS/Android */
+  }
+  #screen-home .content{
+    padding-top: 258px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 0 -10px 28px rgba(0,63,54,.12) !important;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-home .header{
+    position: sticky !important;
+    top: 0 !important;
+    z-index: var(--cb-chrome-z) !important;
+    min-height: 184px !important;
+    overflow: hidden !important;
+  }
+
+  .bottom-nav{
+    z-index: var(--cb-sidebar-z) !important;
+    background: rgba(255,255,255,.98) !important;
+    box-shadow: 12px 0 34px rgba(0,63,54,.08) !important;
+  }
+
+  .screen{
+    overflow: visible !important;
+  }
+}
+
+/* Guias internas: topbar fica sticky, mas sem corte de conteúdo */
+#screen-calendar .header-sub,
+#screen-reports .header-sub,
+#screen-profile .header-sub,
+#screen-ocr .header-sub,
+#screen-dashboard .header-sub,
+#screen-appt .header-sub,
+.screen:not(#screen-home) .header{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: var(--cb-chrome-z) !important;
+  min-height: var(--cb-safe-topbar-mobile) !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Remove enfeites que viravam sombra/faixa branca quando a rolagem repintava */
+.header-sub::before,
+.header-sub::after,
+.screen:not(#screen-home) .header::before,
+.screen:not(#screen-home) .header::after{
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Relatórios: impedir sumiço/corte de cards e gráficos */
+#screen-reports,
+#screen-reports.active,
+#screen-reports .content,
+#screen-reports .stats-grid,
+#screen-reports .card,
+#screen-reports .stat-card,
+#screen-reports .cb-analytics-card,
+#screen-reports .cb-chart-wrap,
+#screen-reports .report-card,
+#screen-reports .analytics-card{
+  overflow: visible !important;
+  contain: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+}
+
+#screen-reports canvas,
+#screen-reports svg{
+  display: block !important;
+  max-width: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#screen-reports .content{
+  padding-top: 20px !important;
+  padding-bottom: calc(var(--nav-h) + 28px) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Sidebar/menu: sempre acima do conteúdo, mas abaixo de modais */
+.bottom-nav,
+.bottom-nav *{
+  pointer-events: auto !important;
+}
+
+/* Removido backface-visibility de elementos não animados — causava piscar no iOS/Android */
+/* .screen, .content, .card, .task-item, .appt-card, .setting-row: sem backface-visibility */
+
+/* Modais, alertas e SAMU continuam no topo */
+.modal-overlay,
+.confirm-overlay,
+.appt-confirm-overlay,
+.med-info-overlay,
+.photo-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.samu-overlay{
+  z-index: var(--cb-modal-z) !important;
+}
+
+@media (min-width: 768px){
+  #screen-calendar .header-sub,
+  #screen-reports .header-sub,
+  #screen-profile .header-sub,
+  #screen-ocr .header-sub,
+  #screen-dashboard .header-sub,
+  #screen-appt .header-sub,
+  .screen:not(#screen-home) .header{
+    min-height: var(--cb-safe-topbar-desktop) !important;
+    height: var(--cb-safe-topbar-desktop) !important;
+    padding: 0 36px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-dashboard .content,
+  #screen-appt .content,
+  .screen:not(#screen-home) .content{
+    padding-top: 24px !important;
+    padding-bottom: 36px !important;
+  }
+}
+
+/* =========================================================
+   CuidarBem v72 — correção de piscar/flash no mobile
+   Causa: display:none→block + backface-visibility desnecessário
+          + scrollTo síncrono + stacking context no header fixo
+========================================================= */
+
+/* Guia Saúde: reduz espaço excessivo entre topbar e primeiro card */
+@media (max-width: 767px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 12px !important;
+  }
+}
+
+/* Impede flash branco de telas ocultas no Safari/Chrome mobile */
+.screen:not(.active) {
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  /* NÃO usa display:
+@media (max-width: 767px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 16px !important;
+  }
+}
+@media (min-width: 768px) {
+  #screen-dashboard .health-dashboard {
+    padding-top: 12px !important;
+  }
+}
+
+/* Impede flash branco de telas ocultas no Safari/Chrome mobile */
+.screen:not(.active) {
+  visibility: hidden !important;
+  position: absolute !important;
+  pointer-events: none !important;
+  /* NÃO usa display:none para evitar layout thrash ao trocar guia */
+}
+
+/* Bottom nav: sem will-change nem backface para não criar layer desnecessária */
+.bottom-nav {
+  will-change: auto !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+}
+
+/* Transição suave e curta ao trocar de guia — sem flash */
+.screen.active {
+  animation: cbScreenIn 0.14s ease both !important;
+}
+@keyframes cbScreenIn {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+/* Evita que o header fixo da Início crie stacking context extra */
+#screen-home .header {
+  isolation: auto !important;
+}
+
+
+body.dark,
+body.dark-theme{
+  background: var(--bg) !important;
+}
+body.dark .bottom-nav,
+body.dark-theme .bottom-nav{
+  background: rgba(26,32,25,.98) !important;
+}
+</style>
+
+<script id="cuidarbem-v70-stability-script">
+(function(){
+  'use strict';
+  const rerender = () => {
+    try{
+      if (typeof renderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(renderReports, 80);
+      }
+      if (typeof rerenderReports === 'function' && document.getElementById('screen-reports')?.classList.contains('active')) {
+        setTimeout(rerenderReports, 120);
+      }
+    }catch(e){ console.warn('[CuidarBem v70] estabilidade visual:', e); }
+  };
+  window.addEventListener('resize', rerender, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(rerender, 220), { passive:true });
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) setTimeout(rerender, 160); });
+})();
+</script>
+
+
+
+<!-- v71 — ajuste fino: início/saúde abaixo da topbar -->
+<style id="cuidarbem-v71-ajuste-inicio-saude-topbar">
+/* =========================================================
+   CuidarBem v71 — ajuste fino de espaçamento visual
+   - Início: impede a Inteligência Ativa de ficar coberta pela topbar
+   - Saúde: aproxima o bloco "Hoje" da topbar, removendo respiro duplicado
+   - Mantém topbar/menu estabilizados da v70
+========================================================= */
+
+/* O card de IA só tem margem quando visível — evita espaço em branco */
+#screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
+  margin-top: 18px !important;
+}
+#screen-home #ai-active-card{
+  scroll-margin-top: 280px !important;
+}
+
+/* Remove qualquer margem negativa herdada que puxe o conteúdo para baixo da topbar */
+#screen-home .content{
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+}
+
+/* Saúde não usa .content; o painel é .health-dashboard. Havia padding duplicado. */
+#screen-dashboard .health-dashboard{
+  position: relative !important;
+  z-index: 1 !important;
+  margin-top: 0 !important;
+}
+#screen-dashboard .health-dashboard > .health-section-label:first-child{
+  margin-top: 0 !important;
+}
+
+@media (max-width: 767px){
+  /* Início mobile/PWA instalado: desce um pouco o conteúdo para não entrar sob o header fixo */
+  #screen-home .content{
+    padding-top: 286px !important;
+  }
+  #screen-home #patient-mode-banner,
+  #screen-home #neuro-priority-card,
+  #screen-home #ai-active-card{
+    transform: translateY(0) !important;
+  }
+  #screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
+    margin-top: 20px !important;
+  }
+
+  /* Saúde mobile: aproxima "Hoje" do topbar sem encostar */
+  #screen-dashboard .health-dashboard{
+    padding-top: 106px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+@media (min-width: 768px){
+  /* Início desktop: mantém o header sticky e dá respiro seguro ao primeiro painel */
+  #screen-home .content{
+    padding-top: 38px !important;
+  }
+  #screen-home #ai-active-card:not([style*="display:none"]):not([style*="display: none"]){
+    margin-top: 20px !important;
+  }
+
+  /* Saúde desktop: remove distância exagerada logo abaixo da topbar */
+  #screen-dashboard .health-dashboard{
+    padding-top: 18px !important;
+    padding-left: 38px !important;
+    padding-right: 38px !important;
+  }
+}
+</style>
+
+
+
+<!-- v73 — vitais: faixa scrollável abaixo do header mobile (estilo Apple Health) -->
+<style id="cuidarbem-v73-vitais-mobile">
+/* =========================================================
+   CuidarBem v73 — Vitais abaixo do header no mobile
+   Faixa fixa colada ao header, scrollável horizontalmente.
+   No desktop continua dentro do header como antes.
+========================================================= */
+@media (max-width: 767px) {
+
+  /* Vitais no mobile: saem do header fi
+@media (max-width: 767px){
+  #screen-reports.screen.active,
+  #screen-reports.active.screen{
+    position: relative !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    max-height: 100svh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    scrollbar-width: thin !important;
+    padding-bottom: 0 !important;
+  }
+
+  #screen-reports.screen.active > .content{
+    min-height: auto !important;
+    padding-bottom: var(--cb-bottom-safe-mobile) !important;
+  }
+
+  #screen-reports.screen.active > .content > :last-child{
+    margin-bottom: 0 !important;
+  }
+
+  #screen-reports.screen.active::-webkit-scrollbar{
+    width: 5px;
+  }
+  #screen-reports.screen.active::-webkit-scrollbar-track{
+    background: transparent;
+  }
+  #screen-reports.screen.active::-webkit-scrollbar-thumb{
+    background: rgba(15,110,86,.26);
+    border-radius: 999px;
+  }
+}
+
+@media (min-width: 768px){
+  #screen-reports.screen.active{
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-10-scrollbar-relatorios-js">
+(function(){
+  'use strict';
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.11-agenda-panel-action'); } catch(e) {}
+})();
+</script>
+
+
+
+<!-- v75.11 — segurança visual: antigo FAB fixo não reserva mais espaço nem sobrepõe a Agenda -->
+<style id="cuidarbem-v75-11-agenda-no-fixed-fab">
+  #screen-calendar .cal-fab-add { display: none !important; }
+</style>
+<script id="cuidarbem-v75-11-agenda-panel-version">
+(function(){
+  try { localStorage.setItem('cuidarbem_patch_version', 'v75.11-agenda-panel-action'); } catch(e) {}
+})();
+</script>
+
+
+<!-- v75.12 — auditoria global de contraste claro/escuro -->
+<style id="cuidarbem-v75-12-contraste-global">
+/* =========================================================
+   CuidarBem v75.12 — Auditoria global de contraste
+   Objetivo: leitura mais forte no tema claro e escuro sem
+   mudar a identidade verde/teal nem pesar o visual premium.
+========================================================= */
+:root{
+  --text:#111916;
+  --text-muted:#33443e;
+  --text-light:#536b62;
+  --gray-400:#62736b;
+  --gray-600:#33443e;
+  --gray-800:#17231f;
+  --green-600:#0f6b56;
+  --green-800:#0a3f36;
+  --teal-600:#075f4c;
+  --blue-600:#155995;
+  --purple-600:#4b42a8;
+  --amber-600:#76480b;
+  --coral-600:#873318;
+  --cb-contrast-line:rgba(15,110,86,.15);
+  --cb-contrast-line-strong:rgba(15,110,86,.26);
+  --cb-contrast-chip-bg:rgba(232,245,241,.92);
+}
+
+body{
+  color:var(--text) !important;
+  text-rendering:optimizeLegibility;
+}
+
+/* Cards e painéis: borda visível para separar planos no tema claro */
+.card,
+.stat-card,
+.setting-row,
+.appt-card,
+.ocr-appt-card,
+.report-card,
+.dash-card,
+.result-card,
+.care-event-card,
+.cb-analytics-card,
+.cb-benefit-card,
+.cb75-card{
+  border:1px solid var(--cb-contrast-line) !important;
+}
+
+/* Hierarquia textual global */
+.section-title,
+.task-name,
+.hist-name,
+.appt-title,
+.setting-label,
+.confirm-name,
+.modal-title,
+.health-section-title,
+.rehab-title,
+.cb75-item-title{
+  color:var(--text) !important;
+}
+
+.card-title,
+.form-label,
+.health-section-label,
+.result-section-title,
+.med-checklist-title,
+.mi-section-title,
+.cb75-label{
+  color:#29453d !important;
+  font-weight:900 !important;
+}
+
+.task-meta,
+.hist-meta,
+.setting-desc,
+.progress-label,
+.progress-count,
+.stat-label,
+.appt-subtitle,
+.appt-detail-row,
+.task-time,
+.med-info-subtitle,
+.confirm-dose,
+.cb75-muted,
+.cb75-item-text,
+.cb75-mini-label,
+.rehab-sub,
+.rehab-phase-desc,
+.rehab-ex-meta,
+.rehab-scale-note,
+.cb-report-insight,
+.cb-functional-mini{
+  color:var(--text-muted) !important;
+}
+
+.header-date,
+.header-greeting,
+.header-patient,
+.header-sub-title{
+  color:#ffffff !important;
+  opacity:.96 !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.18);
+}
+
+/* Inputs, selects e placeholders mais legíveis */
+.form-input,
+.cb75-input,
+.cb75-select,
+.cb75-textarea,
+select,
+textarea,
+input{
+  color:var(--text) !important;
+  border-color:rgba(15,110,86,.24) !important;
+}
+.form-input::placeholder,
+.cb75-input::placeholder,
+.cb75-textarea::placeholder,
+input::placeholder,
+textarea::placeholder{
+  color:#60746b !important;
+  opacity:1 !important;
+}
+.form-input:focus,
+.cb75-input:focus,
+.cb75-select:focus,
+.cb75-textarea:focus,
+select:focus,
+textarea:focus,
+input:focus{
+  border-color:var(--teal-600) !important;
+  box-shadow:0 0 0 3px rgba(29,158,117,.18) !important;
+}
+
+/* Botões secundários e chips: antes alguns ficavam apagados */
+.btn-secondary,
+.btn-confirm-cancel,
+.btn-action-small,
+.cb75-btn.secondary,
+.chip,
+.cat-pill,
+.type-opt,
+.cb75-choice,
+.alert-chip.inactive,
+.cal-today-btn,
+.cal-panel-add{
+  color:#21352f !important;
+  border-color:rgba(15,110,86,.24) !important;
+}
+
+.btn-secondary,
+.btn-confirm-cancel,
+.btn-action-small,
+.cb75-btn.secondary,
+.chip,
+.cb75-choice,
+.type-o
+@media (max-width: 767px) {
+  #screen-home .vitals-bar,
+  #screen-home #vitals-bar-main { display: flex !important; }
+}
+
+/* 1) Cancela todo o posicionamento fixo do v73 */
+#screen-home #vitals-bar-main,
+#screen-home .vitals-bar {
+  position: static !important;
+  top: auto !important; left: auto !important;
+  transform: none !important;
+  width: auto !important; max-width: none !important;
+  z-index: auto !important;
+  background: transparent !important;
+  border: none !important; box-shadow: none !important;
+  overflow: visible !important;
+}
+
+/* 2) Faixa horizontal — distribui igualmente no espaço disponível */
+#screen-home .vitals-cards-grid {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  margin-bottom: 14px !important;
+  margin-top: 0 !important;
+  padding: 2px 2px 6px !important;
+}
+#screen-home .vitals-cards-grid::-webkit-scrollbar { display: none !important; }
+
+/* 3) Cada card — cresce para preencher espaço; mínimo para não sumir */
+#screen-home .vital-card-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex: 1 1 0 !important;          /* todos crescem igualmente */
+  min-width: 120px !important;      /* temperatura não some */
+  max-width: 200px !important;
+  background: var(--card-bg) !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07) !important;
+  border: 1.5px solid rgba(0,0,0,0.04) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  color: var(--text) !important;
+}
+#screen-home .vital-card-item:active {
+  transform: scale(0.96) !important;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.06) !important;
+}
+
+/* 4) Ícone redondo */
+#screen-home .vci-icon {
+  width: 40px !important; height: 40px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important; justify-content: center !important;
+  font-size: 20px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+/* 5) Texto: valor em cima, label embaixo */
+#screen-home .vci-body {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1px !important;
+}
+#screen-home .vci-value {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: var(--text) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  white-space: nowrap !important;
+}
+#screen-home .vci-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: var(--text-light) !important;
+  white-space: nowrap !important;
+  line-height: 1.3 !important;
+}
+#screen-home .vci-unit {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--text-light) !important;
+  opacity: .7 !important;
+  white-space: nowrap !important;
+}
+
+/* 6) Padding-top do content — será sobrescrito pelo fix-final abaixo */
+@media (max-width: 767px) {
+  #screen-home .content { padding-top: 16px !important; }
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FIX MOBILE v75-audit: resolve flashes, header sumindo, animações
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-mobile-fix-final">
+
+/*
+ * CAUSA RAIZ #1 — position:fixed dentro de scroll container no iOS
+ * ----------------------------------------------------------------
+ * No mobile, .screen.active tem overflow-y:auto + height:100svh.
+ * position:fixed dentro desse container é tratado pelo iOS Safari
+ * como position:absolute — o header rola com o conteúdo e some.
+ * Fix: converter para position:sticky no mobile.
+ */
+@media (max-width: 767px) {
+
+  #screen-home .header,
+  .screen.active .header {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  .screen.active .header-sub {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  /* Com header sticky o conteúdo não precisa de padding compensatório */
+  #screen-home.active .content,
+  #screen-home .content {
+    padding-top: 16px !important;
+    margin-top: 0 !important;
+  }
+}
+
+/*
+ * CAUSA RAIZ #2 — Animações GLOBAIS em .screen.active (sem media query)
+ * cbDesktopFadeIn (L12333) e cbScreenIn (L14337) disparam no mobile
+ * em cada troca de guia causando flash de opacity:0 + translateY.
+ */
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior apare
+@media (max-width: 767px) {
+  #screen-home .content { padding-top: 16px !important; }
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FIX MOBILE v75-audit: resolve flashes, header sumindo, animações
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-mobile-fix-final">
+
+/*
+ * CAUSA RAIZ #1 — position:fixed dentro de scroll container no iOS
+ * ----------------------------------------------------------------
+ * No mobile, .screen.active tem overflow-y:auto + height:100svh.
+ * position:fixed dentro desse container é tratado pelo iOS Safari
+ * como position:absolute — o header rola com o conteúdo e some.
+ * Fix: converter para position:sticky no mobile.
+ */
+@media (max-width: 767px) {
+
+  #screen-home .header,
+  .screen.active .header {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  .screen.active .header-sub {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  /* Com header sticky o conteúdo não precisa de padding compensatório */
+  #screen-home.active .content,
+  #screen-home .content {
+    padding-top: 16px !important;
+    margin-top: 0 !important;
+  }
+}
+
+/*
+ * CAUSA RAIZ #2 — Animações GLOBAIS em .screen.active (sem media query)
+ * cbDesktopFadeIn (L12333) e cbScreenIn (L14337) disparam no mobile
+ * em cada troca de guia causando flash de opacity:0 + translateY.
+ */
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior aparecendo brevemente ao trocar guias.
+ */
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico
+     Remove backdrop-filter, animações de layout e will-change
+     que causavam flashes e falhas no mobile
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--sidebar-w, 260px) !important;
+    height: 100svh !important;
+    max-width: none !important;
+  }
+}
+
+/* ── 9. Botão e painel de diagnóstico — centrado na área de conteúdo */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--
+@media (max-width: 767px) {
+
+  #screen-home .header,
+  .screen.active .header {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  .screen.active .header-sub {
+    position: sticky !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    z-index: 90 !important;
+  }
+
+  /* Com header sticky o conteúdo não precisa de padding compensatório */
+  #screen-home.active .content,
+  #screen-home .content {
+    padding-top: 16px !important;
+    margin-top: 0 !important;
+  }
+}
+
+/*
+ * CAUSA RAIZ #2 — Animações GLOBAIS em .screen.active (sem media query)
+ * cbDesktopFadeIn (L12333) e cbScreenIn (L14337) disparam no mobile
+ * em cada troca de guia causando flash de opacity:0 + translateY.
+ */
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior aparecendo brevemente ao trocar guias.
+ */
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico
+     Remove backdrop-filter, animações de layout e will-change
+     que causavam flashes e falhas no mobile
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--sidebar-w, 260px) !important;
+    height: 100svh !important;
+    max-width: none !important;
+  }
+}
+
+/* ── 9. Botão e painel de diagnóstico — centrado na área de conteúdo */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h, 72px) + 12px + env(safe-area-inset-bottom));
+  right: 14px;
+  /* Desktop: afasta do sidebar */
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: .75;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+#cb-diag-btn:active { opacity: 1; }
+#cb-diag-btn .cb-diag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; flex-shrink: 0;
+}
+
+/* Painel centralizado NA ÁREA DE CONTEÚDO (desktop: após sidebar) */
+#cb-diag-panel {
+  position: fixed
+@media (max-width: 767px) {
+  .screen,
+  .screen.active {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/*
+ * EXTRA — Telas inativas não devem ocupar espaço nem renderizar.
+ * Evita o flash da tela anterior aparecendo brevemente ao trocar guias.
+ */
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico
+     Remove backdrop-filter, animações de layout e will-change
+     que causavam flashes e falhas no mobile
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--sidebar-w, 260px) !important;
+    height: 100svh !important;
+    max-width: none !important;
+  }
+}
+
+/* ── 9. Botão e painel de diagnóstico — centrado na área de conteúdo */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h, 72px) + 12px + env(safe-area-inset-bottom));
+  right: 14px;
+  /* Desktop: afasta do sidebar */
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: .75;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+#cb-diag-btn:active { opacity: 1; }
+#cb-diag-btn .cb-diag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; flex-shrink: 0;
+}
+
+/* Painel centralizado NA ÁREA DE CONTEÚDO (desktop: após sidebar) */
+#cb-diag-panel {
+  position: fixed;
+  top: 50%;
+  /* mobile: centrado no viewport; desktop: centrado após sidebar */
+  left: calc(var(--sidebar-w, 0px) / 2 + 50%);
+  transform: translate(-50%, -50%);
+  z-index: 99998;
+  background: rgba(10,20,18,.97);
+  color: #e0f2ec;
+  border-radius: 20px;
+  padding: 20px 22px;
+  width: min(320px, calc(100vw - 32px));
+  font-size: 12px;
+  line-height: 1.7;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  display: none;
+  font-family: 'Courier New', monospace;
+}
+@media (min-width: 768px) {
+  #cb-diag-panel {
+    left: calc(var(--sidebar-w, 260px) + (100vw - var(--sidebar-w, 260px)) / 2);
+  }
+  #cb-diag-btn {
+    bottom: 24px;
+  }
+}
+#cb-diag-panel.open { display: block; }
+#cb-diag-panel h4 { font-size: 13px; font-weight: 800; color: #4ade80; margin-bottom: 10px; font-family: inherit; }
+#cb-diag-panel .cb-drow { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.07); padding: 3px 0; }
+#cb-diag-panel 
+@media (max-width: 767px) {
+  .screen:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIMPEZA PERMANENTE DE EFEITOS — confirmado por diagnóstico
+     Remove backdrop-filter, animações de layout e will-change
+     que causavam flashes e falhas no mobile
+     ═══════════════════════════════════════════════════════════════ -->
+<style id="cb-effects-cleanup">
+
+/* ── 1. backdrop-filter removido globalmente ─────────────────────
+   40 ocorrências espalhadas causavam repaint de GPU em todo scroll.
+   Overlays de modal mantêm um overlay escuro simples via background.  */
+* { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ── 2. Animações em elementos de layout (screen, header, nav) ────
+   cbDesktopFadeIn e cbScreenIn sem @media disparavam no mobile
+   causando opacity:0→1 + translateY em cada troca de guia. */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.bottom-nav,
+.content {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ── 3. will-change removido de todos (criava camadas GPU extras) */
+* { will-change: auto !important; }
+
+/* ── 4. isolation:isolate em containers de layout (interfere sticky) */
+.screen,
+.screen.active,
+.header,
+.header-sub,
+.content {
+  isolation: auto !important;
+}
+
+/* ── 5. Glass backgrounds → opacos (blur foi removido, translúcido
+   sem blur fica sem sentido e mais lento) */
+.bottom-nav {
+  background: var(--white) !important;
+  /* dark mode */
+}
+.bottom-nav.dark-mode-element,
+body.dark .bottom-nav {
+  background: var(--card-bg) !important;
+}
+
+/* ── 6. Overlays ficam com fundo opaco — sem blur */
+.confirm-overlay,
+.med-info-overlay,
+.appt-confirm-overlay,
+.modal-overlay,
+.cb-delete-overlay,
+.edit-task-overlay,
+.edit-med-overlay,
+.photo-modal-overlay,
+.cb75-modal-overlay,
+.result-viewer-overlay,
+.alerts-center-overlay,
+.samu-overlay {
+  background: rgba(0,0,0,0.55) !important;
+}
+
+/* ── 7. Transitions simples MANTIDAS só em interações de botão ────
+   (não afetam layout, não causam reflow) */
+.nav-btn,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-action-small,
+.task-item,
+.med-pill {
+  transition: opacity 0.12s, transform 0.12s !important;
+}
+
+/* ── 8. Corrige sidebar desktop descentralizado ──────────────────
+   O killswitch do diagnóstico apagava o transform da sidebar,
+   deixando ela colada em left:0 sem compensação.
+   Garante que no desktop o sidebar fica fixo à esquerda (correto). */
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    width: var(--sidebar-w, 260px) !important;
+    height: 100svh !important;
+    max-width: none !important;
+  }
+}
+
+/* ── 9. Botão e painel de diagnóstico — centrado na área de conteúdo */
+#cb-diag-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h, 72px) + 12px + env(safe-area-inset-bottom));
+  right: 14px;
+  /* Desktop: afasta do sidebar */
+  z-index: 99999;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: .75;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+#cb-diag-btn:active { opacity: 1; }
+#cb-diag-btn .cb-diag-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #4ade80; flex-shrink: 0;
+}
+
+/* Painel centralizado NA ÁREA DE CONTEÚDO (desktop: após sidebar) */
+#cb-diag-panel {
+  position: fixed;
+  top: 50%;
+  /* mobile: centrado no viewport; desktop: centrado após sidebar */
+  left: calc(var(--sidebar-w, 0px) / 2 + 50%);
+  transform: translate(-50%, -50%);
+  z-index: 99998;
+  background: rgba(10,20,18,.97);
+  color: #e0f2ec;
+  border-radius: 20px;
+  padding: 20px 22px;
+  width: min(320px, calc(100vw - 32px));
+  font-size: 12px;
+  line-height: 1.7;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  display: none;
+  font-family: 'Courier New', monospace;
+}
+@media (min-width: 768px) {
+  #cb-diag-panel {
+    left: calc(var(--sidebar-w, 260px) + (100vw - var(--sidebar-w, 260px)) / 2);
+  }
+  #cb-diag-btn {
+    bottom: 24px;
+  }
+}
+#cb-diag-panel.open { display: block; }
+#cb-diag-panel h4 { font-size: 13px; font-weight: 800; color: #4ade80; margin-bottom: 10px; font-family: inherit; }
+#cb-diag-panel .cb-drow { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.07); padding: 3px 0; }
+#cb-diag-panel .cb-dval { color: #f87171; font-weight: 700; }
+#cb-diag-panel .cb-dval.ok { color: #4ade80; }
+#cb-diag-panel button { margin-top: 14px; width: 100%; background: #0d5c4f; color: #fff; border: none; border-radius: 10px; padding: 10px; font-weight: 800; font-size: 13px; cursor: 
