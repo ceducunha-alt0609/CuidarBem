@@ -14,3 +14,4 @@ if insert.strip() not in s:
     if anchor not in s: raise SystemExit('request permission anchor missing')
     s=s.replace(anchor,insert+anchor,1)
 p.write_text(s,encoding='utf-8')
+# trigger workflow
