@@ -20961,5 +20961,43 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 })();
 </script>
 
+
+
+<!-- v75.38 — Mobile: centraliza Comando por voz + Queda/sintoma -->
+<style id="cuidarbem-v75-38-center-summary-actions">
+@media (max-width:767px){
+  #screen-home .home-ai-actions,
+  #screen-home .summary-actions,
+  #screen-home .ai-actions,
+  #screen-home .quick-actions{
+    justify-content:center !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-38-center-summary-actions-js">
+(function(){
+  'use strict';
+  function norm(v){return (v||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function center(){
+    if(window.innerWidth>=768)return;
+    var root=document.querySelector('#screen-home');
+    if(!root)return;
+    var buttons=Array.from(root.querySelectorAll('button,a,[role="button"]'));
+    var voice=buttons.find(function(el){var t=norm(el.textContent);return t.indexOf('comando por voz')!==-1;});
+    var fall=buttons.find(function(el){var t=norm(el.textContent);return t.indexOf('queda/sintoma')!==-1;});
+    if(!voice||!fall)return;
+    var p=voice.parentElement;
+    if(p&&p===fall.parentElement){
+      p.style.justifyContent='center';
+      p.style.width='100%';
+      p.style.marginLeft='auto';
+      p.style.marginRight='auto';
+    }
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',center,{once:true});else center();
+  setTimeout(center,100);setTimeout(center,500);
+})();
+</script>
+
 </body>
 </html>
