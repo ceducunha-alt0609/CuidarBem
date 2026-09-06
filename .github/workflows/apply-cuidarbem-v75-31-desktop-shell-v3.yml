@@ -12,36 +12,39 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Apply compact centered global search
+      - name: Fix compact centered global search patch
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64, re
+          import re
           index = Path('index.html')
-          sw = Path('sw.js')
-          marker = 'cuidarbem-v75-33-global-search-centered'
-          payload = 'CjwhLS0gdjc1LjMzIOKAlCBEZXNrdG9wOiBwZXNxdWlzYSBnbG9iYWwgY29tcGFjdGEgZSBjZW50cmFsaXphZGEgLS0+CjxzdHlsZSBpZD0iY3VpZGFyYmVtLXY3NS0zMy1nbG9iYWwtc2VhcmNoLWNlbnRlcmVkIj4KQG1lZGlhIChtaW4td2lkdGg6NzY4cHgpewogIC5jYi1kZXNrdG9wLXNlYXJjaHsKICAgIHBvc2l0aW9uOnJlbGF0aXZlICFpbXBvcnRhbnQ7CiAgICBsZWZ0OmF1dG8gIWltcG9ydGFudDsKICAgIHJpZ2h0OmF1dG8gIWltcG9ydGFudDsKICAgIHRvcDphdXRvICFpbXBvcnRhbnQ7CiAgICBib3R0b206YXV0byAhaW1wb3J0YW50OwogICAgdHJhbnNmb3JtOm5vbmUgIWltcG9ydGFudDsKICAgIGdyaWQtY29sdW1uOjIgIWltcG9ydGFudDsKICAgIGp1c3RpZnktc2VsZjpjZW50ZXIgIWltcG9ydGFudDsKICAgIGFsaWduLXNlbGY6Y2VudGVyICFpbXBvcnRhbnQ7CiAgICB3aWR0aDozNDBweCAhaW1wb3J0YW50OwogICAgbWF4LXdpZHRoOjM0MHB4ICFpbXBvcnRhbnQ7CiAgICBtaW4td2lkdGg6MjgwcHggIWltcG9ydGFudDsKICAgIG1hcmdpbjowICFpbXBvcnRhbnQ7CiAgICB6LWluZGV4OjEyICFpbXBvcnRhbnQ7CiAgfQogIC5jYi1kZXNrdG9wLXNlYXJjaC1ib3h7CiAgICB3aWR0aDoxMDAlICFpbXBvcnRhbnQ7CiAgICBoZWlnaHQ6NDJweCAhaW1wb3J0YW50OwogICAgYm9yZGVyLXJhZGl1czoxNHB4ICFpbXBvcnRhbnQ7CiAgICBiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsLjk1KSAhaW1wb3J0YW50OwogIH0KICAjc2NyZWVuLWhvbWUgPiAuaGVhZGVyLAogICNjcmVlbi1jYWxlbmRhciA+IC5oZWFkZXItc3ViLAogICNjcmVlbi1kYXNoYm9hcmQgPiAuaGVhZGVyLXN1YiwKICAjc2NyZWVuLW9jciA+IC5oZWFkZXItc3ViLAogICNjcmVlbi1yZXBvcnRzID4gLmhlYWRlci1zdWIsCiAgI3NjcmVlbi1hcHB0ID4gLmhlYWRlci1zdWIsCiAgI3NjcmVlbi1wcm9maWxlID4gLmhlYWRlci1zdWJ7CiAgICBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MjM1cHggbWlubWF4KDM0MHB4LDFmcikgMjUwcHggIWltcG9ydGFudDsKICB9CiAgLmNiLXRvcGJhci1zcGFjZXJ7CiAgICBncmlkLWNvbHVtbjozICFpbXBvcnRhbnQ7CiAgICB3aWR0aDoxMDAlICFpbXBvcnRhbnQ7CiAgfQp9Cjwvc3R5bGU+CjxzY3JpcHQgaWQ9ImN1aWRhcmJlbS12NzUtMzMtdmVyc2lvbiI+CihmdW5jdGlvbigpewogIHRyeXsgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ2N1aWRhcmJlbV9wYXRjaF92ZXJzaW9uJywndjc1LjMzLWdsb2JhbC1zZWFyY2gtY2VudGVyZWQnKTsgfWNhdGNoKGUpe30KKCl9KSgpOwo8L3NjcmlwdD4K'
           s = index.read_text(encoding='utf-8')
-          if marker not in s:
-              patch = base64.b64decode(payload).decode('utf-8')
-              pos = s.rfind('</body>')
-              if pos < 0:
-                  raise RuntimeError('final </body> not found')
-              index.write_text(s[:pos] + patch + '\n' + s[pos:], encoding='utf-8')
+          s = s.replace('#creen-calendar > .header-sub', '#screen-calendar > .header-sub')
+          s = s.replace('#creen-dashboard > .header-sub', '#screen-dashboard > .header-sub')
+          s = s.replace('#creen-reports > .header-sub', '#screen-reports > .header-sub')
+          s = s.replace("\n()})();\n</script>", "\n})();\n</script>")
+          index.write_text(s, encoding='utf-8')
+
+          sw = Path('sw.js')
           t = sw.read_text(encoding='utf-8')
-          new = "const CACHE_NAME = 'cuidarbem-v63-global-search-centered';"
-          if new not in t:
-              t = re.sub(r"const CACHE_NAME = 'cuidarbem-[^']+';", new, t, count=1)
-              sw.write_text(t, encoding='utf-8')
+          t = re.sub(r"const CACHE_NAME = 'cuidarbem-[^']+';", "const CACHE_NAME = 'cuidarbem-v64-global-search-centered-fix';", t, count=1)
+          sw.write_text(t, encoding='utf-8')
           PY
-      - name: Verify final marker
+      - name: Verify final search patch
         run: |
           grep -q 'cuidarbem-v75-33-global-search-centered' index.html
-          grep -q 'cuidarbem-v63-global-search-centered' sw.js
+          grep -q '#screen-calendar > .header-sub' index.html
+          grep -q '#screen-dashboard > .header-sub' index.html
+          grep -q '#screen-reports > .header-sub' index.html
+          grep -q 'cuidarbem-v64-global-search-centered-fix' sw.js
+          ! grep -q '#creen-calendar > .header-sub' index.html
+          ! grep -q '#creen-dashboard > .header-sub' index.html
+          ! grep -q '#creen-reports > .header-sub' index.html
+          ! grep -q '()})();' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Center compact global search on desktop v75.33'
+          git diff --cached --quiet || git commit -m 'Fix centered global search patch v75.33'
           git push
