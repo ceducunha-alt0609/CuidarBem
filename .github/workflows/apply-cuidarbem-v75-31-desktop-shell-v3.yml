@@ -16,68 +16,18 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
-
+          import base64, re
           index = Path('index.html')
           sw = Path('sw.js')
           marker = 'cuidarbem-v75-33-global-search-centered'
+          payload = 'CjwhLS0gdjc1LjMzIOKAlCBEZXNrdG9wOiBwZXNxdWlzYSBnbG9iYWwgY29tcGFjdGEgZSBjZW50cmFsaXphZGEgLS0+CjxzdHlsZSBpZD0iY3VpZGFyYmVtLXY3NS0zMy1nbG9iYWwtc2VhcmNoLWNlbnRlcmVkIj4KQG1lZGlhIChtaW4td2lkdGg6NzY4cHgpewogIC5jYi1kZXNrdG9wLXNlYXJjaHsKICAgIHBvc2l0aW9uOnJlbGF0aXZlICFpbXBvcnRhbnQ7CiAgICBsZWZ0OmF1dG8gIWltcG9ydGFudDsKICAgIHJpZ2h0OmF1dG8gIWltcG9ydGFudDsKICAgIHRvcDphdXRvICFpbXBvcnRhbnQ7CiAgICBib3R0b206YXV0byAhaW1wb3J0YW50OwogICAgdHJhbnNmb3JtOm5vbmUgIWltcG9ydGFudDsKICAgIGdyaWQtY29sdW1uOjIgIWltcG9ydGFudDsKICAgIGp1c3RpZnktc2VsZjpjZW50ZXIgIWltcG9ydGFudDsKICAgIGFsaWduLXNlbGY6Y2VudGVyICFpbXBvcnRhbnQ7CiAgICB3aWR0aDozNDBweCAhaW1wb3J0YW50OwogICAgbWF4LXdpZHRoOjM0MHB4ICFpbXBvcnRhbnQ7CiAgICBtaW4td2lkdGg6MjgwcHggIWltcG9ydGFudDsKICAgIG1hcmdpbjowICFpbXBvcnRhbnQ7CiAgICB6LWluZGV4OjEyICFpbXBvcnRhbnQ7CiAgfQogIC5jYi1kZXNrdG9wLXNlYXJjaC1ib3h7CiAgICB3aWR0aDoxMDAlICFpbXBvcnRhbnQ7CiAgICBoZWlnaHQ6NDJweCAhaW1wb3J0YW50OwogICAgYm9yZGVyLXJhZGl1czoxNHB4ICFpbXBvcnRhbnQ7CiAgICBiYWNrZ3JvdW5kOnJnYmEoMjU1LDI1NSwyNTUsLjk1KSAhaW1wb3J0YW50OwogIH0KICAjc2NyZWVuLWhvbWUgPiAuaGVhZGVyLAogICNjcmVlbi1jYWxlbmRhciA+IC5oZWFkZXItc3ViLAogICNjcmVlbi1kYXNoYm9hcmQgPiAuaGVhZGVyLXN1YiwKICAjc2NyZWVuLW9jciA+IC5oZWFkZXItc3ViLAogICNjcmVlbi1yZXBvcnRzID4gLmhlYWRlci1zdWIsCiAgI3NjcmVlbi1hcHB0ID4gLmhlYWRlci1zdWIsCiAgI3NjcmVlbi1wcm9maWxlID4gLmhlYWRlci1zdWJ7CiAgICBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MjM1cHggbWlubWF4KDM0MHB4LDFmcikgMjUwcHggIWltcG9ydGFudDsKICB9CiAgLmNiLXRvcGJhci1zcGFjZXJ7CiAgICBncmlkLWNvbHVtbjozICFpbXBvcnRhbnQ7CiAgICB3aWR0aDoxMDAlICFpbXBvcnRhbnQ7CiAgfQp9Cjwvc3R5bGU+CjxzY3JpcHQgaWQ9ImN1aWRhcmJlbS12NzUtMzMtdmVyc2lvbiI+CihmdW5jdGlvbigpewogIHRyeXsgbG9jYWxTdG9yYWdlLnNldEl0ZW0oJ2N1aWRhcmJlbV9wYXRjaF92ZXJzaW9uJywndjc1LjMzLWdsb2JhbC1zZWFyY2gtY2VudGVyZWQnKTsgfWNhdGNoKGUpe30KKCl9KSgpOwo8L3NjcmlwdD4K'
           s = index.read_text(encoding='utf-8')
-
           if marker not in s:
-              patch = '''
-
-<!-- v75.33 — Desktop: pesquisa global compacta e centralizada -->
-<style id="cuidarbem-v75-33-global-search-centered">
-@media (min-width:768px){
-  .cb-desktop-search{
-    position:relative !important;
-    left:auto !important;
-    right:auto !important;
-    top:auto !important;
-    bottom:auto !important;
-    transform:none !important;
-    grid-column:2 !important;
-    justify-self:center !important;
-    align-self:center !important;
-    width:340px !important;
-    max-width:340px !important;
-    min-width:280px !important;
-    margin:0 !important;
-    z-index:12 !important;
-  }
-  .cb-desktop-search-box{
-    width:100% !important;
-    height:42px !important;
-    border-radius:14px !important;
-    background:rgba(255,255,255,.95) !important;
-  }
-  #screen-home > .header,
-  #screen-calendar > .header-sub,
-  #screen-dashboard > .header-sub,
-  #screen-ocr > .header-sub,
-  #screen-reports > .header-sub,
-  #screen-appt > .header-sub,
-  #screen-profile > .header-sub{
-    grid-template-columns:235px minmax(340px,1fr) 250px !important;
-  }
-  .cb-topbar-spacer{
-    grid-column:3 !important;
-    width:100% !important;
-  }
-}
-</style>
-<script id="cuidarbem-v75-33-version">
-(function(){
-  try{ localStorage.setItem('cuidarbem_patch_version','v75.33-global-search-centered'); }catch(e){}
-})();
-</script>
-'''
+              patch = base64.b64decode(payload).decode('utf-8')
               pos = s.rfind('</body>')
               if pos < 0:
                   raise RuntimeError('final </body> not found')
-              s = s[:pos] + patch + '\n' + s[pos:]
-              index.write_text(s, encoding='utf-8')
-
+              index.write_text(s[:pos] + patch + '\n' + s[pos:], encoding='utf-8')
           t = sw.read_text(encoding='utf-8')
           new = "const CACHE_NAME = 'cuidarbem-v63-global-search-centered';"
           if new not in t:
