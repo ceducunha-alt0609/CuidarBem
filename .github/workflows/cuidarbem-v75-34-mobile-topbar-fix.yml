@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.37
+name: CuidarBem mobile refinements v75.38
 on:
   push:
     paths:
@@ -14,14 +14,14 @@ jobs:
           fetch-depth: 0
       - name: Apply mobile refinement
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify one-hand retirement
+      - name: Verify centered summary actions
         run: |
-          grep -q 'cuidarbem-v75-37-remove-one-hand' index.html
-          grep -q 'cuidarbem-v75-37-remove-one-hand' sw.js
+          grep -q 'cuidarbem-v75-38-center-summary-actions' index.html
+          grep -q 'cuidarbem-v75-38-center-summary-actions' sw.js
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email '41898282+github-actions-bot@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Remove one-hand mode from mobile v75.37'
+          git diff --cached --quiet || git commit -m 'Center summary actions on mobile v75.38'
           git push
