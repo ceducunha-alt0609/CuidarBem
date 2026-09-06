@@ -1,0 +1,32 @@
+name: Apply CuidarBem v75.32 subpages full width
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-cuidarbem-v75-32-subtelas-fullwidth.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply width fix
+        run: python cuidarbem_patch_v75_32_fullwidth.py
+      - name: Verify
+        run: |
+          grep -q 'cuidarbem-v75-32-subtelas-fullwidth-fix' index.html
+          grep -q 'cuidarbem-v62-subtelas-fullwidth' sw.js
+      - name: Commit app update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git commit -m 'Fix desktop subpages to full topbar width'
+          git push
+      - name: Cleanup temporary files
+        run: |
+          git pull --rebase
+          rm -f cuidarbem_patch_v75_32_fullwidth.py .github/workflows/apply-cuidarbem-v75-32-subtelas-fullwidth.yml
+          git add -A
+          git commit -m 'Clean temporary v75.32 width patch files'
+          git push
