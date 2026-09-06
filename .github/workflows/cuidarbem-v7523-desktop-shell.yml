@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'cuidarbem_patch_v7523_desktop_shell.py'
+      - '.github/workflows/cuidarbem-v7523-desktop-shell.yml'
 permissions:
   contents: write
 jobs:
