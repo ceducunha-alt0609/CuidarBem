@@ -1,0 +1,58 @@
+name: Apply CuidarBem desktop shell v75.31 v3
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-cuidarbem-v75-31-desktop-shell-v3.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply final approved desktop shell
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, subprocess, re
+
+          index = Path('index.html')
+          sw = Path('sw.js')
+          final_marker = 'cuidarbem-v75-31-fix-contraste-data'
+          source_commit = '1b6d6e7eaa0e628bfc4e2ab62996d821c6c29a79'
+
+          s = index.read_text(encoding='utf-8')
+          if final_marker not in s:
+              payload_parts = []
+              for i in range(9):
+                  path = f'cuidarbem_v75_31_chunk_{i:02d}.txt'
+                  data = subprocess.check_output(['git','show',f'{source_commit}:{path}'], text=True).strip()
+                  payload_parts.append(data)
+              patch = base64.b64decode(''.join(payload_parts)).decode('utf-8')
+              pos = s.rfind('</body>')
+              if pos < 0:
+                  raise RuntimeError('final </body> not found')
+              s = s[:pos] + patch + '\n' + s[pos:]
+              index.write_text(s, encoding='utf-8')
+          else:
+              print('Final v75.31 desktop shell already present')
+
+          t = sw.read_text(encoding='utf-8')
+          new = "const CACHE_NAME = 'cuidarbem-v61-desktop-shell-v75-31';"
+          if new not in t:
+              t = re.sub(r"const CACHE_NAME = 'cuidarbem-[^']+';", new, t, count=1)
+              sw.write_text(t, encoding='utf-8')
+          PY
+      - name: Verify final marker
+        run: |
+          grep -q 'cuidarbem-v75-31-fix-contraste-data' index.html
+          grep -q 'cuidarbem-v61-desktop-shell-v75-31' sw.js
+      - name: Commit app update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git diff --cached --quiet || git commit -m 'Consolidate approved desktop topbar and sidebar v75.31'
+          git push
