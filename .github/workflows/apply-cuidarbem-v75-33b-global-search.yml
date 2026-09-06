@@ -1,0 +1,101 @@
+name: Apply CuidarBem v75.33b compact global search
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-cuidarbem-v75-33b-global-search.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply compact centered search
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = 'cuidarbem-v75-33b-global-search-centered'
+          if marker not in s:
+              patch = r'''
+
+<!-- v75.33b — Desktop: pesquisa global compacta e centralizada -->
+<style id="cuidarbem-v75-33b-global-search-centered">
+@media (min-width:768px){
+  .cb-desktop-search{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    grid-column:2 !important;
+    justify-self:center !important;
+    align-self:center !important;
+    width:340px !important;
+    max-width:340px !important;
+    min-width:280px !important;
+    margin:0 !important;
+    z-index:12 !important;
+  }
+
+  .cb-desktop-search-box{
+    width:100% !important;
+    height:42px !important;
+    border-radius:14px !important;
+    background:rgba(255,255,255,.95) !important;
+  }
+
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    grid-template-columns:235px minmax(340px,1fr) 250px !important;
+  }
+
+  .cb-topbar-spacer{
+    grid-column:3 !important;
+    width:100% !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-33b-version">
+(function(){
+  try{ localStorage.setItem('cuidarbem_patch_version','v75.33b-global-search-centered'); }catch(e){}
+})();
+</script>
+'''
+              idx = s.rfind('</body>')
+              if idx < 0:
+                  raise SystemExit('final </body> not found')
+              s = s[:idx] + patch + '\n' + s[idx:]
+              p.write_text(s, encoding='utf-8')
+
+          sw = Path('sw.js')
+          sws = sw.read_text(encoding='utf-8')
+          sws = re.sub(r"const CACHE_NAME = '[^']+';", "const CACHE_NAME = 'cuidarbem-v63-global-search-centered';", sws, count=1)
+          sw.write_text(sws, encoding='utf-8')
+          PY
+
+      - name: Verify
+        run: |
+          grep -q 'cuidarbem-v75-33b-global-search-centered' index.html
+          grep -q 'cuidarbem-v63-global-search-centered' sw.js
+
+      - name: Commit app update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git commit -m 'Center compact global search on desktop v75.33b'
+          git push
