@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.40
+name: CuidarBem mobile refinements v75.41
 on:
   push:
     paths:
@@ -14,14 +14,14 @@ jobs:
           fetch-depth: 0
       - name: Apply mobile refinement
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify summary card real target
+      - name: Verify general state cards
         run: |
-          grep -q 'cuidarbem-v75-40-summary-card-real-target' index.html
-          grep -q 'cuidarbem-v75-40-summary-card-real-target' sw.js
+          grep -q 'cuidarbem-v75-41-general-state-cards' index.html
+          grep -q 'cuidarbem-v75-41-general-state-cards' sw.js
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Fix compact summary card using real DOM ids v75.40'
+          git diff --cached --quiet || git commit -m 'Compact patient general state into four mobile cards v75.41'
           git push
