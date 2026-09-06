@@ -19071,5 +19071,1581 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 
 </style>
 
+<!-- v75.23 — Desktop shell: topbar contínua + sidebar integrada + pesquisa global -->
+<style id="cuidarbem-v75-23-desktop-shell">
+@media (min-width:768px){
+  :root{
+    --cb-desktop-sidebar:260px;
+    --cb-desktop-topbar:126px;
+  }
+
+  /* Sidebar começa visualmente na mesma faixa da topbar */
+  .bottom-nav{
+    width:var(--cb-desktop-sidebar)!important;
+    border-right:1px solid rgba(0,75,61,.08)!important;
+    box-shadow:4px 0 28px rgba(0,55,45,.055)!important;
+    background:rgba(255,255,255,.97)!important;
+  }
+  .nav-brand{
+    height:var(--cb-desktop-topbar)!important;
+    min-height:var(--cb-desktop-topbar)!important;
+    padding:0 20px!important;
+    margin:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:12px!important;
+    border-radius:0!important;
+    background:
+      radial-gradient(circle at 0% 0%,rgba(255,255,255,.09),transparent 45%),
+      linear-gradient(135deg,#0a6b59 0%,#08725e 54%,#087d66 100%)!important;
+    box-shadow:none!important;
+  }
+  .nav-brand::after{display:none!important;}
+  .nav-brand-icon{
+    width:44px!important;height:44px!important;border-radius:14px!important;
+    background:rgba(255,255,255,.16)!important;
+    box-shadow:inset 0 1px rgba(255,255,255,.16)!important;
+  }
+  .nav-brand-text{font-size:18px!important;}
+  .nav-brand-sub{font-size:10.5px!important;}
+
+  /* Topbar única em todas as telas */
+  .screen>.header,
+  .screen>.header-sub,
+  #screen-home>.header{
+    min-height:var(--cb-desktop-topbar)!important;
+    height:var(--cb-desktop-topbar)!important;
+    padding:0 38px!important;
+    margin:0!important;
+    border-radius:0!important;
+    display:flex!important;
+    align-items:center!important;
+    position:relative!important;
+    overflow:visible!important;
+    background:
+      radial-gradient(circle at 92% -40%,rgba(255,255,255,.10),transparent 34%),
+      linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%)!important;
+    box-shadow:0 10px 28px rgba(0,77,63,.14)!important;
+  }
+  .screen>.header::before,
+  .screen>.header-sub::before{
+    content:''!important;
+    position:absolute!important;
+    inset:0!important;
+    pointer-events:none!important;
+    background:linear-gradient(90deg,rgba(255,255,255,.015),transparent 42%,rgba(255,255,255,.025))!important;
+  }
+  .screen>.header::after{display:none!important;}
+
+  /* Home: retira repetição do nome CuidarBem do centro */
+  #screen-home .mobile-topbar-title-row{
+    position:relative!important;
+    z-index:3!important;
+    flex:0 0 250px!important;
+    width:250px!important;
+    display:block!important;
+  }
+  #screen-home .header-title{display:none!important;}
+  #screen-home .mobile-header-subtitle{
+    display:block!important;
+    color:rgba(255,255,255,.74)!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+    margin-top:4px!important;
+  }
+  #screen-home .header-greeting{
+    display:block!important;
+    color:#fff!important;
+    opacity:.95!important;
+    font-size:15px!important;
+    font-weight:800!important;
+    margin:0!important;
+  }
+  #screen-home .mobile-bell-btn{display:none!important;}
+
+  /* Data/paciente/SAMU continuam à direita */
+  #screen-home .header>.header-date{
+    margin-left:auto!important;
+    margin-right:16px!important;
+    padding:0!important;
+    border:0!important;
+    white-space:nowrap!important;
+    font-size:12px!important;
+    color:rgba(255,255,255,.88)!important;
+    opacity:1!important;
+  }
+  #screen-home .header>div[style*="justify-content:space-between"]{
+    margin:0!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:9px!important;
+    flex:0 0 auto!important;
+  }
+  #screen-home .header-patient{
+    margin:0!important;
+    min-height:38px!important;
+    padding:7px 13px!important;
+    background:rgba(255,255,255,.15)!important;
+    border:1px solid rgba(255,255,255,.25)!important;
+  }
+  #screen-home .header button[onclick="openSamuMode()"]{
+    min-height:38px!important;
+    margin:0!important;
+  }
+  #screen-home .mobile-header-actions,
+  #screen-home #streak-badge,
+  #screen-home #patient-mode-header-badge{display:none!important;}
+
+  /* Subtelas: título discreto à esquerda, mesma altura e mesma barra */
+  .header-sub{
+    justify-content:flex-start!important;
+    gap:10px!important;
+  }
+  .header-sub-title{
+    position:relative!important;
+    z-index:3!important;
+    width:250px!important;
+    flex:0 0 250px!important;
+    font-size:20px!important;
+    line-height:1.1!important;
+    font-weight:900!important;
+    color:#fff!important;
+    margin:0!important;
+  }
+  .header-sub>.header-date{
+    display:none!important;
+  }
+
+  /* Pesquisa global central */
+  .cb-desktop-search{
+    position:absolute;
+    z-index:20;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:min(360px,34vw);
+  }
+  .cb-desktop-search-box{
+    position:relative;
+    height:42px;
+    display:flex;
+    align-items:center;
+    border-radius:13px;
+    background:rgba(255,255,255,.94);
+    border:1px solid rgba(255,255,255,.72);
+    box-shadow:0 5px 16px rgba(0,62,50,.12),inset 0 1px rgba(255,255,255,.7);
+    transition:box-shadow .18s,border-color .18s,background .18s;
+  }
+  .cb-desktop-search-box:focus-within{
+    background:#fff;
+    border-color:rgba(196,235,225,.95);
+    box-shadow:0 7px 22px rgba(0,62,50,.16),0 0 0 3px rgba(255,255,255,.10);
+  }
+  .cb-desktop-search-icon{
+    width:39px;
+    flex:0 0 39px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#5b7069;
+    pointer-events:none;
+  }
+  .cb-desktop-search-icon svg{width:17px;height:17px;}
+  .cb-desktop-search-input{
+    flex:1;
+    min-width:0;
+    height:100%;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:#17352d;
+    font-family:'Nunito Sans',sans-serif;
+    font-size:13px;
+    font-weight:600;
+    padding:0 4px 0 0;
+  }
+  .cb-desktop-search-input::placeholder{color:#82938d;opacity:1;}
+  .cb-desktop-search-clear{
+    width:36px;
+    height:36px;
+    margin-right:3px;
+    border:0;
+    background:transparent;
+    color:#687b75;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+  }
+  .cb-desktop-search-clear.show{display:flex;}
+  .cb-desktop-search-clear:hover{background:#eef6f2;color:#0b6d59;}
+
+  .cb-desktop-search-results{
+    position:absolute;
+    top:48px;
+    left:0;
+    right:0;
+    display:none;
+    max-height:360px;
+    overflow:auto;
+    padding:7px;
+    border-radius:15px;
+    background:rgba(255,255,255,.985);
+    border:1px solid rgba(12,108,88,.12);
+    box-shadow:0 18px 46px rgba(0,55,45,.19);
+  }
+  .cb-desktop-search-results.open{display:block;}
+  .cb-search-empty{
+    padding:14px 12px;
+    color:#6d7e78;
+    font-size:12.5px;
+    text-align:center;
+  }
+  .cb-search-result{
+    width:100%;
+    border:0;
+    background:transparent;
+    padding:10px 11px;
+    border-radius:11px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    text-align:left;
+    cursor:pointer;
+    color:#17352d;
+  }
+  .cb-search-result:hover{background:#edf8f3;}
+  .cb-search-result-icon{
+    width:28px;height:28px;flex:0 0 28px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    background:#e7f4ef;font-size:14px;
+  }
+  .cb-search-result-title{font-size:13px;font-weight:800;line-height:1.25;}
+  .cb-search-result-sub{font-size:11px;color:#6c7e77;margin-top:2px;line-height:1.3;}
+
+  /* Moldura do conteúdo começa exatamente abaixo da faixa superior */
+  #screen-home.active{
+    grid-template-rows:var(--cb-desktop-topbar) minmax(0,1fr)!important;
+  }
+
+  /* Sidebar um pouco mais limpa */
+  .nav-btn{
+    margin-left:12px!important;
+    margin-right:12px!important;
+    width:calc(100% - 24px)!important;
+    border-radius:12px!important;
+    box-shadow:none!important;
+  }
+  .nav-btn.active{
+    box-shadow:0 7px 18px rgba(8,111,91,.18)!important;
+  }
+
+  /* Segurança: nada deste ciclo altera mobile */
+}
+@media (max-width:767px){
+  .cb-desktop-search{display:none!important;}
+}
+</style>
+
+<script id="cuidarbem-v75-23-desktop-shell-js">
+(function(){
+  'use strict';
+
+  const SCREEN_META = [
+    {id:'home', label:'Início', icon:'⌂', sub:'Resumo e tarefas de hoje'},
+    {id:'calendar', label:'Agenda', icon:'📅', sub:'Rotinas, remédios e compromissos'},
+    {id:'dashboard', label:'Saúde', icon:'♡', sub:'Acompanhamento e evolução'},
+    {id:'ocr', label:'Receita', icon:'📷', sub:'Receitas e leitura por câmera'},
+    {id:'reports', label:'Relatório', icon:'▥', sub:'Histórico e indicadores'},
+    {id:'appt', label:'Consulta', icon:'🗓', sub:'Consultas e exames'},
+    {id:'profile', label:'Perfil', icon:'♙', sub:'Paciente e configurações'}
+  ];
+
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function norm(v){
+    return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  }
+  function go(id){
+    try{
+      if(typeof window.goScreen==='function') window.goScreen(id);
+      else {
+        document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+        document.getElementById('screen-'+id)?.classList.add('active');
+      }
+    }catch(e){}
+  }
+
+  function taskResults(q){
+    const out=[];
+    try{
+      const list = Array.isArray(window.tasks) ? window.tasks : (typeof tasks!=='undefined' && Array.isArray(tasks) ? tasks : []);
+      list.forEach(t=>{
+        const hay=norm([t.name,t.medName,t.doctort,.examDoctor,t.local,t.type,t.obs,t.dose].filter(Boolean).join(' '));
+        if(hay.includes(q)){
+          out.push({
+            icon:t.type==='med'?'💊':t.type==='cons'?'🩺':t.type==='exam'?'🔬':t.type==='fisio'?'🦾':'✓',
+            title:t.name||t.medName||'Tarefa',
+            sub:[t.date,t.time,t.dose,t.doctor||t.examDoctor,t.local].filter(Boolean).join(' · '),
+            screen:'calendar'
+          });
+        }
+      });
+    }catch(e){}
+    return out.slice(0,5);
+  }
+
+  function renderResults(root,input){
+    const panel=root.querySelector('.cb-desktop-search-results');
+    const clear=root.querySelector('.cb-desktop-search-clear');
+    const raw=input.value.trim();
+    clear.classList.toggle('show',raw.length>0);
+
+    if(!raw){
+      panel.classList.remove('open');
+      panel.innerHTML='';
+      return;
+    }
+    const q=norm(raw);
+    const screens=SCREEN_META.filter(x=>norm(x.label+' '+x.sub).includes(q)).map(x=>({
+      icon:x.icon,title:x.label,sub:x.sub,screen:x.id
+    }));
+    const results=[...screens,...taskResults(q)].slice(0,8);
+    panel.classList.add('open');
+    if(!results.length){
+      panel.innerHTML='<div class="cb-search-empty">Nenhum resultado encontrado.</div>';
+      return;
+    }
+    panel.innerHTML=results.map((r,i)=>`
+      <button class="cb-search-result" type="button" data-i="${i}">
+        <span class="cb-search-result-icon">${esc(r.icon)}</span>
+        <span>
+          <div class="cb-search-result-title">${esc(r.title)}</div>
+          <div class="cb-search-result-sub">${esc(r.sub||'')}</div>
+        </span>
+      </button>`).join('');
+    panel.querySelectorAll('.cb-search-result').forEach((btn,i)=>{
+      btn.addEventListener('click',()=>{
+        go(results[i].screen);
+        panel.classList.remove('open');
+        input.blur();
+      });
+    });
+  }
+
+  function makeSearch(){
+    const root=document.createElement('div');
+    root.className='cb-desktop-search';
+    root.innerHTML=`
+      <div class="cb-desktop-search-box">
+        <span class="cb-desktop-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4 4"></path>
+          </svg>
+        </span>
+        <input class="cb-desktop-search-input" type="search" autocomplete="off"
+          placeholder="Buscar no CuidarBem..." aria-label="Pesquisa global">
+        <button class="cb-desktop-search-clear" type="button" aria-label="Limpar pesquisa">×</button>
+      </div>
+      <div class="cb-desktop-search-results" role="listbox"></div>`;
+    const input=root.querySelector('input');
+    const clear=root.querySelector('.cb-desktop-search-clear');
+    input.addEventListener('input',()=>renderResults(root,input));
+    input.addEventListener('focus',()=>{ if(input.value.trim()) renderResults(root,input); });
+    clear.addEventListener('click',()=>{
+      input.value='';
+      renderResults(root,input);
+      input.focus();
+    });
+    document.addEventListener('pointerdown',ev=>{
+      if(!root.contains(ev.target)) root.querySelector('.cb-desktop-search-results')?.classList.remove('open');
+    });
+    return root;
+  }
+
+  function mount(){
+    if(document.querySelector('.cb-desktop-search')) return;
+    const search=makeSearch();
+
+    /* um clone por header para a busca permanecer centrada em qualquer tela */
+    document.querySelectorAll('.screen > .header, .screen > .header-sub').forEach((header,i)=>{
+      const node=i===0?search:makeSearch();
+      header.appendChild(node);
+    });
+
+    try{
+      localStorage.setItem('cuidarbem_patch_version','v75.23-desktop-topbar-sidebar-global-search');
+    }catch(e){}
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true});
+  else mount();
+})();
+</script>
+
+<!-- v75.25 — Desktop: topbar visualmente contínua + busca deslocada à esquerda + padronização -->
+<style id="cuidarbem-v75-25-desktop-topbar-unificada">
+@media (min-width:768px){
+
+  /* Mesmo plano visual do topo inteiro */
+  .nav-brand,
+  .screen > .header,
+  .screen > .header-sub,
+  #screen-home > .header{
+    background:
+      radial-gradient(circle at 90% -45%, rgba(255,255,255,.10), transparent 35%),
+      linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%) !important;
+  }
+
+  /* Retira qualquer costura entre sidebar e topbar */
+  .bottom-nav{
+    border-right:0 !important;
+    box-shadow:none !important;
+  }
+  .nav-brand{
+    border-right:0 !important;
+    box-shadow:none !important;
+  }
+  .nav-brand::before,
+  .nav-brand::after{
+    display:none !important;
+  }
+
+  /* Linha inferior contínua e única para toda a faixa */
+  .nav-brand,
+  .screen > .header,
+  .screen > .header-sub{
+    border-bottom:1px solid rgba(255,255,255,.06) !important;
+  }
+
+  /* A topbar encosta visualmente na sidebar sem recuo aparente */
+  .screen > .header,
+  .screen > .header-sub,
+  #screen-home > .header{
+    padding-left:30px !important;
+    padding-right:32px !important;
+    border-radius:0 !important;
+    box-shadow:0 8px 24px rgba(0,77,63,.11) !important;
+  }
+
+  /* Pesquisa continua pequena, mas vem mais à esquerda */
+  .cb-desktop-search{
+    left:46% !important;
+    width:min(360px,34vw) !important;
+  }
+
+  /* Home: mantém exatamente o arranjo atual */
+  #screen-home .mobile-topbar-title-row{
+    flex-basis:240px !important;
+    width:240px !important;
+  }
+
+  /* Padronização das outras guias:
+     mesma altura, mesmo fundo, mesma posição do título e mesma busca */
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    min-height:var(--cb-desktop-topbar) !important;
+    height:var(--cb-desktop-topbar) !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:0 !important;
+  }
+
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    flex:0 0 240px !important;
+    width:240px !important;
+    margin:0 !important;
+    padding:0 !important;
+    font-size:19px !important;
+    line-height:1.15 !important;
+    font-weight:900 !important;
+    color:#fff !important;
+    letter-spacing:-.02em !important;
+  }
+
+  /* Remove elementos antigos que poderiam recriar visual de topbar diferente */
+  #screen-calendar .header-sub > .header-date,
+  #screen-dashboard .header-sub > .header-date,
+  #screen-ocr .header-sub > .header-date,
+  #screen-reports .header-sub > .header-date,
+  #screen-appt .header-sub > .header-date,
+  #screen-profile .header-sub > .header-date{
+    display:none !important;
+  }
+
+  /* Evita halo diferente apenas na área da sidebar */
+  .nav-brand-icon{
+    box-shadow:inset 0 1px rgba(255,255,255,.16) !important;
+  }
+
+  /* A separação sidebar/conteúdo começa só abaixo do topo */
+  .bottom-nav::after{
+    content:'';
+    position:absolute;
+    top:var(--cb-desktop-topbar);
+    right:0;
+    bottom:0;
+    width:1px;
+    background:rgba(0,75,61,.08);
+    pointer-events:none;
+  }
+
+  /* Rodapé e menu continuam claros abaixo da faixa */
+  .bottom-nav{
+    background:rgba(255,255,255,.98) !important;
+  }
+  .nav-brand{
+    position:relative !important;
+    z-index:2 !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-25-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.25-desktop-topbar-unificada');
+  }catch(e){}
+})();
+</script>
+
+
+<!-- v75.26 — Desktop: topbar full width real + padronização total das subguias -->
+<style id="cuidarbem-v75-26-desktop-topbar-fullwidth">
+@media (min-width:768px){
+  :root{
+    --cb-desktop-sidebar:260px;
+    --cb-desktop-topbar:126px;
+  }
+
+  /* Estrutura geral: a área de tela ocupa toda a largura disponível */
+  .screen{
+    margin-left:var(--cb-desktop-sidebar) !important;
+    width:calc(100vw - var(--cb-desktop-sidebar)) !important;
+    max-width:none !important;
+    min-width:0 !important;
+  }
+
+  #screen-home.active,
+  #screen-calendar.active,
+  #screen-reports.active,
+  #screen-profile.active,
+  #screen-ocr.active,
+  #screen-dashboard.active,
+  #screen-appt.active{
+    width:calc(100vw - var(--cb-desktop-sidebar)) !important;
+    max-width:none !important;
+    min-width:0 !important;
+  }
+
+  /* Home segue em grid, mas agora com largura total real */
+  #screen-home.active{
+    display:grid !important;
+    grid-template-rows:var(--cb-desktop-topbar) minmax(0,1fr) !important;
+    grid-template-columns:minmax(0,1fr) 430px !important;
+    min-height:100dvh !important;
+  }
+
+  /* Subguias sem limite de 960px herdado */
+  #screen-calendar.active,
+  #screen-reports.active,
+  #screen-profile.active,
+  #screen-ocr.active,
+  #screen-dashboard.active,
+  #screen-appt.active{
+    display:block !important;
+  }
+
+  /* Topbar realmente completa em todas as telas */
+  .screen > .header,
+  .screen > .header-sub,
+  #screen-home > .header{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    min-height:var(--cb-desktop-topbar) !important;
+    height:var(--cb-desktop-topbar) !important;
+    padding:0 26px 0 28px !important;
+    margin:0 !important;
+    border-radius:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    box-sizing:border-box !important;
+    overflow:visible !important;
+  }
+
+  /* Home — mantém o layout, só organiza melhor o espaço */
+  #screen-home .mobile-topbar-title-row{
+    flex:0 0 220px !important;
+    width:220px !important;
+    max-width:220px !important;
+    margin-right:10px !important;
+  }
+  #screen-home .header > .header-date{
+    margin-left:auto !important;
+    margin-right:14px !important;
+    white-space:nowrap !important;
+  }
+
+  /* Subguias — mesma roupagem da Home */
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    justify-content:flex-start !important;
+    gap:0 !important;
+  }
+
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    flex:0 0 220px !important;
+    width:220px !important;
+    max-width:220px !important;
+    margin:0 10px 0 0 !important;
+    padding:0 !important;
+    font-size:18px !important;
+    font-weight:900 !important;
+    line-height:1.1 !important;
+    color:#fff !important;
+    letter-spacing:-.02em !important;
+  }
+
+  /* Data antiga fora para não quebrar alinhamento */
+  #screen-calendar .header-sub > .header-date,
+  #screen-dashboard .header-sub > .header-date,
+  #screen-ocr .header-sub > .header-date,
+  #screen-reports .header-sub > .header-date,
+  #screen-appt .header-sub > .header-date,
+  #screen-profile .header-sub > .header-date{
+    display:none !important;
+  }
+
+  /* Busca mais à esquerda, sem ficar grande */
+  .cb-desktop-search{
+    left:42% !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) !important;
+    width:min(362px,32vw) !important;
+  }
+
+  /* Conteúdos internos mais coerentes com o topo full width */
+  #screen-home .content{
+    padding:28px 18px 28px 28px !important;
+    overflow-y:auto !important;
+    min-width:0 !important;
+  }
+  .desktop-right-panel{
+    padding:28px 28px 28px 16px !important;
+    overflow-y:auto !important;
+    min-width:0 !important;
+  }
+
+  #screen-calendar .content,
+  #screen-reports .content,
+  #screen-profile .content,
+  #screen-ocr .content,
+  #screen-appt .content{
+    padding:26px 28px 30px !important;
+    max-width:none !important;
+  }
+
+  #screen-dashboard .health-dashboard{
+    padding:26px 28px 30px !important;
+    max-width:none !important;
+  }
+
+  /* Barra visual contínua com a sidebar */
+  .bottom-nav{
+    border-right:0 !important;
+    box-shadow:none !important;
+  }
+  .bottom-nav::after{
+    content:'';
+    position:absolute;
+    top:var(--cb-desktop-topbar);
+    right:0;
+    bottom:0;
+    width:1px;
+    background:rgba(0,75,61,.08);
+    pointer-events:none;
+  }
+
+  .nav-brand,
+  .screen > .header,
+  .screen > .header-sub,
+  #screen-home > .header{
+    background:
+      radial-gradient(circle at 90% -45%, rgba(255,255,255,.10), transparent 35%),
+      linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%) !important;
+  }
+
+  /* Segurança extra: evita qualquer sobra branca lateral causada por wrappers */
+  body{
+    overflow-x:hidden !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-26-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.26-desktop-topbar-fullwidth');
+  }catch(e){}
+})();
+</script>
+
+
+<!-- v75.27 — Desktop: unifica tom da Home com as demais topbars e remove círculos decorativos -->
+<style id="cuidarbem-v75-27-home-topbar-unificada">
+@media (min-width:768px){
+
+  /* Mesmo tom e mesma “pele” em TODAS as topbars, inclusive Home */
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub,
+  .nav-brand{
+    background: linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%) !important;
+  }
+
+  /* Remove os círculos / halos / ornamentos exclusivos da Home */
+  #screen-home > .header::before,
+  #screen-home > .header::after{
+    display:none !important;
+    content:none !important;
+    background:none !important;
+  }
+
+  /* Garante que não haja outro fundo circular herdado nos blocos da Home */
+  #screen-home .mobile-topbar-title-row,
+  #screen-home .mobile-topbar-copy,
+  #screen-home .header-greeting,
+  #screen-home .mobile-header-subtitle{
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  /* Mantém o topo da Home com a mesma leitura das demais */
+  #screen-home > .header{
+    box-shadow:0 8px 24px rgba(0,77,63,.11) !important;
+  }
+
+  /* Título auxiliar da Home fica mais alinhado ao restante */
+  #screen-home .header-greeting{
+    color:#ffffff !important;
+    opacity:.96 !important;
+    margin-bottom:6px !important;
+  }
+
+  #screen-home .mobile-header-subtitle{
+    color:rgba(255,255,255,.82) !important;
+    font-size:12px !important;
+    line-height:1.3 !important;
+    max-width:240px !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-27-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.27-home-topbar-tom-unificado');
+  }catch(e){}
+})();
+</script>
+
+
+<!-- v75.28 — Desktop: aplica os círculos/halos do padrão Home em todas as topbars -->
+<style id="cuidarbem-v75-28-topbars-circulos-home">
+@media (min-width:768px){
+
+  /* Todas as topbars passam a ter o mesmo comportamento visual da Home */
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    position:relative !important;
+    overflow:hidden !important;
+    isolation:isolate !important;
+    background:linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%) !important;
+  }
+
+  /* Círculo maior à esquerda, mais escuro/sutil, inspirado na Home */
+  #screen-home > .header::before,
+  #screen-calendar > .header-sub::before,
+  #screen-dashboard > .header-sub::before,
+  #screen-ocr > .header-sub::before,
+  #screen-reports > .header-sub::before,
+  #screen-appt > .header-sub::before,
+  #screen-profile > .header-sub::before{
+    content:'' !important;
+    display:block !important;
+    position:absolute !important;
+    left:-26px !important;
+    top:-58px !important;
+    width:300px !important;
+    height:300px !important;
+    border-radius:50% !important;
+    background:radial-gradient(circle, rgba(0,0,0,.14) 0%, rgba(0,0,0,.12) 38%, rgba(0,0,0,.08) 56%, rgba(0,0,0,0) 70%) !important;
+    opacity:.42 !important;
+    pointer-events:none !important;
+    z-index:0 !important;
+    filter:blur(.2px) !important;
+  }
+
+  /* Círculo secundário um pouco menor, levemente deslocado */
+  #screen-home > .header::after,
+  #screen-calendar > .header-sub::after,
+  #screen-dashboard > .header-sub::after,
+  #screen-ocr > .header-sub::after,
+  #screen-reports > .header-sub::after,
+  #screen-appt > .header-sub::after,
+  #screen-profile > .header-sub::after{
+    content:'' !important;
+    display:block !important;
+    position:absolute !important;
+    left:54px !important;
+    top:34px !important;
+    width:160px !important;
+    height:160px !important;
+    border-radius:50% !important;
+    background:radial-gradient(circle, rgba(0,0,0,.11) 0%, rgba(0,0,0,.09) 40%, rgba(0,0,0,.05) 58%, rgba(0,0,0,0) 74%) !important;
+    opacity:.32 !important;
+    pointer-events:none !important;
+    z-index:0 !important;
+  }
+
+  /* Garante que o conteúdo da topbar fique acima dos círculos */
+  #screen-home > .header > *,
+  #screen-calendar > .header-sub > *,
+  #screen-dashboard > .header-sub > *,
+  #screen-ocr > .header-sub > *,
+  #screen-reports > .header-sub > *,
+  #screen-appt > .header-sub > *,
+  #screen-profile > .header-sub > *{
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  /* A busca também acima do efeito */
+  .cb-desktop-search{
+    z-index:5 !important;
+  }
+
+  /* Dá um pequeno tratamento aos títulos das subtelas para conversar melhor com o fundo */
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    text-shadow:0 1px 2px rgba(0,0,0,.08) !important;
+  }
+
+  /* Home mantém o mesmo padrão de leitura */
+  #screen-home .header-greeting,
+  #screen-home .mobile-header-subtitle{
+    text-shadow:0 1px 2px rgba(0,0,0,.08) !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-28-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.28-topbars-circulos-padrao-home');
+  }catch(e){}
+})();
+</script>
+
+
+<!-- v75.29 — Desktop: corrige pesquisa global e aplica círculos discretos como fundo real -->
+<style id="cuidarbem-v75-29-topbar-fix">
+@media (min-width:768px){
+  :root{
+    --cb-desktop-sidebar:260px;
+    --cb-desktop-topbar:126px;
+    --cb-left-slot:235px;
+    --cb-right-slot:250px;
+    --cb-search-max:360px;
+  }
+
+  /* Fundo padronizado com círculos discretos em TODAS as topbars */
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub,
+  .nav-brand{
+    background:
+      radial-gradient(circle at 110px 22px, rgba(255,255,255,.11) 0 112px, transparent 113px),
+      radial-gradient(circle at 165px 86px, rgba(255,255,255,.07) 0 58px, transparent 59px),
+      linear-gradient(135deg,#08725e 0%,#087963 55%,#0a8069 100%) !important;
+  }
+
+  /* Desliga pseudo-elementos antigos */
+  #screen-home > .header::before,
+  #screen-home > .header::after,
+  #screen-calendar > .header-sub::before,
+  #screen-calendar > .header-sub::after,
+  #screen-dashboard > .header-sub::before,
+  #screen-dashboard > .header-sub::after,
+  #screen-ocr > .header-sub::before,
+  #screen-ocr > .header-sub::after,
+  #screen-reports > .header-sub::before,
+  #screen-reports > .header-sub::after,
+  #screen-appt > .header-sub::before,
+  #screen-appt > .header-sub::after,
+  #screen-profile > .header-sub::before,
+  #screen-profile > .header-sub::after{
+    display:none !important;
+    content:none !important;
+  }
+
+  /* Grade estável: esquerda / centro / direita */
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    display:grid !important;
+    grid-template-columns: var(--cb-left-slot) minmax(320px, 1fr) var(--cb-right-slot) !important;
+    align-items:center !important;
+    column-gap:18px !important;
+    width:100% !important;
+    min-height:var(--cb-desktop-topbar) !important;
+    height:var(--cb-desktop-topbar) !important;
+    padding:0 22px 0 28px !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Bloco esquerdo */
+  #screen-home .mobile-topbar-title-row,
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    grid-column:1 !important;
+    align-self:center !important;
+    width:auto !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin:0 !important;
+    position:relative !important;
+    z-index:2 !important;
+  }
+
+  /* Busca realmente central */
+  .cb-desktop-search{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    transform:none !important;
+    grid-column:2 !important;
+    justify-self:center !important;
+    align-self:center !important;
+    width:min(var(--cb-search-max), 100%) !important;
+    max-width:var(--cb-search-max) !important;
+    min-width:280px !important;
+    margin:0 !important;
+    z-index:3 !important;
+  }
+
+  .cb-desktop-search-box{
+    height:42px !important;
+    border-radius:14px !important;
+  }
+
+  /* Lado direito da Home */
+  .cb-home-topbar-right{
+    grid-column:3 !important;
+    min-width:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:14px !important;
+    position:relative !important;
+    z-index:3 !important;
+  }
+
+  .cb-home-topbar-right .header-date{
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    white-space:nowrap !important;
+    font-size:12px !important;
+    color:rgba(255,255,255,.88) !important;
+    opacity:1 !important;
+  }
+
+  .cb-home-topbar-right .cb-home-actions{
+    display:flex !important;
+    align-items:center !important;
+    gap:9px !important;
+  }
+
+  #screen-home .header-patient{
+    margin:0 !important;
+    min-height:38px !important;
+    padding:7px 13px !important;
+    background:rgba(255,255,255,.15) !important;
+    border:1px solid rgba(255,255,255,.25) !important;
+  }
+
+  #screen-home .header button[onclick="openSamuMode()"]{
+    margin:0 !important;
+    min-height:38px !important;
+  }
+
+  /* Espaço fantasma nas outras telas para manter centro geométrico */
+  .cb-topbar-spacer{
+    grid-column:3 !important;
+    width:100% !important;
+    height:1px !important;
+    justify-self:stretch !important;
+  }
+
+  /* Home: neutraliza alinhamentos antigos */
+  #screen-home .header > .header-date{
+    display:none !important;
+  }
+  #screen-home .header > div[style*="justify-content:space-between"]{
+    display:none !important;
+  }
+
+  #screen-home .mobile-topbar-title-row{
+    display:block !important;
+    flex:none !important;
+  }
+  #screen-home .header-greeting{
+    display:block !important;
+    margin:0 0 6px 0 !important;
+    font-size:15px !important;
+    font-weight:800 !important;
+    color:#fff !important;
+    opacity:.96 !important;
+  }
+  #screen-home .header-title{display:none !important;}
+  #screen-home .mobile-header-subtitle{
+    display:block !important;
+    color:rgba(255,255,255,.82) !important;
+    font-size:12px !important;
+    line-height:1.3 !important;
+    max-width:230px !important;
+  }
+
+  /* Subtelas */
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    font-size:18px !important;
+    line-height:1.1 !important;
+    font-weight:900 !important;
+    letter-spacing:-.02em !important;
+    color:#fff !important;
+    text-shadow:0 1px 2px rgba(0,0,0,.08) !important;
+  }
+
+  #screen-calendar .header-sub > .header-date,
+  #screen-dashboard .header-sub > .header-date,
+  #screen-ocr .header-sub > .header-date,
+  #screen-reports .header-sub > .header-date,
+  #screen-appt .header-sub > .header-date,
+  #screen-profile .header-sub > .header-date{
+    display:none !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-29-topbar-fix-js">
+(function(){
+  'use strict';
+
+  function buildRightHomeBlock(header){
+    if(header.querySelector('.cb-home-topbar-right')) return;
+
+    const dateEl = header.querySelector(':scope > .header-date');
+    const actionsEl = Array.from(header.children).find(el=>{
+      if(!el || !el.getAttribute) return false;
+      const st = el.getAttribute('style') || '';
+      return st.includes('justify-content:space-between');
+    });
+
+    const right = document.createElement('div');
+    right.className = 'cb-home-topbar-right';
+
+    if(dateEl){
+      right.appendChild(dateEl.cloneNode(true));
+      dateEl.style.display = 'none';
+    }
+
+    const actionsWrap = document.createElement('div');
+    actionsWrap.className = 'cb-home-actions';
+    if(actionsEl){
+      Array.from(actionsEl.children).forEach(ch => actionsWrap.appendChild(ch.cloneNode(true)));
+      actionsEl.style.display = 'none';
+    }
+    right.appendChild(actionsWrap);
+    header.appendChild(right);
+  }
+
+  function ensureSpacer(header){
+    if(header.querySelector('.cb-topbar-spacer')) return;
+    const spacer = document.createElement('div');
+    spacer.className = 'cb-topbar-spacer';
+    spacer.setAttribute('aria-hidden','true');
+    header.appendChild(spacer);
+  }
+
+  function mount(){
+    const homeHeader = document.querySelector('#screen-home > .header');
+    if(homeHeader){
+      buildRightHomeBlock(homeHeader);
+    }
+
+    document.querySelectorAll(
+      '#screen-calendar > .header-sub,' +
+      '#screen-dashboard > .header-sub,' +
+      '#screen-ocr > .header-sub,' +
+      '#screen-reports > .header-sub,' +
+      '#screen-appt > .header-sub,' +
+      '#screen-profile > .header-sub'
+    ).forEach(ensureSpacer);
+
+    try{
+      localStorage.setItem('cuidarbem_patch_version','v75.29-topbar-fix-pesquisa-circulos');
+    }catch(e){}
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount, {once:true});
+  else mount();
+})();
+</script>
+
+
+<!-- v75.30 — Desktop: sidebar verde premium + círculos só na saudação + data acima de paciente/SAMU -->
+<style id="cuidarbem-v75-30-sidebar-data">
+@media (min-width:768px){
+  :root{
+    --cb-sidebar-green-top:#169078;
+    --cb-sidebar-green-bottom:#0f7c67;
+    --cb-topbar-green-a:#08725e;
+    --cb-topbar-green-b:#087963;
+    --cb-topbar-green-c:#0a8069;
+  }
+
+  /* SIDEBAR VERDE — levemente mais clara que a topbar */
+  .bottom-nav{
+    background:
+      linear-gradient(180deg,var(--cb-sidebar-green-top) 0%,var(--cb-sidebar-green-bottom) 100%) !important;
+    color:#fff !important;
+    border-right:0 !important;
+    box-shadow:2px 0 18px rgba(0,60,50,.08) !important;
+  }
+
+  /* Marca limpa, sem círculos */
+  .nav-brand{
+    background:transparent !important;
+    border-bottom:1px solid rgba(255,255,255,.10) !important;
+    box-shadow:none !important;
+  }
+  .nav-brand::before,
+  .nav-brand::after{
+    display:none !important;
+    content:none !important;
+  }
+
+  .nav-brand-icon{
+    background:rgba(255,255,255,.14) !important;
+    color:#fff !important;
+    box-shadow:inset 0 1px rgba(255,255,255,.12) !important;
+  }
+  .nav-brand-text{color:#fff !important;}
+  .nav-brand-sub{color:rgba(255,255,255,.68) !important;}
+
+  /* Itens padrão */
+  .nav-btn{
+    color:rgba(255,255,255,.92) !important;
+    background:transparent !important;
+    box-shadow:none !important;
+  }
+  .nav-btn svg{
+    color:currentColor !important;
+    stroke:currentColor !important;
+  }
+  .nav-btn:not(.active):hover{
+    background:rgba(255,255,255,.09) !important;
+    color:#fff !important;
+  }
+
+  /* Item selecionado = branco + verde */
+  .nav-btn.active{
+    background:#fff !important;
+    color:#08725e !important;
+    box-shadow:0 8px 20px rgba(0,70,56,.16) !important;
+    font-weight:900 !important;
+  }
+  .nav-btn.active svg{
+    color:#08725e !important;
+    stroke:#08725e !important;
+  }
+
+  /* Rodapé sidebar */
+  .nav-footer{
+    color:rgba(255,255,255,.88) !important;
+    border-top:1px solid rgba(255,255,255,.10) !important;
+  }
+
+  /* Linha divisória começa abaixo do topo */
+  .bottom-nav::after{
+    content:'';
+    position:absolute;
+    top:var(--cb-desktop-topbar);
+    right:0;
+    bottom:0;
+    width:1px;
+    background:rgba(255,255,255,.08);
+    pointer-events:none;
+  }
+
+  /* TOPBAR base uniforme, sem círculos globais */
+  #screen-home > .header,
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    background:
+      linear-gradient(135deg,var(--cb-topbar-green-a) 0%,var(--cb-topbar-green-b) 55%,var(--cb-topbar-green-c) 100%) !important;
+  }
+
+  /* Remove qualquer decoração antiga das outras topbars */
+  #screen-calendar > .header-sub::before,
+  #screen-calendar > .header-sub::after,
+  #screen-dashboard > .header-sub::before,
+  #screen-dashboard > .header-sub::after,
+  #screen-ocr > .header-sub::before,
+  #screen-ocr > .header-sub::after,
+  #screen-reports > .header-sub::before,
+  #screen-reports > .header-sub::after,
+  #screen-appt > .header-sub::before,
+  #screen-appt > .header-sub::after,
+  #screen-profile > .header-sub::before,
+  #screen-profile > .header-sub::after{
+    display:none !important;
+    content:none !important;
+  }
+
+  /* CÍRCULOS SOMENTE na área da saudação / título à esquerda */
+  #screen-home .mobile-topbar-title-row,
+  #screen-calendar .header-sub-title,
+  #screen-dashboard .header-sub-title,
+  #screen-ocr .header-sub-title,
+  #screen-reports .header-sub-title,
+  #screen-appt .header-sub-title,
+  #screen-profile .header-sub-title{
+    position:relative !important;
+    isolation:isolate !important;
+  }
+
+  #screen-home .mobile-topbar-title-row::before,
+  #screen-calendar .header-sub-title::before,
+  #screen-dashboard .header-sub-title::before,
+  #screen-ocr .header-sub-title::before,
+  #screen-reports .header-sub-title::before,
+  #screen-appt .header-sub-title::before,
+  #screen-profile .header-sub-title::before{
+    content:'' !important;
+    position:absolute !important;
+    width:220px !important;
+    height:220px !important;
+    left:-54px !important;
+    top:-86px !important;
+    border-radius:50% !important;
+    background:rgba(255,255,255,.065) !important;
+    z-index:-1 !important;
+    pointer-events:none !important;
+  }
+
+  #screen-home .mobile-topbar-title-row::after,
+  #screen-calendar .header-sub-title::after,
+  #screen-dashboard .header-sub-title::after,
+  #screen-ocr .header-sub-title::after,
+  #screen-reports .header-sub-title::after,
+  #screen-appt .header-sub-title::after,
+  #screen-profile .header-sub-title::after{
+    content:'' !important;
+    position:absolute !important;
+    width:112px !important;
+    height:112px !important;
+    left:78px !important;
+    top:12px !important;
+    border-radius:50% !important;
+    background:rgba(255,255,255,.075) !important;
+    z-index:-1 !important;
+    pointer-events:none !important;
+  }
+
+  /* HOME direita: data em cima, paciente/SAMU embaixo */
+  .cb-home-topbar-right{
+    display:grid !important;
+    grid-template-rows:auto auto !important;
+    grid-template-columns:1fr !important;
+    align-items:center !important;
+    justify-items:end !important;
+    row-gap:9px !important;
+    min-width:230px !important;
+  }
+
+  .cb-home-topbar-right .header-date{
+    grid-row:1 !important;
+    font-size:11.5px !important;
+    line-height:1 !important;
+    color:rgba(255,255,255,.82) !important;
+    font-weight:700 !important;
+    white-space:nowrap !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  .cb-home-topbar-right .cb-home-actions{
+    grid-row:2 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:10px !important;
+  }
+
+  /* Busca preservada no centro */
+  .cb-desktop-search{
+    justify-self:center !important;
+    align-self:center !important;
+    width:min(360px,100%) !important;
+    max-width:360px !important;
+    min-width:280px !important;
+  }
+
+  /* Dá um pouco mais de respiro à direita */
+  #screen-home > .header{
+    padding-right:24px !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-30-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.30-sidebar-verde-data-topo');
+  }catch(e){}
+})();
+</script>
+
+
+<!-- v75.31 — Desktop: corrige contraste sidebar e sobreposição data/paciente/SAMU -->
+<style id="cuidarbem-v75-31-fix-contraste-data">
+@media (min-width:768px){
+
+  /* SIDEBAR — força contraste correto nos itens inativos */
+  .bottom-nav .nav-btn:not(.active),
+  .bottom-nav button.nav-btn:not(.active),
+  body .bottom-nav .nav-btn:not(.active){
+    color:rgba(255,255,255,.94) !important;
+    background:transparent !important;
+    text-shadow:none !important;
+  }
+
+  .bottom-nav .nav-btn:not(.active) svg,
+  body .bottom-nav .nav-btn:not(.active) svg{
+    stroke:rgba(255,255,255,.94) !important;
+    color:rgba(255,255,255,.94) !important;
+  }
+
+  .bottom-nav .nav-btn:not(.active):hover{
+    color:#fff !important;
+    background:rgba(255,255,255,.10) !important;
+  }
+
+  /* Receita tinha bolha/ícone próprio: mantém leitura clara */
+  .bottom-nav .nav-btn-cam:not(.active),
+  .bottom-nav .nav-btn-cam:not(.active) .nav-cam-bubble{
+    color:#fff !important;
+  }
+  .bottom-nav .nav-btn-cam:not(.active) .nav-cam-bubble{
+    background:rgba(255,255,255,.10) !important;
+    box-shadow:none !important;
+  }
+  .bottom-nav .nav-btn-cam:not(.active) .nav-cam-bubble svg{
+    stroke:#fff !important;
+  }
+
+  /* Selecionado permanece branco + verde */
+  .bottom-nav .nav-btn.active{
+    background:#fff !important;
+    color:#08725e !important;
+  }
+  .bottom-nav .nav-btn.active svg{
+    stroke:#08725e !important;
+    color:#08725e !important;
+  }
+
+  /* BLOCO DIREITO HOME — neutraliza regras antigas absolutas */
+  #screen-home .cb-home-topbar-right{
+    position:relative !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    bottom:auto !important;
+
+    grid-column:3 !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto auto !important;
+    align-items:center !important;
+    justify-items:end !important;
+    align-self:center !important;
+
+    row-gap:10px !important;
+    width:100% !important;
+    min-width:235px !important;
+    max-width:250px !important;
+    margin:0 !important;
+    padding:0 !important;
+    z-index:8 !important;
+  }
+
+  /* Data realmente acima, sem position:absolute herdado */
+  #screen-home .cb-home-topbar-right .header-date,
+  #screen-home .cb-home-topbar-right #today-date{
+    position:static !important;
+    inset:auto !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    bottom:auto !important;
+
+    display:block !important;
+    grid-row:1 !important;
+    justify-self:end !important;
+
+    width:auto !important;
+    max-width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+
+    font-size:11px !important;
+    line-height:1.15 !important;
+    font-weight:800 !important;
+    color:rgba(255,255,255,.80) !important;
+    text-align:right !important;
+    white-space:nowrap !important;
+
+    background:none !important;
+    border:0 !important;
+    box-shadow:none !important;
+    transform:none !important;
+    z-index:auto !important;
+  }
+
+  /* Maria + SAMU em segunda linha independente */
+  #screen-home .cb-home-topbar-right .cb-home-actions{
+    position:static !important;
+    inset:auto !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    bottom:auto !important;
+
+    display:flex !important;
+    grid-row:2 !important;
+    justify-self:end !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+
+    gap:9px !important;
+    width:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    transform:none !important;
+  }
+
+  #screen-home .cb-home-topbar-right .header-patient,
+  #screen-home .cb-home-topbar-right button[onclick="openSamuMode()"]{
+    position:static !important;
+    top:auto !important;
+    right:auto !important;
+    left:auto !important;
+    bottom:auto !important;
+
+    height:36px !important;
+    min-height:36px !important;
+    margin:0 !important;
+    transform:none !important;
+  }
+
+  /* Originais continuam escondidos */
+  #screen-home > .header > .header-date,
+  #screen-home > .header > #today-date{
+    display:none !important;
+  }
+
+  #screen-home > .header > div[style*="justify-content:space-between"]{
+    display:none !important;
+  }
+
+  /* Respiro extra para evitar qualquer colisão */
+  #screen-home > .header{
+    grid-template-columns:235px minmax(320px,1fr) 250px !important;
+    column-gap:18px !important;
+    padding-right:18px !important;
+  }
+}
+</style>
+
+<script id="cuidarbem-v75-31-version">
+(function(){
+  try{
+    localStorage.setItem('cuidarbem_patch_version','v75.31-fix-sidebar-contraste-data');
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>
