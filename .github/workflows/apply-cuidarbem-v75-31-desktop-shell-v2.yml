@@ -1,0 +1,28 @@
+name: Apply CuidarBem desktop shell v75.31 v2
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-cuidarbem-v75-31-desktop-shell-v2.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply approved desktop shell
+        run: python cuidarbem_apply_v75_31_desktop_shell.py
+      - name: Commit app update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git commit -m 'Apply approved desktop topbar and sidebar shell v75.31'
+          git push
+      - name: Cleanup temporary patch payload
+        run: |
+          git pull --rebase
+          rm -f cuidarbem_apply_v75_31_desktop_shell.py cuidarbem_v75_31_chunk_*.txt
+          git add -A
+          git commit -m 'Clean temporary CuidarBem desktop shell payload'
+          git push
