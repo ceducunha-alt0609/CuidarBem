@@ -17637,71 +17637,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 
 
-<!-- v75.34 — Mobile: remove clone desktop que bagunçava a Home -->
-<style id="cuidarbem-v75-34-mobile-topbar-fix">
-@media (max-width:767px){
-  #screen-home > .header{
-    display:block !important;
-    height:auto !important;
-    min-height:238px !important;
-    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px !important;
-    overflow:hidden !important;
-  }
-  #screen-home .cb-home-topbar-right{display:none !important;}
-  #screen-home > .header > .header-date,
-  #screen-home > .header > #today-date{
-    display:inline-flex !important;
-    position:relative !important;
-    inset:auto !important;
-    top:auto !important;
-    right:auto !important;
-    left:auto !important;
-    transform:none !important;
-    margin:12px 0 0 !important;
-    padding:6px 10px !important;
-  }
-  #screen-home > .header > div[style*="justify-content:space-between"]{
-    display:flex !important;
-    position:relative !important;
-    inset:auto !important;
-    transform:none !important;
-    margin-top:10px !important;
-    margin-bottom:0 !important;
-  }
-  #screen-home .mobile-header-actions{
-    display:grid !important;
-    margin-top:12px !important;
-  }
-  #screen-home .content{padding-top:258px !important;}
-}
-</style>
-<script id="cuidarbem-v75-34-mobile-topbar-fix-js">
-(function(){
-  'use strict';
-  function repairMobileHomeTopbar(){
-    if(window.innerWidth > 767) return;
-    const header = document.querySelector('#screen-home > .header');
-    if(!header) return;
-    header.querySelectorAll(':scope > .cb-home-topbar-right').forEach(el => el.remove());
-    const date = header.querySelector(':scope > .header-date, :scope > #today-date');
-    if(date) date.style.removeProperty('display');
-    const actions = Array.from(header.children).find(el => {
-      if(!el || !el.getAttribute) return false;
-      const st = el.getAttribute('style') || '';
-      return st.includes('justify-content:space-between');
-    });
-    if(actions) actions.style.removeProperty('display');
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    repairMobileHomeTopbar();
-    setTimeout(repairMobileHomeTopbar, 80);
-    setTimeout(repairMobileHomeTopbar, 350);
-  });
-  window.addEventListener('resize', repairMobileHomeTopbar, {passive:true});
-  window.addEventListener('orientationchange', function(){ setTimeout(repairMobileHomeTopbar, 120); });
-})();
-</script>
-
 </body></html>`;
     const w = window.open('', '_blank');
     if (!w) { alert('Permita pop-ups para imprimir o guia.'); return; }
@@ -20266,6 +20201,7 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
   'use strict';
 
   function buildRightHomeBlock(header){
+    if(window.innerWidth < 768) return;
     if(header.querySelector('.cb-home-topbar-right')) return;
 
     const dateEl = header.querySelector(':scope > .header-date');
@@ -20805,6 +20741,67 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 <script id="cuidarbem-v75-33-version">
 (function(){
   try{ localStorage.setItem('cuidarbem_patch_version','v75.33-global-search-centered'); }catch(e){}
+})();
+</script>
+
+
+
+<!-- v75.35 — Mobile Home: restaura a ordem original e bloqueia clone desktop -->
+<style id="cuidarbem-v75-35-mobile-topbar-root-fix">
+@media (max-width:767px){
+  #screen-home > .header{
+    display:block !important;
+    height:auto !important;
+    min-height:238px !important;
+    padding:calc(env(safe-area-inset-top) + 16px) 18px 16px !important;
+    overflow:hidden !important;
+  }
+  #screen-home .cb-home-topbar-right{display:none !important;}
+  #screen-home > .header > .header-date,
+  #screen-home > .header > #today-date{
+    display:inline-flex !important;
+    position:relative !important;
+    inset:auto !important;
+    transform:none !important;
+    margin:12px 0 0 !important;
+    padding:6px 10px !important;
+  }
+  #screen-home > .header > div[style*="justify-content:space-between"]{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    position:relative !important;
+    inset:auto !important;
+    transform:none !important;
+    margin-top:10px !important;
+    margin-bottom:0 !important;
+  }
+  #screen-home .mobile-header-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+    margin-top:12px !important;
+  }
+  #screen-home .content{padding-top:258px !important;}
+}
+</style>
+<script id="cuidarbem-v75-35-mobile-topbar-root-fix-js">
+(function(){
+  'use strict';
+  function cleanMobileHome(){
+    if(window.innerWidth >= 768) return;
+    const header = document.querySelector('#screen-home > .header');
+    if(!header) return;
+    header.querySelectorAll('.cb-home-topbar-right').forEach(el => el.remove());
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', cleanMobileHome, {once:true});
+  }else{
+    cleanMobileHome();
+  }
+  setTimeout(cleanMobileHome, 100);
+  setTimeout(cleanMobileHome, 500);
+  window.addEventListener('resize', cleanMobileHome, {passive:true});
+  window.addEventListener('orientationchange', function(){setTimeout(cleanMobileHome,120);});
 })();
 </script>
 
