@@ -20694,5 +20694,52 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
   try{ localStorage.setItem('cuidarbem_patch_version','v75.32-subtelas-fullwidth-fix'); }catch(e){}
 })();
 </script>
+
+<!-- v75.33 — Desktop: pesquisa global compacta e centralizada -->
+<style id="cuidarbem-v75-33-global-search-centered">
+@media (min-width:768px){
+  .cb-desktop-search{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    grid-column:2 !important;
+    justify-self:center !important;
+    align-self:center !important;
+    width:340px !important;
+    max-width:340px !important;
+    min-width:280px !important;
+    margin:0 !important;
+    z-index:12 !important;
+  }
+  .cb-desktop-search-box{
+    width:100% !important;
+    height:42px !important;
+    border-radius:14px !important;
+    background:rgba(255,255,255,.95) !important;
+  }
+  #screen-home > .header,
+  #creen-calendar > .header-sub,
+  #creen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #creen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    grid-template-columns:235px minmax(340px,1fr) 250px !important;
+  }
+  .cb-topbar-spacer{
+    grid-column:3 !important;
+    width:100% !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-33-version">
+(function(){
+  try{ localStorage.setItem('cuidarbem_patch_version','v75.33-global-search-centered'); }catch(e){}
+()})();
+</script>
+
 </body>
 </html>
