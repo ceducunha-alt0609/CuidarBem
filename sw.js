@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v60-native-home-scroll';
+const CACHE_NAME = 'cuidarbem-v61-desktop-shell-v75-31';
 const APP_SHELL = [
   './',
   './index.html',
