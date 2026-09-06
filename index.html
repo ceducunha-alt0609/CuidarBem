@@ -20647,5 +20647,52 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 })();
 </script>
 
+
+<!-- v75.32 — Desktop: subtelas com a mesma largura útil da Home -->
+<style id="cuidarbem-v75-32-subtelas-fullwidth-fix">
+@media (min-width:768px){
+  #screen-calendar.active,
+  #screen-dashboard.active,
+  #screen-ocr.active,
+  #screen-reports.active,
+  #screen-appt.active,
+  #screen-profile.active{
+    width:calc(100vw - var(--cb-desktop-sidebar,260px)) !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin-left:var(--cb-desktop-sidebar,260px) !important;
+  }
+
+  #screen-calendar > .header-sub,
+  #screen-dashboard > .header-sub,
+  #screen-ocr > .header-sub,
+  #screen-reports > .header-sub,
+  #screen-appt > .header-sub,
+  #screen-profile > .header-sub{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  #screen-calendar .content,
+  #screen-dashboard .health-dashboard,
+  #screen-ocr .content,
+  #screen-reports .content,
+  #screen-appt .content,
+  #screen-profile .content{
+    width:100% !important;
+    max-width:none !important;
+    box-sizing:border-box !important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-32-version">
+(function(){
+  try{ localStorage.setItem('cuidarbem_patch_version','v75.32-subtelas-fullwidth-fix'); }catch(e){}
+})();
+</script>
 </body>
 </html>
