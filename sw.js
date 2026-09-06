@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v64-global-search-centered-fix';
+const CACHE_NAME = 'cuidarbem-v75-34-mobile-topbar-fix';
 const APP_SHELL = [
   './',
   './index.html',
