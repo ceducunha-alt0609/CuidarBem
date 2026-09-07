@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.82
+name: CuidarBem mobile refinements v75.83
 on:
   push:
     paths:
@@ -12,17 +12,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Simplify accessibility tools
+      - name: Fix More navigation targets
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify accessibility cleanup
+      - name: Verify More navigation fix
         run: |
-          grep -q 'cuidarbem-v75-82-accessibility-cleanup' index.html
-          grep -q 'cuidarbem-v75-82-accessibility-cleanup' sw.js
-          grep -q 'cb7582-font-plus2' index.html
+          grep -q 'cuidarbem-v75-83-more-navigation-fix' index.html
+          grep -q 'cuidarbem-v75-83-more-navigation-fix' sw.js
+          grep -q "go('appt')" index.html
+          grep -q "go('profile')" index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Simplify accessibility tools v75.82'
+          git diff --cached --quiet || git commit -m 'Fix More navigation targets v75.83'
           git push
