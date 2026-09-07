@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.58
+name: CuidarBem mobile refinements v75.59
 on:
   push:
     paths:
@@ -12,16 +12,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Finalize Health orphan label cleanup
+      - name: Stabilize refresh and navigation boot
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify Health final cleanup
+      - name: Verify refresh stability patch
         run: |
-          grep -q 'cuidarbem-v75-58-health-final-today' index.html
-          grep -q 'cuidarbem-v75-58-health-final-today' sw.js
+          grep -q 'cuidarbem-v75-59-refresh-stability' index.html
+          grep -q 'cuidarbem-v75-59-refresh-stability' sw.js
+          ! grep -q "getAttribute('data-screen')" index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Finalize Health cleanup v75.58'
+          git diff --cached --quiet || git commit -m 'Stabilize refresh boot and restore last screen v75.59'
           git push
