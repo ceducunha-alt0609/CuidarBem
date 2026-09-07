@@ -3091,6 +3091,13 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
 }
 </style>
 
+<style id="cuidarbem-v75-62-no-static-home-flash">
+@media(max-width:767px){
+  /* Enquanto o boot decide a guia, nenhuma screen antiga pode pintar. */
+  html.cb761-booting .screen{display:none!important;visibility:hidden!important;}
+}
+</style>
+
 </head>
 <body>
 
@@ -4628,7 +4635,7 @@ body.dark-theme .rehab-card,body.dark .rehab-card{background:linear-gradient(180
     </div>
   </div>
   <!-- 3 botões esquerda -->
-  <button class="nav-btn active" onclick="goScreen('home',this)" id="nav-home">
+  <button class="nav-btn" onclick="goScreen('home',this)" id="nav-home">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
       <polyline points="9 22 9 12 15 12 15 22"/>
