@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.83
+name: CuidarBem mobile refinements v75.84
 on:
   push:
     paths:
@@ -12,18 +12,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Fix More navigation targets
+      - name: Clean More and fix gear
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify More navigation fix
+      - name: Verify More cleanup and gear fix
         run: |
-          grep -q 'cuidarbem-v75-83-more-navigation-fix' index.html
-          grep -q 'cuidarbem-v75-83-more-navigation-fix' sw.js
-          grep -q "go('appt')" index.html
-          grep -q "go('profile')" index.html
+          grep -q 'cuidarbem-v75-84-more-cleanup-a11y-fix' index.html
+          grep -q 'cuidarbem-v75-84-more-cleanup-a11y-fix' sw.js
+          grep -q 'cb7584-force-open' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Fix More navigation targets v75.83'
+          git diff --cached --quiet || git commit -m 'Clean More and fix accessibility gear v75.84'
           git push
