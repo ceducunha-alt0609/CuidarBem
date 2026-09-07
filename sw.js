@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v75-67-medication-schedule';
+const CACHE_NAME = 'cuidarbem-v75-68-medication-time-labels';
 const APP_SHELL = [
   './',
   './index.html',
