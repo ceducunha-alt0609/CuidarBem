@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.66
+name: CuidarBem mobile refinements v75.67
 on:
   push:
     paths:
@@ -12,17 +12,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Add manual medication form
+      - name: Refine medication schedule
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify medication form
+      - name: Verify medication schedule
         run: |
-          grep -q 'cuidarbem-v75-66-medication-form' index.html
-          grep -q 'cuidarbem-v75-66-medication-form' sw.js
-          grep -q 'Novo medicamento' index.html
+          grep -q 'cuidarbem-v75-67-medication-schedule' index.html
+          grep -q 'cuidarbem-v75-67-medication-schedule' sw.js
+          grep -q 'Uso contínuo' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Add manual medication form v75.66'
+          git diff --cached --quiet || git commit -m 'Refine medication schedule v75.67'
           git push
