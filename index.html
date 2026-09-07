@@ -15087,7 +15087,7 @@ body.dark-theme .bottom-nav{
     el.innerHTML = rows.length ? rows.map((r,i)=>`<div class="cb75-item"><div class="cb75-item-icon">🏥</div><div class="cb75-item-main"><div class="cb75-item-title">${esc(r.type)} · ${fmt(r.date)}</div><div class="cb75-item-text">${esc(r.desc)}</div></div><button class="cb75-btn secondary" onclick="removeCB75HospitalEvent(${i})">✕</button></div>`).join('') : '<div class="hist-empty">Nenhum histórico estruturado cadastrado.</div>';
   }
 
-  window.setCB75Quick = function(key,val,btn){ saveTodayLog({[key]:val}, 'cb75-state'); pushHaptic([12]); };
+  window.setCB75Quick = function(key,val,btn){ const log=getTodayLog(); const next=(log && log[key]===val) ? '' : val; saveTodayLog({[key]:next}, 'cb75-state'); pushHaptic([12]); };
   window.setCB75PatientFeeling = function(val,btn){ saveTodayLog({patientFeeling:val}, 'cb75-patient-feeling'); toast('✅ Como estou hoje registrado'); };
   window.addCB75Water = function(delta){ const log=getTodayLog(); saveTodayLog({water:Math.max(0,Number(log.water||0)+delta)}, 'cb75-water'); };
   window.addCB75Meal = function(delta){ const log=getTodayLog(); saveTodayLog({meals:Math.max(0,Number(log.meals||0)+delta)}, 'cb75-meals'); };
@@ -21251,6 +21251,10 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
  var c=card();if(c)new MutationObserver(refresh).observe(c,{subtree:true,attributes:true,attributeFilter:['class']});
 })();
 </script>
+
+
+<!-- v75.43 — Estado Geral: seleção reversível corrigida na origem -->
+<meta id="cuidarbem-v75-43-toggle-at-source" data-fix="state-toggle-source">
 
 </body>
 </html>
