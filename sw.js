@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v75-56-hide-orphan-today';
+const CACHE_NAME = 'cuidarbem-v75-57-complications-compact';
 const APP_SHELL = [
   './',
   './index.html',
