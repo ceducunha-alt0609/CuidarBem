@@ -2,29 +2,31 @@ from pathlib import Path
 import re
 
 index=Path('index.html'); s=index.read_text(encoding='utf-8')
-marker='cuidarbem-v75-64-medication-header-fix'
+marker='cuidarbem-v75-65-medication-simple-choice'
 if marker not in s:
     patch=r'''
-<!-- v75.64 — Mobile: corrige sobreposição do cabeçalho de medicamentos -->
-<style id="cuidarbem-v75-64-medication-header-fix">
+<!-- v75.65 — Mobile: receita como ação principal; manual como alternativa -->
+<style id="cuidarbem-v75-65-medication-simple-choice">
 @media(max-width:767px){
- #screen-ocr .header-sub-title,
- #screen-ocr .header-date{font-size:inherit!important;}
- #screen-ocr .header-sub-title::after,
- #screen-ocr .header-date::after{content:none!important;display:none!important;}
- #screen-ocr .header-sub-title{font-size:22px!important;font-weight:800!important;line-height:1.15!important;}
- #screen-ocr .header-date{font-size:13px!important;line-height:1.35!important;margin-top:5px!important;}
+ #screen-ocr #cb7563-methods{display:block!important;margin-top:12px!important;}
+ #screen-ocr #cb7563-gallery{display:none!important;}
+ #screen-ocr #cb7563-manual{width:100%!important;min-height:62px!important;flex-direction:row!important;gap:9px!important;font-size:16px!important;border-radius:16px!important;}
+ #screen-ocr #cb7563-manual .ico{font-size:22px!important;}
+ #screen-ocr #ocr-upload-zone>.card:first-child{cursor:pointer!important;}
+ #screen-ocr #ocr-upload-zone>.card:first-child::after{content:'Toque para ler a receita ›';display:block;margin-top:12px;font-size:12px;font-weight:800;color:var(--green-600);}
 }
 </style>
-<script id="cuidarbem-v75-64-medication-header-fix-js">
+<script id="cuidarbem-v75-65-medication-simple-choice-js">
 (function(){
- function fix(){
-   var root=document.getElementById('screen-ocr');if(!root)return;
-   var t=root.querySelector('.header-sub-title'),d=root.querySelector('.header-date');
-   if(t)t.textContent='💊 Adicionar medicamento';
-   if(d)d.textContent='Cadastre pela receita ou manualmente';
+ function setup(){
+   var zone=document.getElementById('ocr-upload-zone');if(!zone)return;
+   var upload=zone.querySelector('.card');if(!upload||upload.dataset.cb7565)return;
+   upload.dataset.cb7565='1';upload.setAttribute('role','button');upload.setAttribute('tabindex','0');
+   function choose(){var f=document.getElementById('ocr-file-input');if(f){f.removeAttribute('capture');f.click();}}
+   upload.addEventListener('click',choose);
+   upload.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}});
  }
- fix();document.addEventListener('DOMContentLoaded',fix);setTimeout(fix,100);setTimeout(fix,600);
+ document.addEventListener('DOMContentLoaded',setup);var n=0,x=setInterval(function(){setup();if(document.querySelector('#ocr-upload-zone .card[data-cb7565]')||++n>50)clearInterval(x);},250);
 })();
 </script>
 '''
@@ -32,4 +34,4 @@ if marker not in s:
     if pos==-1: raise SystemExit('ERRO: </body> real não encontrado')
     s=s[:pos]+patch+'\n'+s[pos:]
 index.write_text(s,encoding='utf-8')
-sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-64-medication-header-fix';",t,count=1);sw.write_text(t,encoding='utf-8')
+sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-65-medication-simple-choice';",t,count=1);sw.write_text(t,encoding='utf-8')
