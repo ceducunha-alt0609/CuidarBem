@@ -1,26 +1,28 @@
 from pathlib import Path
 import re
-index=Path('index.html');s=index.read_text(encoding='utf-8');marker='cuidarbem-v75-68-medication-time-labels'
+index=Path('index.html');s=index.read_text(encoding='utf-8');marker='cuidarbem-v75-69-medication-auto-times'
 if marker not in s:
  patch=r'''
-<!-- v75.68 — identifica horários e separa período do tratamento -->
-<style id="cuidarbem-v75-68-medication-time-labels">
+<!-- v75.69 — calcula horários seguintes a partir do primeiro -->
+<style id="cuidarbem-v75-69-medication-auto-times">
 @media(max-width:767px){
- #cb7567-times-wrap{margin-top:10px;grid-template-columns:repeat(2,minmax(0,1fr))!important}
- .cb7568-time-field{display:flex;flex-direction:column;gap:5px;min-width:0}.cb7568-time-field label{font-size:11px!important;font-weight:800!important;color:var(--green-700)!important;text-transform:uppercase;letter-spacing:.03em}.cb7568-time-field input{width:100%!important}
- .cb7568-period-label{grid-column:1/-1;margin:4px 0 -2px;font-size:12px;font-weight:900;color:var(--green-800);text-transform:uppercase;letter-spacing:.04em}
+ .cb7567-time.cb7569-suggested{background:#fff7df!important;border-color:#e4bd68!important;color:#76520b!important;box-shadow:inset 0 0 0 1px rgba(202,145,35,.08)}
+ .cb7568-time-field.cb7569-auto label{color:#9a6811!important}.cb7568-time-field.cb7569-auto label::after{content:' · sugerido';font-size:9px;font-weight:800;text-transform:none;letter-spacing:0;color:#a97920}
 }
 </style>
-<script id="cuidarbem-v75-68-medication-time-labels-js">
+<script id="cuidarbem-v75-69-medication-auto-times-js">
 (function(){
- function setup(){var freq=document.getElementById('cb7567-frequency'),wrap=document.getElementById('cb7567-times-wrap'),start=document.getElementById('cb7566-start');if(!freq||!wrap||!start||freq.dataset.cb7568)return;freq.dataset.cb7568='1';
-  function labelTimes(){var inputs=[].slice.call(wrap.querySelectorAll('.cb7567-time'));inputs.forEach(function(inp,i){if(inp.parentElement.classList.contains('cb7568-time-field'))return;var box=document.createElement('div');box.className='cb7568-time-field';var lab=document.createElement('label');lab.textContent=(i+1)+'º horário';inp.parentNode.insertBefore(box,inp);box.appendChild(lab);box.appendChild(inp);});}
-  freq.addEventListener('change',function(){setTimeout(labelTimes,0)});
-  var sf=start.closest('.cb7566-field');if(sf&&!document.getElementById('cb7568-period-label')){var p=document.createElement('div');p.id='cb7568-period-label';p.className='cb7568-period-label';p.textContent='Período do tratamento';sf.parentNode.insertBefore(p,sf);}
+ function setup(){var freq=document.getElementById('cb7567-frequency'),wrap=document.getElementById('cb7567-times-wrap');if(!freq||!wrap||freq.dataset.cb7569)return;freq.dataset.cb7569='1';
+  function mins(v){var p=v.split(':');return (+p[0])*60+(+p[1])}function clock(m){m=(m+1440)%1440;return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0')}
+  function step(){var v=freq.value;if(v==='2x/dia'||v==='12/12h')return 720;if(v==='3x/dia'||v==='8/8h')return 480;if(v==='4x/dia'||v==='6/6h')return 360;return 0}
+  function bind(){var ins=[].slice.call(wrap.querySelectorAll('.cb7567-time'));if(!ins.length)return;ins.forEach(function(x,i){x.dataset.cb7569Index=i;if(i>0)x.addEventListener('input',function(){this.classList.remove('cb7569-suggested');var b=this.closest('.cb7568-time-field');if(b)b.classList.remove('cb7569-auto')})});ins[0].addEventListener('change',function(){var gap=step(),base=this.value;if(!gap||!base)return;ins.slice(1).forEach(function(x,i){x.value=clock(mins(base)+gap*(i+1));x.classList.add('cb7569-suggested');var b=x.closest('.cb7568-time-field');if(b)b.classList.add('cb7569-auto')})});
+  }
+  freq.addEventListener('change',function(){setTimeout(bind,20)});
+  var mo=new MutationObserver(function(){setTimeout(bind,0)});mo.observe(wrap,{childList:true,subtree:true});
  }
- document.addEventListener('DOMContentLoaded',setup);var n=0,x=setInterval(function(){setup();if(document.querySelector('#cb7567-frequency[data-cb7568]')||++n>50)clearInterval(x)},250);
+ document.addEventListener('DOMContentLoaded',setup);var n=0,x=setInterval(function(){setup();if(document.querySelector('#cb7567-frequency[data-cb7569]')||++n>50)clearInterval(x)},250);
 })();
 </script>
 '''
  pos=s.rfind('</body>');s=s[:pos]+patch+'\n'+s[pos:]
-index.write_text(s,encoding='utf-8');sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-68-medication-time-labels';",t,count=1);sw.write_text(t,encoding='utf-8')
+index.write_text(s,encoding='utf-8');sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-69-medication-auto-times';",t,count=1);sw.write_text(t,encoding='utf-8')
