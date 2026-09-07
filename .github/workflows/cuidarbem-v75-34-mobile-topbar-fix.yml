@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.71
+name: CuidarBem mobile refinements v75.72
 on:
   push:
     paths:
@@ -12,17 +12,19 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Target real Reports DOM
+      - name: Apply direct Reports IDs
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify Reports real DOM patch
+      - name: Verify direct Reports patch
         run: |
-          grep -q 'cuidarbem-v75-71-reports-real-dom' index.html
-          grep -q 'cuidarbem-v75-71-reports-real-dom' sw.js
-          grep -q 'cb7571-summary' index.html
+          grep -q 'cuidarbem-v75-72-reports-direct-ids' index.html
+          grep -q 'cuidarbem-v75-72-reports-direct-ids' sw.js
+          grep -q 'monthly-adherence-pct' index.html
+          grep -q 'functional-evolution-summary' index.html
+          grep -q 'adherence-list' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Target real Reports DOM v75.71'
+          git diff --cached --quiet || git commit -m 'Use direct Reports IDs v75.72'
           git push
