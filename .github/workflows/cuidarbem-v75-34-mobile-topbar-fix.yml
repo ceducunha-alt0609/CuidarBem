@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.69
+name: CuidarBem mobile refinements v75.70
 on:
   push:
     paths:
@@ -12,17 +12,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Add automatic medication times
+      - name: Refine Reports for caregiver
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify automatic medication times
+      - name: Verify Reports refinement
         run: |
-          grep -q 'cuidarbem-v75-69-medication-auto-times' index.html
-          grep -q 'cuidarbem-v75-69-medication-auto-times' sw.js
-          grep -q 'cb7569-suggested' index.html
+          grep -q 'cuidarbem-v75-70-reports-caregiver' index.html
+          grep -q 'cuidarbem-v75-70-reports-caregiver' sw.js
+          grep -q 'cb7570-period' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Auto-suggest medication times v75.69'
+          git diff --cached --quiet || git commit -m 'Refine mobile Reports for caregiver v75.70'
           git push
