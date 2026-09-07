@@ -1,66 +1,39 @@
 from pathlib import Path
 import re
 p=Path('index.html'); s=p.read_text(encoding='utf-8')
-marker='cuidarbem-v75-82-accessibility-cleanup'
+marker='cuidarbem-v75-83-more-navigation-fix'
 if marker not in s:
  patch=r'''
-<!-- v75.82 — Mobile: acessibilidade útil, sem baixo estresse e DIAG fora do cuidador -->
-<style id="cuidarbem-v75-82-accessibility-cleanup">
-@media(max-width:767px){
- /* DIAG é ferramenta técnica: não ocupa a interface normal do cuidador */
- #diag-fab,#diag-badge,#diag-panel,.diag-fab,.diag-badge,.diag-panel,[id*="diag-fab"],[id*="diag-badge"]{display:none!important}
- /* remove a opção Baixo estresse visual dos atalhos/configurações */
- .cb7582-hide-stress{display:none!important}
- /* escala tipográfica real do app */
- html.cb7582-font-plus{font-size:17px!important}
- html.cb7582-font-plus2{font-size:19px!important}
- html.cb7582-font-plus body{font-size:1rem!important}
- html.cb7582-font-plus2 body{font-size:1rem!important}
- html.cb7582-font-plus button,html.cb7582-font-plus input,html.cb7582-font-plus select,html.cb7582-font-plus textarea,
- html.cb7582-font-plus2 button,html.cb7582-font-plus2 input,html.cb7582-font-plus2 select,html.cb7582-font-plus2 textarea{font-size:1em}
-}
-</style>
-<script id="cuidarbem-v75-82-accessibility-cleanup-js">
+<!-- v75.83 — Mobile: Mais usa a navegação real do app -->
+<script id="cuidarbem-v75-83-more-navigation-fix">
 (function(){
- function norm(x){return (x||'').replace(/\s+/g,' ').trim().toLowerCase()}
- function hideStress(){
-  [].slice.call(document.querySelectorAll('body *')).forEach(function(el){
-   if(el.children.length<8 && norm(el.textContent).indexOf('baixo estresse')>=0){
-    var box=el.closest('.setting-row,.settings-row,.card,.accessibility-item,.toggle-row')||el;
-    if(box && norm(box.textContent).length<180) box.classList.add('cb7582-hide-stress');
-   }
-  });
+ function closeMore(){var sh=document.getElementById('cb7581-more-sheet');if(sh)sh.classList.remove('open')}
+ function closePatient(){var ps=document.getElementById('cb7581-patient-screen');if(ps)ps.classList.remove('open')}
+ function go(name){
+  closeMore();closePatient();
+  var btn=document.getElementById('nav-'+name);
+  if(typeof window.goScreen==='function' && btn){window.goScreen(name,btn);return true}
+  if(btn){btn.click();return true}return false;
  }
- function hideDiag(){
-  [].slice.call(document.querySelectorAll('button,div,span')).forEach(function(el){
-   var t=norm(el.textContent);
-   if((t==='diag'||t.indexOf('efeitos removidos')>=0) && t.length<400){
-    var box=el.closest('[role="dialog"],.modal,.diag-panel,.diag-fab,.floating-btn')||el;
-    box.style.display='none';
-   }
-  });
+ function setup(){
+  var sheet=document.getElementById('cb7581-more-sheet');
+  if(sheet && !sheet.dataset.cb7583){sheet.dataset.cb7583='1';sheet.addEventListener('click',function(e){
+    var b=e.target.closest('[data-go]');if(!b)return;
+    var g=b.dataset.go;
+    if(g==='consulta'){e.preventDefault();e.stopImmediatePropagation();go('appt')}
+    else if(g==='perfil'){e.preventDefault();e.stopImmediatePropagation();go('profile')}
+  },true)}
+  var ps=document.getElementById('cb7581-patient-screen');
+  if(ps && !ps.dataset.cb7583){ps.dataset.cb7583='1';ps.addEventListener('click',function(e){
+    var b=e.target.closest('[data-section]');if(!b)return;
+    e.preventDefault();e.stopImmediatePropagation();go('profile');
+  },true)}
+  /* engrenagem flutuante = acessibilidade, não Perfil/Configurações */
+  var fab=document.querySelector('.a11y-fab');
+  if(fab)fab.style.display='flex';
  }
- function applyFont(level){
-  var h=document.documentElement;h.classList.remove('cb7582-font-plus','cb7582-font-plus2');
-  if(level==='plus')h.classList.add('cb7582-font-plus');
-  if(level==='plus2')h.classList.add('cb7582-font-plus2');
-  try{localStorage.setItem('cb7582_font_size',level)}catch(e){}
- }
- function wireFont(){
-  var candidates=[].slice.call(document.querySelectorAll('button,[role="button"]'));
-  candidates.forEach(function(b){
-   var t=norm(b.textContent);
-   if(t==='a'||t==='a+'||t==='a++'){
-    if(b.dataset.cb7582)return;b.dataset.cb7582='1';
-    b.addEventListener('click',function(){applyFont(t==='a'?'normal':t==='a+'?'plus':'plus2')},true);
-   }
-  });
- }
- function setup(){hideStress();hideDiag();wireFont();}
- try{applyFont(localStorage.getItem('cb7582_font_size')||'normal')}catch(e){}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
- setTimeout(setup,400);setTimeout(setup,1200);
- new MutationObserver(function(){clearTimeout(window.__cb7582t);window.__cb7582t=setTimeout(setup,80)}).observe(document.documentElement,{childList:true,subtree:true});
+ setTimeout(setup,300);setTimeout(setup,900);
 })();
 </script>
 '''
@@ -68,4 +41,4 @@ if marker not in s:
  if pos<0: raise SystemExit('body not found')
  s=s[:pos]+patch+'\n'+s[pos:]
 p.write_text(s,encoding='utf-8')
-sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-82-accessibility-cleanup';",t,count=1);sw.write_text(t,encoding='utf-8')
+sw=Path('sw.js');t=sw.read_text(encoding='utf-8');t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-83-more-navigation-fix';",t,count=1);sw.write_text(t,encoding='utf-8')
