@@ -8717,23 +8717,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.nav-btn').forEach(btn=>{
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-      this.classList.add('active');
 
-      const target = this.getAttribute('data-screen');
-      if(!target) return;
-
-      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-      const el = document.getElementById(target);
-      if(el) el.classList.add('active');
-    });
-  });
-});
-</script>
 
 <!-- ══════════════════════════════════════════════════════════
      ONBOARDING OVERLAY
@@ -17587,7 +17571,24 @@ body.low-stress .ai-active-sub{
     const patient = st.patient || 'Paciente';
     const missing = status.missing.length ? status.missing.map(x=>`<li>${esc(x)}</li>`).join('') : '<li>Ficha essencial preenchida.</li>';
     const doc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>CuidarBem — Guia de Uso Seguro</title><style>
-      body{font-family:Arial,sans-serif;margin:28px;color:#10201b;line-height:1.55} h1{color:#0f6e56;margin-bottom:4px} h2{color:#1a6b5c;margin-top:22px} .box{border:1px solid #b7ddd1;border-radius:14px;padding:14px;margin:12px 0;background:#f1faf7}.warn{border-left:5px solid #d85a30;background:#fff4ee}.small{color:#52615c;font-size:13px}@media print{body{margin:18mm}.box{break-inside:avoid}}</style></head><body>
+      body{font-family:Arial,sans-serif;margin:28px;color:#10201b;line-height:1.55} h1{color:#0f6e56;margin-bottom:4px} h2{color:#1a6b5c;margin-top:22px} .box{border:1px solid #b7ddd1;border-radius:14px;padding:14px;margin:12px 0;background:#f1faf7}.warn{border-left:5px solid #d85a30;background:#fff4ee}.small{color:#52615c;font-size:13px}@media print{body{margin:18mm}.box{break-inside:avoid}}</style>
+<!-- v75.59 — boot estável: sem flash da Home durante atualização -->
+<style id="cuidarbem-v75-59-refresh-stability">
+@media(max-width:767px){
+  html.cb759-booting .screen{visibility:hidden!important;}
+  html.cb759-booting .bottom-nav{visibility:hidden!important;}
+  html.cb759-booting *,html.cb759-booting *::before,html.cb759-booting *::after{
+    animation:none!important;transition:none!important;
+  }
+}
+</style>
+<script id="cuidarbem-v75-59-boot-head">
+(function(){
+  try{document.documentElement.classList.add('cb759-booting');}catch(e){}
+})();
+</script>
+
+</head><body>
       <h1>CuidarBem — Guia de Uso Seguro</h1><div class="small">Paciente: <b>${esc(patient)}</b> · Checklist Modo SAMU: <b>${status.pct}%</b></div>
       <div class="box warn"><b>Finalidade:</b> o app organiza, lembra, registra e alerta. Não substitui profissionais de saúde nem atendimento de emergência.</div>
       <h2>Quando procurar ajuda</h2><p>Fraqueza de um lado, boca torta, fala alterada, confusão súbita, alteração visual, perda de equilíbrio, queda importante ou piora neurológica nova devem ser tratados como urgência.</p>
@@ -21872,6 +21873,49 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
  }
  document.addEventListener('DOMContentLoaded',clean);
  var n=0,x=setInterval(function(){clean();if(document.querySelector('.cb7558-original-today')||++n>50)clearInterval(x);},200);
+})();
+</script>
+
+
+<script id="cuidarbem-v75-59-refresh-stability-js">
+(function(){
+  var KEY='cuidarbem_last_screen_v759';
+  var valid=['home','calendar','dashboard','ocr','reports','appt','profile'];
+  function save(name){try{if(valid.indexOf(name)>=0)localStorage.setItem(KEY,name);}catch(e){}}
+  function restore(){
+    var name='home';
+    try{var saved=localStorage.getItem(KEY);if(valid.indexOf(saved)>=0)name=saved;}catch(e){}
+    var screen=document.getElementById('screen-'+name);
+    var nav=document.getElementById('nav-'+name);
+    if(screen){
+      document.querySelectorAll('.screen.active').forEach(function(el){el.classList.remove('active');});
+      screen.classList.add('active');
+    }
+    if(nav){
+      document.querySelectorAll('.nav-btn.active').forEach(function(el){el.classList.remove('active');});
+      nav.classList.add('active');
+    }
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){document.documentElement.classList.remove('cb759-booting');});
+    });
+  }
+
+  /* A navegação oficial continua sendo goScreen; apenas registramos a última guia. */
+  var oldGo=window.goScreen;
+  if(typeof oldGo==='function'){
+    window.goScreen=function(name,btn){save(name);return oldGo.apply(this,arguments);};
+  }
+
+  document.addEventListener('click',function(e){
+    var btn=e.target&&e.target.closest?e.target.closest('.nav-btn'):null;
+    if(!btn)return;
+    var id=btn.id||'';
+    if(id.indexOf('nav-')===0)save(id.slice(4));
+  },true);
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});else restore();
+  /* Failsafe: nunca deixar a interface escondida se algum módulo antigo falhar. */
+  setTimeout(function(){document.documentElement.classList.remove('cb759-booting');},1800);
 })();
 </script>
 
