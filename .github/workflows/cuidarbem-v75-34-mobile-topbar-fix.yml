@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.77
+name: CuidarBem mobile refinements v75.78
 on:
   push:
     paths:
@@ -12,17 +12,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Clean conflicting Consultas Exames patches
+      - name: Final Consultas Exames cards
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify clean Consultas Exames patch
+      - name: Verify final cards
         run: |
-          grep -q 'cuidarbem-v75-77-consultas-exames-clean' index.html
-          grep -q 'cuidarbem-v75-77-consultas-exames-clean' sw.js
-          ! grep -q 'cuidarbem-v75-76-consultas-exames-stable-js' index.html
+          grep -q 'cuidarbem-v75-78-consultas-exames-final' index.html
+          grep -q 'cuidarbem-v75-78-consultas-exames-final' sw.js
+          ! grep -q 'cuidarbem-v75-77-consultas-exames-clean-js' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Clean and stabilize Consultas Exames v75.77'
+          git diff --cached --quiet || git commit -m 'Finalize Consultas Exames cards v75.78'
           git push
