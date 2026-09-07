@@ -22220,5 +22220,34 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 }
 </style>
 
+
+<!-- v75.80 — Consultas/Exames: render inicial também no refresh -->
+<script id="cuidarbem-v75-80-upcoming-initial-render">
+(function(){
+  function renderNow(){
+    try{
+      if(typeof window.renderApptUpcoming==='function'){
+        window.renderApptUpcoming();
+        return true;
+      }
+      if(typeof renderApptUpcoming==='function'){
+        renderApptUpcoming();
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+  function boot(){
+    renderNow();
+    setTimeout(renderNow,120);
+    setTimeout(renderNow,400);
+    setTimeout(renderNow,900);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
+  window.addEventListener('load',function(){setTimeout(renderNow,60)},{once:true});
+})();
+</script>
+
 </body>
 </html>

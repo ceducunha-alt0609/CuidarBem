@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v75-79-consultas-source-fix';
+const CACHE_NAME = 'cuidarbem-v75-80-upcoming-initial-render';
 const APP_SHELL = [
   './',
   './index.html',
