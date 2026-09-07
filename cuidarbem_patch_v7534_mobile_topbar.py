@@ -1,68 +1,79 @@
 from pathlib import Path
 import re
 
-index=Path('index.html')
-s=index.read_text(encoding='utf-8')
-marker='cuidarbem-v75-52-health-organization'
+index=Path('index.html'); s=index.read_text(encoding='utf-8')
+marker='cuidarbem-v75-53-health-compact-details'
 if marker not in s:
     patch=r'''
 
-<!-- v75.52 — Mobile: Saúde focada no registro; tendências e reabilitação compactadas -->
-<style id="cuidarbem-v75-52-health-organization">
+<!-- v75.53 — Mobile: sinais vitais enxutos + biblioteca compacta -->
+<style id="cuidarbem-v75-53-health-compact-details">
 @media(max-width:767px){
-  /* linguagem de desenvolvimento fora da interface */
-  #cb75-care-label{font-size:0!important;}
-  #cb75-care-label::after{content:'CUIDADO DIÁRIO';font-size:14px;letter-spacing:.06em;}
+  /* remove rótulo órfão HOJE deixado pela área de adesão */
+  #screen-dashboard .health-section-label{margin-top:14px;}
 
-  /* histórico/tendência sai do fluxo principal de Saúde */
-  #screen-dashboard #dash-rings,
-  #screen-dashboard #dash-trends,
-  #screen-dashboard #dash-weekly{display:none!important;}
-  #screen-dashboard #dash-rings + .health-section-label,
-  #screen-dashboard #dash-trends + .health-section-label{display:none!important;}
+  /* Sinais vitais: registrar aqui; tendência/histórico sob demanda */
+  body:not(.cb7553-vitals-open) #screen-dashboard #vitals-chart,
+  body:not(.cb7553-vitals-open) #screen-dashboard #vitals-history,
+  body:not(.cb7553-vitals-open) #screen-dashboard .vitals-chart,
+  body:not(.cb7553-vitals-open) #screen-dashboard .vitals-history{display:none!important;}
+  #cb7553-vitals-toggle{width:100%;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:7px;}
 
-  /* entrada compacta para o módulo especializado de reabilitação */
-  #cb7552-rehab-entry{display:block!important;}
-  #cb75-rehab-ai-card,
-  #screen-dashboard #rehab-card,
-  #screen-dashboard .health-section-label[style*="margin-top:16px"] + #cb75-rehab-ai-card{display:none!important;}
-  #cb7552-rehab-entry .cb7552-rehab-head{display:flex;align-items:center;gap:12px;}
-  #cb7552-rehab-entry .cb7552-rehab-icon{width:48px;height:48px;border-radius:15px;background:var(--teal-50);display:flex;align-items:center;justify-content:center;font-size:24px;flex:0 0 auto;}
-  #cb7552-rehab-entry .cb7552-rehab-copy{flex:1;min-width:0;}
-  #cb7552-rehab-entry .cb7552-rehab-title{font-family:'Nunito',sans-serif;font-size:17px;font-weight:900;color:var(--green-800);line-height:1.15;}
-  #cb7552-rehab-entry .cb7552-rehab-sub{font-size:12px;color:var(--text-muted);font-weight:700;line-height:1.35;margin-top:3px;}
-  #cb7552-rehab-entry .cb7552-rehab-go{font-size:25px;color:var(--green-600);}
-  #cb7552-rehab-entry .cb7552-rehab-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}
-  #cb7552-rehab-entry .cb7552-chip{padding:5px 9px;border-radius:999px;background:var(--green-50);border:1px solid var(--green-200);font-size:11px;font-weight:800;color:var(--green-600);}
-
-  /* módulo completo só aparece quando solicitado */
-  body.cb7552-rehab-open #cb75-rehab-ai-card,
-  body.cb7552-rehab-open #screen-dashboard #rehab-card{display:block!important;}
-  body.cb7552-rehab-open #cb7552-rehab-entry{display:none!important;}
-  #cb7552-rehab-close{display:none;}
-  body.cb7552-rehab-open #cb7552-rehab-close{display:flex!important;position:sticky;top:8px;z-index:55;margin:0 0 12px;}
+  /* Biblioteca: vira porta de entrada compacta */
+  #cb7553-library-entry{display:block!important;}
+  body:not(.cb7553-library-open) #cb7553-library-entry ~ .cb7553-library-source{display:none!important;}
+  body.cb7553-library-open #cb7553-library-entry{display:none!important;}
+  #cb7553-library-entry .head{display:flex;align-items:center;gap:12px;}
+  #cb7553-library-entry .ico{width:48px;height:48px;border-radius:15px;background:var(--teal-50);display:flex;align-items:center;justify-content:center;font-size:24px;}
+  #cb7553-library-entry .copy{flex:1;min-width:0;}
+  #cb7553-library-entry .title{font-family:'Nunito',sans-serif;font-size:17px;font-weight:900;color:var(--green-800);}
+  #cb7553-library-entry .sub{font-size:12px;color:var(--text-muted);font-weight:700;margin-top:3px;line-height:1.35;}
+  #cb7553-library-entry .go{font-size:25px;color:var(--green-600);}
+  #cb7553-library-close{display:none;}
+  body.cb7553-library-open #cb7553-library-close{display:flex!important;position:sticky;top:8px;z-index:55;margin:0 0 12px;}
 }
-@media(min-width:768px){#cb7552-rehab-entry,#cb7552-rehab-close{display:none!important;}}
+@media(min-width:768px){#cb7553-library-entry,#cb7553-library-close,#cb7553-vitals-toggle{display:none!important;}}
 </style>
-<script id="cuidarbem-v75-52-health-organization-js">
+<script id="cuidarbem-v75-53-health-compact-details-js">
 (function(){
-  function setup(){
-    var rehab=document.getElementById('rehab-card');
-    var ai=document.getElementById('cb75-rehab-ai-card');
-    if(!rehab || !ai || document.getElementById('cb7552-rehab-entry')) return;
-    var entry=document.createElement('section');
-    entry.className='card cb75-card'; entry.id='cb7552-rehab-entry';
-    entry.setAttribute('role','button'); entry.setAttribute('tabindex','0');
-    entry.innerHTML='<div class="cb7552-rehab-head"><div class="cb7552-rehab-icon">🦾</div><div class="cb7552-rehab-copy"><div class="cb7552-rehab-title">Reabilitação Pós-AVC</div><div class="cb7552-rehab-sub">Exercícios guiados, fase atual e evolução funcional.</div></div><div class="cb7552-rehab-go">›</div></div><div class="cb7552-rehab-meta"><span class="cb7552-chip">Programa personalizado</span><span class="cb7552-chip">Barthel / mRS</span></div>';
-    ai.parentNode.insertBefore(entry,ai);
-    var close=document.createElement('button'); close.id='cb7552-rehab-close'; close.className='cb75-btn secondary'; close.innerHTML='‹ Voltar para Saúde';
-    ai.parentNode.insertBefore(close,ai);
-    function openRehab(){document.body.classList.add('cb7552-rehab-open'); setTimeout(function(){close.scrollIntoView({behavior:'smooth',block:'start'});},30);}
-    function closeRehab(){document.body.classList.remove('cb7552-rehab-open'); setTimeout(function(){entry.scrollIntoView({behavior:'smooth',block:'center'});},30);}
-    entry.addEventListener('click',openRehab); entry.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openRehab();}}); close.addEventListener('click',closeRehab);
-  }
-  var tries=0, timer=setInterval(function(){setup(); if(document.getElementById('cb7552-rehab-entry') || ++tries>40) clearInterval(timer);},250);
-  document.addEventListener('DOMContentLoaded',setup);
+ function text(el){return (el&&el.textContent||'').replace(/\s+/g,' ').trim();}
+ function setupVitals(){
+   if(document.getElementById('cb7553-vitals-toggle')) return;
+   var screen=document.getElementById('screen-dashboard'); if(!screen) return;
+   var hist=null, nodes=screen.querySelectorAll('*');
+   for(var i=0;i<nodes.length;i++){if(/^HISTÓRICO$/i.test(text(nodes[i]))){hist=nodes[i];break;}}
+   if(!hist) return;
+   var card=hist.closest('.card') || hist.parentElement; if(!card) return;
+   var btn=document.createElement('button'); btn.id='cb7553-vitals-toggle'; btn.className='cb75-btn secondary'; btn.innerHTML='📈 Ver histórico e tendência';
+   hist.parentNode.insertBefore(btn,hist);
+   var chart=hist.previousElementSibling;
+   if(chart) chart.id=chart.id||'vitals-chart';
+   var wrap=hist.parentElement; hist.id=hist.id||'vitals-history';
+   btn.addEventListener('click',function(){var open=document.body.classList.toggle('cb7553-vitals-open'); btn.innerHTML=open?'▲ Ocultar histórico':'📈 Ver histórico e tendência';});
+ }
+ function setupLibrary(){
+   if(document.getElementById('cb7553-library-entry')) return;
+   var screen=document.getElementById('screen-dashboard'); if(!screen) return;
+   var nodes=screen.querySelectorAll('*'), title=null;
+   for(var i=0;i<nodes.length;i++){if(text(nodes[i]).indexOf('Biblioteca educativa pós-AVC')===0){title=nodes[i];break;}}
+   if(!title) return;
+   var card=title.closest('.card'); if(!card) return;
+   card.classList.add('cb7553-library-source');
+   var entry=document.createElement('section'); entry.id='cb7553-library-entry'; entry.className='card cb75-card'; entry.setAttribute('role','button'); entry.setAttribute('tabindex','0');
+   entry.innerHTML='<div class="head"><div class="ico">📚</div><div class="copy"><div class="title">Biblioteca educativa pós-AVC</div><div class="sub">FAST, deglutição, prevenção e orientações por fase.</div></div><div class="go">›</div></div>';
+   card.parentNode.insertBefore(entry,card);
+   var close=document.createElement('button'); close.id='cb7553-library-close'; close.className='cb75-btn secondary'; close.innerHTML='‹ Voltar para Saúde'; card.parentNode.insertBefore(close,card);
+   function open(){document.body.classList.add('cb7553-library-open'); setTimeout(function(){close.scrollIntoView({behavior:'smooth',block:'start'});},30);}
+   function shut(){document.body.classList.remove('cb7553-library-open'); setTimeout(function(){entry.scrollIntoView({behavior:'smooth',block:'center'});},30);}
+   entry.addEventListener('click',open); entry.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}}); close.addEventListener('click',shut);
+ }
+ function setupOrphanToday(){
+   var screen=document.getElementById('screen-dashboard'); if(!screen) return;
+   var labels=screen.querySelectorAll('.health-section-label');
+   for(var i=0;i<labels.length;i++){if(text(labels[i])==='HOJE'){labels[i].style.display='none';}}
+ }
+ function setup(){setupVitals();setupLibrary();setupOrphanToday();}
+ var tries=0,timer=setInterval(function(){setup();if(++tries>40)clearInterval(timer);},250); document.addEventListener('DOMContentLoaded',setup);
 })();
 </script>
 '''
@@ -70,7 +81,4 @@ if marker not in s:
     if pos==-1: raise SystemExit('ERRO: </body> real não encontrado')
     s=s[:pos]+patch+'\n'+s[pos:]
 index.write_text(s,encoding='utf-8')
-
-sw=Path('sw.js'); t=sw.read_text(encoding='utf-8')
-t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-52-health-organization';",t,count=1)
-sw.write_text(t,encoding='utf-8')
+sw=Path('sw.js'); t=sw.read_text(encoding='utf-8'); t=re.sub(r"const CACHE_NAME = '[^']+';","const CACHE_NAME = 'cuidarbem-v75-53-health-compact-details';",t,count=1); sw.write_text(t,encoding='utf-8')
