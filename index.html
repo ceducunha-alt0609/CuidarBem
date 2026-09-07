@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<style id="cuidarbem-v75-60-refresh-prepaint">
+<style id="cuidarbem-v75-61-refresh-race-fix">
 @media(max-width:767px){
- html.cb760-booting body{visibility:hidden!important;}
- html.cb760-booting *,html.cb760-booting *::before,html.cb760-booting *::after{animation:none!important;transition:none!important;}
+ html.cb761-booting body{visibility:hidden!important;}
+ html.cb761-booting *,html.cb761-booting *::before,html.cb761-booting *::after{animation:none!important;transition:none!important;}
 }
 </style>
-<script id="cuidarbem-v75-60-refresh-prepaint-js">
-(function(){
- try{
-   var h=document.documentElement;h.classList.add('cb760-booting');
-   var k='cuidarbem_last_screen_v759',v=localStorage.getItem(k)||'home';
-   h.setAttribute('data-cb760-screen',v);
- }catch(e){}
-})();
+<script id="cuidarbem-v75-61-refresh-race-fix-head">
+(function(){try{document.documentElement.classList.add('cb761-booting');}catch(e){}})();
 </script>
 
 <meta charset="UTF-8">
@@ -17589,21 +17583,6 @@ body.low-stress .ai-active-sub{
     const doc = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>CuidarBem — Guia de Uso Seguro</title><style>
       body{font-family:Arial,sans-serif;margin:28px;color:#10201b;line-height:1.55} h1{color:#0f6e56;margin-bottom:4px} h2{color:#1a6b5c;margin-top:22px} .box{border:1px solid #b7ddd1;border-radius:14px;padding:14px;margin:12px 0;background:#f1faf7}.warn{border-left:5px solid #d85a30;background:#fff4ee}.small{color:#52615c;font-size:13px}@media print{body{margin:18mm}.box{break-inside:avoid}}</style>
 <!-- v75.59 — boot estável: sem flash da Home durante atualização -->
-<style id="cuidarbem-v75-59-refresh-stability">
-@media(max-width:767px){
-  html.cb759-booting .screen{visibility:hidden!important;}
-  html.cb759-booting .bottom-nav{visibility:hidden!important;}
-  html.cb759-booting *,html.cb759-booting *::before,html.cb759-booting *::after{
-    animation:none!important;transition:none!important;
-  }
-}
-</style>
-<script id="cuidarbem-v75-59-boot-head">
-(function(){
-  try{document.documentElement.classList.add('cb759-booting');}catch(e){}
-})();
-</script>
-
 </head><body>
       <h1>CuidarBem — Guia de Uso Seguro</h1><div class="small">Paciente: <b>${esc(patient)}</b> · Checklist Modo SAMU: <b>${status.pct}%</b></div>
       <div class="box warn"><b>Finalidade:</b> o app organiza, lembra, registra e alerta. Não substitui profissionais de saúde nem atendimento de emergência.</div>
@@ -20892,7 +20871,7 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
     try{
       var active=document.querySelector('.screen.active');
       var name=active&&active.id&&active.id.indexOf('screen-')===0?active.id.slice(7):'';
-      if(name) localStorage.setItem('cuidarbem_last_screen_v759',name);
+      if(name) localStorage.setItem('cuidarbem_last_screen',name);
     }catch(e){}
     if(!indicator) return location.reload();
     indicator.classList.add('show','refreshing');
@@ -21898,68 +21877,42 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 </script>
 
 
-<script id="cuidarbem-v75-59-refresh-stability-js">
+<script id="cuidarbem-v75-61-refresh-race-fix-js">
 (function(){
-  var KEY='cuidarbem_last_screen_v759';
+  var KEY='cuidarbem_last_screen';
   var valid=['home','calendar','dashboard','ocr','reports','appt','profile'];
-  function save(name){try{if(valid.indexOf(name)>=0)localStorage.setItem(KEY,name);}catch(e){}}
-  function restore(){
+  var restoring=true;
+  function getActive(){var x=document.querySelector('.screen.active');return x&&x.id&&x.id.indexOf('screen-')===0?x.id.slice(7):'';}
+  function save(name){try{if(!restoring&&valid.indexOf(name)>=0)localStorage.setItem(KEY,name);}catch(e){}}
+  function apply(name){
+    if(valid.indexOf(name)<0)name='home';
+    var sc=document.getElementById('screen-'+name),nav=document.getElementById('nav-'+name);
+    if(!sc)return false;
+    document.querySelectorAll('.screen.active').forEach(function(x){x.classList.remove('active');});
+    sc.classList.add('active');
+    document.querySelectorAll('.nav-btn.active').forEach(function(x){x.classList.remove('active');});
+    if(nav)nav.classList.add('active');
+    return true;
+  }
+  function boot(){
     var name='home';
-    try{var saved=localStorage.getItem(KEY);if(valid.indexOf(saved)>=0)name=saved;}catch(e){}
-    var screen=document.getElementById('screen-'+name);
-    var nav=document.getElementById('nav-'+name);
-    if(screen){
-      document.querySelectorAll('.screen.active').forEach(function(el){el.classList.remove('active');});
-      screen.classList.add('active');
-    }
-    if(nav){
-      document.querySelectorAll('.nav-btn.active').forEach(function(el){el.classList.remove('active');});
-      nav.classList.add('active');
-    }
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){document.documentElement.classList.remove('cb759-booting');});
-    });
+    try{var v=localStorage.getItem(KEY);if(valid.indexOf(v)>=0)name=v;}catch(e){}
+    apply(name);
+    /* Só depois da tela correta estar aplicada liberamos qualquer gravação. */
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      restoring=false;
+      document.documentElement.classList.remove('cb761-booting');
+    });});
+
+    /* Navegação oficial: grava somente após clique real do usuário. */
+    document.addEventListener('click',function(e){
+      var b=e.target&&e.target.closest?e.target.closest('.nav-btn'):null;
+      if(!b)return;
+      var id=b.id||''; if(id.indexOf('nav-')===0)save(id.slice(4));
+    },true);
   }
-
-  /* A navegação oficial continua sendo goScreen; apenas registramos a última guia. */
-  var oldGo=window.goScreen;
-  if(typeof oldGo==='function'){
-    window.goScreen=function(name,btn){save(name);return oldGo.apply(this,arguments);};
-  }
-
-  document.addEventListener('click',function(e){
-    var btn=e.target&&e.target.closest?e.target.closest('.nav-btn'):null;
-    if(!btn)return;
-    var id=btn.id||'';
-    if(id.indexOf('nav-')===0)save(id.slice(4));
-  },true);
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});else restore();
-  /* Failsafe: nunca deixar a interface escondida se algum módulo antigo falhar. */
-  setTimeout(function(){document.documentElement.classList.remove('cb759-booting');},1800);
-})();
-</script>
-
-<script id="cuidarbem-v75-60-refresh-finalize-js">
-(function(){
- var KEY='cuidarbem_last_screen_v759';
- var valid=['home','calendar','dashboard','ocr','reports','appt','profile'];
- function activeName(){var x=document.querySelector('.screen.active');return x&&x.id&&x.id.indexOf('screen-')===0?x.id.slice(7):'';}
- function saveActive(){try{var n=activeName();if(valid.indexOf(n)>=0)localStorage.setItem(KEY,n);}catch(e){}}
- function restore(){
-   var name='home';try{var v=localStorage.getItem(KEY);if(valid.indexOf(v)>=0)name=v;}catch(e){}
-   var sc=document.getElementById('screen-'+name),nav=document.getElementById('nav-'+name);
-   if(sc){document.querySelectorAll('.screen.active').forEach(function(x){x.classList.remove('active');});sc.classList.add('active');}
-   if(nav){document.querySelectorAll('.nav-btn.active').forEach(function(x){x.classList.remove('active');});nav.classList.add('active');}
-   saveActive();
-   requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.classList.remove('cb760-booting');});});
- }
- document.addEventListener('click',function(e){var b=e.target&&e.target.closest?e.target.closest('.nav-btn'):null;if(b)setTimeout(saveActive,0);},true);
- if(window.MutationObserver){
-   new MutationObserver(function(){saveActive();}).observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:['class']});
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',restore,{once:true});else restore();
- setTimeout(function(){document.documentElement.classList.remove('cb760-booting');},2200);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+  setTimeout(function(){restoring=false;document.documentElement.classList.remove('cb761-booting');},2200);
 })();
 </script>
 
