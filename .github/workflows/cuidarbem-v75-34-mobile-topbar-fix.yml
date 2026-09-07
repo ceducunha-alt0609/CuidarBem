@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.79
+name: CuidarBem mobile refinements v75.80
 on:
   push:
     paths:
@@ -12,19 +12,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Fix Consultas Exames at source
+      - name: Initialize upcoming appointments on refresh
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify source-level fix
+      - name: Verify initial render fix
         run: |
-          grep -q 'cuidarbem-v75-79-consultas-source-fix' index.html
+          grep -q 'cuidarbem-v75-80-upcoming-initial-render' index.html
+          grep -q 'cuidarbem-v75-80-upcoming-initial-render' sw.js
           grep -q 'cb7579-cons-card' index.html
           grep -q 'cb7579-exam-card' index.html
-          grep -q 'cuidarbem-v75-79-consultas-source-fix' sw.js
-          ! grep -q 'cuidarbem-v75-78-consultas-exames-final-js' index.html
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Fix Consultas Exames at source v75.79'
+          git diff --cached --quiet || git commit -m 'Initialize upcoming appointments on refresh v75.80'
           git push
