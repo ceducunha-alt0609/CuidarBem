@@ -1,6 +1,6 @@
 // CuidarBem PWA Service Worker
 const CACHE_PREFIX = 'cuidarbem-';
-const CACHE_NAME = 'cuidarbem-v75-44-state-picker-direct';
+const CACHE_NAME = 'cuidarbem-v75-45-state-picker-storage';
 const APP_SHELL = [
   './',
   './index.html',
