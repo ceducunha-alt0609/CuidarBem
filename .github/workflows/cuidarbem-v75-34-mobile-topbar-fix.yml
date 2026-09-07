@@ -1,4 +1,4 @@
-name: CuidarBem mobile refinements v75.46
+name: CuidarBem mobile refinements v75.47
 on:
   push:
     paths:
@@ -12,18 +12,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Remove conflicting picker listener
+      - name: Center patient state actions
         run: python cuidarbem_patch_v7534_mobile_topbar.py
-      - name: Verify conflict removal
+      - name: Verify centered state actions
         run: |
-          grep -q 'cuidarbem-v75-46-remove-picker-conflict' index.html
-          ! grep -q 'cuidarbem-v75-44-state-picker-direct-js' index.html
-          grep -q 'cuidarbem-v75-45-state-picker-storage-js' index.html
-          grep -q 'cuidarbem-v75-46-remove-picker-conflict' sw.js
+          grep -q 'cuidarbem-v75-47-center-state-actions' index.html
+          grep -q 'cuidarbem-v75-47-center-state-actions' sw.js
       - name: Commit app update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sw.js
-          git diff --cached --quiet || git commit -m 'Remove conflicting old state picker listener v75.46'
+          git diff --cached --quiet || git commit -m 'Center patient state action buttons v75.47'
           git push
