@@ -21854,5 +21854,26 @@ body.dark #vital-temp  .vci-icon { background: rgba(124,58,237,.25) !important; 
 })();
 </script>
 
+
+
+<!-- v75.58 — Saúde: remove definitivamente o HOJE original -->
+<style id="cuidarbem-v75-58-health-final-today">
+@media(max-width:767px){
+  #screen-dashboard .health-dashboard > .health-section-label.cb7558-original-today{display:none!important;}
+}
+</style>
+<script id="cuidarbem-v75-58-health-final-today-js">
+(function(){
+ function clean(){
+   var rings=document.getElementById('dash-rings');
+   if(!rings)return;
+   var label=rings.previousElementSibling;
+   if(label && label.classList.contains('health-section-label')) label.classList.add('cb7558-original-today');
+ }
+ document.addEventListener('DOMContentLoaded',clean);
+ var n=0,x=setInterval(function(){clean();if(document.querySelector('.cb7558-original-today')||++n>50)clearInterval(x);},200);
+})();
+</script>
+
 </body>
 </html>
