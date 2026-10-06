@@ -1,0 +1,28 @@
+name: CuidarBem desktop topbar v75.86
+on:
+  push:
+    paths:
+      - '.github/workflows/cuidarbem-v75-86-desktop-topbar.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Refine desktop topbar
+        run: python cuidarbem_patch_v7586_desktop_topbar.py
+      - name: Verify topbar refinement
+        run: |
+          grep -q 'cuidarbem-v75-86-desktop-topbar' index.html
+          grep -q 'cuidarbem-v75-86-desktop-topbar' sw.js
+          grep -q 'cb7586-search' index.html
+      - name: Commit app update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js
+          git diff --cached --quiet || git commit -m 'Refine desktop topbar v75.86'
+          git push
